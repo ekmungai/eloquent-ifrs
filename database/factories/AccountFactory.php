@@ -4,7 +4,7 @@
  * @var \Illuminate\Database\Eloquent\Factory $factory
  */
 
-use App\Models\Account;
+use Ekmungai\IFRS\Models\Account;
 use Faker\Generator as Faker;
 
 $factory->define(
@@ -14,9 +14,9 @@ $factory->define(
         'name' => $faker->name,
         'description' => $faker->sentence,
         'account_type' => $faker->randomElement(array_keys(config('ifrs')['accounts'])),
-        'entity_id' => factory('App\Models\Entity')->create()->id,
-        'category_id' => factory('App\Models\Category')->create()->id,
-        'currency_id' => factory('App\Models\Currency')->create()->id,
+        'entity_id' => factory('Ekmungai\IFRS\Models\Entity')->create()->id,
+        'category_id' => factory('Ekmungai\IFRS\Models\Category')->create()->id,
+        'currency_id' => factory('Ekmungai\IFRS\Models\Currency')->create()->id,
         'code' => $faker->randomDigit,
         ];
     }

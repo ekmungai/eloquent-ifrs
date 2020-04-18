@@ -2,11 +2,11 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use Ekmungai\IFRS\Tests\TestCase;
 
-use App\Models\RecycledObject;
-use App\Models\User;
-use App\Models\Vat;
+use Ekmungai\IFRS\Models\RecycledObject;
+use Ekmungai\IFRS\Models\User;
+use Ekmungai\IFRS\Models\Vat;
 
 class VatTest extends TestCase
 {

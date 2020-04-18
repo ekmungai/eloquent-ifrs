@@ -6,14 +6,14 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Models;
+namespace Ekmungai\IFRS\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use App\Interfaces\Recyclable;
+use Ekmungai\IFRS\Interfaces\Recyclable;
 
-use App\Traits\Recycling;
+use Ekmungai\IFRS\Traits\Recycling;
 
 /**
  * Class Currency

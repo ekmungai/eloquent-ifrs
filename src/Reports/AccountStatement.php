@@ -6,20 +6,20 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Reports;
+namespace Ekmungai\IFRS\Reports;
 
 use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-use App\Models\Account;
-use App\Models\Currency;
-use App\Models\Entity;
-use App\Models\ReportingPeriod;
-use App\Models\Ledger;
+use Ekmungai\IFRS\Models\Account;
+use Ekmungai\IFRS\Models\Currency;
+use Ekmungai\IFRS\Models\Entity;
+use Ekmungai\IFRS\Models\ReportingPeriod;
+use Ekmungai\IFRS\Models\Ledger;
 
-use App\Exceptions\MissingAccount;
+use Ekmungai\IFRS\Exceptions\MissingAccount;
 use Illuminate\Database\Query\Builder;
 
 class AccountStatement
@@ -76,7 +76,7 @@ class AccountStatement
     /**
      * Get Statement Currency
      *
-     * @return \App\Models\Currency
+     * @return \Ekmungai\IFRS\Models\Currency
      */
     public function getCurrency()
     {
@@ -86,7 +86,7 @@ class AccountStatement
     /**
      * Set Statement Currency
      *
-     * @param \App\Models\Currency $currency
+     * @param \Ekmungai\IFRS\Models\Currency $currency
      */
     public function setCurrency($currency) : void
     {
@@ -96,7 +96,7 @@ class AccountStatement
     /**
      * Get Statement Account
      *
-     * @return \App\Models\Account
+     * @return \Ekmungai\IFRS\Models\Account
      */
     public function getAccount()
     {
@@ -106,7 +106,7 @@ class AccountStatement
     /**
      * Set Statement Account
      *
-     * @param \App\Models\Account $account
+     * @param \Ekmungai\IFRS\Models\Account $account
      */
     public function setAccount($account) : void
     {
@@ -116,7 +116,7 @@ class AccountStatement
     /**
      * Get Statement Entity
      *
-     * @return \App\Models\Entity
+     * @return \Ekmungai\IFRS\Models\Entity
      */
     public function getEntity()
     {
@@ -126,7 +126,7 @@ class AccountStatement
     /**
      * Set Statement Entity
      *
-     * @param \App\Models\Entity $entity
+     * @param \Ekmungai\IFRS\Models\Entity $entity
      */
     public function setEntity($entity) : void
     {

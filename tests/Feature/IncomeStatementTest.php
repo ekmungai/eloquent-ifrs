@@ -4,19 +4,19 @@ namespace Tests\Feature;
 
 use Carbon\Carbon;
 
-use Tests\TestCase;
+use Ekmungai\IFRS\Tests\TestCase;
 
-use App\Models\Account;
-use App\Models\LineItem;
+use Ekmungai\IFRS\Models\Account;
+use Ekmungai\IFRS\Models\LineItem;
 
-use App\Reports\IncomeStatement;
+use Ekmungai\IFRS\Reports\IncomeStatement;
 
-use App\Transactions\CashSale;
-use App\Transactions\CreditNote;
-use App\Transactions\JournalEntry;
-use App\Transactions\SupplierBill;
-use App\Transactions\CashPurchase;
-use App\Transactions\DebitNote;
+use Ekmungai\IFRS\Transactions\CashSale;
+use Ekmungai\IFRS\Transactions\CreditNote;
+use Ekmungai\IFRS\Transactions\JournalEntry;
+use Ekmungai\IFRS\Transactions\SupplierBill;
+use Ekmungai\IFRS\Transactions\CashPurchase;
+use Ekmungai\IFRS\Transactions\DebitNote;
 
 class IncomeStatementTest extends TestCase
 {
@@ -44,14 +44,14 @@ class IncomeStatementTest extends TestCase
         );
 
         $lineItem =  LineItem::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::OPERATING_REVENUE
             ]),
-            factory('App\Models\Vat')->create(["rate" => 16]),
+            factory('Ekmungai\IFRS\Models\Vat')->create(["rate" => 16]),
             200,
             1,
             null,
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::CONTROL_ACCOUNT
             ])
         );
@@ -68,10 +68,10 @@ class IncomeStatementTest extends TestCase
         );
 
         $lineItem = LineItem::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::OPERATING_REVENUE
             ]),
-            factory('App\Models\Vat')->create(["rate" => 0]),
+            factory('Ekmungai\IFRS\Models\Vat')->create(["rate" => 0]),
             50
         );
         $creditNote->addLineItem($lineItem);
@@ -93,14 +93,14 @@ class IncomeStatementTest extends TestCase
         );
 
         $lineItem =  LineItem::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::NON_OPERATING_REVENUE
             ]),
-            factory('App\Models\Vat')->create(["rate" => 16]),
+            factory('Ekmungai\IFRS\Models\Vat')->create(["rate" => 16]),
             200,
             1,
             null,
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::CONTROL_ACCOUNT
             ])
         );
@@ -122,14 +122,14 @@ class IncomeStatementTest extends TestCase
         );
 
         $lineItem =  LineItem::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::OPERATING_EXPENSE
             ]),
-            factory('App\Models\Vat')->create(["rate" => 16]),
+            factory('Ekmungai\IFRS\Models\Vat')->create(["rate" => 16]),
             100,
             1,
             null,
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::CONTROL_ACCOUNT
             ])
         );
@@ -150,14 +150,14 @@ class IncomeStatementTest extends TestCase
         );
 
         $lineItem =  LineItem::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::DIRECT_EXPENSE
             ]),
-            factory('App\Models\Vat')->create(["rate" => 16]),
+            factory('Ekmungai\IFRS\Models\Vat')->create(["rate" => 16]),
             70,
             1,
             null,
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::CONTROL_ACCOUNT
             ])
         );
@@ -173,10 +173,10 @@ class IncomeStatementTest extends TestCase
         );
 
         $lineItem = LineItem::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::OVERHEAD_EXPENSE
             ]),
-            factory('App\Models\Vat')->create(["rate" => 0]),
+            factory('Ekmungai\IFRS\Models\Vat')->create(["rate" => 0]),
             70
         );
 
@@ -184,24 +184,24 @@ class IncomeStatementTest extends TestCase
         $journalEntry->post();
 
         $cashPurchase = CashPurchase::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 'account_type' => Account::BANK,
             ]),
             Carbon::now(),
             $this->faker->word
         );
         $lineItem = LineItem::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::OTHER_EXPENSE
             ]),
-            factory('App\Models\Vat')->create(["rate" => 0]),
+            factory('Ekmungai\IFRS\Models\Vat')->create(["rate" => 0]),
             70
         );
         $cashPurchase->addLineItem($lineItem);
         $cashPurchase->post();
 
         $debitNote = DebitNote::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 'account_type' => Account::PAYABLE,
             ]),
             Carbon::now(),
@@ -209,10 +209,10 @@ class IncomeStatementTest extends TestCase
         );
 
         $lineItem = LineItem::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::OTHER_EXPENSE
             ]),
-            factory('App\Models\Vat')->create(["rate" => 0]),
+            factory('Ekmungai\IFRS\Models\Vat')->create(["rate" => 0]),
             50
         );
         $debitNote->addLineItem($lineItem);

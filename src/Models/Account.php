@@ -6,21 +6,21 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Models;
+namespace Ekmungai\IFRS\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
-use App\Interfaces\Recyclable;
-use App\Interfaces\Segragatable;
+use Ekmungai\IFRS\Interfaces\Recyclable;
+use Ekmungai\IFRS\Interfaces\Segragatable;
 
-use App\Traits\Segragating;
-use App\Traits\Recycling;
+use Ekmungai\IFRS\Traits\Segragating;
+use Ekmungai\IFRS\Traits\Recycling;
 
-use App\Exceptions\MissingAccountType;
-use App\Exceptions\HangingTransactions;
+use Ekmungai\IFRS\Exceptions\MissingAccountType;
+use Ekmungai\IFRS\Exceptions\HangingTransactions;
 use Carbon\Carbon;
 
 /**
@@ -262,7 +262,6 @@ class Account extends Model implements Recyclable, Segragatable
     public function save(array $options = []) : bool
     {
         if (is_null($this->code)) {
-
             if (is_null($this->account_type)) {
                 throw new MissingAccountType();
             }

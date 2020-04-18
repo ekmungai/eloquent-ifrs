@@ -6,23 +6,23 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Transactions;
+namespace Ekmungai\IFRS\Transactions;
 
 use Carbon\Carbon;
 
 
-use App\Models\Account;
-use App\Models\Currency;
-use App\Models\ExchangeRate;
-use App\Models\Transaction;
+use Ekmungai\IFRS\Models\Account;
+use Ekmungai\IFRS\Models\Currency;
+use Ekmungai\IFRS\Models\ExchangeRate;
+use Ekmungai\IFRS\Models\Transaction;
 
-use App\Interfaces\Sells;
-use App\Interfaces\Fetchable;
+use Ekmungai\IFRS\Interfaces\Sells;
+use Ekmungai\IFRS\Interfaces\Fetchable;
 
-use App\Traits\Selling;
-use App\Traits\Fetching;
-use App\Interfaces\Clearable;
-use App\Traits\Clearing;
+use Ekmungai\IFRS\Traits\Selling;
+use Ekmungai\IFRS\Traits\Fetching;
+use Ekmungai\IFRS\Interfaces\Clearable;
+use Ekmungai\IFRS\Traits\Clearing;
 
 class ClientInvoice extends AbstractTransaction implements Sells, Fetchable, Clearable
 {
@@ -66,7 +66,6 @@ class ClientInvoice extends AbstractTransaction implements Sells, Fetchable, Cle
         ExchangeRate $exchangeRate = null,
         string $reference = null
     ) : AbstractTransaction {
-
         $clientInvoice = parent::instantiate(self::PREFIX);
 
         $clientInvoice->newTransaction(

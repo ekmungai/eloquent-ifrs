@@ -6,10 +6,10 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Interfaces;
+namespace Ekmungai\IFRS\Interfaces;
 
-use App\Models\Currency;
-use App\Models\Account;
+use Ekmungai\IFRS\Models\Currency;
+use Ekmungai\IFRS\Models\Account;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 

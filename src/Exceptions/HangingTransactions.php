@@ -6,7 +6,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT See LICENSE.md
  */
-namespace App\Exceptions;
+namespace Ekmungai\IFRS\Exceptions;
 
 /**
  *

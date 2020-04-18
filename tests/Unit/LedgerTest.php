@@ -2,18 +2,18 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use Ekmungai\IFRS\Tests\TestCase;
 
 
 use Carbon\Carbon;
 
-use App\Models\Account;
-use App\Models\Balance;
-use App\Models\Ledger;
-use App\Models\LineItem;
-use App\Models\Vat;
+use Ekmungai\IFRS\Models\Account;
+use Ekmungai\IFRS\Models\Balance;
+use Ekmungai\IFRS\Models\Ledger;
+use Ekmungai\IFRS\Models\LineItem;
+use Ekmungai\IFRS\Models\Vat;
 
-use App\Transactions\JournalEntry;
+use Ekmungai\IFRS\Transactions\JournalEntry;
 
 class LedgerTest extends TestCase
 {

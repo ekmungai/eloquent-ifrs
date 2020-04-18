@@ -4,20 +4,20 @@ namespace Tests\Unit;
 
 use Carbon\Carbon;
 
-use Tests\TestCase;
+use Ekmungai\IFRS\Tests\TestCase;
 
 use Illuminate\Support\Facades\Auth;
 
-use App\Models\Account;
-use App\Models\Balance;
-use App\Models\Currency;
-use App\Models\Ledger;
-use App\Models\LineItem;
+use Ekmungai\IFRS\Models\Account;
+use Ekmungai\IFRS\Models\Balance;
+use Ekmungai\IFRS\Models\Currency;
+use Ekmungai\IFRS\Models\Ledger;
+use Ekmungai\IFRS\Models\LineItem;
 
-use App\Transactions\SupplierPayment;
+use Ekmungai\IFRS\Transactions\SupplierPayment;
 
-use App\Exceptions\LineItemAccount;
-use App\Exceptions\MainAccount;
+use Ekmungai\IFRS\Exceptions\LineItemAccount;
+use Ekmungai\IFRS\Exceptions\MainAccount;
 
 class SupplierPaymentTest extends TestCase
 {
@@ -48,7 +48,7 @@ class SupplierPaymentTest extends TestCase
     public function testPostSupplierPaymentTransaction()
     {
         $supplierPayment = SupplierPayment::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 'account_type' => Account::PAYABLE,
             ]),
             Carbon::now(),
@@ -57,10 +57,10 @@ class SupplierPaymentTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::BANK
             ])->id,
         ]);
@@ -89,7 +89,7 @@ class SupplierPaymentTest extends TestCase
     public function testSupplierPaymentLineItemAccount()
     {
         $supplierPayment = SupplierPayment::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 'account_type' => Account::PAYABLE,
             ]),
             Carbon::now(),
@@ -100,10 +100,10 @@ class SupplierPaymentTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::RECONCILIATION
             ])->id,
         ]);
@@ -120,7 +120,7 @@ class SupplierPaymentTest extends TestCase
     public function testSupplierPaymentMainAccount()
     {
         $supplierPayment = SupplierPayment::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 'account_type' => Account::RECONCILIATION,
             ]),
             Carbon::now(),
@@ -131,10 +131,10 @@ class SupplierPaymentTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::BANK
             ])->id,
         ]);

@@ -6,7 +6,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Models;
+namespace Ekmungai\IFRS\Models;
 
 use Carbon\Carbon;
 
@@ -14,20 +14,20 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use App\Reports\IncomeStatement;
+use Ekmungai\IFRS\Reports\IncomeStatement;
 
-use App\Interfaces\Recyclable;
-use App\Interfaces\Clearable;
-use App\Interfaces\Segragatable;
+use Ekmungai\IFRS\Interfaces\Recyclable;
+use Ekmungai\IFRS\Interfaces\Clearable;
+use Ekmungai\IFRS\Interfaces\Segragatable;
 
-use App\Traits\Recycling;
-use App\Traits\Segragating;
-use App\Traits\Clearing;
+use Ekmungai\IFRS\Traits\Recycling;
+use Ekmungai\IFRS\Traits\Segragating;
+use Ekmungai\IFRS\Traits\Clearing;
 
-use App\Exceptions\InvalidAccountClassBalance;
-use App\Exceptions\InvalidBalanceTransaction;
-use App\Exceptions\InvalidBalance;
-use App\Exceptions\NegativeAmount;
+use Ekmungai\IFRS\Exceptions\InvalidAccountClassBalance;
+use Ekmungai\IFRS\Exceptions\InvalidBalanceTransaction;
+use Ekmungai\IFRS\Exceptions\InvalidBalance;
+use Ekmungai\IFRS\Exceptions\NegativeAmount;
 
 /**
  * Class Balance
@@ -60,7 +60,7 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
      * @var array
      */
 
-    const MODELNAME = "App\Models\Balance";
+    const MODELNAME = "Ekmungai\IFRS\Models\Balance";
 
     /**
      * Balance Type

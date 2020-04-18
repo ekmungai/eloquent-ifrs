@@ -6,7 +6,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Interfaces;
+namespace Ekmungai\IFRS\Interfaces;
 
 /**
  *

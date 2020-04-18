@@ -6,12 +6,12 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-use App\Models\Account;
-use App\Models\Balance;
-use App\Models\Transaction;
+use Ekmungai\IFRS\Models\Account;
+use Ekmungai\IFRS\Models\Balance;
+use Ekmungai\IFRS\Models\Transaction;
 
-use App\Reports\IncomeStatement;
-use App\Reports\BalanceSheet;
+use Ekmungai\IFRS\Reports\IncomeStatement;
+use Ekmungai\IFRS\Reports\BalanceSheet;
 
 return [
 

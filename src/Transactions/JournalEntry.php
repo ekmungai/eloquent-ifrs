@@ -6,22 +6,22 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Transactions;
+namespace Ekmungai\IFRS\Transactions;
 
 use Carbon\Carbon;
 
-use App\Models\Account;
-use App\Models\Currency;
-use App\Models\Transaction;
-use App\Models\ExchangeRate;
+use Ekmungai\IFRS\Models\Account;
+use Ekmungai\IFRS\Models\Currency;
+use Ekmungai\IFRS\Models\Transaction;
+use Ekmungai\IFRS\Models\ExchangeRate;
 
-use App\Interfaces\Assignable;
-use App\Interfaces\Clearable;
-use App\Interfaces\Fetchable;
+use Ekmungai\IFRS\Interfaces\Assignable;
+use Ekmungai\IFRS\Interfaces\Clearable;
+use Ekmungai\IFRS\Interfaces\Fetchable;
 
-use App\Traits\Assigning;
-use App\Traits\Clearing;
-use App\Traits\Fetching;
+use Ekmungai\IFRS\Traits\Assigning;
+use Ekmungai\IFRS\Traits\Clearing;
+use Ekmungai\IFRS\Traits\Fetching;
 
 class JournalEntry extends AbstractTransaction implements Assignable, Clearable, Fetchable
 {
@@ -64,7 +64,6 @@ class JournalEntry extends AbstractTransaction implements Assignable, Clearable,
         ExchangeRate $exchangeRate = null,
         string $reference = null
     ) : AbstractTransaction {
-
         $journalEntry = parent::instantiate(self::PREFIX);
 
         $journalEntry->newTransaction(

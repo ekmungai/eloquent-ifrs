@@ -6,13 +6,13 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Traits;
+namespace Ekmungai\IFRS\Traits;
 
 use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Auth;
 
-use App\Models\RecycledObject;
+use Ekmungai\IFRS\Models\RecycledObject;
 
 trait Recycling
 {
@@ -61,6 +61,6 @@ trait Recycling
      */
     public function recycled()
     {
-        return $this->morphMany('App\Models\RecycledObject', 'recyclable');
+        return $this->morphMany('Ekmungai\IFRS\Models\RecycledObject', 'recyclable');
     }
 }

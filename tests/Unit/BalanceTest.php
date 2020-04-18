@@ -4,20 +4,20 @@ namespace Tests\Unit;
 
 use Carbon\Carbon;
 
-use Tests\TestCase;
+use Ekmungai\IFRS\Tests\TestCase;
 
-use App\Models\Account;
-use App\Models\Balance;
-use App\Models\Currency;
-use App\Models\ExchangeRate;
-use App\Models\RecycledObject;
-use App\Models\User;
-use App\Models\Transaction;
+use Ekmungai\IFRS\Models\Account;
+use Ekmungai\IFRS\Models\Balance;
+use Ekmungai\IFRS\Models\Currency;
+use Ekmungai\IFRS\Models\ExchangeRate;
+use Ekmungai\IFRS\Models\RecycledObject;
+use Ekmungai\IFRS\Models\User;
+use Ekmungai\IFRS\Models\Transaction;
 
-use App\Exceptions\InvalidBalanceTransaction;
-use App\Exceptions\InvalidAccountClassBalance;
-use App\Exceptions\InvalidBalance;
-use App\Exceptions\NegativeAmount;
+use Ekmungai\IFRS\Exceptions\InvalidBalanceTransaction;
+use Ekmungai\IFRS\Exceptions\InvalidAccountClassBalance;
+use Ekmungai\IFRS\Exceptions\InvalidBalance;
+use Ekmungai\IFRS\Exceptions\NegativeAmount;
 
 class AccountBalanceTest extends TestCase
 {
@@ -102,7 +102,7 @@ class AccountBalanceTest extends TestCase
         $this->expectExceptionMessage('Income Statement Accounts cannot have Opening Balances');
 
         factory(Balance::class)->create([
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::OPERATING_REVENUE
             ])->id,
         ]);
@@ -121,7 +121,7 @@ class AccountBalanceTest extends TestCase
         );
 
         $balance = Balance::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::RECEIVABLE
             ]),
             Carbon::now()->year,
@@ -144,7 +144,7 @@ class AccountBalanceTest extends TestCase
         $this->expectExceptionMessage('Opening Balance Type must be one of: Debit, Credit');
 
         $balance = Balance::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::RECEIVABLE
             ]),
             Carbon::now()->year,
@@ -164,7 +164,7 @@ class AccountBalanceTest extends TestCase
     public function testNegativeAmount()
     {
         $balance = Balance::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::RECEIVABLE
             ]),
             Carbon::now()->year,

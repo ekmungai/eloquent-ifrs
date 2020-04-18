@@ -6,22 +6,22 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Transactions;
+namespace Ekmungai\IFRS\Transactions;
 
 use Carbon\Carbon;
 
-use App\Models\Account;
-use App\Models\Currency;
-use App\Models\ExchangeRate;
-use App\Models\Transaction;
+use Ekmungai\IFRS\Models\Account;
+use Ekmungai\IFRS\Models\Currency;
+use Ekmungai\IFRS\Models\ExchangeRate;
+use Ekmungai\IFRS\Models\Transaction;
 
-use App\Interfaces\Fetchable;
+use Ekmungai\IFRS\Interfaces\Fetchable;
 
-use App\Traits\Fetching;
+use Ekmungai\IFRS\Traits\Fetching;
 
-use App\Exceptions\MainAccount;
-use App\Exceptions\LineItemAccount;
-use App\Exceptions\VatCharge;
+use Ekmungai\IFRS\Exceptions\MainAccount;
+use Ekmungai\IFRS\Exceptions\LineItemAccount;
+use Ekmungai\IFRS\Exceptions\VatCharge;
 
 class ContraEntry extends AbstractTransaction implements Fetchable
 {
@@ -63,7 +63,6 @@ class ContraEntry extends AbstractTransaction implements Fetchable
         ExchangeRate $exchangeRate = null,
         string $reference = null
     ) : AbstractTransaction {
-
         $contraEntry = parent::instantiate(self::PREFIX);
 
         $contraEntry->newTransaction(

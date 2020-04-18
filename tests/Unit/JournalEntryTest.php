@@ -6,15 +6,15 @@ use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Auth;
 
-use Tests\TestCase;
+use Ekmungai\IFRS\Tests\TestCase;
 
-use App\Models\Account;
-use App\Models\Balance;
-use App\Models\Currency;
-use App\Models\LineItem;
-use App\Models\Ledger;
+use Ekmungai\IFRS\Models\Account;
+use Ekmungai\IFRS\Models\Balance;
+use Ekmungai\IFRS\Models\Currency;
+use Ekmungai\IFRS\Models\LineItem;
+use Ekmungai\IFRS\Models\Ledger;
 
-use App\Transactions\JournalEntry;
+use Ekmungai\IFRS\Transactions\JournalEntry;
 
 class JournalEntryTest extends TestCase
 {
@@ -43,14 +43,14 @@ class JournalEntryTest extends TestCase
     public function testPostJournalEntryTransaction()
     {
         $journalEntry = JournalEntry::new(
-            factory('App\Models\Account')->create(),
+            factory('Ekmungai\IFRS\Models\Account')->create(),
             Carbon::now(),
             $this->faker->word
         );
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -72,7 +72,7 @@ class JournalEntryTest extends TestCase
         $this->assertEquals($journalEntry->getAmount(), 100);
 
         $journalEntry2 = JournalEntry::new(
-            factory('App\Models\Account')->create(),
+            factory('Ekmungai\IFRS\Models\Account')->create(),
             Carbon::now(),
             $this->faker->word
         );
@@ -80,13 +80,13 @@ class JournalEntryTest extends TestCase
 
         $lineItem1 = factory(LineItem::class)->create([
             "amount" => 50,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
         $lineItem2 = factory(LineItem::class)->create([
             "amount" => 25,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
         ]);

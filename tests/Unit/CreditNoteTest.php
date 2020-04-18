@@ -6,18 +6,18 @@ use Illuminate\Support\Facades\Auth;
 
 use Carbon\Carbon;
 
-use Tests\TestCase;
+use Ekmungai\IFRS\Tests\TestCase;
 
-use App\Models\Account;
-use App\Models\Balance;
-use App\Models\Currency;
-use App\Models\Ledger;
-use App\Models\LineItem;
+use Ekmungai\IFRS\Models\Account;
+use Ekmungai\IFRS\Models\Balance;
+use Ekmungai\IFRS\Models\Currency;
+use Ekmungai\IFRS\Models\Ledger;
+use Ekmungai\IFRS\Models\LineItem;
 
-use App\Transactions\CreditNote;
+use Ekmungai\IFRS\Transactions\CreditNote;
 
-use App\Exceptions\LineItemAccount;
-use App\Exceptions\MainAccount;
+use Ekmungai\IFRS\Exceptions\LineItemAccount;
+use Ekmungai\IFRS\Exceptions\MainAccount;
 
 class CreditNoteTest extends TestCase
 {
@@ -48,7 +48,7 @@ class CreditNoteTest extends TestCase
     public function testPostCreditNoteTransaction()
     {
         $creditNote = CreditNote::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 'account_type' => Account::RECEIVABLE,
             ]),
             Carbon::now(),
@@ -57,10 +57,10 @@ class CreditNoteTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::OPERATING_REVENUE
             ])->id,
         ]);
@@ -99,7 +99,7 @@ class CreditNoteTest extends TestCase
     public function testCreditNoteLineItemAccount()
     {
         $creditNote = CreditNote::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 'account_type' => Account::RECEIVABLE,
             ]),
             Carbon::now(),
@@ -110,10 +110,10 @@ class CreditNoteTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::RECONCILIATION
             ])->id,
         ]);
@@ -130,7 +130,7 @@ class CreditNoteTest extends TestCase
     public function testCreditNoteMainAccount()
     {
         $creditNote = CreditNote::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 'account_type' => Account::RECONCILIATION,
             ]),
             Carbon::now(),
@@ -141,10 +141,10 @@ class CreditNoteTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::RECONCILIATION
             ])->id,
         ]);

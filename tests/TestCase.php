@@ -1,25 +1,26 @@
 <?php
 
-namespace Tests;
+namespace Ekmungai\IFRS\Tests;
 
 use Faker\Factory as Faker;
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Orchestra\Testbench\TestCase as Orchestra;
 
-use App\Models\ReportingPeriod;
-use App\Models\User;
+use Ekmungai\IFRS\IFRSServiceProvider;
+use Ekmungai\IFRS\Models\ReportingPeriod;
+use Ekmungai\IFRS\Models\User;
 
-abstract class TestCase extends BaseTestCase
+abstract class TestCase extends Orchestra
 {
-    use CreatesApplication;
-
     public function setUp(): void
     {
         parent::setUp();
+
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+
         $this->faker = Faker::create();
-        $this->prepareForTests();
 
         $this->be(factory(User::class)->create());
         $this->period = factory(ReportingPeriod::class)->create([
@@ -28,11 +29,13 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * Migrate the database
+     * Add the package provider
+     *
+     * @param $app
+     * @return array
      */
-    private function prepareForTests()
+    protected function getPackageProviders($app)
     {
-        Config::set('database.default', 'sqlite');
-        Artisan::call('migrate:refresh');
+        return [IFRSServiceProvider::class];
     }
 }

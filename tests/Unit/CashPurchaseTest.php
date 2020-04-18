@@ -6,18 +6,18 @@ use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Auth;
 
-use Tests\TestCase;
+use Ekmungai\IFRS\Tests\TestCase;
 
-use App\Models\Account;
-use App\Models\Balance;
-use App\Models\Ledger;
-use App\Models\LineItem;
-use App\Models\Currency;
+use Ekmungai\IFRS\Models\Account;
+use Ekmungai\IFRS\Models\Balance;
+use Ekmungai\IFRS\Models\Ledger;
+use Ekmungai\IFRS\Models\LineItem;
+use Ekmungai\IFRS\Models\Currency;
 
-use App\Transactions\CashPurchase;
+use Ekmungai\IFRS\Transactions\CashPurchase;
 
-use App\Exceptions\LineItemAccount;
-use App\Exceptions\MainAccount;
+use Ekmungai\IFRS\Exceptions\LineItemAccount;
+use Ekmungai\IFRS\Exceptions\MainAccount;
 
 class CashPurchaseTest extends TestCase
 {
@@ -48,7 +48,7 @@ class CashPurchaseTest extends TestCase
     public function testPostCashPurchaseTransaction()
     {
         $cashPurchase = CashPurchase::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 'account_type' => Account::BANK,
             ]),
             Carbon::now(),
@@ -57,10 +57,10 @@ class CashPurchaseTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::OPERATING_EXPENSE
             ])->id,
         ]);
@@ -99,7 +99,7 @@ class CashPurchaseTest extends TestCase
     public function testCashPurchaseLineItemAccount()
     {
         $cashPurchase = CashPurchase::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 'account_type' => Account::BANK,
             ]),
             Carbon::now(),
@@ -114,10 +114,10 @@ class CashPurchaseTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::RECONCILIATION
             ])->id,
         ]);
@@ -134,7 +134,7 @@ class CashPurchaseTest extends TestCase
     public function testCashPurchaseMainAccount()
     {
         $cashPurchase = CashPurchase::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 'account_type' => Account::RECONCILIATION,
             ]),
             Carbon::now(),
@@ -145,10 +145,10 @@ class CashPurchaseTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::RECONCILIATION
             ])->id,
         ]);

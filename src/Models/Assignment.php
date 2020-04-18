@@ -6,27 +6,27 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Models;
+namespace Ekmungai\IFRS\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use App\Interfaces\Segragatable;
-use App\Interfaces\Assignable;
-use App\Interfaces\Clearable;
+use Ekmungai\IFRS\Interfaces\Segragatable;
+use Ekmungai\IFRS\Interfaces\Assignable;
+use Ekmungai\IFRS\Interfaces\Clearable;
 
-use App\Traits\Segragating;
+use Ekmungai\IFRS\Traits\Segragating;
 
-use App\Exceptions\InsufficientBalance;
-use App\Exceptions\OverClearance;
-use App\Exceptions\SelfClearance;
-use App\Exceptions\UnassignableTransaction;
-use App\Exceptions\UnclearableTransaction;
-use App\Exceptions\UnpostedAssignment;
-use App\Exceptions\InvalidClearanceAccount;
-use App\Exceptions\InvalidClearanceCurrency;
-use App\Exceptions\InvalidClearanceEntry;
-use App\Exceptions\NegativeAmount;
+use Ekmungai\IFRS\Exceptions\InsufficientBalance;
+use Ekmungai\IFRS\Exceptions\OverClearance;
+use Ekmungai\IFRS\Exceptions\SelfClearance;
+use Ekmungai\IFRS\Exceptions\UnassignableTransaction;
+use Ekmungai\IFRS\Exceptions\UnclearableTransaction;
+use Ekmungai\IFRS\Exceptions\UnpostedAssignment;
+use Ekmungai\IFRS\Exceptions\InvalidClearanceAccount;
+use Ekmungai\IFRS\Exceptions\InvalidClearanceCurrency;
+use Ekmungai\IFRS\Exceptions\InvalidClearanceEntry;
+use Ekmungai\IFRS\Exceptions\NegativeAmount;
 
 /**
  * Class Assignment

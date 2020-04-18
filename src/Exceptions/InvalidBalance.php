@@ -6,9 +6,9 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Exceptions;
+namespace Ekmungai\IFRS\Exceptions;
 
-use App\Models\Balance;
+use Ekmungai\IFRS\Models\Balance;
 
 /**
  *

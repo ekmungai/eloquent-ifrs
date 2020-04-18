@@ -6,7 +6,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Traits;
+namespace Ekmungai\IFRS\Traits;
 
 /**
  *
@@ -35,6 +35,6 @@ trait Clearing
      */
     public function clearances()
     {
-        return $this->morphMany('App\Models\Assignment', 'cleared');
+        return $this->morphMany('Ekmungai\IFRS\Models\Assignment', 'cleared');
     }
 }

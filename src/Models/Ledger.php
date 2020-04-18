@@ -6,16 +6,16 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Models;
+namespace Ekmungai\IFRS\Models;
 
 use Carbon\Carbon;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use App\Interfaces\Segragatable;
+use Ekmungai\IFRS\Interfaces\Segragatable;
 
-use App\Traits\Segragating;
+use Ekmungai\IFRS\Traits\Segragating;
 
 /**
  * Class Ledger
@@ -163,7 +163,7 @@ class Ledger extends Model implements Segragatable
      */
     public function postAccount()
     {
-        return $this->HasOne('App\Models\Account', 'id', 'post_account');
+        return $this->HasOne('Ekmungai\IFRS\Models\Account', 'id', 'post_account');
     }
 
     /**
@@ -173,7 +173,7 @@ class Ledger extends Model implements Segragatable
      */
     public function folioAccount()
     {
-        return $this->HasOne('App\Models\Account', 'id', 'folio_account');
+        return $this->HasOne('Ekmungai\IFRS\Models\Account', 'id', 'folio_account');
     }
 
     /**
@@ -183,7 +183,7 @@ class Ledger extends Model implements Segragatable
      */
     public function lineItem()
     {
-        return $this->BelongsTo('App\Models\LineItem', 'line_item_id', 'id');
+        return $this->BelongsTo('Ekmungai\IFRS\Models\LineItem', 'line_item_id', 'id');
     }
 
     /**

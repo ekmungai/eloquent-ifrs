@@ -6,21 +6,21 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Transactions;
+namespace Ekmungai\IFRS\Transactions;
 
 use Carbon\Carbon;
 
-use App\Interfaces\Findable;
-use App\Interfaces\Instantiable;
+use Ekmungai\IFRS\Interfaces\Findable;
+use Ekmungai\IFRS\Interfaces\Instantiable;
 
-use App\Traits\Finding;
-use App\Traits\Instantiating;
+use Ekmungai\IFRS\Traits\Finding;
+use Ekmungai\IFRS\Traits\Instantiating;
 
-use App\Models\LineItem;
-use App\Models\Currency;
-use App\Models\ExchangeRate;
-use App\Models\Account;
-use App\Models\Transaction;
+use Ekmungai\IFRS\Models\LineItem;
+use Ekmungai\IFRS\Models\Currency;
+use Ekmungai\IFRS\Models\ExchangeRate;
+use Ekmungai\IFRS\Models\Account;
+use Ekmungai\IFRS\Models\Transaction;
 
 /**
  *

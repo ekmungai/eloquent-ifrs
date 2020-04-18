@@ -2,14 +2,14 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Transactions\JournalEntry;
-use App\Models\Transaction;
+use Ekmungai\IFRS\Transactions\JournalEntry;
+use Ekmungai\IFRS\Models\Transaction;
 use Carbon\Carbon;
 use Faker\Generator as Faker;
 
 $factory->define(JournalEntry::class, function (Faker $faker) {
     return [
-        'account_id' => factory('App\Models\Account')->create()->id,
+        'account_id' => factory('Ekmungai\IFRS\Models\Account')->create()->id,
         'date'=> Carbon::now(),
         'narration'=> $faker->word,
         'transaction_type'=> Transaction::JN,

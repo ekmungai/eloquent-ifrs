@@ -4,31 +4,31 @@ namespace Tests\Unit;
 
 use Carbon\Carbon;
 
-use Tests\TestCase;
+use Ekmungai\IFRS\Tests\TestCase;
 
-use App\Models\Account;
-use App\Models\Assignment;
-use App\Models\Currency;
-use App\Models\ReportingPeriod;
-use App\Models\User;
-use App\Models\Vat;
-use App\Models\LineItem;
-use App\Models\Balance;
+use Ekmungai\IFRS\Models\Account;
+use Ekmungai\IFRS\Models\Assignment;
+use Ekmungai\IFRS\Models\Currency;
+use Ekmungai\IFRS\Models\ReportingPeriod;
+use Ekmungai\IFRS\Models\User;
+use Ekmungai\IFRS\Models\Vat;
+use Ekmungai\IFRS\Models\LineItem;
+use Ekmungai\IFRS\Models\Balance;
 
-use App\Transactions\JournalEntry;
-use App\Transactions\ClientInvoice;
-use App\Transactions\ClientReceipt;
+use Ekmungai\IFRS\Transactions\JournalEntry;
+use Ekmungai\IFRS\Transactions\ClientInvoice;
+use Ekmungai\IFRS\Transactions\ClientReceipt;
 
-use App\Exceptions\InsufficientBalance;
-use App\Exceptions\OverClearance;
-use App\Exceptions\SelfClearance;
-use App\Exceptions\UnpostedAssignment;
-use App\Exceptions\UnassignableTransaction;
-use App\Exceptions\UnclearableTransaction;
-use App\Exceptions\InvalidClearanceAccount;
-use App\Exceptions\InvalidClearanceCurrency;
-use App\Exceptions\InvalidClearanceEntry;
-use App\Exceptions\NegativeAmount;
+use Ekmungai\IFRS\Exceptions\InsufficientBalance;
+use Ekmungai\IFRS\Exceptions\OverClearance;
+use Ekmungai\IFRS\Exceptions\SelfClearance;
+use Ekmungai\IFRS\Exceptions\UnpostedAssignment;
+use Ekmungai\IFRS\Exceptions\UnassignableTransaction;
+use Ekmungai\IFRS\Exceptions\UnclearableTransaction;
+use Ekmungai\IFRS\Exceptions\InvalidClearanceAccount;
+use Ekmungai\IFRS\Exceptions\InvalidClearanceCurrency;
+use Ekmungai\IFRS\Exceptions\InvalidClearanceEntry;
+use Ekmungai\IFRS\Exceptions\NegativeAmount;
 
 class AssignmentTest extends TestCase
 {

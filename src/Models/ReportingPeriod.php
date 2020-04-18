@@ -6,7 +6,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Models;
+namespace Ekmungai\IFRS\Models;
 
 use Carbon\Carbon;
 
@@ -14,13 +14,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
-use App\Interfaces\Segragatable;
-use App\Interfaces\Recyclable;
+use Ekmungai\IFRS\Interfaces\Segragatable;
+use Ekmungai\IFRS\Interfaces\Recyclable;
 
-use App\Traits\Segragating;
-use App\Traits\Recycling;
+use Ekmungai\IFRS\Traits\Segragating;
+use Ekmungai\IFRS\Traits\Recycling;
 
-use App\Exceptions\MissingReportingPeriod;
+use Ekmungai\IFRS\Exceptions\MissingReportingPeriod;
 
 /**
  * Class ReportingPeriod

@@ -4,21 +4,21 @@ namespace Tests\Feature;
 
 use Carbon\Carbon;
 
-use Tests\TestCase;
+use Ekmungai\IFRS\Tests\TestCase;
 
-use App\Models\Account;
-use App\Models\Balance;
-use App\Models\LineItem;
+use Ekmungai\IFRS\Models\Account;
+use Ekmungai\IFRS\Models\Balance;
+use Ekmungai\IFRS\Models\LineItem;
 
-use App\Reports\BalanceSheet;
-use App\Reports\IncomeStatement;
-use App\Reports\TrialBalance;
+use Ekmungai\IFRS\Reports\BalanceSheet;
+use Ekmungai\IFRS\Reports\IncomeStatement;
+use Ekmungai\IFRS\Reports\TrialBalance;
 
-use App\Transactions\JournalEntry;
-use App\Transactions\SupplierBill;
-use App\Transactions\CashPurchase;
-use App\Transactions\ContraEntry;
-use App\Transactions\ClientInvoice;
+use Ekmungai\IFRS\Transactions\JournalEntry;
+use Ekmungai\IFRS\Transactions\SupplierBill;
+use Ekmungai\IFRS\Transactions\CashPurchase;
+use Ekmungai\IFRS\Transactions\ContraEntry;
+use Ekmungai\IFRS\Transactions\ClientInvoice;
 
 class TrialBalanceTest extends TestCase
 {
@@ -50,7 +50,7 @@ class TrialBalanceTest extends TestCase
             "year" => date("Y"),
             "account_id" => $nonCurrentAsset,
             "balance_type" => Balance::D,
-            "exchange_rate_id" => factory('App\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
@@ -58,7 +58,7 @@ class TrialBalanceTest extends TestCase
 
         //transaction
         $bill = SupplierBill::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 'account_type' => Account::PAYABLE,
             ]),
             Carbon::now(),
@@ -80,7 +80,7 @@ class TrialBalanceTest extends TestCase
             "year" => date("Y"),
             "account_id" => $contraAsset,
             "balance_type" => Balance::D,
-            "exchange_rate_id" => factory('App\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
@@ -102,7 +102,7 @@ class TrialBalanceTest extends TestCase
             "year" => date("Y"),
             "account_id" => $inventory,
             "balance_type" => Balance::D,
-            "exchange_rate_id" => factory('App\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
@@ -110,7 +110,7 @@ class TrialBalanceTest extends TestCase
 
         //transaction
         $cashPurchase = CashPurchase::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 'account_type' => Account::BANK,
             ]),
             Carbon::now(),
@@ -130,7 +130,7 @@ class TrialBalanceTest extends TestCase
             "year" => date("Y"),
             "account_id" => $bank,
             "balance_type" => Balance::D,
-            "exchange_rate_id" => factory('App\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
@@ -138,7 +138,7 @@ class TrialBalanceTest extends TestCase
 
         //transaction
         $contraEntry = ContraEntry::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 'account_type' => Account::BANK,
             ]),
             Carbon::now(),
@@ -147,7 +147,7 @@ class TrialBalanceTest extends TestCase
 
         $contraEntry->addLineItem(factory(LineItem::class)->create([
             "account_id" => $bank,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]));
@@ -163,7 +163,7 @@ class TrialBalanceTest extends TestCase
             "year" => date("Y"),
             "account_id" => $currentAsset,
             "balance_type" => Balance::D,
-            "exchange_rate_id" => factory('App\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
@@ -185,7 +185,7 @@ class TrialBalanceTest extends TestCase
             "year" => date("Y"),
             "account_id" => $receivable,
             "balance_type" => Balance::D,
-            "exchange_rate_id" => factory('App\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
@@ -195,7 +195,7 @@ class TrialBalanceTest extends TestCase
         $clientInvoice = ClientInvoice::new($receivable, Carbon::now(), $this->faker->word);
 
         $clientInvoice->addLineItem(factory(LineItem::class)->create([
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 'account_type' => Account::OPERATING_REVENUE,
             ])->id,
         ]));
@@ -216,7 +216,7 @@ class TrialBalanceTest extends TestCase
             "year" => date("Y"),
             "account_id" => $nonCurrentLiability,
             "balance_type" => Balance::C,
-            "exchange_rate_id" => factory('App\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
@@ -238,7 +238,7 @@ class TrialBalanceTest extends TestCase
             "year" => date("Y"),
             "account_id" => $controlAccount,
             "balance_type" => Balance::C,
-            "exchange_rate_id" => factory('App\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
@@ -260,7 +260,7 @@ class TrialBalanceTest extends TestCase
             "year" => date("Y"),
             "account_id" => $currentLiability,
             "balance_type" => Balance::C,
-            "exchange_rate_id" => factory('App\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
@@ -282,7 +282,7 @@ class TrialBalanceTest extends TestCase
             "year" => date("Y"),
             "account_id" => $payable,
             "balance_type" => Balance::C,
-            "exchange_rate_id" => factory('App\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
@@ -304,7 +304,7 @@ class TrialBalanceTest extends TestCase
             "year" => date("Y"),
             "account_id" => $reconciliation,
             "balance_type" => Balance::C,
-            "exchange_rate_id" => factory('App\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
@@ -331,7 +331,7 @@ class TrialBalanceTest extends TestCase
             "year" => date("Y"),
             "account_id" => $equity,
             "balance_type" => Balance::C,
-            "exchange_rate_id" => factory('App\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
@@ -367,7 +367,7 @@ class TrialBalanceTest extends TestCase
 
         //transaction
         $cashPurchase = CashPurchase::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 'account_type' => Account::BANK,
             ]),
             Carbon::now(),
@@ -409,7 +409,7 @@ class TrialBalanceTest extends TestCase
 
         //transaction
         $cashPurchase = CashPurchase::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 'account_type' => Account::BANK,
             ]),
             Carbon::now(),

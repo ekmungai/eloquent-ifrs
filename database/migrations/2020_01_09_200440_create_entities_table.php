@@ -41,7 +41,6 @@ class CreateEntitiesTable extends Migration
                 $table->timestamps();
             }
         );
-
     }
 
     /**

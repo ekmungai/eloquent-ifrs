@@ -6,11 +6,11 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Reports;
+namespace Ekmungai\IFRS\Reports;
 
 use Carbon\Carbon;
 
-use App\Models\ReportingPeriod;
+use Ekmungai\IFRS\Models\ReportingPeriod;
 
 class BalanceSheet extends FinancialStatement
 {

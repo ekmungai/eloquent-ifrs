@@ -4,23 +4,23 @@ namespace Tests\Unit;
 
 use Carbon\Carbon;
 
-use Tests\TestCase;
+use Ekmungai\IFRS\Tests\TestCase;
 
-use App\Models\Account;
-use App\Models\Category;
-use App\Models\Currency;
-use App\Models\RecycledObject;
-use App\Models\User;
-use App\Models\Balance;
-use App\Models\ExchangeRate;
-use App\Models\Ledger;
-use App\Models\Vat;
-use App\Models\LineItem;
+use Ekmungai\IFRS\Models\Account;
+use Ekmungai\IFRS\Models\Category;
+use Ekmungai\IFRS\Models\Currency;
+use Ekmungai\IFRS\Models\RecycledObject;
+use Ekmungai\IFRS\Models\User;
+use Ekmungai\IFRS\Models\Balance;
+use Ekmungai\IFRS\Models\ExchangeRate;
+use Ekmungai\IFRS\Models\Ledger;
+use Ekmungai\IFRS\Models\Vat;
+use Ekmungai\IFRS\Models\LineItem;
 
-use App\Transactions\ClientInvoice;
+use Ekmungai\IFRS\Transactions\ClientInvoice;
 
-use App\Exceptions\HangingTransactions;
-use App\Exceptions\MissingAccountType;
+use Ekmungai\IFRS\Exceptions\HangingTransactions;
+use Ekmungai\IFRS\Exceptions\MissingAccountType;
 
 class AccountTest extends TestCase
 {
@@ -320,7 +320,7 @@ class AccountTest extends TestCase
             "year" => date("Y"),
             "account_id" => $account1->id,
             "balance_type" => Balance::D,
-            "exchange_rate_id" => factory('App\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 50
@@ -330,7 +330,7 @@ class AccountTest extends TestCase
             "year" => date("Y"),
             "account_id" => $account1->id,
             "balance_type" => Balance::C,
-            "exchange_rate_id" => factory('App\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 40

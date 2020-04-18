@@ -2,15 +2,15 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use Ekmungai\IFRS\Tests\TestCase;
 
 use Illuminate\Support\Facades\Auth;
 
-use App\Models\RecycledObject;
-use App\Models\ReportingPeriod;
-use App\Models\User;
+use Ekmungai\IFRS\Models\RecycledObject;
+use Ekmungai\IFRS\Models\ReportingPeriod;
+use Ekmungai\IFRS\Models\User;
 
-use App\Exceptions\MissingReportingPeriod;
+use Ekmungai\IFRS\Exceptions\MissingReportingPeriod;
 
 class ReportingPeriodTest extends TestCase
 {

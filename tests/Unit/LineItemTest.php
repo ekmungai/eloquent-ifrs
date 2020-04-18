@@ -2,16 +2,16 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use Ekmungai\IFRS\Tests\TestCase;
 
-use App\Models\Account;
-use App\Models\LineItem;
-use App\Models\User;
-use App\Models\Vat;
-use App\Models\Transaction;
+use Ekmungai\IFRS\Models\Account;
+use Ekmungai\IFRS\Models\LineItem;
+use Ekmungai\IFRS\Models\User;
+use Ekmungai\IFRS\Models\Vat;
+use Ekmungai\IFRS\Models\Transaction;
 
-use App\Exceptions\MissingVatAccount;
-use App\Exceptions\NegativeAmount;
+use Ekmungai\IFRS\Exceptions\MissingVatAccount;
+use Ekmungai\IFRS\Exceptions\NegativeAmount;
 
 class LineItemTest extends TestCase
 {

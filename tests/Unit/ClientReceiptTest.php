@@ -6,19 +6,19 @@ use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Auth;
 
-use Tests\TestCase;
+use Ekmungai\IFRS\Tests\TestCase;
 
-use App\Models\Account;
-use App\Models\Balance;
-use App\Models\Currency;
-use App\Models\Ledger;
-use App\Models\LineItem;
+use Ekmungai\IFRS\Models\Account;
+use Ekmungai\IFRS\Models\Balance;
+use Ekmungai\IFRS\Models\Currency;
+use Ekmungai\IFRS\Models\Ledger;
+use Ekmungai\IFRS\Models\LineItem;
 
-use App\Transactions\ClientReceipt;
+use Ekmungai\IFRS\Transactions\ClientReceipt;
 
-use App\Exceptions\LineItemAccount;
-use App\Exceptions\MainAccount;
-use App\Exceptions\VatCharge;
+use Ekmungai\IFRS\Exceptions\LineItemAccount;
+use Ekmungai\IFRS\Exceptions\MainAccount;
+use Ekmungai\IFRS\Exceptions\VatCharge;
 
 class ClientReceiptTest extends TestCase
 {
@@ -49,7 +49,7 @@ class ClientReceiptTest extends TestCase
     public function testPostClientReceiptTransaction()
     {
         $clientReceipt = ClientReceipt::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 'account_type' => Account::RECEIVABLE,
             ]),
             Carbon::now(),
@@ -58,10 +58,10 @@ class ClientReceiptTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::BANK
             ])->id,
         ]);
@@ -90,7 +90,7 @@ class ClientReceiptTest extends TestCase
     public function testClientReceiptLineItemAccount()
     {
         $clientReceipt = ClientReceipt::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 'account_type' => Account::RECEIVABLE,
             ]),
             Carbon::now(),
@@ -101,10 +101,10 @@ class ClientReceiptTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::RECONCILIATION
             ])->id,
         ]);
@@ -121,7 +121,7 @@ class ClientReceiptTest extends TestCase
     public function testClientReceiptMainAccount()
     {
         $clientReceipt = ClientReceipt::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 'account_type' => Account::RECONCILIATION,
             ]),
             Carbon::now(),
@@ -132,10 +132,10 @@ class ClientReceiptTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::BANK
             ])->id,
         ]);
@@ -152,7 +152,7 @@ class ClientReceiptTest extends TestCase
     public function testClientReceiptVatCharge()
     {
         $clientReceipt = ClientReceipt::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 'account_type' => Account::RECEIVABLE,
             ]),
             Carbon::now(),
@@ -163,10 +163,10 @@ class ClientReceiptTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 10
             ])->id,
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::BANK
             ])->id,
         ]);

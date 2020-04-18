@@ -37,7 +37,6 @@ class CreateCurrenciesTable extends Migration
                 $table->timestamps();
             }
         );
-
     }
 
     /**

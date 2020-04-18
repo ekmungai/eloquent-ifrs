@@ -4,27 +4,27 @@ namespace Tests\Unit;
 
 use Carbon\Carbon;
 
-use Tests\TestCase;
+use Ekmungai\IFRS\Tests\TestCase;
 
-use App\Models\Account;
-use App\Models\Assignment;
-use App\Models\Currency;
-use App\Models\Entity;
-use App\Models\ExchangeRate;
-use App\Models\LineItem;
-use App\Models\RecycledObject;
-use App\Models\ReportingPeriod;
-use App\Models\Transaction;
-use App\Models\User;
-use App\Models\Vat;
+use Ekmungai\IFRS\Models\Account;
+use Ekmungai\IFRS\Models\Assignment;
+use Ekmungai\IFRS\Models\Currency;
+use Ekmungai\IFRS\Models\Entity;
+use Ekmungai\IFRS\Models\ExchangeRate;
+use Ekmungai\IFRS\Models\LineItem;
+use Ekmungai\IFRS\Models\RecycledObject;
+use Ekmungai\IFRS\Models\ReportingPeriod;
+use Ekmungai\IFRS\Models\Transaction;
+use Ekmungai\IFRS\Models\User;
+use Ekmungai\IFRS\Models\Vat;
 
-use App\Transactions\JournalEntry;
-use App\Transactions\ClientInvoice;
+use Ekmungai\IFRS\Transactions\JournalEntry;
+use Ekmungai\IFRS\Transactions\ClientInvoice;
 
-use App\Exceptions\RedundantTransaction;
-use App\Exceptions\HangingClearances;
-use App\Exceptions\MissingLineItem;
-use App\Exceptions\PostedTransaction;
+use Ekmungai\IFRS\Exceptions\RedundantTransaction;
+use Ekmungai\IFRS\Exceptions\HangingClearances;
+use Ekmungai\IFRS\Exceptions\MissingLineItem;
+use Ekmungai\IFRS\Exceptions\PostedTransaction;
 
 class TransactionTest extends TestCase
 {
@@ -165,9 +165,9 @@ class TransactionTest extends TestCase
     public function testTransactionLineItems()
     {
         $transaction = new Transaction();
-        $transaction->account_id = factory('App\Models\Account')->create()->id;
-        $transaction->exchange_rate_id = factory('App\Models\ExchangeRate')->create()->id;
-        $transaction->currency_id = factory('App\Models\Currency')->create()->id;
+        $transaction->account_id = factory('Ekmungai\IFRS\Models\Account')->create()->id;
+        $transaction->exchange_rate_id = factory('Ekmungai\IFRS\Models\ExchangeRate')->create()->id;
+        $transaction->currency_id = factory('Ekmungai\IFRS\Models\Currency')->create()->id;
         $transaction->date = Carbon::now();
         $transaction->narration = $this->faker->word;
         $transaction->transaction_no = $this->faker->word;
@@ -227,7 +227,7 @@ class TransactionTest extends TestCase
     public function testPostedTransactionRemoveLineItem()
     {
         $transaction = JournalEntry::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 'account_type' => Account::RECONCILIATION,
             ]),
             Carbon::now(),
@@ -236,10 +236,10 @@ class TransactionTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::RECONCILIATION
             ])->id,
         ]);
@@ -260,7 +260,7 @@ class TransactionTest extends TestCase
      */
     public function testRedundantTransaction()
     {
-        $account = factory('App\Models\Account')->create([
+        $account = factory('Ekmungai\IFRS\Models\Account')->create([
             'account_type' => Account::RECONCILIATION,
         ]);
         $transaction = JournalEntry::new(
@@ -271,7 +271,7 @@ class TransactionTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
             "account_id" => $account->id,

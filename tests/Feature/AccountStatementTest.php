@@ -4,29 +4,29 @@ namespace Tests\Feature;
 
 use Carbon\Carbon;
 
-use Tests\TestCase;
+use Ekmungai\IFRS\Tests\TestCase;
 
-use App\Models\Account;
-use App\Models\Balance;
-use App\Models\ExchangeRate;
-use App\Models\LineItem;
-use App\Models\ReportingPeriod;
-use App\Models\User;
+use Ekmungai\IFRS\Models\Account;
+use Ekmungai\IFRS\Models\Balance;
+use Ekmungai\IFRS\Models\ExchangeRate;
+use Ekmungai\IFRS\Models\LineItem;
+use Ekmungai\IFRS\Models\ReportingPeriod;
+use Ekmungai\IFRS\Models\User;
 
-use App\Reports\AccountStatement;
+use Ekmungai\IFRS\Reports\AccountStatement;
 
-use App\Transactions\CashSale;
-use App\Transactions\ContraEntry;
-use App\Transactions\ClientReceipt;
-use App\Transactions\CashPurchase;
-use App\Transactions\SupplierPayment;
-use App\Transactions\JournalEntry;
-use App\Transactions\ClientInvoice;
-use App\Transactions\CreditNote;
-use App\Transactions\SupplierBill;
-use App\Transactions\DebitNote;
+use Ekmungai\IFRS\Transactions\CashSale;
+use Ekmungai\IFRS\Transactions\ContraEntry;
+use Ekmungai\IFRS\Transactions\ClientReceipt;
+use Ekmungai\IFRS\Transactions\CashPurchase;
+use Ekmungai\IFRS\Transactions\SupplierPayment;
+use Ekmungai\IFRS\Transactions\JournalEntry;
+use Ekmungai\IFRS\Transactions\ClientInvoice;
+use Ekmungai\IFRS\Transactions\CreditNote;
+use Ekmungai\IFRS\Transactions\SupplierBill;
+use Ekmungai\IFRS\Transactions\DebitNote;
 
-use App\Exceptions\MissingAccount;
+use Ekmungai\IFRS\Exceptions\MissingAccount;
 
 class AccountStatementTest extends TestCase
 {
@@ -91,10 +91,10 @@ class AccountStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::OPERATING_REVENUE
             ])->id,
         ]);
@@ -104,7 +104,7 @@ class AccountStatementTest extends TestCase
 
         //Credit Contra Entry Transaction
         $creditContraEntry = ContraEntry::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 'account_type' => Account::BANK,
             ]),
             Carbon::now(),
@@ -114,7 +114,7 @@ class AccountStatementTest extends TestCase
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
             "account_id" => $account->id,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -127,10 +127,10 @@ class AccountStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::BANK
             ])->id,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -140,7 +140,7 @@ class AccountStatementTest extends TestCase
 
         //Client Receipt Transaction
         $clientReceipt = ClientReceipt::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::RECEIVABLE
             ]),
             Carbon::now(),
@@ -150,7 +150,7 @@ class AccountStatementTest extends TestCase
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
             "account_id" => $account->id,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -163,8 +163,8 @@ class AccountStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 75,
-            "vat_id" => factory('App\Models\Vat')->create(["rate" => 16])->id,
-            "account_id" => factory('App\Models\Account')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create(["rate" => 16])->id,
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::OTHER_EXPENSE
             ])->id,
         ]);
@@ -174,7 +174,7 @@ class AccountStatementTest extends TestCase
 
         //Supplier Payment Transaction
         $supplierPayment = SupplierPayment::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::PAYABLE
             ]),
             Carbon::now(),
@@ -183,7 +183,7 @@ class AccountStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
             "account_id" => $account->id,
@@ -197,7 +197,7 @@ class AccountStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -207,7 +207,7 @@ class AccountStatementTest extends TestCase
 
         //Debit Joutnal Entry Transaction
         $debitJournalEntry = JournalEntry::new(
-            factory('App\Models\Account')->create(),
+            factory('Ekmungai\IFRS\Models\Account')->create(),
             Carbon::now(),
             $this->faker->word
         );
@@ -215,7 +215,7 @@ class AccountStatementTest extends TestCase
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
             "account_id" => $account->id,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -300,8 +300,8 @@ class AccountStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('App\Models\Vat')->create(["rate" => 16])->id,
-            "account_id" => factory('App\Models\Account')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create(["rate" => 16])->id,
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::OPERATING_REVENUE
             ])->id,
         ]);
@@ -314,10 +314,10 @@ class AccountStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::OPERATING_REVENUE
             ])->id,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
         ]);
@@ -330,10 +330,10 @@ class AccountStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::BANK
             ])->id,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -346,7 +346,7 @@ class AccountStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -356,7 +356,7 @@ class AccountStatementTest extends TestCase
 
         //Debit Journal Entry Transaction
         $debitJournalEntry = JournalEntry::new(
-            factory('App\Models\Account')->create(),
+            factory('Ekmungai\IFRS\Models\Account')->create(),
             Carbon::now(),
             $this->faker->word
         );
@@ -364,7 +364,7 @@ class AccountStatementTest extends TestCase
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
             "account_id" => $account->id,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -438,8 +438,8 @@ class AccountStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('App\Models\Vat')->create(["rate" => 16])->id,
-            "account_id" => factory('App\Models\Account')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create(["rate" => 16])->id,
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::OPERATING_EXPENSE
             ])->id,
         ]);
@@ -452,10 +452,10 @@ class AccountStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::OVERHEAD_EXPENSE
             ])->id,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
         ]);
@@ -468,10 +468,10 @@ class AccountStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::BANK
             ])->id,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -484,7 +484,7 @@ class AccountStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -494,7 +494,7 @@ class AccountStatementTest extends TestCase
 
         //Debit Journal Entry Transaction
         $debitJournalEntry = JournalEntry::new(
-            factory('App\Models\Account')->create(),
+            factory('Ekmungai\IFRS\Models\Account')->create(),
             Carbon::now(),
             $this->faker->word
         );
@@ -502,7 +502,7 @@ class AccountStatementTest extends TestCase
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
             "account_id" => $account->id,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);

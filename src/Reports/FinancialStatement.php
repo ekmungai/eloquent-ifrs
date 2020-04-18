@@ -6,13 +6,13 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Reports;
+namespace Ekmungai\IFRS\Reports;
 
 use Illuminate\Support\Facades\Auth;
 
-use App\Models\Account;
-use App\Models\Entity;
-use App\Models\ReportingPeriod;
+use Ekmungai\IFRS\Models\Account;
+use Ekmungai\IFRS\Models\Entity;
+use Ekmungai\IFRS\Models\ReportingPeriod;
 
 /**
  *
@@ -118,7 +118,7 @@ abstract class FinancialStatement
     /**
      * Get Statements Entity.
      *
-     * @return \App\Models\Entity
+     * @return \Ekmungai\IFRS\Models\Entity
      */
     public function getEntity()
     {
@@ -128,7 +128,7 @@ abstract class FinancialStatement
     /**
      * Set Statement Entity.
      *
-     * @param \App\Models\Entity $entity
+     * @param \Ekmungai\IFRS\Models\Entity $entity
      */
     public function setEntity(Entity $entity) : void
     {

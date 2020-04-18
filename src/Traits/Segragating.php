@@ -6,15 +6,15 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Traits;
+namespace Ekmungai\IFRS\Traits;
 
 use Illuminate\Support\Facades\Auth;
 
-use App\Models\Entity;
+use Ekmungai\IFRS\Models\Entity;
 
-use App\Scopes\EntityScope;
+use Ekmungai\IFRS\Scopes\EntityScope;
 
-use App\Exceptions\UnauthorizedUser;
+use Ekmungai\IFRS\Exceptions\UnauthorizedUser;
 
 trait Segragating
 {
@@ -32,7 +32,7 @@ trait Segragating
             function ($model) {
 
                 // only users can be created without requiring to be logged on
-                if (!Auth::check() && !is_a($model, "App\Models\User")) {
+                if (!Auth::check() && !is_a($model, "Ekmungai\IFRS\Models\User")) {
                     throw new UnauthorizedUser();
                 }
 

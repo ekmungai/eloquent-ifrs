@@ -6,19 +6,19 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Models;
+namespace Ekmungai\IFRS\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use App\Interfaces\Recyclable;
-use App\Interfaces\Segragatable;
+use Ekmungai\IFRS\Interfaces\Recyclable;
+use Ekmungai\IFRS\Interfaces\Segragatable;
 
-use App\Traits\Segragating;
-use App\Traits\Recycling;
+use Ekmungai\IFRS\Traits\Segragating;
+use Ekmungai\IFRS\Traits\Recycling;
 
-use App\Exceptions\MissingVatAccount;
-use App\Exceptions\NegativeAmount;
+use Ekmungai\IFRS\Exceptions\MissingVatAccount;
+use Ekmungai\IFRS\Exceptions\NegativeAmount;
 
 /**
  * Class LineItem
@@ -81,7 +81,7 @@ class LineItem extends Model implements Recyclable, Segragatable
      */
     public function ledgers()
     {
-        return $this->HasMany('App\Models\Ledger', 'line_item_id', 'id');
+        return $this->HasMany('Ekmungai\IFRS\Models\Ledger', 'line_item_id', 'id');
     }
 
     /**
@@ -121,7 +121,7 @@ class LineItem extends Model implements Recyclable, Segragatable
      */
     public function vatAccount()
     {
-        return $this->HasOne('App\Models\Account', 'id', 'vat_account_id');
+        return $this->HasOne('Ekmungai\IFRS\Models\Account', 'id', 'vat_account_id');
     }
 
     /**

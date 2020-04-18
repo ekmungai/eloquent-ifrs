@@ -6,7 +6,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Models;
+namespace Ekmungai\IFRS\Models;
 
 use Carbon\Carbon;
 
@@ -14,20 +14,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
-use App\Interfaces\Segragatable;
-use App\Interfaces\Recyclable;
-use App\Interfaces\Assignable;
-use App\Interfaces\Clearable;
+use Ekmungai\IFRS\Interfaces\Segragatable;
+use Ekmungai\IFRS\Interfaces\Recyclable;
+use Ekmungai\IFRS\Interfaces\Assignable;
+use Ekmungai\IFRS\Interfaces\Clearable;
 
-use App\Traits\Recycling;
-use App\Traits\Segragating;
-use App\Traits\Assigning;
-use App\Traits\Clearing;
+use Ekmungai\IFRS\Traits\Recycling;
+use Ekmungai\IFRS\Traits\Segragating;
+use Ekmungai\IFRS\Traits\Assigning;
+use Ekmungai\IFRS\Traits\Clearing;
 
-use App\Exceptions\MissingLineItem;
-use App\Exceptions\RedundantTransaction;
-use App\Exceptions\PostedTransaction;
-use App\Exceptions\HangingClearances;
+use Ekmungai\IFRS\Exceptions\MissingLineItem;
+use Ekmungai\IFRS\Exceptions\RedundantTransaction;
+use Ekmungai\IFRS\Exceptions\PostedTransaction;
+use Ekmungai\IFRS\Exceptions\HangingClearances;
 
 /**
  * Class Transaction
@@ -62,7 +62,7 @@ class Transaction extends Model implements Assignable, Clearable, Segragatable, 
      * @var array
      */
 
-    const MODELNAME = "App\Models\Transaction";
+    const MODELNAME = "Ekmungai\IFRS\Models\Transaction";
 
     /**
      * Transaction Types
@@ -275,7 +275,7 @@ class Transaction extends Model implements Assignable, Clearable, Segragatable, 
      */
     public function savedLineItems()
     {
-        return $this->HasMany('App\Models\LineItem', 'transaction_id', 'id');
+        return $this->HasMany('Ekmungai\IFRS\Models\LineItem', 'transaction_id', 'id');
     }
 
     /**
@@ -285,7 +285,7 @@ class Transaction extends Model implements Assignable, Clearable, Segragatable, 
      */
     public function ledgers()
     {
-        return $this->HasMany('App\Models\Ledger', 'transaction_id', 'id');
+        return $this->HasMany('Ekmungai\IFRS\Models\Ledger', 'transaction_id', 'id');
     }
 
     /**
@@ -325,7 +325,7 @@ class Transaction extends Model implements Assignable, Clearable, Segragatable, 
      */
     public function assignments()
     {
-        return $this->HasMany('App\Models\Assignment', 'transaction_id', 'id');
+        return $this->HasMany('Ekmungai\IFRS\Models\Assignment', 'transaction_id', 'id');
     }
 
     /**

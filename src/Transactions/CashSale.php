@@ -6,22 +6,22 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Transactions;
+namespace Ekmungai\IFRS\Transactions;
 
 use Carbon\Carbon;
 
-use App\Interfaces\Sells;
-use App\Interfaces\Fetchable;
+use Ekmungai\IFRS\Interfaces\Sells;
+use Ekmungai\IFRS\Interfaces\Fetchable;
 
-use App\Traits\Selling;
-use App\Traits\Fetching;
+use Ekmungai\IFRS\Traits\Selling;
+use Ekmungai\IFRS\Traits\Fetching;
 
-use App\Models\Currency;
-use App\Models\ExchangeRate;
-use App\Models\Transaction;
-use App\Models\Account;
+use Ekmungai\IFRS\Models\Currency;
+use Ekmungai\IFRS\Models\ExchangeRate;
+use Ekmungai\IFRS\Models\Transaction;
+use Ekmungai\IFRS\Models\Account;
 
-use App\Exceptions\MainAccount;
+use Ekmungai\IFRS\Exceptions\MainAccount;
 
 class CashSale extends AbstractTransaction implements Sells, Fetchable
 {
@@ -64,7 +64,6 @@ class CashSale extends AbstractTransaction implements Sells, Fetchable
         ExchangeRate $exchangeRate = null,
         string $reference = null
     ) : AbstractTransaction {
-
         $cashSale = parent::instantiate(self::PREFIX);
 
         $cashSale->newTransaction(

@@ -6,19 +6,19 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Traits;
+namespace Ekmungai\IFRS\Traits;
 
 use Carbon\Carbon;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
-use App\Transactions\AbstractTransaction;
+use Ekmungai\IFRS\Transactions\AbstractTransaction;
 
-use App\Models\Account;
-use App\Models\ReportingPeriod;
-use App\Models\Transaction;
-use App\Models\Currency;
+use Ekmungai\IFRS\Models\Account;
+use Ekmungai\IFRS\Models\ReportingPeriod;
+use Ekmungai\IFRS\Models\Transaction;
+use Ekmungai\IFRS\Models\Currency;
 
 /**
  *

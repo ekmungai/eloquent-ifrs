@@ -6,22 +6,22 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Transactions;
+namespace Ekmungai\IFRS\Transactions;
 
 use Carbon\Carbon;
 
-use App\Models\Account;
-use App\Models\Currency;
-use App\Models\ExchangeRate;
-use App\Models\Transaction;
+use Ekmungai\IFRS\Models\Account;
+use Ekmungai\IFRS\Models\Currency;
+use Ekmungai\IFRS\Models\ExchangeRate;
+use Ekmungai\IFRS\Models\Transaction;
 
-use App\Interfaces\Sells;
-use App\Interfaces\Fetchable;
+use Ekmungai\IFRS\Interfaces\Sells;
+use Ekmungai\IFRS\Interfaces\Fetchable;
 
-use App\Traits\Selling;
-use App\Traits\Fetching;
-use App\Interfaces\Assignable;
-use App\Traits\Assigning;
+use Ekmungai\IFRS\Traits\Selling;
+use Ekmungai\IFRS\Traits\Fetching;
+use Ekmungai\IFRS\Interfaces\Assignable;
+use Ekmungai\IFRS\Traits\Assigning;
 
 class CreditNote extends AbstractTransaction implements Sells, Fetchable, Assignable
 {
@@ -65,7 +65,6 @@ class CreditNote extends AbstractTransaction implements Sells, Fetchable, Assign
         ExchangeRate $exchangeRate = null,
         string $reference = null
     ) : AbstractTransaction {
-
         $creditNote = parent::instantiate(self::PREFIX);
 
         $creditNote->newTransaction(

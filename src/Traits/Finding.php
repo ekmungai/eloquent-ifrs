@@ -6,11 +6,11 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Traits;
+namespace Ekmungai\IFRS\Traits;
 
-use App\Models\Transaction;
+use Ekmungai\IFRS\Models\Transaction;
 
-use App\Transactions\AbstractTransaction;
+use Ekmungai\IFRS\Transactions\AbstractTransaction;
 
 /**
  *

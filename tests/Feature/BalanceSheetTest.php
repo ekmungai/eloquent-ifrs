@@ -4,18 +4,18 @@ namespace Tests\Feature;
 
 use Carbon\Carbon;
 
-use Tests\TestCase;
+use Ekmungai\IFRS\Tests\TestCase;
 
-use App\Models\Account;
-use App\Models\Balance;
-use App\Models\LineItem;
+use Ekmungai\IFRS\Models\Account;
+use Ekmungai\IFRS\Models\Balance;
+use Ekmungai\IFRS\Models\LineItem;
 
-use App\Reports\BalanceSheet;
-use App\Reports\IncomeStatement;
+use Ekmungai\IFRS\Reports\BalanceSheet;
+use Ekmungai\IFRS\Reports\IncomeStatement;
 
-use App\Transactions\SupplierBill;
-use App\Transactions\CashSale;
-use App\Transactions\JournalEntry;
+use Ekmungai\IFRS\Transactions\SupplierBill;
+use Ekmungai\IFRS\Transactions\CashSale;
+use Ekmungai\IFRS\Transactions\JournalEntry;
 
 class BalanceSheetTest extends TestCase
 {
@@ -30,11 +30,11 @@ class BalanceSheetTest extends TestCase
 
         factory(Balance::class)->create([
             "year" => date("Y"),
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::INVENTORY
             ])->id,
             "balance_type" => Balance::D,
-            "exchange_rate_id" => factory('App\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
@@ -42,11 +42,11 @@ class BalanceSheetTest extends TestCase
 
         factory(Balance::class)->create([
             "year" => date("Y"),
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::CURRENT_LIABILITY
             ])->id,
             "balance_type" => Balance::C,
-            "exchange_rate_id" => factory('App\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
@@ -61,14 +61,14 @@ class BalanceSheetTest extends TestCase
         );
 
         $lineItem =  LineItem::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::NON_CURRENT_ASSET
             ]),
-            factory('App\Models\Vat')->create(["rate" => 16]),
+            factory('Ekmungai\IFRS\Models\Vat')->create(["rate" => 16]),
             100,
             1,
             null,
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::CONTROL_ACCOUNT
             ])
         );
@@ -84,14 +84,14 @@ class BalanceSheetTest extends TestCase
         );
 
         $lineItem =  LineItem::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::OPERATING_REVENUE
             ]),
-            factory('App\Models\Vat')->create(["rate" => 16]),
+            factory('Ekmungai\IFRS\Models\Vat')->create(["rate" => 16]),
             200,
             1,
             null,
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::CONTROL_ACCOUNT
             ])
         );
@@ -108,10 +108,10 @@ class BalanceSheetTest extends TestCase
         );
 
         $lineItem = LineItem::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::RECONCILIATION
             ]),
-            factory('App\Models\Vat')->create(["rate" => 0]),
+            factory('Ekmungai\IFRS\Models\Vat')->create(["rate" => 0]),
             70
         );
         $journalEntry->setCredited(false);

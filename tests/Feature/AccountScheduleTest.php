@@ -4,28 +4,28 @@ namespace Tests\Feature;
 
 use Carbon\Carbon;
 
-use Tests\TestCase;
+use Ekmungai\IFRS\Tests\TestCase;
 
-use App\Models\Account;
-use App\Models\Assignment;
-use App\Models\Balance;
-use App\Models\Currency;
-use App\Models\ExchangeRate;
-use App\Models\LineItem;
-use App\Models\ReportingPeriod;
-use App\Models\User;
+use Ekmungai\IFRS\Models\Account;
+use Ekmungai\IFRS\Models\Assignment;
+use Ekmungai\IFRS\Models\Balance;
+use Ekmungai\IFRS\Models\Currency;
+use Ekmungai\IFRS\Models\ExchangeRate;
+use Ekmungai\IFRS\Models\LineItem;
+use Ekmungai\IFRS\Models\ReportingPeriod;
+use Ekmungai\IFRS\Models\User;
 
-use App\Transactions\ClientInvoice;
-use App\Transactions\CreditNote;
-use App\Transactions\ClientReceipt;
-use App\Transactions\JournalEntry;
-use App\Transactions\SupplierBill;
-use App\Transactions\DebitNote;
-use App\Transactions\SupplierPayment;
+use Ekmungai\IFRS\Transactions\ClientInvoice;
+use Ekmungai\IFRS\Transactions\CreditNote;
+use Ekmungai\IFRS\Transactions\ClientReceipt;
+use Ekmungai\IFRS\Transactions\JournalEntry;
+use Ekmungai\IFRS\Transactions\SupplierBill;
+use Ekmungai\IFRS\Transactions\DebitNote;
+use Ekmungai\IFRS\Transactions\SupplierPayment;
 
-use App\Reports\AccountSchedule;
+use Ekmungai\IFRS\Reports\AccountSchedule;
 
-use App\Exceptions\MissingAccount;
+use Ekmungai\IFRS\Exceptions\MissingAccount;
 
 class AccountScheduleTest extends TestCase
 {
@@ -80,10 +80,10 @@ class AccountScheduleTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::BANK
             ])->id,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -94,7 +94,7 @@ class AccountScheduleTest extends TestCase
         factory(Assignment::class)->create([
             'transaction_id'=> $clientReceipt->getId(),
             'cleared_id'=> $balance->id,
-            'cleared_type'=> "App\Models\Balance",
+            'cleared_type'=> "Ekmungai\IFRS\Models\Balance",
             "amount" => 15,
         ]);
 
@@ -103,8 +103,8 @@ class AccountScheduleTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('App\Models\Vat')->create(["rate" => 16])->id,
-            "account_id" => factory('App\Models\Account')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create(["rate" => 16])->id,
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::OPERATING_REVENUE
             ])->id,
         ]);
@@ -117,10 +117,10 @@ class AccountScheduleTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::OPERATING_REVENUE
             ])->id,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
         ]);
@@ -140,7 +140,7 @@ class AccountScheduleTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 75,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -153,8 +153,8 @@ class AccountScheduleTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 30,
-            "account_id" => factory('App\Models\Account')->create()->id,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create()->id,
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -222,10 +222,10 @@ class AccountScheduleTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::BANK
             ])->id,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -236,7 +236,7 @@ class AccountScheduleTest extends TestCase
         factory(Assignment::class)->create([
             'transaction_id'=> $supplierPayment->getId(),
             'cleared_id'=> $balance->id,
-            'cleared_type'=> "App\Models\Balance",
+            'cleared_type'=> "Ekmungai\IFRS\Models\Balance",
             "amount" => 24,
         ]);
 
@@ -245,8 +245,8 @@ class AccountScheduleTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 300,
-            "vat_id" => factory('App\Models\Vat')->create(["rate" => 16])->id,
-            "account_id" => factory('App\Models\Account')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create(["rate" => 16])->id,
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::DIRECT_EXPENSE
             ])->id,
         ]);
@@ -259,10 +259,10 @@ class AccountScheduleTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 175,
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::OVERHEAD_EXPENSE
             ])->id,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
         ]);
@@ -282,7 +282,7 @@ class AccountScheduleTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 180,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -295,8 +295,8 @@ class AccountScheduleTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 240,
-            "account_id" => factory('App\Models\Account')->create()->id,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create()->id,
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
         ]);

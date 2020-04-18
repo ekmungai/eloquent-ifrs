@@ -2,10 +2,10 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use Ekmungai\IFRS\Tests\TestCase;
 
-use App\Models\RecycledObject;
-use App\Models\User;
+use Ekmungai\IFRS\Models\RecycledObject;
+use Ekmungai\IFRS\Models\User;
 
 class RecycledObjectTest extends TestCase
 {

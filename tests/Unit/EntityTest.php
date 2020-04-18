@@ -2,17 +2,17 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use Ekmungai\IFRS\Tests\TestCase;
 
 use Illuminate\Support\Facades\Auth;
 
-use App\Models\Currency;
-use App\Models\Entity;
-use App\Models\RecycledObject;
-use App\Models\User;
-use App\Models\Account;
+use Ekmungai\IFRS\Models\Currency;
+use Ekmungai\IFRS\Models\Entity;
+use Ekmungai\IFRS\Models\RecycledObject;
+use Ekmungai\IFRS\Models\User;
+use Ekmungai\IFRS\Models\Account;
 
-use App\Exceptions\UnauthorizedUser;
+use Ekmungai\IFRS\Exceptions\UnauthorizedUser;
 
 class EntityTest extends TestCase
 {

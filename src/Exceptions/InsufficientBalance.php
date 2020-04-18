@@ -6,9 +6,9 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Exceptions;
+namespace Ekmungai\IFRS\Exceptions;
 
-use App\Models\Transaction;
+use Ekmungai\IFRS\Models\Transaction;
 
 /**
  *
@@ -33,7 +33,6 @@ class InsufficientBalance extends IFRSException
         string $message = null,
         int $code = 0
     ) {
-
         $transactionType = Transaction::getType($transactionType);
         $assignedType = Transaction::getType($assignedType);
 

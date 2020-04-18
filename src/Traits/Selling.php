@@ -6,12 +6,12 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Traits;
+namespace Ekmungai\IFRS\Traits;
 
-use App\Models\Account;
+use Ekmungai\IFRS\Models\Account;
 
-use App\Exceptions\MainAccount;
-use App\Exceptions\LineItemAccount;
+use Ekmungai\IFRS\Exceptions\MainAccount;
+use Ekmungai\IFRS\Exceptions\LineItemAccount;
 
 trait Selling
 {

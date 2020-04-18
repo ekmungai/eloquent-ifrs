@@ -9,8 +9,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\Balance;
-use App\Models\Transaction;
+use Ekmungai\IFRS\Models\Balance;
+use Ekmungai\IFRS\Models\Transaction;
 
 class CreateBalancesTable extends Migration
 {

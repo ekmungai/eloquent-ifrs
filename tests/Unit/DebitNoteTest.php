@@ -6,18 +6,18 @@ use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Auth;
 
-use Tests\TestCase;
+use Ekmungai\IFRS\Tests\TestCase;
 
-use App\Models\Account;
-use App\Models\Balance;
-use App\Models\Currency;
-use App\Models\Ledger;
-use App\Models\LineItem;
+use Ekmungai\IFRS\Models\Account;
+use Ekmungai\IFRS\Models\Balance;
+use Ekmungai\IFRS\Models\Currency;
+use Ekmungai\IFRS\Models\Ledger;
+use Ekmungai\IFRS\Models\LineItem;
 
-use App\Transactions\DebitNote;
+use Ekmungai\IFRS\Transactions\DebitNote;
 
-use App\Exceptions\LineItemAccount;
-use App\Exceptions\MainAccount;
+use Ekmungai\IFRS\Exceptions\LineItemAccount;
+use Ekmungai\IFRS\Exceptions\MainAccount;
 
 class DebitNoteTest extends TestCase
 {
@@ -48,7 +48,7 @@ class DebitNoteTest extends TestCase
     public function testPostDebitNoteTransaction()
     {
         $debitNote = DebitNote::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 'account_type' => Account::PAYABLE,
             ]),
             Carbon::now(),
@@ -57,10 +57,10 @@ class DebitNoteTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::DIRECT_EXPENSE
             ])->id,
         ]);
@@ -99,7 +99,7 @@ class DebitNoteTest extends TestCase
     public function testDebitNoteLineItemAccount()
     {
         $debitNote = DebitNote::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 'account_type' => Account::PAYABLE,
             ]),
             Carbon::now(),
@@ -114,10 +114,10 @@ class DebitNoteTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::RECONCILIATION
             ])->id,
         ]);
@@ -134,7 +134,7 @@ class DebitNoteTest extends TestCase
     public function testDebitNoteMainAccount()
     {
         $debitNote = DebitNote::new(
-            factory('App\Models\Account')->create([
+            factory('Ekmungai\IFRS\Models\Account')->create([
                 'account_type' => Account::RECONCILIATION,
             ]),
             Carbon::now(),
@@ -145,10 +145,10 @@ class DebitNoteTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('App\Models\Vat')->create([
+            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
-            "account_id" => factory('App\Models\Account')->create([
+            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::RECONCILIATION
             ])->id,
         ]);

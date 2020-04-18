@@ -6,10 +6,10 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace App\Exceptions;
+namespace Ekmungai\IFRS\Exceptions;
 
-use App\Models\Transaction;
-use App\Models\Account;
+use Ekmungai\IFRS\Models\Transaction;
+use Ekmungai\IFRS\Models\Account;
 
 /**
  *

@@ -2,13 +2,13 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use Ekmungai\IFRS\Tests\TestCase;
 
-use App\Models\ExchangeRate;
-use App\Models\RecycledObject;
-use App\Models\User;
+use Ekmungai\IFRS\Models\ExchangeRate;
+use Ekmungai\IFRS\Models\RecycledObject;
+use Ekmungai\IFRS\Models\User;
 use Carbon\Carbon;
-use App\Models\Currency;
+use Ekmungai\IFRS\Models\Currency;
 
 class ExchangeRateTest extends TestCase
 {

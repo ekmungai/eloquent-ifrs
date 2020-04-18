@@ -2,11 +2,11 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use Ekmungai\IFRS\Tests\TestCase;
 
-use App\Models\Category;
-use App\Models\RecycledObject;
-use App\Models\User;
+use Ekmungai\IFRS\Models\Category;
+use Ekmungai\IFRS\Models\RecycledObject;
+use Ekmungai\IFRS\Models\User;
 
 class CategoryTest extends TestCase
 {
