@@ -22,7 +22,7 @@ The package supports multiple Entities (Companies), Account Categorization, Tran
 
 ## Installation
 
-Use composer to Install the package into your laravel application. Laravel IFRS requires PHP versions 5.6 - 7.2.
+Use composer to Install the package into your laravel application. Laravel IFRS requires PHP version 7.2 and Laravel Framework version 6.0 and above.
 
 #### For production
 
