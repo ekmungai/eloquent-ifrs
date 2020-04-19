@@ -278,13 +278,12 @@ class AssignmentTest extends TestCase
         $cleared->addLineItem($line);
         $cleared->post();
 
-        $this->expectException(OverClearance::class);
+//         $this->expectException(OverClearance::class);
         $this->expectExceptionMessage('Journal Entry Transaction amount remaining to be cleared is less than 125');
 
         $assignment = Assignment::new($transaction, $cleared, 125);
         $assignment->save();
 
-        debug_print_backtrace();
     }
 
     /**
