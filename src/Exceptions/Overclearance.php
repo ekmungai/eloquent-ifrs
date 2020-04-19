@@ -13,7 +13,7 @@ use Ekmungai\IFRS\Models\Transaction;
 class OverClearance extends IFRSException
 {
     /**
-     * OverClearance Exception
+     * Over Clearance Exception
      *
      * @param string $assignedType
      * @param float $amount
