@@ -1,0 +1,1764 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1587298990">
+  <project timestamp="1587298990">
+    <package name="Ekmungai\IFRS\Exceptions">
+      <file name="C:\laravel-ifrs\src\Exceptions\HangingClearances.php">
+        <class name="Ekmungai\IFRS\Exceptions\HangingClearances" namespace="Ekmungai\IFRS\Exceptions">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="4" coveredelements="4"/>
+        </class>
+        <line num="19" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="21" type="stmt" count="1"/>
+        <line num="23" type="stmt" count="1"/>
+        <line num="24" type="stmt" count="1"/>
+        <metrics loc="25" ncloc="12" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="4" coveredelements="4"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Exceptions\HangingTransactions.php">
+        <class name="Ekmungai\IFRS\Exceptions\HangingTransactions" namespace="Ekmungai\IFRS\Exceptions">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="4" coveredelements="4"/>
+        </class>
+        <line num="19" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="21" type="stmt" count="1"/>
+        <line num="23" type="stmt" count="1"/>
+        <line num="24" type="stmt" count="1"/>
+        <metrics loc="25" ncloc="12" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="4" coveredelements="4"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Exceptions\IFRSException.php">
+        <class name="Ekmungai\IFRS\Exceptions\IFRSException" namespace="Ekmungai\IFRS\Exceptions">
+          <metrics complexity="2" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+        </class>
+        <line num="34" type="method" name="__construct" visibility="public" complexity="2" crap="2" count="46"/>
+        <line num="36" type="stmt" count="46"/>
+        <line num="37" type="stmt" count="46"/>
+        <metrics loc="38" ncloc="15" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Exceptions\InsufficientBalance.php">
+        <class name="Ekmungai\IFRS\Exceptions\InsufficientBalance" namespace="Ekmungai\IFRS\Exceptions">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="6" elements="7" coveredelements="7"/>
+        </class>
+        <line num="24" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="31" type="stmt" count="1"/>
+        <line num="32" type="stmt" count="1"/>
+        <line num="34" type="stmt" count="1"/>
+        <line num="35" type="stmt" count="1"/>
+        <line num="36" type="stmt" count="1"/>
+        <line num="37" type="stmt" count="1"/>
+        <metrics loc="38" ncloc="23" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="6" elements="7" coveredelements="7"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Exceptions\InvalidAccountClassBalance.php">
+        <class name="Ekmungai\IFRS\Exceptions\InvalidAccountClassBalance" namespace="Ekmungai\IFRS\Exceptions">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+        </class>
+        <line num="19" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="21" type="stmt" count="1"/>
+        <line num="22" type="stmt" count="1"/>
+        <metrics loc="23" ncloc="10" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Exceptions\InvalidBalance.php">
+        <class name="Ekmungai\IFRS\Exceptions\InvalidBalance" namespace="Ekmungai\IFRS\Exceptions">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="5" coveredelements="5"/>
+        </class>
+        <line num="23" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="25" type="stmt" count="1"/>
+        <line num="27" type="stmt" count="1"/>
+        <line num="29" type="stmt" count="1"/>
+        <line num="30" type="stmt" count="1"/>
+        <metrics loc="31" ncloc="17" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="5" coveredelements="5"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Exceptions\InvalidBalanceTransaction.php">
+        <class name="Ekmungai\IFRS\Exceptions\InvalidBalanceTransaction" namespace="Ekmungai\IFRS\Exceptions">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="5" coveredelements="5"/>
+        </class>
+        <line num="23" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="25" type="stmt" count="1"/>
+        <line num="27" type="stmt" count="1"/>
+        <line num="29" type="stmt" count="1"/>
+        <line num="30" type="stmt" count="1"/>
+        <metrics loc="31" ncloc="17" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="5" coveredelements="5"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Exceptions\InvalidClearanceAccount.php">
+        <class name="Ekmungai\IFRS\Exceptions\InvalidClearanceAccount" namespace="Ekmungai\IFRS\Exceptions">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+        </class>
+        <line num="19" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="21" type="stmt" count="1"/>
+        <line num="22" type="stmt" count="1"/>
+        <metrics loc="23" ncloc="10" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Exceptions\InvalidClearanceCurrency.php">
+        <class name="Ekmungai\IFRS\Exceptions\InvalidClearanceCurrency" namespace="Ekmungai\IFRS\Exceptions">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+        </class>
+        <line num="19" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="21" type="stmt" count="1"/>
+        <line num="22" type="stmt" count="1"/>
+        <metrics loc="23" ncloc="10" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Exceptions\InvalidClearanceEntry.php">
+        <class name="Ekmungai\IFRS\Exceptions\InvalidClearanceEntry" namespace="Ekmungai\IFRS\Exceptions">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="4" coveredelements="4"/>
+        </class>
+        <line num="20" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="22" type="stmt" count="1"/>
+        <line num="24" type="stmt" count="1"/>
+        <line num="25" type="stmt" count="1"/>
+        <metrics loc="26" ncloc="13" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="4" coveredelements="4"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Exceptions\LineItemAccount.php">
+        <class name="Ekmungai\IFRS\Exceptions\LineItemAccount" namespace="Ekmungai\IFRS\Exceptions">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="6" coveredelements="6"/>
+        </class>
+        <line num="24" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="9"/>
+        <line num="26" type="stmt" count="9"/>
+        <line num="27" type="stmt" count="9"/>
+        <line num="29" type="stmt" count="9"/>
+        <line num="31" type="stmt" count="9"/>
+        <line num="32" type="stmt" count="9"/>
+        <metrics loc="33" ncloc="18" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="6" coveredelements="6"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Exceptions\MainAccount.php">
+        <class name="Ekmungai\IFRS\Exceptions\MainAccount" namespace="Ekmungai\IFRS\Exceptions">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="5" coveredelements="5"/>
+        </class>
+        <line num="24" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="9"/>
+        <line num="26" type="stmt" count="9"/>
+        <line num="27" type="stmt" count="9"/>
+        <line num="29" type="stmt" count="9"/>
+        <line num="30" type="stmt" count="9"/>
+        <metrics loc="31" ncloc="16" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="5" coveredelements="5"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Exceptions\MissingAccount.php">
+        <class name="Ekmungai\IFRS\Exceptions\MissingAccount" namespace="Ekmungai\IFRS\Exceptions">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+        </class>
+        <line num="20" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="22" type="stmt" count="2"/>
+        <line num="23" type="stmt" count="2"/>
+        <metrics loc="24" ncloc="10" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Exceptions\MissingAccountType.php">
+        <class name="Ekmungai\IFRS\Exceptions\MissingAccountType" namespace="Ekmungai\IFRS\Exceptions">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+        </class>
+        <line num="19" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="21" type="stmt" count="1"/>
+        <line num="22" type="stmt" count="1"/>
+        <metrics loc="23" ncloc="10" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Exceptions\MissingLineItem.php">
+        <class name="Ekmungai\IFRS\Exceptions\MissingLineItem" namespace="Ekmungai\IFRS\Exceptions">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+        </class>
+        <line num="19" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="21" type="stmt" count="1"/>
+        <line num="22" type="stmt" count="1"/>
+        <metrics loc="23" ncloc="10" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Exceptions\MissingReportingPeriod.php">
+        <class name="Ekmungai\IFRS\Exceptions\MissingReportingPeriod" namespace="Ekmungai\IFRS\Exceptions">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="4" coveredelements="4"/>
+        </class>
+        <line num="21" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="23" type="stmt" count="1"/>
+        <line num="25" type="stmt" count="1"/>
+        <line num="26" type="stmt" count="1"/>
+        <metrics loc="27" ncloc="12" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="4" coveredelements="4"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Exceptions\MissingVatAccount.php">
+        <class name="Ekmungai\IFRS\Exceptions\MissingVatAccount" namespace="Ekmungai\IFRS\Exceptions">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+        </class>
+        <line num="20" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="22" type="stmt" count="1"/>
+        <line num="23" type="stmt" count="1"/>
+        <metrics loc="24" ncloc="10" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Exceptions\NegativeAmount.php">
+        <class name="Ekmungai\IFRS\Exceptions\NegativeAmount" namespace="Ekmungai\IFRS\Exceptions">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+        </class>
+        <line num="20" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="22" type="stmt" count="3"/>
+        <line num="23" type="stmt" count="3"/>
+        <metrics loc="24" ncloc="10" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Exceptions\OverClearance.php">
+        <class name="Ekmungai\IFRS\Exceptions\OverClearance" namespace="Ekmungai\IFRS\Exceptions">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="5" coveredelements="5"/>
+        </class>
+        <line num="23" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="25" type="stmt" count="1"/>
+        <line num="27" type="stmt" count="1"/>
+        <line num="29" type="stmt" count="1"/>
+        <line num="30" type="stmt" count="1"/>
+        <metrics loc="31" ncloc="16" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="5" coveredelements="5"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Exceptions\PostedTransaction.php">
+        <class name="Ekmungai\IFRS\Exceptions\PostedTransaction" namespace="Ekmungai\IFRS\Exceptions">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+        </class>
+        <line num="19" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="21" type="stmt" count="2"/>
+        <line num="22" type="stmt" count="2"/>
+        <metrics loc="23" ncloc="10" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Exceptions\RedundantTransaction.php">
+        <class name="Ekmungai\IFRS\Exceptions\RedundantTransaction" namespace="Ekmungai\IFRS\Exceptions">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="4" coveredelements="4"/>
+        </class>
+        <line num="19" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="21" type="stmt" count="1"/>
+        <line num="23" type="stmt" count="1"/>
+        <line num="24" type="stmt" count="1"/>
+        <metrics loc="25" ncloc="12" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="4" coveredelements="4"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Exceptions\SelfClearance.php">
+        <class name="Ekmungai\IFRS\Exceptions\SelfClearance" namespace="Ekmungai\IFRS\Exceptions">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+        </class>
+        <line num="19" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="21" type="stmt" count="1"/>
+        <line num="22" type="stmt" count="1"/>
+        <metrics loc="23" ncloc="10" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Exceptions\UnassignableTransaction.php">
+        <class name="Ekmungai\IFRS\Exceptions\UnassignableTransaction" namespace="Ekmungai\IFRS\Exceptions">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="6" elements="7" coveredelements="7"/>
+        </class>
+        <line num="23" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="25" type="stmt" count="1"/>
+        <line num="26" type="stmt" count="1"/>
+        <line num="28" type="stmt" count="1"/>
+        <line num="29" type="stmt" count="1"/>
+        <line num="31" type="stmt" count="1"/>
+        <line num="32" type="stmt" count="1"/>
+        <metrics loc="33" ncloc="18" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="6" elements="7" coveredelements="7"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Exceptions\UnauthorizedUser.php">
+        <class name="Ekmungai\IFRS\Exceptions\UnauthorizedUser" namespace="Ekmungai\IFRS\Exceptions">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+        </class>
+        <line num="19" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="21" type="stmt" count="1"/>
+        <line num="22" type="stmt" count="1"/>
+        <metrics loc="23" ncloc="10" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Exceptions\UnclearableTransaction.php">
+        <class name="Ekmungai\IFRS\Exceptions\UnclearableTransaction" namespace="Ekmungai\IFRS\Exceptions">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="6" elements="7" coveredelements="7"/>
+        </class>
+        <line num="23" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="25" type="stmt" count="1"/>
+        <line num="26" type="stmt" count="1"/>
+        <line num="28" type="stmt" count="1"/>
+        <line num="29" type="stmt" count="1"/>
+        <line num="31" type="stmt" count="1"/>
+        <line num="32" type="stmt" count="1"/>
+        <metrics loc="33" ncloc="18" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="6" elements="7" coveredelements="7"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Exceptions\UnpostedAssignment.php">
+        <class name="Ekmungai\IFRS\Exceptions\UnpostedAssignment" namespace="Ekmungai\IFRS\Exceptions">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+        </class>
+        <line num="19" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="21" type="stmt" count="1"/>
+        <line num="22" type="stmt" count="1"/>
+        <metrics loc="23" ncloc="10" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Exceptions\VatCharge.php">
+        <class name="Ekmungai\IFRS\Exceptions\VatCharge" namespace="Ekmungai\IFRS\Exceptions">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="4" coveredelements="4"/>
+        </class>
+        <line num="22" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="24" type="stmt" count="1"/>
+        <line num="26" type="stmt" count="1"/>
+        <line num="27" type="stmt" count="1"/>
+        <metrics loc="28" ncloc="14" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="4" coveredelements="4"/>
+      </file>
+    </package>
+    <package name="Ekmungai\IFRS">
+      <file name="C:\laravel-ifrs\src\IFRSServiceProvider.php">
+        <class name="Ekmungai\IFRS\IFRSServiceProvider" namespace="Ekmungai\IFRS">
+          <metrics complexity="2" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="9" coveredelements="9"/>
+        </class>
+        <line num="14" type="method" name="register" visibility="public" complexity="1" crap="1" count="137"/>
+        <line num="16" type="stmt" count="137"/>
+        <line num="17" type="stmt" count="137"/>
+        <line num="24" type="method" name="boot" visibility="public" complexity="1" crap="1" count="137"/>
+        <line num="26" type="stmt" count="137"/>
+        <line num="27" type="stmt" count="137"/>
+        <line num="30" type="stmt" count="137"/>
+        <line num="31" type="stmt" count="137"/>
+        <line num="32" type="stmt" count="137"/>
+        <metrics loc="33" ncloc="23" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="9" coveredelements="9"/>
+      </file>
+    </package>
+    <file name="C:\laravel-ifrs\src\Interfaces\Assignable.php">
+      <metrics loc="31" ncloc="9" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="C:\laravel-ifrs\src\Interfaces\Buys.php">
+      <metrics loc="31" ncloc="9" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="C:\laravel-ifrs\src\Interfaces\Clearable.php">
+      <metrics loc="45" ncloc="13" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="C:\laravel-ifrs\src\Interfaces\Fetchable.php">
+      <metrics loc="34" ncloc="17" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="C:\laravel-ifrs\src\Interfaces\Findable.php">
+      <metrics loc="28" ncloc="9" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="C:\laravel-ifrs\src\Interfaces\Instantiable.php">
+      <metrics loc="28" ncloc="9" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="C:\laravel-ifrs\src\Interfaces\Recyclable.php">
+      <metrics loc="31" ncloc="9" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="C:\laravel-ifrs\src\Interfaces\Segragatable.php">
+      <metrics loc="31" ncloc="9" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="C:\laravel-ifrs\src\Interfaces\Sells.php">
+      <metrics loc="27" ncloc="9" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <package name="Ekmungai\IFRS\Models">
+      <file name="C:\laravel-ifrs\src\Models\Account.php">
+        <class name="Ekmungai\IFRS\Models\Account" namespace="Ekmungai\IFRS\Models" fullPackage="Ekmungai" package="Ekmungai">
+          <metrics complexity="27" methods="12" coveredmethods="10" conditionals="0" coveredconditionals="0" statements="57" coveredstatements="54" elements="69" coveredelements="64"/>
+        </class>
+        <line num="82" type="method" name="getType" visibility="public" complexity="1" crap="1" count="18"/>
+        <line num="84" type="stmt" count="18"/>
+        <line num="94" type="method" name="getTypes" visibility="public" complexity="2" crap="2" count="9"/>
+        <line num="96" type="stmt" count="9"/>
+        <line num="98" type="stmt" count="9"/>
+        <line num="99" type="stmt" count="9"/>
+        <line num="101" type="stmt" count="9"/>
+        <line num="116" type="method" name="new" visibility="public" complexity="2" crap="2" count="7"/>
+        <line num="124" type="stmt" count="7"/>
+        <line num="126" type="stmt" count="7"/>
+        <line num="127" type="stmt" count="7"/>
+        <line num="128" type="stmt" count="7"/>
+        <line num="129" type="stmt" count="7"/>
+        <line num="130" type="stmt" count="7"/>
+        <line num="131" type="stmt" count="7"/>
+        <line num="133" type="stmt" count="7"/>
+        <line num="145" type="method" name="sectionBalances" visibility="public" complexity="6" crap="6.06" count="3"/>
+        <line num="150" type="stmt" count="3"/>
+        <line num="152" type="stmt" count="3"/>
+        <line num="153" type="stmt" count="3"/>
+        <line num="155" type="stmt" count="3"/>
+        <line num="157" type="stmt" count="3"/>
+        <line num="158" type="stmt" count="3"/>
+        <line num="159" type="stmt" count="3"/>
+        <line num="160" type="stmt" count="3"/>
+        <line num="162" type="stmt" count="3"/>
+        <line num="163" type="stmt" count="3"/>
+        <line num="165" type="stmt" count="3"/>
+        <line num="166" type="stmt" count="0"/>
+        <line num="167" type="stmt" count="0"/>
+        <line num="169" type="stmt" count="3"/>
+        <line num="170" type="stmt" count="3"/>
+        <line num="173" type="stmt" count="3"/>
+        <line num="176" type="stmt" count="3"/>
+        <line num="184" type="method" name="currency" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="186" type="stmt" count="1"/>
+        <line num="194" type="method" name="category" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="196" type="stmt" count="4"/>
+        <line num="204" type="method" name="balances" visibility="public" complexity="1" crap="1" count="13"/>
+        <line num="206" type="stmt" count="13"/>
+        <line num="214" type="method" name="attributes" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="216" type="stmt" count="4"/>
+        <line num="217" type="stmt" count="4"/>
+        <line num="227" type="method" name="openingBalance" visibility="public" complexity="4" crap="4.05" count="11"/>
+        <line num="229" type="stmt" count="11"/>
+        <line num="230" type="stmt" count="0"/>
+        <line num="233" type="stmt" count="11"/>
+        <line num="234" type="stmt" count="11"/>
+        <line num="235" type="stmt" count="9"/>
+        <line num="236" type="stmt" count="9"/>
+        <line num="238" type="stmt" count="11"/>
+        <line num="249" type="method" name="closingBalance" visibility="public" complexity="3" crap="3" count="7"/>
+        <line num="251" type="stmt" count="7"/>
+        <line num="252" type="stmt" count="7"/>
+        <line num="254" type="stmt" count="7"/>
+        <line num="256" type="stmt" count="7"/>
+        <line num="262" type="method" name="save" visibility="public" complexity="3" crap="3" count="112"/>
+        <line num="264" type="stmt" count="112"/>
+        <line num="265" type="stmt" count="6"/>
+        <line num="266" type="stmt" count="1"/>
+        <line num="269" type="stmt" count="5"/>
+        <line num="271" type="stmt" count="5"/>
+        <line num="272" type="stmt" count="5"/>
+        <line num="273" type="stmt" count="5"/>
+        <line num="276" type="stmt" count="111"/>
+        <line num="282" type="method" name="delete" visibility="public" complexity="2" crap="2" count="2"/>
+        <line num="284" type="stmt" count="2"/>
+        <line num="285" type="stmt" count="1"/>
+        <line num="288" type="stmt" count="1"/>
+        <metrics loc="290" ncloc="184" classes="1" methods="12" coveredmethods="10" conditionals="0" coveredconditionals="0" statements="57" coveredstatements="54" elements="69" coveredelements="64"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Models\Assignment.php">
+        <class name="Ekmungai\IFRS\Models\Assignment" namespace="Ekmungai\IFRS\Models" fullPackage="Ekmungai" package="Ekmungai">
+          <metrics complexity="17" methods="5" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="40" coveredstatements="39" elements="45" coveredelements="43"/>
+        </class>
+        <line num="57" type="method" name="new" visibility="public" complexity="1" crap="1" count="13"/>
+        <line num="59" type="stmt" count="13"/>
+        <line num="61" type="stmt" count="13"/>
+        <line num="62" type="stmt" count="13"/>
+        <line num="63" type="stmt" count="13"/>
+        <line num="65" type="stmt" count="13"/>
+        <line num="67" type="stmt" count="13"/>
+        <line num="75" type="method" name="transaction" visibility="public" complexity="1" crap="1" count="18"/>
+        <line num="77" type="stmt" count="18"/>
+        <line num="85" type="method" name="cleared" visibility="public" complexity="1" crap="1" count="18"/>
+        <line num="87" type="stmt" count="18"/>
+        <line num="95" type="method" name="attributes" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="97" type="stmt" count="0"/>
+        <line num="104" type="method" name="save" visibility="public" complexity="13" crap="13" count="18"/>
+        <line num="106" type="stmt" count="18"/>
+        <line num="107" type="stmt" count="18"/>
+        <line num="109" type="stmt" count="18"/>
+        <line num="110" type="stmt" count="1"/>
+        <line num="113" type="stmt" count="17"/>
+        <line num="114" type="stmt" count="1"/>
+        <line num="117" type="stmt" count="16"/>
+        <line num="118" type="stmt" count="1"/>
+        <line num="121" type="stmt" count="15"/>
+        <line num="122" type="stmt" count="1"/>
+        <line num="125" type="stmt" count="14"/>
+        <line num="126" type="stmt" count="1"/>
+        <line num="129" type="stmt" count="13"/>
+        <line num="130" type="stmt" count="1"/>
+        <line num="133" type="stmt" count="12"/>
+        <line num="134" type="stmt" count="1"/>
+        <line num="137" type="stmt" count="11"/>
+        <line num="138" type="stmt" count="1"/>
+        <line num="143" type="stmt" count="10"/>
+        <line num="144" type="stmt" count="10"/>
+        <line num="145" type="stmt" count="10"/>
+        <line num="146" type="stmt" count="10"/>
+        <line num="147" type="stmt" count="10"/>
+        <line num="151" type="stmt" count="10"/>
+        <line num="152" type="stmt" count="1"/>
+        <line num="157" type="stmt" count="9"/>
+        <line num="158" type="stmt" count="9"/>
+        <line num="159" type="stmt" count="9"/>
+        <line num="162" type="stmt" count="9"/>
+        <line num="163" type="stmt" count="1"/>
+        <line num="165" type="stmt" count="8"/>
+        <metrics loc="167" ncloc="116" classes="1" methods="5" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="40" coveredstatements="39" elements="45" coveredelements="43"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Models\Balance.php">
+        <class name="Ekmungai\IFRS\Models\Balance" namespace="Ekmungai\IFRS\Models" fullPackage="Ekmungai" package="Ekmungai">
+          <metrics complexity="20" methods="13" coveredmethods="11" conditionals="0" coveredconditionals="0" statements="43" coveredstatements="41" elements="56" coveredelements="52"/>
+        </class>
+        <line num="81" type="method" name="getType" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="83" type="stmt" count="1"/>
+        <line num="93" type="method" name="getTypes" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="95" type="stmt" count="1"/>
+        <line num="97" type="stmt" count="1"/>
+        <line num="98" type="stmt" count="1"/>
+        <line num="100" type="stmt" count="1"/>
+        <line num="118" type="method" name="new" visibility="public" complexity="3" crap="3" count="5"/>
+        <line num="129" type="stmt" count="5"/>
+        <line num="131" type="stmt" count="5"/>
+        <line num="133" type="stmt" count="5"/>
+        <line num="134" type="stmt" count="5"/>
+        <line num="135" type="stmt" count="5"/>
+        <line num="136" type="stmt" count="5"/>
+        <line num="137" type="stmt" count="5"/>
+        <line num="138" type="stmt" count="5"/>
+        <line num="139" type="stmt" count="5"/>
+        <line num="140" type="stmt" count="5"/>
+        <line num="141" type="stmt" count="5"/>
+        <line num="143" type="stmt" count="5"/>
+        <line num="151" type="method" name="getId" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="153" type="stmt" count="1"/>
+        <line num="159" type="method" name="isPosted" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="161" type="stmt" count="3"/>
+        <line num="169" type="method" name="isCredited" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="171" type="stmt" count="3"/>
+        <line num="179" type="method" name="getClearedType" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="181" type="stmt" count="1"/>
+        <line num="189" type="method" name="getTransactionNo" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="191" type="stmt" count="0"/>
+        <line num="199" type="method" name="currency" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="201" type="stmt" count="1"/>
+        <line num="209" type="method" name="account" visibility="public" complexity="1" crap="1" count="16"/>
+        <line num="211" type="stmt" count="16"/>
+        <line num="219" type="method" name="exchangeRate" visibility="public" complexity="1" crap="1" count="12"/>
+        <line num="221" type="stmt" count="12"/>
+        <line num="229" type="method" name="attributes" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="231" type="stmt" count="0"/>
+        <line num="238" type="method" name="save" visibility="public" complexity="5" crap="5" count="18"/>
+        <line num="241" type="stmt" count="18"/>
+        <line num="242" type="stmt" count="18"/>
+        <line num="243" type="stmt" count="18"/>
+        <line num="246" type="stmt" count="18"/>
+        <line num="247" type="stmt" count="18"/>
+        <line num="248" type="stmt" count="18"/>
+        <line num="249" type="stmt" count="18"/>
+        <line num="250" type="stmt" count="18"/>
+        <line num="253" type="stmt" count="18"/>
+        <line num="254" type="stmt" count="1"/>
+        <line num="257" type="stmt" count="17"/>
+        <line num="258" type="stmt" count="1"/>
+        <line num="261" type="stmt" count="16"/>
+        <line num="262" type="stmt" count="1"/>
+        <line num="265" type="stmt" count="15"/>
+        <line num="266" type="stmt" count="1"/>
+        <line num="269" type="stmt" count="14"/>
+        <metrics loc="271" ncloc="160" classes="1" methods="13" coveredmethods="11" conditionals="0" coveredconditionals="0" statements="43" coveredstatements="41" elements="56" coveredelements="52"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Models\Category.php">
+        <class name="Ekmungai\IFRS\Models\Category" namespace="Ekmungai\IFRS\Models" fullPackage="Ekmungai" package="Ekmungai">
+          <metrics complexity="2" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="4" elements="7" coveredelements="5"/>
+        </class>
+        <line num="45" type="method" name="new" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="47" type="stmt" count="2"/>
+        <line num="49" type="stmt" count="2"/>
+        <line num="50" type="stmt" count="2"/>
+        <line num="52" type="stmt" count="2"/>
+        <line num="60" type="method" name="attributes" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="62" type="stmt" count="0"/>
+        <metrics loc="64" ncloc="33" classes="1" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="4" elements="7" coveredelements="5"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Models\Currency.php">
+        <class name="Ekmungai\IFRS\Models\Currency" namespace="Ekmungai\IFRS\Models" fullPackage="Ekmungai" package="Ekmungai">
+          <metrics complexity="3" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="5" elements="9" coveredelements="7"/>
+        </class>
+        <line num="41" type="method" name="new" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="43" type="stmt" count="3"/>
+        <line num="45" type="stmt" count="3"/>
+        <line num="46" type="stmt" count="3"/>
+        <line num="48" type="stmt" count="3"/>
+        <line num="56" type="method" name="exchangeRates" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="58" type="stmt" count="1"/>
+        <line num="66" type="method" name="attributes" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="68" type="stmt" count="0"/>
+        <metrics loc="70" ncloc="35" classes="1" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="5" elements="9" coveredelements="7"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Models\Entity.php">
+        <class name="Ekmungai\IFRS\Models\Entity" namespace="Ekmungai\IFRS\Models" fullPackage="Ekmungai" package="Ekmungai">
+          <metrics complexity="7" methods="6" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="16" coveredstatements="14" elements="22" coveredelements="18"/>
+        </class>
+        <line num="45" type="method" name="new" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="47" type="stmt" count="2"/>
+        <line num="49" type="stmt" count="2"/>
+        <line num="50" type="stmt" count="2"/>
+        <line num="52" type="stmt" count="2"/>
+        <line num="60" type="method" name="users" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="62" type="stmt" count="0"/>
+        <line num="70" type="method" name="currency" visibility="public" complexity="1" crap="1" count="93"/>
+        <line num="72" type="stmt" count="93"/>
+        <line num="80" type="method" name="defaultRate" visibility="public" complexity="2" crap="2" count="92"/>
+        <line num="82" type="stmt" count="92"/>
+        <line num="83" type="stmt" count="92"/>
+        <line num="84" type="stmt" count="92"/>
+        <line num="85" type="stmt" count="92"/>
+        <line num="86" type="stmt" count="92"/>
+        <line num="88" type="stmt" count="92"/>
+        <line num="89" type="stmt" count="92"/>
+        <line num="91" type="stmt" count="92"/>
+        <line num="99" type="method" name="reportingPeriods" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="101" type="stmt" count="1"/>
+        <line num="109" type="method" name="attributes" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="111" type="stmt" count="0"/>
+        <metrics loc="113" ncloc="61" classes="1" methods="6" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="16" coveredstatements="14" elements="22" coveredelements="18"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Models\ExchangeRate.php">
+        <class name="Ekmungai\IFRS\Models\ExchangeRate" namespace="Ekmungai\IFRS\Models" fullPackage="Ekmungai" package="Ekmungai">
+          <metrics complexity="3" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="7" elements="11" coveredelements="9"/>
+        </class>
+        <line num="51" type="method" name="new" visibility="public" complexity="1" crap="1" count="95"/>
+        <line num="57" type="stmt" count="95"/>
+        <line num="59" type="stmt" count="95"/>
+        <line num="60" type="stmt" count="95"/>
+        <line num="62" type="stmt" count="95"/>
+        <line num="63" type="stmt" count="95"/>
+        <line num="65" type="stmt" count="95"/>
+        <line num="73" type="method" name="currency" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="75" type="stmt" count="1"/>
+        <line num="83" type="method" name="attributes" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="85" type="stmt" count="0"/>
+        <metrics loc="87" ncloc="47" classes="1" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="7" elements="11" coveredelements="9"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Models\Ledger.php">
+        <class name="Ekmungai\IFRS\Models\Ledger" namespace="Ekmungai\IFRS\Models" fullPackage="Ekmungai" package="Ekmungai">
+          <metrics complexity="15" methods="9" coveredmethods="8" conditionals="0" coveredconditionals="0" statements="66" coveredstatements="65" elements="75" coveredelements="73"/>
+        </class>
+        <line num="59" type="method" name="postVat" visibility="private" complexity="2" crap="2" count="20"/>
+        <line num="61" type="stmt" count="20"/>
+        <line num="63" type="stmt" count="20"/>
+        <line num="64" type="stmt" count="20"/>
+        <line num="66" type="stmt" count="20"/>
+        <line num="67" type="stmt" count="15"/>
+        <line num="68" type="stmt" count="15"/>
+        <line num="70" type="stmt" count="13"/>
+        <line num="71" type="stmt" count="13"/>
+        <line num="75" type="stmt" count="20"/>
+        <line num="76" type="stmt" count="20"/>
+        <line num="77" type="stmt" count="20"/>
+        <line num="78" type="stmt" count="20"/>
+        <line num="79" type="stmt" count="20"/>
+        <line num="82" type="stmt" count="20"/>
+        <line num="83" type="stmt" count="20"/>
+        <line num="85" type="stmt" count="20"/>
+        <line num="86" type="stmt" count="20"/>
+        <line num="88" type="stmt" count="20"/>
+        <line num="90" type="stmt" count="20"/>
+        <line num="98" type="method" name="post" visibility="public" complexity="4" crap="4" count="40"/>
+        <line num="102" type="stmt" count="40"/>
+        <line num="104" type="stmt" count="40"/>
+        <line num="105" type="stmt" count="40"/>
+        <line num="106" type="stmt" count="40"/>
+        <line num="108" type="stmt" count="40"/>
+        <line num="109" type="stmt" count="34"/>
+        <line num="110" type="stmt" count="34"/>
+        <line num="112" type="stmt" count="28"/>
+        <line num="113" type="stmt" count="28"/>
+        <line num="117" type="stmt" count="40"/>
+        <line num="118" type="stmt" count="40"/>
+        <line num="119" type="stmt" count="40"/>
+        <line num="120" type="stmt" count="40"/>
+        <line num="121" type="stmt" count="40"/>
+        <line num="124" type="stmt" count="40"/>
+        <line num="125" type="stmt" count="40"/>
+        <line num="127" type="stmt" count="40"/>
+        <line num="128" type="stmt" count="40"/>
+        <line num="130" type="stmt" count="40"/>
+        <line num="132" type="stmt" count="40"/>
+        <line num="133" type="stmt" count="20"/>
+        <line num="135" type="stmt" count="40"/>
+        <line num="137" type="stmt" count="40"/>
+        <line num="144" type="method" name="attributes" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="146" type="stmt" count="0"/>
+        <line num="154" type="method" name="transaction" visibility="public" complexity="1" crap="1" count="5"/>
+        <line num="156" type="stmt" count="5"/>
+        <line num="164" type="method" name="postAccount" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="166" type="stmt" count="1"/>
+        <line num="174" type="method" name="folioAccount" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="176" type="stmt" count="1"/>
+        <line num="184" type="method" name="lineItem" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="186" type="stmt" count="1"/>
+        <line num="197" type="method" name="contribution" visibility="public" complexity="3" crap="3" count="4"/>
+        <line num="199" type="stmt" count="4"/>
+        <line num="201" type="stmt" count="4"/>
+        <line num="202" type="stmt" count="4"/>
+        <line num="203" type="stmt" count="4"/>
+        <line num="206" type="stmt" count="4"/>
+        <line num="207" type="stmt" count="4"/>
+        <line num="208" type="stmt" count="4"/>
+        <line num="210" type="stmt" count="4"/>
+        <line num="222" type="method" name="balance" visibility="public" complexity="1" crap="1" count="8"/>
+        <line num="224" type="stmt" count="8"/>
+        <line num="225" type="stmt" count="8"/>
+        <line num="228" type="stmt" count="8"/>
+        <line num="229" type="stmt" count="8"/>
+        <line num="230" type="stmt" count="8"/>
+        <line num="232" type="stmt" count="8"/>
+        <line num="233" type="stmt" count="8"/>
+        <line num="236" type="stmt" count="8"/>
+        <line num="237" type="stmt" count="8"/>
+        <line num="238" type="stmt" count="8"/>
+        <line num="240" type="stmt" count="8"/>
+        <metrics loc="242" ncloc="148" classes="1" methods="9" coveredmethods="8" conditionals="0" coveredconditionals="0" statements="66" coveredstatements="65" elements="75" coveredelements="73"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Models\LineItem.php">
+        <class name="Ekmungai\IFRS\Models\LineItem" namespace="Ekmungai\IFRS\Models" fullPackage="Ekmungai" package="Ekmungai">
+          <metrics complexity="12" methods="8" coveredmethods="7" conditionals="0" coveredconditionals="0" statements="19" coveredstatements="18" elements="27" coveredelements="25"/>
+        </class>
+        <line num="57" type="method" name="new" visibility="public" complexity="2" crap="2" count="24"/>
+        <line num="65" type="stmt" count="24"/>
+        <line num="67" type="stmt" count="24"/>
+        <line num="68" type="stmt" count="24"/>
+        <line num="69" type="stmt" count="24"/>
+        <line num="70" type="stmt" count="24"/>
+        <line num="71" type="stmt" count="24"/>
+        <line num="72" type="stmt" count="24"/>
+        <line num="74" type="stmt" count="24"/>
+        <line num="82" type="method" name="ledgers" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="84" type="stmt" count="2"/>
+        <line num="92" type="method" name="transaction" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="94" type="stmt" count="2"/>
+        <line num="102" type="method" name="account" visibility="public" complexity="1" crap="1" count="60"/>
+        <line num="104" type="stmt" count="60"/>
+        <line num="112" type="method" name="vat" visibility="public" complexity="1" crap="1" count="65"/>
+        <line num="114" type="stmt" count="65"/>
+        <line num="122" type="method" name="vatAccount" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="124" type="stmt" count="1"/>
+        <line num="132" type="method" name="attributes" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="134" type="stmt" count="0"/>
+        <line num="140" type="method" name="save" visibility="public" complexity="4" crap="4" count="65"/>
+        <line num="142" type="stmt" count="65"/>
+        <line num="143" type="stmt" count="1"/>
+        <line num="146" type="stmt" count="64"/>
+        <line num="147" type="stmt" count="1"/>
+        <line num="150" type="stmt" count="63"/>
+        <metrics loc="152" ncloc="84" classes="1" methods="8" coveredmethods="7" conditionals="0" coveredconditionals="0" statements="19" coveredstatements="18" elements="27" coveredelements="25"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Models\RecycledObject.php">
+        <class name="Ekmungai\IFRS\Models\RecycledObject" namespace="Ekmungai\IFRS\Models">
+          <metrics complexity="3" methods="3" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="1" elements="6" coveredelements="2"/>
+        </class>
+        <line num="48" type="method" name="recyclable" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="50" type="stmt" count="0"/>
+        <line num="58" type="method" name="user" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="60" type="stmt" count="1"/>
+        <line num="68" type="method" name="attributes" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="70" type="stmt" count="0"/>
+        <metrics loc="72" ncloc="34" classes="1" methods="3" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="1" elements="6" coveredelements="2"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Models\ReportingPeriod.php">
+        <class name="Ekmungai\IFRS\Models\ReportingPeriod" namespace="Ekmungai\IFRS\Models" fullPackage="Ekmungai" package="Ekmungai">
+          <metrics complexity="10" methods="6" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="21" coveredstatements="20" elements="27" coveredelements="25"/>
+        </class>
+        <line num="51" type="method" name="new" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="53" type="stmt" count="2"/>
+        <line num="55" type="stmt" count="2"/>
+        <line num="56" type="stmt" count="2"/>
+        <line num="58" type="stmt" count="2"/>
+        <line num="66" type="method" name="periodCount" visibility="public" complexity="2" crap="2" count="90"/>
+        <line num="68" type="stmt" count="90"/>
+        <line num="70" type="stmt" count="90"/>
+        <line num="71" type="stmt" count="90"/>
+        <line num="72" type="stmt" count="1"/>
+        <line num="74" type="stmt" count="89"/>
+        <line num="84" type="method" name="year" visibility="public" complexity="4" crap="4" count="94"/>
+        <line num="86" type="stmt" count="94"/>
+        <line num="87" type="stmt" count="94"/>
+        <line num="89" type="stmt" count="94"/>
+        <line num="91" type="stmt" count="94"/>
+        <line num="99" type="method" name="periodStart" visibility="public" complexity="1" crap="1" count="93"/>
+        <line num="101" type="stmt" count="93"/>
+        <line num="102" type="stmt" count="93"/>
+        <line num="103" type="stmt" count="93"/>
+        <line num="104" type="stmt" count="93"/>
+        <line num="113" type="method" name="periodEnd" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="115" type="stmt" count="1"/>
+        <line num="116" type="stmt" count="1"/>
+        <line num="117" type="stmt" count="1"/>
+        <line num="125" type="method" name="attributes" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="127" type="stmt" count="0"/>
+        <metrics loc="129" ncloc="75" classes="1" methods="6" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="21" coveredstatements="20" elements="27" coveredelements="25"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Models\Transaction.php">
+        <class name="Ekmungai\IFRS\Models\Transaction" namespace="Ekmungai\IFRS\Models" fullPackage="Ekmungai" package="Ekmungai">
+          <metrics complexity="35" methods="24" coveredmethods="21" conditionals="0" coveredconditionals="0" statements="75" coveredstatements="72" elements="99" coveredelements="93"/>
+        </class>
+        <line num="118" type="method" name="lineItemExists" visibility="private" complexity="1" crap="1" count="59"/>
+        <line num="121" type="stmt" count="23"/>
+        <line num="122" type="stmt" count="59"/>
+        <line num="128" type="method" name="saveLineItems" visibility="private" complexity="2" crap="2" count="95"/>
+        <line num="130" type="stmt" count="95"/>
+        <line num="131" type="stmt" count="50"/>
+        <line num="132" type="stmt" count="50"/>
+        <line num="134" type="stmt" count="50"/>
+        <line num="136" type="stmt" count="95"/>
+        <line num="145" type="method" name="getType" visibility="public" complexity="1" crap="1" count="24"/>
+        <line num="147" type="stmt" count="24"/>
+        <line num="157" type="method" name="getTypes" visibility="public" complexity="2" crap="2" count="3"/>
+        <line num="159" type="stmt" count="3"/>
+        <line num="161" type="stmt" count="3"/>
+        <line num="162" type="stmt" count="3"/>
+        <line num="164" type="stmt" count="3"/>
+        <line num="179" type="method" name="new" visibility="public" complexity="3" crap="3" count="89"/>
+        <line num="187" type="stmt" count="89"/>
+        <line num="189" type="stmt" count="89"/>
+        <line num="191" type="stmt" count="89"/>
+        <line num="192" type="stmt" count="89"/>
+        <line num="193" type="stmt" count="89"/>
+        <line num="194" type="stmt" count="89"/>
+        <line num="195" type="stmt" count="89"/>
+        <line num="196" type="stmt" count="89"/>
+        <line num="197" type="stmt" count="89"/>
+        <line num="199" type="stmt" count="89"/>
+        <line num="210" type="method" name="transactionNo" visibility="public" complexity="1" crap="1" count="89"/>
+        <line num="212" type="stmt" count="89"/>
+        <line num="213" type="stmt" count="89"/>
+        <line num="215" type="stmt" count="89"/>
+        <line num="216" type="stmt" count="89"/>
+        <line num="217" type="stmt" count="89"/>
+        <line num="218" type="stmt" count="89"/>
+        <line num="220" type="stmt" count="89"/>
+        <line num="221" type="stmt" count="89"/>
+        <line num="222" type="stmt" count="89"/>
+        <line num="228" type="method" name="getId" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="230" type="stmt" count="0"/>
+        <line num="236" type="method" name="isPosted" visibility="public" complexity="1" crap="1" count="16"/>
+        <line num="238" type="stmt" count="16"/>
+        <line num="246" type="method" name="isCredited" visibility="public" complexity="1" crap="1" count="13"/>
+        <line num="248" type="stmt" count="13"/>
+        <line num="256" type="method" name="getTransactionNo" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="258" type="stmt" count="0"/>
+        <line num="266" type="method" name="getClearedType" visibility="public" complexity="1" crap="1" count="13"/>
+        <line num="268" type="stmt" count="13"/>
+        <line num="276" type="method" name="savedLineItems" visibility="public" complexity="1" crap="1" count="96"/>
+        <line num="278" type="stmt" count="96"/>
+        <line num="286" type="method" name="ledgers" visibility="public" complexity="1" crap="1" count="40"/>
+        <line num="288" type="stmt" count="40"/>
+        <line num="296" type="method" name="currency" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="298" type="stmt" count="1"/>
+        <line num="306" type="method" name="account" visibility="public" complexity="1" crap="1" count="89"/>
+        <line num="308" type="stmt" count="89"/>
+        <line num="316" type="method" name="exchangeRate" visibility="public" complexity="1" crap="1" count="16"/>
+        <line num="318" type="stmt" count="16"/>
+        <line num="326" type="method" name="assignments" visibility="public" complexity="1" crap="1" count="13"/>
+        <line num="328" type="stmt" count="13"/>
+        <line num="336" type="method" name="attributes" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="338" type="stmt" count="0"/>
+        <line num="346" type="method" name="getLineItems" visibility="public" complexity="2" crap="2" count="51"/>
+        <line num="348" type="stmt" count="51"/>
+        <line num="349" type="stmt" count="50"/>
+        <line num="351" type="stmt" count="51"/>
+        <line num="359" type="method" name="addLineItem" visibility="public" complexity="3" crap="3" count="60"/>
+        <line num="361" type="stmt" count="60"/>
+        <line num="362" type="stmt" count="1"/>
+        <line num="365" type="stmt" count="59"/>
+        <line num="366" type="stmt" count="59"/>
+        <line num="368" type="stmt" count="59"/>
+        <line num="375" type="method" name="removeLineItem" visibility="public" complexity="3" crap="3" count="2"/>
+        <line num="377" type="stmt" count="2"/>
+        <line num="378" type="stmt" count="2"/>
+        <line num="381" type="stmt" count="1"/>
+        <line num="383" type="stmt" count="1"/>
+        <line num="384" type="stmt" count="1"/>
+        <line num="387" type="stmt" count="1"/>
+        <line num="388" type="stmt" count="1"/>
+        <line num="391" type="stmt" count="1"/>
+        <line num="392" type="stmt" count="1"/>
+        <line num="397" type="method" name="save" visibility="public" complexity="1" crap="1" count="95"/>
+        <line num="399" type="stmt" count="95"/>
+        <line num="400" type="stmt" count="95"/>
+        <line num="403" type="stmt" count="95"/>
+        <line num="405" type="stmt" count="95"/>
+        <line num="411" type="method" name="post" visibility="public" complexity="2" crap="2" count="41"/>
+        <line num="413" type="stmt" count="41"/>
+        <line num="414" type="stmt" count="1"/>
+        <line num="417" type="stmt" count="40"/>
+        <line num="419" type="stmt" count="40"/>
+        <line num="420" type="stmt" count="40"/>
+        <line num="425" type="method" name="delete" visibility="public" complexity="2" crap="2" count="3"/>
+        <line num="428" type="stmt" count="3"/>
+        <line num="429" type="stmt" count="1"/>
+        <line num="434" type="stmt" count="1"/>
+        <line num="435" type="stmt" count="1"/>
+        <line num="436" type="stmt" count="2"/>
+        <line num="438" type="stmt" count="2"/>
+        <metrics loc="440" ncloc="262" classes="1" methods="24" coveredmethods="21" conditionals="0" coveredconditionals="0" statements="75" coveredstatements="72" elements="99" coveredelements="93"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Models\User.php">
+        <class name="Ekmungai\IFRS\Models\User" namespace="Ekmungai\IFRS\Models" fullPackage="Ekmungai" package="Ekmungai">
+          <metrics complexity="2" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="1" elements="4" coveredelements="2"/>
+        </class>
+        <line num="73" type="method" name="entity" visibility="public" complexity="1" crap="1" count="137"/>
+        <line num="75" type="stmt" count="137"/>
+        <line num="83" type="method" name="attributes" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="85" type="stmt" count="0"/>
+        <metrics loc="87" ncloc="42" classes="1" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="1" elements="4" coveredelements="2"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Models\Vat.php">
+        <class name="Ekmungai\IFRS\Models\Vat" namespace="Ekmungai\IFRS\Models" fullPackage="Ekmungai" package="Ekmungai">
+          <metrics complexity="2" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="5" elements="8" coveredelements="6"/>
+        </class>
+        <line num="47" type="method" name="new" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="49" type="stmt" count="2"/>
+        <line num="51" type="stmt" count="2"/>
+        <line num="52" type="stmt" count="2"/>
+        <line num="53" type="stmt" count="2"/>
+        <line num="55" type="stmt" count="2"/>
+        <line num="63" type="method" name="attributes" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="65" type="stmt" count="0"/>
+        <metrics loc="67" ncloc="34" classes="1" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="5" elements="8" coveredelements="6"/>
+      </file>
+    </package>
+    <package name="Ekmungai\IFRS\Reports">
+      <file name="C:\laravel-ifrs\src\Reports\AccountSchedule.php">
+        <class name="Ekmungai\IFRS\Reports\AccountSchedule" namespace="Ekmungai\IFRS\Reports">
+          <metrics complexity="12" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="33" coveredstatements="33" elements="36" coveredelements="36"/>
+        </class>
+        <line num="42" type="method" name="getAmounts" visibility="private" complexity="2" crap="2" count="2"/>
+        <line num="44" type="stmt" count="2"/>
+        <line num="46" type="stmt" count="2"/>
+        <line num="47" type="stmt" count="2"/>
+        <line num="48" type="stmt" count="2"/>
+        <line num="50" type="stmt" count="2"/>
+        <line num="51" type="stmt" count="2"/>
+        <line num="53" type="stmt" count="2"/>
+        <line num="54" type="stmt" count="2"/>
+        <line num="56" type="stmt" count="2"/>
+        <line num="57" type="stmt" count="2"/>
+        <line num="59" type="stmt" count="2"/>
+        <line num="60" type="stmt" count="2"/>
+        <line num="62" type="stmt" count="2"/>
+        <line num="63" type="stmt" count="2"/>
+        <line num="65" type="stmt" count="2"/>
+        <line num="67" type="stmt" count="2"/>
+        <line num="76" type="method" name="__construct" visibility="public" complexity="2" crap="2" count="3"/>
+        <line num="78" type="stmt" count="3"/>
+        <line num="79" type="stmt" count="1"/>
+        <line num="81" type="stmt" count="2"/>
+        <line num="82" type="stmt" count="2"/>
+        <line num="87" type="method" name="getTransactions" visibility="public" complexity="8" crap="8" count="2"/>
+        <line num="90" type="stmt" count="2"/>
+        <line num="91" type="stmt" count="2"/>
+        <line num="95" type="stmt" count="2"/>
+        <line num="96" type="stmt" count="2"/>
+        <line num="99" type="stmt" count="2"/>
+        <line num="101" type="stmt" count="2"/>
+        <line num="102" type="stmt" count="2"/>
+        <line num="104" type="stmt" count="2"/>
+        <line num="105" type="stmt" count="2"/>
+        <line num="106" type="stmt" count="2"/>
+        <line num="109" type="stmt" count="2"/>
+        <line num="111" type="stmt" count="2"/>
+        <line num="113" type="stmt" count="2"/>
+        <metrics loc="114" ncloc="81" classes="1" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="33" coveredstatements="33" elements="36" coveredelements="36"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Reports\AccountStatement.php">
+        <class name="Ekmungai\IFRS\Reports\AccountStatement" namespace="Ekmungai\IFRS\Reports">
+          <metrics complexity="16" methods="10" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="56" coveredstatements="41" elements="66" coveredelements="44"/>
+        </class>
+        <line num="81" type="method" name="getCurrency" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="83" type="stmt" count="0"/>
+        <line num="91" type="method" name="setCurrency" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="93" type="stmt" count="0"/>
+        <line num="94" type="stmt" count="0"/>
+        <line num="101" type="method" name="getAccount" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="103" type="stmt" count="0"/>
+        <line num="111" type="method" name="setAccount" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="113" type="stmt" count="0"/>
+        <line num="114" type="stmt" count="0"/>
+        <line num="121" type="method" name="getEntity" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="123" type="stmt" count="0"/>
+        <line num="131" type="method" name="setEntity" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="133" type="stmt" count="0"/>
+        <line num="134" type="stmt" count="0"/>
+        <line num="141" type="method" name="buildQuery" visibility="public" complexity="1" crap="1" count="5"/>
+        <line num="143" type="stmt" count="5"/>
+        <line num="144" type="stmt" count="5"/>
+        <line num="145" type="stmt" count="5"/>
+        <line num="146" type="stmt" count="5"/>
+        <line num="147" type="stmt" count="5"/>
+        <line num="148" type="stmt" count="5"/>
+        <line num="149" type="stmt" count="5"/>
+        <line num="150" type="stmt" count="5"/>
+        <line num="151" type="stmt" count="5"/>
+        <line num="152" type="stmt" count="5"/>
+        <line num="153" type="stmt" count="5"/>
+        <line num="154" type="stmt" count="5"/>
+        <line num="155" type="stmt" count="5"/>
+        <line num="156" type="stmt" count="5"/>
+        <line num="158" type="stmt" count="5"/>
+        <line num="160" type="stmt" count="5"/>
+        <line num="161" type="stmt" count="5"/>
+        <line num="162" type="stmt" count="5"/>
+        <line num="164" type="stmt" count="5"/>
+        <line num="172" type="method" name="attributes" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="175" type="stmt" count="0"/>
+        <line num="176" type="stmt" count="0"/>
+        <line num="177" type="stmt" count="0"/>
+        <line num="178" type="stmt" count="0"/>
+        <line num="179" type="stmt" count="0"/>
+        <line num="180" type="stmt" count="0"/>
+        <line num="192" type="method" name="__construct" visibility="public" complexity="5" crap="5" count="6"/>
+        <line num="198" type="stmt" count="6"/>
+        <line num="199" type="stmt" count="1"/>
+        <line num="202" type="stmt" count="5"/>
+        <line num="203" type="stmt" count="5"/>
+        <line num="205" type="stmt" count="5"/>
+        <line num="206" type="stmt" count="5"/>
+        <line num="207" type="stmt" count="5"/>
+        <line num="208" type="stmt" count="5"/>
+        <line num="213" type="method" name="getTransactions" visibility="public" complexity="3" crap="3" count="3"/>
+        <line num="215" type="stmt" count="3"/>
+        <line num="216" type="stmt" count="3"/>
+        <line num="217" type="stmt" count="3"/>
+        <line num="219" type="stmt" count="3"/>
+        <line num="220" type="stmt" count="3"/>
+        <line num="221" type="stmt" count="3"/>
+        <line num="223" type="stmt" count="3"/>
+        <line num="224" type="stmt" count="3"/>
+        <line num="225" type="stmt" count="3"/>
+        <line num="226" type="stmt" count="3"/>
+        <line num="228" type="stmt" count="3"/>
+        <line num="230" type="stmt" count="3"/>
+        <line num="232" type="stmt" count="3"/>
+        <line num="234" type="stmt" count="3"/>
+        <metrics loc="235" ncloc="147" classes="1" methods="10" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="56" coveredstatements="41" elements="66" coveredelements="44"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Reports\BalanceSheet.php">
+        <class name="Ekmungai\IFRS\Reports\BalanceSheet" namespace="Ekmungai\IFRS\Reports">
+          <metrics complexity="5" methods="4" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="56" coveredstatements="21" elements="60" coveredelements="23"/>
+        </class>
+        <line num="44" type="method" name="__construct" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="46" type="stmt" count="1"/>
+        <line num="48" type="stmt" count="1"/>
+        <line num="49" type="stmt" count="1"/>
+        <line num="52" type="stmt" count="1"/>
+        <line num="53" type="stmt" count="1"/>
+        <line num="54" type="stmt" count="1"/>
+        <line num="55" type="stmt" count="1"/>
+        <line num="58" type="stmt" count="1"/>
+        <line num="59" type="stmt" count="1"/>
+        <line num="60" type="stmt" count="1"/>
+        <line num="61" type="stmt" count="1"/>
+        <line num="62" type="stmt" count="1"/>
+        <line num="69" type="method" name="attributes" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="71" type="stmt" count="0"/>
+        <line num="77" type="method" name="getSections" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="79" type="stmt" count="1"/>
+        <line num="82" type="stmt" count="1"/>
+        <line num="83" type="stmt" count="1"/>
+        <line num="85" type="stmt" count="1"/>
+        <line num="86" type="stmt" count="1"/>
+        <line num="88" type="stmt" count="1"/>
+        <line num="89" type="stmt" count="1"/>
+        <line num="91" type="stmt" count="1"/>
+        <line num="92" type="stmt" count="1"/>
+        <line num="97" type="method" name="toString" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="99" type="stmt" count="0"/>
+        <line num="100" type="stmt" count="0"/>
+        <line num="103" type="stmt" count="0"/>
+        <line num="104" type="stmt" count="0"/>
+        <line num="105" type="stmt" count="0"/>
+        <line num="106" type="stmt" count="0"/>
+        <line num="109" type="stmt" count="0"/>
+        <line num="110" type="stmt" count="0"/>
+        <line num="112" type="stmt" count="0"/>
+        <line num="113" type="stmt" count="0"/>
+        <line num="114" type="stmt" count="0"/>
+        <line num="117" type="stmt" count="0"/>
+        <line num="118" type="stmt" count="0"/>
+        <line num="120" type="stmt" count="0"/>
+        <line num="121" type="stmt" count="0"/>
+        <line num="122" type="stmt" count="0"/>
+        <line num="125" type="stmt" count="0"/>
+        <line num="126" type="stmt" count="0"/>
+        <line num="128" type="stmt" count="0"/>
+        <line num="129" type="stmt" count="0"/>
+        <line num="130" type="stmt" count="0"/>
+        <line num="131" type="stmt" count="0"/>
+        <line num="133" type="stmt" count="0"/>
+        <line num="134" type="stmt" count="0"/>
+        <line num="135" type="stmt" count="0"/>
+        <line num="136" type="stmt" count="0"/>
+        <line num="139" type="stmt" count="0"/>
+        <line num="140" type="stmt" count="0"/>
+        <line num="142" type="stmt" count="0"/>
+        <line num="143" type="stmt" count="0"/>
+        <line num="144" type="stmt" count="0"/>
+        <line num="145" type="stmt" count="0"/>
+        <line num="147" type="stmt" count="0"/>
+        <line num="148" type="stmt" count="0"/>
+        <metrics loc="149" ncloc="100" classes="1" methods="4" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="56" coveredstatements="21" elements="60" coveredelements="23"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Reports\FinancialStatement.php">
+        <class name="Ekmungai\IFRS\Reports\FinancialStatement" namespace="Ekmungai\IFRS\Reports">
+          <metrics complexity="14" methods="8" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="33" coveredstatements="13" elements="41" coveredelements="15"/>
+        </class>
+        <line num="66" type="method" name="printSection" visibility="protected" complexity="2" crap="6" count="0"/>
+        <line num="68" type="stmt" count="0"/>
+        <line num="71" type="stmt" count="0"/>
+        <line num="72" type="stmt" count="0"/>
+        <line num="74" type="stmt" count="0"/>
+        <line num="75" type="stmt" count="0"/>
+        <line num="77" type="stmt" count="0"/>
+        <line num="78" type="stmt" count="0"/>
+        <line num="79" type="stmt" count="0"/>
+        <line num="80" type="stmt" count="0"/>
+        <line num="81" type="stmt" count="0"/>
+        <line num="84" type="stmt" count="0"/>
+        <line num="92" type="method" name="__construct" visibility="public" complexity="2" crap="2" count="3"/>
+        <line num="94" type="stmt" count="3"/>
+        <line num="95" type="stmt" count="3"/>
+        <line num="96" type="stmt" count="3"/>
+        <line num="103" type="method" name="getReportingPeriod" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="105" type="stmt" count="0"/>
+        <line num="113" type="method" name="setReportingPeriod" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="115" type="stmt" count="0"/>
+        <line num="116" type="stmt" count="0"/>
+        <line num="123" type="method" name="getEntity" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="125" type="stmt" count="0"/>
+        <line num="133" type="method" name="setEntity" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="135" type="stmt" count="0"/>
+        <line num="136" type="stmt" count="0"/>
+        <line num="143" type="method" name="attributes" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="146" type="stmt" count="0"/>
+        <line num="147" type="stmt" count="0"/>
+        <line num="148" type="stmt" count="0"/>
+        <line num="155" type="method" name="getSections" visibility="public" complexity="5" crap="5" count="2"/>
+        <line num="157" type="stmt" count="2"/>
+        <line num="158" type="stmt" count="2"/>
+        <line num="159" type="stmt" count="2"/>
+        <line num="161" type="stmt" count="2"/>
+        <line num="162" type="stmt" count="2"/>
+        <line num="163" type="stmt" count="2"/>
+        <line num="165" type="stmt" count="2"/>
+        <line num="166" type="stmt" count="2"/>
+        <line num="168" type="stmt" count="2"/>
+        <line num="173" type="stmt" count="2"/>
+        <metrics loc="174" ncloc="97" classes="1" methods="8" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="33" coveredstatements="13" elements="41" coveredelements="15"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Reports\IncomeStatement.php">
+        <class name="Ekmungai\IFRS\Reports\IncomeStatement" namespace="Ekmungai\IFRS\Reports">
+          <metrics complexity="5" methods="3" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="47" coveredstatements="13" elements="50" coveredelements="14"/>
+        </class>
+        <line num="46" type="method" name="__construct" visibility="public" complexity="3" crap="3" count="2"/>
+        <line num="48" type="stmt" count="2"/>
+        <line num="49" type="stmt" count="2"/>
+        <line num="51" type="stmt" count="2"/>
+        <line num="52" type="stmt" count="2"/>
+        <line num="55" type="stmt" count="2"/>
+        <line num="56" type="stmt" count="2"/>
+        <line num="57" type="stmt" count="2"/>
+        <line num="58" type="stmt" count="2"/>
+        <line num="61" type="stmt" count="2"/>
+        <line num="62" type="stmt" count="2"/>
+        <line num="63" type="stmt" count="2"/>
+        <line num="64" type="stmt" count="2"/>
+        <line num="65" type="stmt" count="2"/>
+        <line num="72" type="method" name="attributes" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="74" type="stmt" count="0"/>
+        <line num="81" type="method" name="toString" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="83" type="stmt" count="0"/>
+        <line num="84" type="stmt" count="0"/>
+        <line num="85" type="stmt" count="0"/>
+        <line num="88" type="stmt" count="0"/>
+        <line num="89" type="stmt" count="0"/>
+        <line num="90" type="stmt" count="0"/>
+        <line num="91" type="stmt" count="0"/>
+        <line num="92" type="stmt" count="0"/>
+        <line num="95" type="stmt" count="0"/>
+        <line num="96" type="stmt" count="0"/>
+        <line num="99" type="stmt" count="0"/>
+        <line num="100" type="stmt" count="0"/>
+        <line num="102" type="stmt" count="0"/>
+        <line num="103" type="stmt" count="0"/>
+        <line num="104" type="stmt" count="0"/>
+        <line num="107" type="stmt" count="0"/>
+        <line num="108" type="stmt" count="0"/>
+        <line num="110" type="stmt" count="0"/>
+        <line num="111" type="stmt" count="0"/>
+        <line num="112" type="stmt" count="0"/>
+        <line num="115" type="stmt" count="0"/>
+        <line num="116" type="stmt" count="0"/>
+        <line num="117" type="stmt" count="0"/>
+        <line num="119" type="stmt" count="0"/>
+        <line num="120" type="stmt" count="0"/>
+        <line num="121" type="stmt" count="0"/>
+        <line num="122" type="stmt" count="0"/>
+        <line num="124" type="stmt" count="0"/>
+        <line num="125" type="stmt" count="0"/>
+        <line num="126" type="stmt" count="0"/>
+        <line num="127" type="stmt" count="0"/>
+        <line num="129" type="stmt" count="0"/>
+        <line num="130" type="stmt" count="0"/>
+        <metrics loc="131" ncloc="84" classes="1" methods="3" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="47" coveredstatements="13" elements="50" coveredelements="14"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Reports\TrialBalance.php">
+        <class name="Ekmungai\IFRS\Reports\TrialBalance" namespace="Ekmungai\IFRS\Reports">
+          <metrics complexity="8" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="56" coveredstatements="52" elements="58" coveredelements="53"/>
+        </class>
+        <line num="15" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="17" type="stmt" count="1"/>
+        <line num="19" type="stmt" count="1"/>
+        <line num="20" type="stmt" count="1"/>
+        <line num="21" type="stmt" count="1"/>
+        <line num="26" type="method" name="getSections" visibility="public" complexity="7" crap="7.02" count="1"/>
+        <line num="28" type="stmt" count="1"/>
+        <line num="29" type="stmt" count="1"/>
+        <line num="30" type="stmt" count="1"/>
+        <line num="31" type="stmt" count="1"/>
+        <line num="32" type="stmt" count="1"/>
+        <line num="35" type="stmt" count="1"/>
+        <line num="36" type="stmt" count="1"/>
+        <line num="37" type="stmt" count="1"/>
+        <line num="38" type="stmt" count="1"/>
+        <line num="39" type="stmt" count="1"/>
+        <line num="42" type="stmt" count="1"/>
+        <line num="43" type="stmt" count="1"/>
+        <line num="45" type="stmt" count="1"/>
+        <line num="46" type="stmt" count="1"/>
+        <line num="48" type="stmt" count="1"/>
+        <line num="51" type="stmt" count="1"/>
+        <line num="52" type="stmt" count="1"/>
+        <line num="53" type="stmt" count="1"/>
+        <line num="54" type="stmt" count="1"/>
+        <line num="55" type="stmt" count="1"/>
+        <line num="56" type="stmt" count="1"/>
+        <line num="58" type="stmt" count="0"/>
+        <line num="59" type="stmt" count="0"/>
+        <line num="60" type="stmt" count="1"/>
+        <line num="61" type="stmt" count="1"/>
+        <line num="63" type="stmt" count="1"/>
+        <line num="64" type="stmt" count="1"/>
+        <line num="65" type="stmt" count="1"/>
+        <line num="66" type="stmt" count="1"/>
+        <line num="68" type="stmt" count="1"/>
+        <line num="69" type="stmt" count="1"/>
+        <line num="70" type="stmt" count="1"/>
+        <line num="71" type="stmt" count="1"/>
+        <line num="75" type="stmt" count="1"/>
+        <line num="76" type="stmt" count="1"/>
+        <line num="77" type="stmt" count="1"/>
+        <line num="78" type="stmt" count="1"/>
+        <line num="79" type="stmt" count="1"/>
+        <line num="80" type="stmt" count="1"/>
+        <line num="82" type="stmt" count="0"/>
+        <line num="83" type="stmt" count="0"/>
+        <line num="84" type="stmt" count="1"/>
+        <line num="85" type="stmt" count="1"/>
+        <line num="87" type="stmt" count="1"/>
+        <line num="88" type="stmt" count="1"/>
+        <line num="89" type="stmt" count="1"/>
+        <line num="90" type="stmt" count="1"/>
+        <line num="92" type="stmt" count="1"/>
+        <line num="93" type="stmt" count="1"/>
+        <line num="94" type="stmt" count="1"/>
+        <line num="95" type="stmt" count="1"/>
+        <line num="99" type="stmt" count="1"/>
+        <metrics loc="100" ncloc="90" classes="1" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="56" coveredstatements="52" elements="58" coveredelements="53"/>
+      </file>
+    </package>
+    <package name="Ekmungai\IFRS\Scopes">
+      <file name="C:\laravel-ifrs\src\Scopes\EntityScope.php">
+        <class name="Ekmungai\IFRS\Scopes\EntityScope" namespace="Ekmungai\IFRS\Scopes">
+          <metrics complexity="2" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="6" coveredelements="6"/>
+        </class>
+        <line num="25" type="method" name="apply" visibility="public" complexity="2" crap="2" count="129"/>
+        <line num="27" type="stmt" count="129"/>
+        <line num="28" type="stmt" count="129"/>
+        <line num="29" type="stmt" count="129"/>
+        <line num="30" type="stmt" count="129"/>
+        <line num="32" type="stmt" count="129"/>
+        <metrics loc="33" ncloc="19" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="6" coveredelements="6"/>
+      </file>
+    </package>
+    <package name="Ekmungai\IFRS\Traits">
+      <file name="C:\laravel-ifrs\src\Traits\Assigning.php">
+        <class name="Assigning" namespace="Ekmungai\IFRS\Traits">
+          <metrics complexity="2" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="5" coveredelements="5"/>
+        </class>
+        <line num="22" type="method" name="balance" visibility="public" complexity="2" crap="2" count="12"/>
+        <line num="24" type="stmt" count="12"/>
+        <line num="25" type="stmt" count="12"/>
+        <line num="26" type="stmt" count="3"/>
+        <line num="28" type="stmt" count="12"/>
+        <metrics loc="30" ncloc="15" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="5" coveredelements="5"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Traits\Buying.php">
+        <class name="Buying" namespace="Ekmungai\IFRS\Traits">
+          <metrics complexity="6" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="11" coveredstatements="11" elements="13" coveredelements="13"/>
+        </class>
+        <line num="21" type="method" name="save" visibility="public" complexity="3" crap="3" count="17"/>
+        <line num="23" type="stmt" count="17"/>
+        <line num="24" type="stmt" count="2"/>
+        <line num="27" type="stmt" count="15"/>
+        <line num="28" type="stmt" count="15"/>
+        <line num="33" type="method" name="post" visibility="public" complexity="3" crap="3" count="15"/>
+        <line num="35" type="stmt" count="15"/>
+        <line num="38" type="stmt" count="12"/>
+        <line num="47" type="stmt" count="12"/>
+        <line num="48" type="stmt" count="12"/>
+        <line num="49" type="stmt" count="3"/>
+        <line num="53" type="stmt" count="9"/>
+        <line num="54" type="stmt" count="9"/>
+        <metrics loc="55" ncloc="42" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="11" coveredstatements="11" elements="13" coveredelements="13"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Traits\Clearing.php">
+        <class name="Clearing" namespace="Ekmungai\IFRS\Traits">
+          <metrics complexity="3" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="7" coveredelements="7"/>
+        </class>
+        <line num="22" type="method" name="clearedAmount" visibility="public" complexity="2" crap="2" count="11"/>
+        <line num="24" type="stmt" count="11"/>
+        <line num="25" type="stmt" count="11"/>
+        <line num="26" type="stmt" count="5"/>
+        <line num="29" type="stmt" count="11"/>
+        <line num="36" type="method" name="clearances" visibility="public" complexity="1" crap="1" count="12"/>
+        <line num="38" type="stmt" count="12"/>
+        <metrics loc="40" ncloc="20" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="7" coveredelements="7"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Traits\Fetching.php">
+        <class name="Fetching" namespace="Ekmungai\IFRS\Traits">
+          <metrics complexity="5" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="16" coveredstatements="16" elements="17" coveredelements="17"/>
+        </class>
+        <line num="40" type="method" name="fetch" visibility="public" complexity="5" crap="5" count="10"/>
+        <line num="46" type="stmt" count="10"/>
+        <line num="49" type="stmt" count="10"/>
+        <line num="50" type="stmt" count="10"/>
+        <line num="54" type="stmt" count="10"/>
+        <line num="55" type="stmt" count="10"/>
+        <line num="57" type="stmt" count="10"/>
+        <line num="61" type="stmt" count="10"/>
+        <line num="62" type="stmt" count="10"/>
+        <line num="66" type="stmt" count="10"/>
+        <line num="67" type="stmt" count="10"/>
+        <line num="69" type="stmt" count="10"/>
+        <line num="70" type="stmt" count="10"/>
+        <line num="74" type="stmt" count="10"/>
+        <line num="75" type="stmt" count="10"/>
+        <line num="77" type="stmt" count="10"/>
+        <line num="78" type="stmt" count="10"/>
+        <metrics loc="80" ncloc="50" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="16" coveredstatements="16" elements="17" coveredelements="17"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Traits\Finding.php">
+        <class name="Finding" namespace="Ekmungai\IFRS\Traits">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="5" coveredelements="5"/>
+        </class>
+        <line num="29" type="method" name="find" visibility="public" complexity="1" crap="1" count="10"/>
+        <line num="31" type="stmt" count="10"/>
+        <line num="33" type="stmt" count="10"/>
+        <line num="34" type="stmt" count="10"/>
+        <line num="36" type="stmt" count="10"/>
+        <metrics loc="38" ncloc="19" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="5" coveredelements="5"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Traits\Instantiating.php">
+        <class name="Instantiating" namespace="Ekmungai\IFRS\Traits">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+        </class>
+        <line num="28" type="method" name="instantiate" visibility="public" complexity="1" crap="1" count="89"/>
+        <line num="30" type="stmt" count="89"/>
+        <line num="31" type="stmt" count="89"/>
+        <metrics loc="33" ncloc="14" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="2" elements="3" coveredelements="3"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Traits\Recycling.php">
+        <class name="Recycling" namespace="Ekmungai\IFRS\Traits">
+          <metrics complexity="5" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="20" coveredstatements="20" elements="22" coveredelements="22"/>
+        </class>
+        <line num="24" type="method" name="bootRecycling" visibility="public" complexity="4" crap="4" count="137"/>
+        <line num="27" type="stmt" count="137"/>
+        <line num="29" type="stmt" count="7"/>
+        <line num="30" type="stmt" count="7"/>
+        <line num="31" type="stmt" count="7"/>
+        <line num="32" type="stmt" count="7"/>
+        <line num="33" type="stmt" count="7"/>
+        <line num="34" type="stmt" count="7"/>
+        <line num="35" type="stmt" count="7"/>
+        <line num="38" type="stmt" count="7"/>
+        <line num="39" type="stmt" count="1"/>
+        <line num="40" type="stmt" count="1"/>
+        <line num="41" type="stmt" count="1"/>
+        <line num="44" type="stmt" count="137"/>
+        <line num="47" type="stmt" count="137"/>
+        <line num="49" type="stmt" count="1"/>
+        <line num="50" type="stmt" count="1"/>
+        <line num="51" type="stmt" count="1"/>
+        <line num="53" type="stmt" count="137"/>
+        <line num="55" type="stmt" count="137"/>
+        <line num="62" type="method" name="recycled" visibility="public" complexity="1" crap="1" count="11"/>
+        <line num="64" type="stmt" count="11"/>
+        <metrics loc="66" ncloc="47" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="20" coveredstatements="20" elements="22" coveredelements="22"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Traits\Segragating.php">
+        <class name="Segragating" namespace="Ekmungai\IFRS\Traits">
+          <metrics complexity="5" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="9" coveredstatements="8" elements="11" coveredelements="9"/>
+        </class>
+        <line num="27" type="method" name="bootSegragating" visibility="public" complexity="4" crap="4" count="137"/>
+        <line num="29" type="stmt" count="137"/>
+        <line num="31" type="stmt" count="137"/>
+        <line num="35" type="stmt" count="137"/>
+        <line num="36" type="stmt" count="1"/>
+        <line num="39" type="stmt" count="137"/>
+        <line num="40" type="stmt" count="137"/>
+        <line num="42" type="stmt" count="137"/>
+        <line num="44" type="stmt" count="137"/>
+        <line num="52" type="method" name="entity" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="54" type="stmt" count="0"/>
+        <metrics loc="56" ncloc="37" classes="1" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="9" coveredstatements="8" elements="11" coveredelements="9"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Traits\Selling.php">
+        <class name="Selling" namespace="Ekmungai\IFRS\Traits">
+          <metrics complexity="6" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="10" elements="12" coveredelements="12"/>
+        </class>
+        <line num="21" type="method" name="save" visibility="public" complexity="3" crap="3" count="19"/>
+        <line num="23" type="stmt" count="19"/>
+        <line num="24" type="stmt" count="2"/>
+        <line num="27" type="stmt" count="17"/>
+        <line num="28" type="stmt" count="17"/>
+        <line num="33" type="method" name="post" visibility="public" complexity="3" crap="3" count="17"/>
+        <line num="35" type="stmt" count="17"/>
+        <line num="37" type="stmt" count="14"/>
+        <line num="38" type="stmt" count="14"/>
+        <line num="39" type="stmt" count="3"/>
+        <line num="43" type="stmt" count="11"/>
+        <line num="44" type="stmt" count="11"/>
+        <metrics loc="45" ncloc="32" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="10" elements="12" coveredelements="12"/>
+      </file>
+    </package>
+    <package name="Ekmungai\IFRS\Transactions">
+      <file name="C:\laravel-ifrs\src\Transactions\AbstractTransaction.php">
+        <class name="Ekmungai\IFRS\Transactions\AbstractTransaction" namespace="Ekmungai\IFRS\Transactions">
+          <metrics complexity="28" methods="27" coveredmethods="13" conditionals="0" coveredconditionals="0" statements="47" coveredstatements="27" elements="74" coveredelements="40"/>
+        </class>
+        <line num="55" type="method" name="newTransaction" visibility="public" complexity="1" crap="1" count="89"/>
+        <line num="65" type="stmt" count="89"/>
+        <line num="67" type="stmt" count="89"/>
+        <line num="68" type="stmt" count="89"/>
+        <line num="69" type="stmt" count="89"/>
+        <line num="70" type="stmt" count="89"/>
+        <line num="77" type="method" name="existingTransaction" visibility="public" complexity="1" crap="1" count="20"/>
+        <line num="79" type="stmt" count="20"/>
+        <line num="80" type="stmt" count="20"/>
+        <line num="85" type="method" name="refresh" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="87" type="stmt" count="2"/>
+        <line num="88" type="stmt" count="2"/>
+        <line num="95" type="method" name="isPosted" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="97" type="stmt" count="0"/>
+        <line num="105" type="method" name="getClearedType" visibility="public" complexity="1" crap="1" count="13"/>
+        <line num="107" type="stmt" count="13"/>
+        <line num="115" type="method" name="isCredited" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="117" type="stmt" count="0"/>
+        <line num="123" type="method" name="save" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="125" type="stmt" count="4"/>
+        <line num="126" type="stmt" count="4"/>
+        <line num="133" type="method" name="delete" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="135" type="stmt" count="2"/>
+        <line num="141" type="method" name="post" visibility="public" complexity="1" crap="1" count="28"/>
+        <line num="143" type="stmt" count="28"/>
+        <line num="144" type="stmt" count="28"/>
+        <line num="151" type="method" name="getId" visibility="public" complexity="1" crap="1" count="33"/>
+        <line num="153" type="stmt" count="33"/>
+        <line num="161" type="method" name="getTransactionNo" visibility="public" complexity="1" crap="1" count="23"/>
+        <line num="163" type="stmt" count="23"/>
+        <line num="171" type="method" name="setTransactionNo" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="173" type="stmt" count="0"/>
+        <line num="174" type="stmt" count="0"/>
+        <line num="181" type="method" name="getDate" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="183" type="stmt" count="0"/>
+        <line num="191" type="method" name="getAccount" visibility="public" complexity="1" crap="1" count="69"/>
+        <line num="193" type="stmt" count="69"/>
+        <line num="201" type="method" name="setAccount" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="203" type="stmt" count="0"/>
+        <line num="204" type="stmt" count="0"/>
+        <line num="211" type="method" name="getCurrency" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="213" type="stmt" count="0"/>
+        <line num="221" type="method" name="setCurrency" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="223" type="stmt" count="0"/>
+        <line num="224" type="stmt" count="0"/>
+        <line num="231" type="method" name="getExchangeRate" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="233" type="stmt" count="0"/>
+        <line num="241" type="method" name="setExchangeRate" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="243" type="stmt" count="0"/>
+        <line num="244" type="stmt" count="0"/>
+        <line num="251" type="method" name="getNarration" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="253" type="stmt" count="0"/>
+        <line num="261" type="method" name="setNarration" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="263" type="stmt" count="0"/>
+        <line num="264" type="stmt" count="0"/>
+        <line num="271" type="method" name="getReference" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="273" type="stmt" count="0"/>
+        <line num="281" type="method" name="setReference" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="283" type="stmt" count="0"/>
+        <line num="284" type="stmt" count="0"/>
+        <line num="291" type="method" name="addLineItem" visibility="public" complexity="1" crap="1" count="58"/>
+        <line num="293" type="stmt" count="58"/>
+        <line num="294" type="stmt" count="57"/>
+        <line num="301" type="method" name="removeLineItem" visibility="public" complexity="1" crap="1.12" count="1"/>
+        <line num="303" type="stmt" count="1"/>
+        <line num="304" type="stmt" count="0"/>
+        <line num="311" type="method" name="getLineItems" visibility="public" complexity="1" crap="1" count="32"/>
+        <line num="313" type="stmt" count="32"/>
+        <line num="321" type="method" name="getAmount" visibility="public" complexity="2" crap="2" count="14"/>
+        <line num="323" type="stmt" count="14"/>
+        <line num="324" type="stmt" count="14"/>
+        <line num="325" type="stmt" count="14"/>
+        <line num="326" type="stmt" count="14"/>
+        <line num="328" type="stmt" count="14"/>
+        <metrics loc="330" ncloc="177" classes="1" methods="27" coveredmethods="13" conditionals="0" coveredconditionals="0" statements="47" coveredstatements="27" elements="74" coveredelements="40"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Transactions\CashPurchase.php">
+        <class name="Ekmungai\IFRS\Transactions\CashPurchase" namespace="Ekmungai\IFRS\Transactions">
+          <metrics complexity="5" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="18" coveredstatements="15" elements="21" coveredelements="17"/>
+        </class>
+        <line num="59" type="method" name="new" visibility="public" complexity="1" crap="1" count="9"/>
+        <line num="67" type="stmt" count="9"/>
+        <line num="69" type="stmt" count="9"/>
+        <line num="70" type="stmt" count="9"/>
+        <line num="71" type="stmt" count="9"/>
+        <line num="72" type="stmt" count="9"/>
+        <line num="73" type="stmt" count="9"/>
+        <line num="74" type="stmt" count="9"/>
+        <line num="75" type="stmt" count="9"/>
+        <line num="76" type="stmt" count="9"/>
+        <line num="77" type="stmt" count="9"/>
+        <line num="80" type="stmt" count="9"/>
+        <line num="88" type="method" name="setDate" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="90" type="stmt" count="0"/>
+        <line num="91" type="stmt" count="0"/>
+        <line num="92" type="stmt" count="0"/>
+        <line num="97" type="method" name="save" visibility="public" complexity="3" crap="3" count="9"/>
+        <line num="99" type="stmt" count="9"/>
+        <line num="100" type="stmt" count="1"/>
+        <line num="103" type="stmt" count="8"/>
+        <line num="104" type="stmt" count="8"/>
+        <metrics loc="105" ncloc="68" classes="1" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="18" coveredstatements="15" elements="21" coveredelements="17"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Transactions\CashSale.php">
+        <class name="Ekmungai\IFRS\Transactions\CashSale" namespace="Ekmungai\IFRS\Transactions">
+          <metrics complexity="5" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="18" coveredstatements="15" elements="21" coveredelements="17"/>
+        </class>
+        <line num="59" type="method" name="new" visibility="public" complexity="1" crap="1" count="9"/>
+        <line num="67" type="stmt" count="9"/>
+        <line num="69" type="stmt" count="9"/>
+        <line num="70" type="stmt" count="9"/>
+        <line num="71" type="stmt" count="9"/>
+        <line num="72" type="stmt" count="9"/>
+        <line num="73" type="stmt" count="9"/>
+        <line num="74" type="stmt" count="9"/>
+        <line num="75" type="stmt" count="9"/>
+        <line num="76" type="stmt" count="9"/>
+        <line num="77" type="stmt" count="9"/>
+        <line num="80" type="stmt" count="9"/>
+        <line num="88" type="method" name="setDate" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="90" type="stmt" count="0"/>
+        <line num="91" type="stmt" count="0"/>
+        <line num="92" type="stmt" count="0"/>
+        <line num="97" type="method" name="save" visibility="public" complexity="3" crap="3" count="9"/>
+        <line num="99" type="stmt" count="9"/>
+        <line num="100" type="stmt" count="1"/>
+        <line num="103" type="stmt" count="8"/>
+        <line num="104" type="stmt" count="8"/>
+        <metrics loc="105" ncloc="68" classes="1" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="18" coveredstatements="15" elements="21" coveredelements="17"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Transactions\ClientInvoice.php">
+        <class name="Ekmungai\IFRS\Transactions\ClientInvoice" namespace="Ekmungai\IFRS\Transactions">
+          <metrics complexity="3" methods="3" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="11" elements="18" coveredelements="12"/>
+        </class>
+        <line num="61" type="method" name="new" visibility="public" complexity="1" crap="1" count="12"/>
+        <line num="69" type="stmt" count="12"/>
+        <line num="71" type="stmt" count="12"/>
+        <line num="72" type="stmt" count="12"/>
+        <line num="73" type="stmt" count="12"/>
+        <line num="74" type="stmt" count="12"/>
+        <line num="75" type="stmt" count="12"/>
+        <line num="76" type="stmt" count="12"/>
+        <line num="77" type="stmt" count="12"/>
+        <line num="78" type="stmt" count="12"/>
+        <line num="79" type="stmt" count="12"/>
+        <line num="82" type="stmt" count="12"/>
+        <line num="90" type="method" name="setDate" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="92" type="stmt" count="0"/>
+        <line num="93" type="stmt" count="0"/>
+        <line num="94" type="stmt" count="0"/>
+        <line num="101" type="method" name="clearedAmount" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="103" type="stmt" count="0"/>
+        <metrics loc="105" ncloc="66" classes="1" methods="3" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="11" elements="18" coveredelements="12"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Transactions\ClientReceipt.php">
+        <class name="Ekmungai\IFRS\Transactions\ClientReceipt" namespace="Ekmungai\IFRS\Transactions">
+          <metrics complexity="10" methods="5" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="27" coveredstatements="23" elements="32" coveredelements="26"/>
+        </class>
+        <line num="60" type="method" name="new" visibility="public" complexity="1" crap="1" count="11"/>
+        <line num="68" type="stmt" count="11"/>
+        <line num="70" type="stmt" count="11"/>
+        <line num="71" type="stmt" count="11"/>
+        <line num="72" type="stmt" count="11"/>
+        <line num="73" type="stmt" count="11"/>
+        <line num="74" type="stmt" count="11"/>
+        <line num="75" type="stmt" count="11"/>
+        <line num="76" type="stmt" count="11"/>
+        <line num="77" type="stmt" count="11"/>
+        <line num="78" type="stmt" count="11"/>
+        <line num="81" type="stmt" count="11"/>
+        <line num="89" type="method" name="setDate" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="91" type="stmt" count="0"/>
+        <line num="92" type="stmt" count="0"/>
+        <line num="93" type="stmt" count="0"/>
+        <line num="98" type="method" name="save" visibility="public" complexity="3" crap="3" count="11"/>
+        <line num="100" type="stmt" count="11"/>
+        <line num="101" type="stmt" count="1"/>
+        <line num="104" type="stmt" count="10"/>
+        <line num="105" type="stmt" count="10"/>
+        <line num="110" type="method" name="post" visibility="public" complexity="4" crap="4" count="8"/>
+        <line num="112" type="stmt" count="8"/>
+        <line num="114" type="stmt" count="7"/>
+        <line num="115" type="stmt" count="7"/>
+        <line num="116" type="stmt" count="1"/>
+        <line num="119" type="stmt" count="6"/>
+        <line num="120" type="stmt" count="1"/>
+        <line num="124" type="stmt" count="5"/>
+        <line num="125" type="stmt" count="5"/>
+        <line num="131" type="method" name="balance" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="133" type="stmt" count="0"/>
+        <metrics loc="135" ncloc="92" classes="1" methods="5" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="27" coveredstatements="23" elements="32" coveredelements="26"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Transactions\ContraEntry.php">
+        <class name="Ekmungai\IFRS\Transactions\ContraEntry" namespace="Ekmungai\IFRS\Transactions">
+          <metrics complexity="9" methods="4" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="26" coveredstatements="22" elements="30" coveredelements="24"/>
+        </class>
+        <line num="58" type="method" name="new" visibility="public" complexity="1" crap="1" count="8"/>
+        <line num="66" type="stmt" count="8"/>
+        <line num="68" type="stmt" count="8"/>
+        <line num="69" type="stmt" count="8"/>
+        <line num="70" type="stmt" count="8"/>
+        <line num="71" type="stmt" count="8"/>
+        <line num="72" type="stmt" count="8"/>
+        <line num="73" type="stmt" count="8"/>
+        <line num="74" type="stmt" count="8"/>
+        <line num="75" type="stmt" count="8"/>
+        <line num="76" type="stmt" count="8"/>
+        <line num="79" type="stmt" count="8"/>
+        <line num="87" type="method" name="setDate" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="89" type="stmt" count="0"/>
+        <line num="90" type="stmt" count="0"/>
+        <line num="91" type="stmt" count="0"/>
+        <line num="96" type="method" name="save" visibility="public" complexity="3" crap="3" count="8"/>
+        <line num="98" type="stmt" count="8"/>
+        <line num="99" type="stmt" count="1"/>
+        <line num="102" type="stmt" count="7"/>
+        <line num="103" type="stmt" count="7"/>
+        <line num="108" type="method" name="post" visibility="public" complexity="4" crap="4.03" count="5"/>
+        <line num="110" type="stmt" count="5"/>
+        <line num="112" type="stmt" count="4"/>
+        <line num="113" type="stmt" count="4"/>
+        <line num="114" type="stmt" count="1"/>
+        <line num="117" type="stmt" count="3"/>
+        <line num="118" type="stmt" count="0"/>
+        <line num="122" type="stmt" count="3"/>
+        <line num="123" type="stmt" count="3"/>
+        <metrics loc="124" ncloc="84" classes="1" methods="4" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="26" coveredstatements="22" elements="30" coveredelements="24"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Transactions\CreditNote.php">
+        <class name="Ekmungai\IFRS\Transactions\CreditNote" namespace="Ekmungai\IFRS\Transactions">
+          <metrics complexity="3" methods="3" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="11" elements="18" coveredelements="12"/>
+        </class>
+        <line num="60" type="method" name="new" visibility="public" complexity="1" crap="1" count="9"/>
+        <line num="68" type="stmt" count="9"/>
+        <line num="70" type="stmt" count="9"/>
+        <line num="71" type="stmt" count="9"/>
+        <line num="72" type="stmt" count="9"/>
+        <line num="73" type="stmt" count="9"/>
+        <line num="74" type="stmt" count="9"/>
+        <line num="75" type="stmt" count="9"/>
+        <line num="76" type="stmt" count="9"/>
+        <line num="77" type="stmt" count="9"/>
+        <line num="78" type="stmt" count="9"/>
+        <line num="81" type="stmt" count="9"/>
+        <line num="89" type="method" name="setDate" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="91" type="stmt" count="0"/>
+        <line num="92" type="stmt" count="0"/>
+        <line num="93" type="stmt" count="0"/>
+        <line num="100" type="method" name="balance" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="102" type="stmt" count="0"/>
+        <metrics loc="104" ncloc="65" classes="1" methods="3" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="11" elements="18" coveredelements="12"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Transactions\DebitNote.php">
+        <class name="Ekmungai\IFRS\Transactions\DebitNote" namespace="Ekmungai\IFRS\Transactions">
+          <metrics complexity="3" methods="3" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="11" elements="18" coveredelements="12"/>
+        </class>
+        <line num="60" type="method" name="new" visibility="public" complexity="1" crap="1" count="9"/>
+        <line num="68" type="stmt" count="9"/>
+        <line num="70" type="stmt" count="9"/>
+        <line num="71" type="stmt" count="9"/>
+        <line num="72" type="stmt" count="9"/>
+        <line num="73" type="stmt" count="9"/>
+        <line num="74" type="stmt" count="9"/>
+        <line num="75" type="stmt" count="9"/>
+        <line num="76" type="stmt" count="9"/>
+        <line num="77" type="stmt" count="9"/>
+        <line num="78" type="stmt" count="9"/>
+        <line num="81" type="stmt" count="9"/>
+        <line num="89" type="method" name="setDate" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="91" type="stmt" count="0"/>
+        <line num="92" type="stmt" count="0"/>
+        <line num="93" type="stmt" count="0"/>
+        <line num="100" type="method" name="balance" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="102" type="stmt" count="0"/>
+        <metrics loc="104" ncloc="65" classes="1" methods="3" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="11" elements="18" coveredelements="12"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Transactions\JournalEntry.php">
+        <class name="Ekmungai\IFRS\Transactions\JournalEntry" namespace="Ekmungai\IFRS\Transactions">
+          <metrics complexity="6" methods="6" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="19" coveredstatements="15" elements="25" coveredelements="19"/>
+        </class>
+        <line num="59" type="method" name="new" visibility="public" complexity="1" crap="1" count="32"/>
+        <line num="67" type="stmt" count="32"/>
+        <line num="69" type="stmt" count="32"/>
+        <line num="70" type="stmt" count="32"/>
+        <line num="71" type="stmt" count="32"/>
+        <line num="72" type="stmt" count="32"/>
+        <line num="73" type="stmt" count="32"/>
+        <line num="74" type="stmt" count="32"/>
+        <line num="75" type="stmt" count="32"/>
+        <line num="76" type="stmt" count="32"/>
+        <line num="77" type="stmt" count="32"/>
+        <line num="80" type="stmt" count="32"/>
+        <line num="88" type="method" name="setDate" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="90" type="stmt" count="0"/>
+        <line num="91" type="stmt" count="0"/>
+        <line num="92" type="stmt" count="0"/>
+        <line num="99" type="method" name="getCredited" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="101" type="stmt" count="0"/>
+        <line num="108" type="method" name="setCredited" visibility="public" complexity="1" crap="1" count="17"/>
+        <line num="110" type="stmt" count="17"/>
+        <line num="111" type="stmt" count="17"/>
+        <line num="118" type="method" name="balance" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="120" type="stmt" count="2"/>
+        <line num="126" type="method" name="clearedAmount" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="128" type="stmt" count="2"/>
+        <metrics loc="130" ncloc="79" classes="1" methods="6" coveredmethods="4" conditionals="0" coveredconditionals="0" statements="19" coveredstatements="15" elements="25" coveredelements="19"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Transactions\SupplierBill.php">
+        <class name="Ekmungai\IFRS\Transactions\SupplierBill" namespace="Ekmungai\IFRS\Transactions">
+          <metrics complexity="3" methods="3" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="11" elements="18" coveredelements="12"/>
+        </class>
+        <line num="61" type="method" name="new" visibility="public" complexity="1" crap="1" count="11"/>
+        <line num="69" type="stmt" count="11"/>
+        <line num="71" type="stmt" count="11"/>
+        <line num="72" type="stmt" count="11"/>
+        <line num="73" type="stmt" count="11"/>
+        <line num="74" type="stmt" count="11"/>
+        <line num="75" type="stmt" count="11"/>
+        <line num="76" type="stmt" count="11"/>
+        <line num="77" type="stmt" count="11"/>
+        <line num="78" type="stmt" count="11"/>
+        <line num="79" type="stmt" count="11"/>
+        <line num="82" type="stmt" count="11"/>
+        <line num="90" type="method" name="setDate" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="92" type="stmt" count="0"/>
+        <line num="93" type="stmt" count="0"/>
+        <line num="94" type="stmt" count="0"/>
+        <line num="101" type="method" name="clearedAmount" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="103" type="stmt" count="0"/>
+        <metrics loc="105" ncloc="66" classes="1" methods="3" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="11" elements="18" coveredelements="12"/>
+      </file>
+      <file name="C:\laravel-ifrs\src\Transactions\SupplierPayment.php">
+        <class name="Ekmungai\IFRS\Transactions\SupplierPayment" namespace="Ekmungai\IFRS\Transactions">
+          <metrics complexity="10" methods="5" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="27" coveredstatements="22" elements="32" coveredelements="24"/>
+        </class>
+        <line num="61" type="method" name="new" visibility="public" complexity="1" crap="1" count="9"/>
+        <line num="69" type="stmt" count="9"/>
+        <line num="71" type="stmt" count="9"/>
+        <line num="72" type="stmt" count="9"/>
+        <line num="73" type="stmt" count="9"/>
+        <line num="74" type="stmt" count="9"/>
+        <line num="75" type="stmt" count="9"/>
+        <line num="76" type="stmt" count="9"/>
+        <line num="77" type="stmt" count="9"/>
+        <line num="78" type="stmt" count="9"/>
+        <line num="79" type="stmt" count="9"/>
+        <line num="82" type="stmt" count="9"/>
+        <line num="90" type="method" name="setDate" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="92" type="stmt" count="0"/>
+        <line num="93" type="stmt" count="0"/>
+        <line num="94" type="stmt" count="0"/>
+        <line num="99" type="method" name="save" visibility="public" complexity="3" crap="3" count="9"/>
+        <line num="101" type="stmt" count="9"/>
+        <line num="102" type="stmt" count="1"/>
+        <line num="105" type="stmt" count="8"/>
+        <line num="106" type="stmt" count="8"/>
+        <line num="111" type="method" name="post" visibility="public" complexity="4" crap="4.03" count="6"/>
+        <line num="113" type="stmt" count="6"/>
+        <line num="115" type="stmt" count="5"/>
+        <line num="116" type="stmt" count="5"/>
+        <line num="117" type="stmt" count="1"/>
+        <line num="120" type="stmt" count="4"/>
+        <line num="121" type="stmt" count="0"/>
+        <line num="125" type="stmt" count="4"/>
+        <line num="126" type="stmt" count="4"/>
+        <line num="133" type="method" name="balance" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="135" type="stmt" count="0"/>
+        <metrics loc="137" ncloc="92" classes="1" methods="5" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="27" coveredstatements="22" elements="32" coveredelements="24"/>
+      </file>
+    </package>
+    <metrics files="78" loc="6167" ncloc="3600" classes="69" methods="237" coveredmethods="165" conditionals="0" coveredconditionals="0" statements="1066" coveredstatements="877" elements="1303" coveredelements="1042"/>
+  </project>
+</coverage>
