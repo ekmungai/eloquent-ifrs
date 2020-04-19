@@ -20,6 +20,7 @@ use Ekmungai\IFRS\Transactions\ClientInvoice;
 use Ekmungai\IFRS\Transactions\ClientReceipt;
 
 use Ekmungai\IFRS\Exceptions\InsufficientBalance;
+use Ekmungai\IFRS\Exceptions\OverClearance;
 use Ekmungai\IFRS\Exceptions\SelfClearance;
 use Ekmungai\IFRS\Exceptions\UnpostedAssignment;
 use Ekmungai\IFRS\Exceptions\UnassignableTransaction;
@@ -28,7 +29,6 @@ use Ekmungai\IFRS\Exceptions\InvalidClearanceAccount;
 use Ekmungai\IFRS\Exceptions\InvalidClearanceCurrency;
 use Ekmungai\IFRS\Exceptions\InvalidClearanceEntry;
 use Ekmungai\IFRS\Exceptions\NegativeAmount;
-
 
 class AssignmentTest extends TestCase
 {
@@ -278,11 +278,11 @@ class AssignmentTest extends TestCase
         $cleared->addLineItem($line);
         $cleared->post();
 
-        $this->expectException('\Ekmungai\IFRS\Exceptions\OverClearance');
+        $this->expectException(OverClearance::class);
         $this->expectExceptionMessage('Journal Entry Transaction amount remaining to be cleared is less than 125');
 
         $assignment = Assignment::new($transaction, $cleared, 125);
-        $assignment->save();
+//         $assignment->save();
     }
 
     /**
