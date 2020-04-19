@@ -29,8 +29,6 @@ class TrialBalanceTest extends TestCase
      */
     public function testTrialBalance()
     {
-        $trialBalance = new TrialBalance();
-
         /*
          |
          | Opening balances must be made to balance manually, Transactions enforce double entry
@@ -429,6 +427,7 @@ class TrialBalanceTest extends TestCase
         $bill->addLineItem(factory(LineItem::class)->create(["account_id" => $otherExpense]));
         $bill->post();
 
+        $trialBalance = new TrialBalance();
         $trialBalance->getSections();
 
         /*

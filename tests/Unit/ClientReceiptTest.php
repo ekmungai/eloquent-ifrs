@@ -34,6 +34,7 @@ class ClientReceiptTest extends TestCase
         ]);
 
         $clientReceipt = ClientReceipt::new($clientAccount, Carbon::now(), $this->faker->word);
+        $clientReceipt->setDate(Carbon::now());
         $clientReceipt->save();
 
         $this->assertEquals($clientReceipt->getAccount()->name, $clientAccount->name);

@@ -33,6 +33,7 @@ class ContraEntryTest extends TestCase
         ]);
 
         $contraEntry = ContraEntry::new($bankAccount, Carbon::now(), $this->faker->word);
+        $contraEntry->setDate(Carbon::now());
         $contraEntry->save();
 
         $this->assertEquals($contraEntry->getAccount()->name, $bankAccount->name);

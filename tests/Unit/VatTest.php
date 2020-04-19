@@ -24,6 +24,7 @@ class VatTest extends TestCase
         $this->be($user);
 
         $vat = Vat::new($this->faker->word, $this->faker->word, 10);
+        $vat->attributes();
         $vat->save();
 
         $this->assertEquals(count(Vat::all()), 1);

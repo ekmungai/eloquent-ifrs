@@ -33,6 +33,7 @@ class SupplierPaymentTest extends TestCase
         ]);
 
         $supplierPayment = SupplierPayment::new($supplierAccount, Carbon::now(), $this->faker->word);
+        $supplierPayment->setDate(Carbon::now());
         $supplierPayment->save();
 
         $this->assertEquals($supplierPayment->getAccount()->name, $supplierAccount->name);

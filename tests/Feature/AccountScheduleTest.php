@@ -171,6 +171,7 @@ class AccountScheduleTest extends TestCase
 
 
         $schedule = new AccountSchedule($account, $currency);
+        $schedule->attributes();
         $schedule->getTransactions();
 
         $this->assertEquals($schedule->transactions[0]->id, $balance->id);

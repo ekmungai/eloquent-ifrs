@@ -77,6 +77,8 @@ class AccountStatement
      * Get Statement Currency
      *
      * @return \Ekmungai\IFRS\Models\Currency
+     *
+     * @codeCoverageIgnore
      */
     public function getCurrency()
     {
@@ -87,6 +89,8 @@ class AccountStatement
      * Set Statement Currency
      *
      * @param \Ekmungai\IFRS\Models\Currency $currency
+     *
+     * @codeCoverageIgnore
      */
     public function setCurrency($currency) : void
     {
@@ -97,6 +101,8 @@ class AccountStatement
      * Get Statement Account
      *
      * @return \Ekmungai\IFRS\Models\Account
+     *
+     * @codeCoverageIgnore
      */
     public function getAccount()
     {
@@ -107,6 +113,8 @@ class AccountStatement
      * Set Statement Account
      *
      * @param \Ekmungai\IFRS\Models\Account $account
+     *
+     * @codeCoverageIgnore
      */
     public function setAccount($account) : void
     {
@@ -117,6 +125,8 @@ class AccountStatement
      * Get Statement Entity
      *
      * @return \Ekmungai\IFRS\Models\Entity
+     *
+     * @codeCoverageIgnore
      */
     public function getEntity()
     {
@@ -127,6 +137,8 @@ class AccountStatement
      * Set Statement Entity
      *
      * @param \Ekmungai\IFRS\Models\Entity $entity
+     *
+     * @codeCoverageIgnore
      */
     public function setEntity($entity) : void
     {

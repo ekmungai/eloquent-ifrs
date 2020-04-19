@@ -1,6 +1,8 @@
 # Laravel IFRS
+
 [![Build Status](https://travis-ci.com/ekmungai/laravel-ifrs.svg?branch=master)](https://travis-ci.com/ekmungai/laravel-ifrs)
 ![PHP 7.2](https://img.shields.io/badge/PHP-7.2-blue.svg)
+
 Laravel Double Entry Accounting with a focus on IFRS Compliant Reporting.
 
 With a fluent interface for creating Accounts, Transactions and Reports, this package transforms your Business Objects into Standard Accounting Reports such as an Income Statement (Profit and Loss) and a Balance Sheet.

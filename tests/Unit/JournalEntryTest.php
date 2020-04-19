@@ -28,6 +28,7 @@ class JournalEntryTest extends TestCase
         $mainAccount = factory(Account::class)->create();
 
         $journalEntry = JournalEntry::new($mainAccount, Carbon::now(), $this->faker->word);
+        $journalEntry->setDate(Carbon::now());
         $journalEntry->save();
 
         $this->assertEquals($journalEntry->getAccount()->name, $mainAccount->name);

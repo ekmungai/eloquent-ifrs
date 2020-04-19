@@ -31,6 +31,8 @@ class CategoryTest extends TestCase
         );
         $category->save();
 
+        $category->attributes();
+
         $this->assertEquals(count(Category::all()), 1);
 
         $this->be(User::withoutGlobalScopes()->find(1));

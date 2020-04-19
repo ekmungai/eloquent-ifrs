@@ -33,6 +33,7 @@ class CashSaleTest extends TestCase
         ]);
 
         $cashSale = CashSale::new($bankAccount, Carbon::now(), $this->faker->word);
+        $cashSale->setDate(Carbon::now());
         $cashSale->save();
 
         $this->assertEquals($cashSale->getAccount()->name, $bankAccount->name);

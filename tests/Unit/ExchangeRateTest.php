@@ -28,6 +28,7 @@ class ExchangeRateTest extends TestCase
             $currency,
             10
         );
+        $exchangeRate->attributes();
         $exchangeRate->save();
 
         $this->assertEquals($exchangeRate->currency->name, $currency->name);

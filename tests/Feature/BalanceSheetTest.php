@@ -27,6 +27,7 @@ class BalanceSheetTest extends TestCase
     public function testBalanceSheet()
     {
         $balanceSheet = new BalanceSheet();
+        $balanceSheet->attributes();
 
         factory(Balance::class)->create([
             "year" => date("Y"),

@@ -33,6 +33,7 @@ class DebitNoteTest extends TestCase
         ]);
 
         $debitNote = DebitNote::new($supplierAccount, Carbon::now(), $this->faker->word);
+        $debitNote->setDate(Carbon::now());
         $debitNote->save();
 
         $this->assertEquals($debitNote->getAccount()->name, $supplierAccount->name);

@@ -50,6 +50,7 @@ class AccountStatementTest extends TestCase
         $this->expectExceptionMessage('Account Statement Transactions require an Account');
 
         $statement = new AccountStatement();
+        $statement->attributes();
         $statement->getTransactions();
     }
 

@@ -33,6 +33,7 @@ class ClientInvoiceTest extends TestCase
         ]);
 
         $clientInvoice = ClientInvoice::new($clientAccount, Carbon::now(), $this->faker->word);
+        $clientInvoice->setDate(Carbon::now());
         $clientInvoice->save();
 
         $this->assertEquals($clientInvoice->getAccount()->name, $clientAccount->name);

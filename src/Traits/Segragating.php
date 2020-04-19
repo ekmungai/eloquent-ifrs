@@ -23,6 +23,8 @@ trait Segragating
      * Register EntityScope for Model.
      *
      * @return null
+     *
+     * @codeCoverageIgnore
      */
     public static function bootSegragating()
     {

@@ -33,6 +33,7 @@ class SupplierBillTest extends TestCase
         ]);
 
         $supplierBill = SupplierBill::new($supplierAccount, Carbon::now(), $this->faker->word);
+        $supplierBill->setDate(Carbon::now());
         $supplierBill->save();
 
         $this->assertEquals($supplierBill->getAccount()->name, $supplierAccount->name);

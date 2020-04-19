@@ -77,6 +77,7 @@ class IncomeStatement extends FinancialStatement
     /**
      * Print Income Statement.
      *
+     * @codeCoverageIgnore
      */
     public function toString() : void
     {

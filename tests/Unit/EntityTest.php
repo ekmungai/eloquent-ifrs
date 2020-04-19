@@ -26,6 +26,7 @@ class EntityTest extends TestCase
         $currency = factory(Currency::class)->create();
 
         $entity = Entity::new($this->faker->company, $currency);
+        $entity->attributes();
         $entity->save();
 
         $user = factory(User::class)->create();

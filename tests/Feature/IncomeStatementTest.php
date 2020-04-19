@@ -28,6 +28,7 @@ class IncomeStatementTest extends TestCase
     public function testIncomeStatement()
     {
         $incomeStatement = new IncomeStatement();
+        $incomeStatement->attributes();
 
         /*
          | ------------------------------

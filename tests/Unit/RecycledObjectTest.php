@@ -25,6 +25,7 @@ class RecycledObjectTest extends TestCase
         factory(User::class)->create()->delete();
 
         $recycled = RecycledObject::all()->first();
+        $recycled->attributes();
         $this->assertEquals($recycled->user->id, $user->id);
     }
 

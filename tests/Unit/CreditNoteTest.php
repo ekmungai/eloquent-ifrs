@@ -33,6 +33,7 @@ class CreditNoteTest extends TestCase
         ]);
 
         $creditNote = CreditNote::new($clientAccount, Carbon::now(), $this->faker->word);
+        $creditNote->setDate(Carbon::now());
         $creditNote->save();
 
         $this->assertEquals($creditNote->getAccount()->name, $clientAccount->name);

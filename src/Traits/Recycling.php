@@ -20,6 +20,8 @@ trait Recycling
      * Model recycling events.
      *
      * @return void
+     *
+     * @codeCoverageIgnore
      */
     public static function bootRecycling()
     {

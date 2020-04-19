@@ -24,6 +24,7 @@ class ReportingPeriodTest extends TestCase
         $entity = Auth::user()->entity;
 
         $period = ReportingPeriod::new(1, date("Y"));
+        $period->attributes();
         $this->assertEquals($entity->reportingPeriods->last()->year, $period->year);
     }
 

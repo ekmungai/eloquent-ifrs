@@ -93,6 +93,8 @@ class BalanceSheet extends FinancialStatement
 
     /**
      * Print Balance Sheet.
+     *
+     * @codeCoverageIgnore
      */
     public function toString() : void
     {

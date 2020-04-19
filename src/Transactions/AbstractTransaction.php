@@ -24,7 +24,7 @@ use Ekmungai\IFRS\Models\Transaction;
 
 /**
  *
- * @author emung
+ * @codeCoverageIgnore
  *
  */
 abstract class AbstractTransaction implements Instantiable, Findable
@@ -51,6 +51,8 @@ abstract class AbstractTransaction implements Instantiable, Findable
      * @param Currency $currency
      * @param ExchangeRate $exchangeRate
      * @param string $reference
+     *
+     *
      */
     public function newTransaction(
         string $prefix,

@@ -18,6 +18,7 @@ class CurrencyTest extends TestCase
     public function testCurrencyRelationships()
     {
         $currency = Currency::new($this->faker->word, $this->faker->currencyCode);
+        $currency->attributes();
         $currency->save();
 
         $exchangeRate = factory(ExchangeRate::class)->create(

@@ -62,6 +62,8 @@ abstract class FinancialStatement
      * @param string $indent
      *
      * @return array[string, float]
+     *
+     * @codeCoverageIgnore
      */
     protected function printSection(string $section, string $statement, int $multiplier, string $indent)
     {
@@ -85,7 +87,7 @@ abstract class FinancialStatement
     }
 
     /**
-     * Constract Financial Statement for the given period
+     * Construct Financial Statement for the given period
      *
      * @param string $year
      */
@@ -99,6 +101,8 @@ abstract class FinancialStatement
      * Get Statement Reporting Period
      *
      * @return string
+     *
+     * @codeCoverageIgnore
      */
     public function getReportingPeriod()
     {
@@ -109,6 +113,8 @@ abstract class FinancialStatement
      * Set Statement Reporting period
      *
      * @param string $reportingPeriod
+     *
+     * @codeCoverageIgnore
      */
     public function setReportingPeriod(string $reportingPeriod) : void
     {
@@ -119,6 +125,8 @@ abstract class FinancialStatement
      * Get Statements Entity.
      *
      * @return \Ekmungai\IFRS\Models\Entity
+     *
+     * @codeCoverageIgnore
      */
     public function getEntity()
     {
@@ -129,6 +137,8 @@ abstract class FinancialStatement
      * Set Statement Entity.
      *
      * @param \Ekmungai\IFRS\Models\Entity $entity
+     *
+     * @codeCoverageIgnore
      */
     public function setEntity(Entity $entity) : void
     {

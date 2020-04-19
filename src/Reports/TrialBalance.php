@@ -22,6 +22,8 @@ class TrialBalance extends FinancialStatement
 
     /**
      * Get Trial Balance Sections.
+     *
+     * @codeCoverageIgnore
      */
     public function getSections() : void
     {

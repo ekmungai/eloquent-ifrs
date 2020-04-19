@@ -28,6 +28,7 @@ class UserTest extends TestCase
 
         $this->be($users[0]);
 
+        $this->assertEquals($users[0]->entity->id, 2);
         $this->assertEquals(count(User::all()), 5);
     }
 
@@ -39,6 +40,7 @@ class UserTest extends TestCase
     public function testUserRecycling()
     {
         $user = factory(User::class)->create();
+        $user->attributes();
         $user->delete();
 
         $recycled = RecycledObject::all()->first();
