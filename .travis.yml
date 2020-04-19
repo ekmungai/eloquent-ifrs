@@ -7,3 +7,6 @@ install:
 - travis_retry composer install --no-interaction --prefer-source
 
 dist: trusty
+
+script:
+  - vendor/bin/phpunit --filter testOverClearance --testdox
