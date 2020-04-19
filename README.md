@@ -403,7 +403,11 @@ $incomeStatement->getSections();// Fetch balances from the ledger and store them
 At this point the Income Statement object contains an array of sections as defined in the configuration with total balances for each section. Printing the statement to a string yields:
 
 ```
-$incomeStatement->toString(); //this function is only for demonstration and debugging use and should never be called in production
+/**
+* this function is only for demonstration and
+* debugging use and should never be called in production
+*/
+$incomeStatement->toString();
 
 Example Company
 Income Statement
@@ -443,7 +447,11 @@ $balanceSheet = new BalanceSheet(
 );
 $balanceSheet->getSections();
 
-$balanceSheet->toString(); //again, this function is only for demonstration and debugging use and should never be called in production
+/**
+* again to emphasize, this function is only for demonstration and
+* debugging use and should never be called in production
+*/
+$balanceSheet->toString();
 
 Example Company
 Balance Sheet
@@ -529,4 +537,4 @@ This software is distributed for free under the MIT License
 
 
 ## References
-This package is Heavily influenced by [simple-accounts-3](https://github.com/chippyash/simple-accounts-3) and [scottlaurent/accounting](https://github.com/scottlaurent/accounting).
+This package is heavily influenced by [simple-accounts-3](https://github.com/chippyash/simple-accounts-3) and [scottlaurent/accounting](https://github.com/scottlaurent/accounting).
