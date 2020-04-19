@@ -10,11 +10,6 @@ namespace Ekmungai\IFRS\Exceptions;
 
 use Ekmungai\IFRS\Models\Transaction;
 
-/**
- *
- * @author emung
- *
- */
 class VatCharge extends IFRSException
 {
     /**
@@ -24,7 +19,7 @@ class VatCharge extends IFRSException
      * @param string $message
      * @param int $code
      */
-    public function __construct($transactionType, string $message = null, int $code = 0)
+    public function __construct($transactionType, string $message = null, int $code = null)
     {
         $transactionType = Transaction::getType($transactionType);
 

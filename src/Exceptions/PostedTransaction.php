@@ -8,11 +8,6 @@
  */
 namespace Ekmungai\IFRS\Exceptions;
 
-/**
- *
- * @author emung
- *
- */
 class PostedTransaction extends IFRSException
 {
     /**
@@ -21,7 +16,7 @@ class PostedTransaction extends IFRSException
      * @param string $message
      * @param int $code
      */
-    public function __construct(string $message = null, int $code = 0)
+    public function __construct(string $message = null, int $code = null)
     {
         parent::__construct(_("Cannot remove LineItem from a posted Transaction ").$message, $code);
     }

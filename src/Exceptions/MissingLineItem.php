@@ -8,11 +8,6 @@
  */
 namespace Ekmungai\IFRS\Exceptions;
 
-/**
- *
- * @author emung
- *
- */
 class MissingLineItem extends IFRSException
 {
     /**
@@ -21,7 +16,7 @@ class MissingLineItem extends IFRSException
      * @param string $message
      * @param int $code
      */
-    public function __construct(string $message = null, int $code = 0)
+    public function __construct(string $message = null, int $code = null)
     {
         parent::__construct(_("A Transaction must have at least one LineItem to be posted ").$message, $code=null);
     }

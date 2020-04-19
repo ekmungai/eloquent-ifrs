@@ -10,11 +10,6 @@ namespace Ekmungai\IFRS\Exceptions;
 
 use Ekmungai\IFRS\Models\Balance;
 
-/**
- *
- * @author emung
- *
- */
 class InvalidBalance extends IFRSException
 {
 

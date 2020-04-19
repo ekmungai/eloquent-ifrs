@@ -11,11 +11,6 @@ namespace Ekmungai\IFRS\Exceptions;
 use Ekmungai\IFRS\Models\Transaction;
 use Ekmungai\IFRS\Models\Account;
 
-/**
- *
- * @author emung
- *
- */
 class LineItemAccount extends IFRSException
 {
     /**
@@ -26,7 +21,7 @@ class LineItemAccount extends IFRSException
      * @param string $message
      * @param int $code
      */
-    public function __construct(string $transactionType, array $accountTypes, string $message = null, int $code = 0)
+    public function __construct(string $transactionType, array $accountTypes, string $message = null, int $code = null)
     {
         $transactionType = Transaction::getType($transactionType);
         $accountTypes = Account::getTypes($accountTypes);

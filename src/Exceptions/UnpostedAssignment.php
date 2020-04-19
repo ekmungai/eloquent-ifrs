@@ -8,11 +8,6 @@
  */
 namespace Ekmungai\IFRS\Exceptions;
 
-/**
- *
- * @author emung
- *
- */
 class UnpostedAssignment extends IFRSException
 {
     /**

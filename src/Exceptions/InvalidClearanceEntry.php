@@ -8,11 +8,6 @@
  */
 namespace Ekmungai\IFRS\Exceptions;
 
-/**
- *
- * @author emung
- *
- */
 class InvalidClearanceEntry extends IFRSException
 {
 
@@ -22,7 +17,7 @@ class InvalidClearanceEntry extends IFRSException
      * @param string $message
      * @param int $code
      */
-    public function __construct(string $message = null, int $code = 0)
+    public function __construct(string $message = null, int $code = null)
     {
         $error = _("Transaction Entry increases the Main Account outstanding balance instead of reducing it ");
 

@@ -8,14 +8,10 @@
  */
 namespace Ekmungai\IFRS\Exceptions;
 
-/**
- *
- * @author emung
- *
- */
 class NegativeAmount extends IFRSException
 {
     /**
+     * Negative Amount Exception
      *
      * @param string $modelType
      * @param string $message

@@ -8,11 +8,6 @@
  */
 namespace Ekmungai\IFRS\Exceptions;
 
-/**
- *
- * @author emung
- *
- */
 class MissingReportingPeriod extends IFRSException
 {
     /**
@@ -23,7 +18,7 @@ class MissingReportingPeriod extends IFRSException
      * @param string $message
      * @param int $code
      */
-    public function __construct(string $entity, int $year, string $message = null, int $code = 0)
+    public function __construct(string $entity, int $year, string $message = null, int $code = null)
     {
         $error = _("Entity '". $entity."' has no reporting period defined for the year ").$year." ";
 
