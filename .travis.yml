@@ -9,4 +9,4 @@ install:
 dist: trusty
 
 script:
-  - vendor/bin/phpunit --filter testOverClearance --coverage-text --coverage-clover=coverage.clover
+  - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
