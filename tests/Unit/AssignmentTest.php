@@ -282,7 +282,9 @@ class AssignmentTest extends TestCase
         $this->expectExceptionMessage('Journal Entry Transaction amount remaining to be cleared is less than 125');
 
         $assignment = Assignment::new($transaction, $cleared, 125);
-//         $assignment->save();
+        $assignment->save();
+
+        debug_print_backtrace();
     }
 
     /**
