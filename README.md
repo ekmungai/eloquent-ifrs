@@ -4,7 +4,7 @@
 ![PHP 7.2](https://img.shields.io/badge/PHP-7.2-blue.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-Laravel Double Entry Accounting with a focus on IFRS Compliant Reporting.
+Laravel Double Entry Accounting with a focus on International Financial Reporting Standards Compliant Reporting.
 
 With a fluent interface for creating Accounts, Transactions and Reports, this package transforms your Business Objects into Standard Accounting Reports such as an Income Statement (Profit and Loss) and a Balance Sheet.
 
@@ -290,8 +290,17 @@ $clientInvoiceLineItem = LineItem::new(
     $salesVatAccount                    // Vat Account
 );
 
-$clientInvoice->addLineItem($clientInvoiceLineItem); // Line Item save may be skipped as saving the Transaction saves the all its Line Items automatically
-$clientInvoice->post(); // Transaction save may be skipped as post() saves the Transaction automatically
+/**
+* Line Item save may be skipped as saving the
+* Transaction saves the all its Line Items automatically
+*/
+$clientInvoice->addLineItem($clientInvoiceLineItem);
+
+/**
+* Transaction save may be skipped as post()
+* saves the Transaction automatically
+*/
+$clientInvoice->post();
 
 ```
 Then we have a Cash Purchase:
