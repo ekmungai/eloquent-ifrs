@@ -17,8 +17,8 @@
     "minimum-stability": "dev",
     "require": {
         "php": "^7.2",
-		"illuminate/database": "^7.0",
-		"illuminate/auth": "^7.0"
+		"illuminate/database": "^6.0",
+		"illuminate/auth": "^6.0"
     },
     "require-dev": {
         "facade/ignition": "^1.4",

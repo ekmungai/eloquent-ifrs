@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.com/ekmungai/laravel-ifrs.svg?branch=master)](https://travis-ci.com/ekmungai/laravel-ifrs)
 ![PHP 7.2](https://img.shields.io/badge/PHP-7.2-blue.svg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 Laravel Double Entry Accounting with a focus on IFRS Compliant Reporting.
 
@@ -31,6 +32,10 @@ composer install --no-dev
 ```
 
 Then run migrations to create the database tables.
+
+```
+php artisan migrate
+```
 
 #### For development
 

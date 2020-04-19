@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "00f4c2b43c54af8f3233c5499e4e1b07",
+    "content-hash": "77036790000218974be208b31797db51",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -253,12 +253,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "f5d6c432998f7a924209b748b35c35821cc8f827"
+                "reference": "bb045881188d7ef2bac45f8495fb17e90d7e0116"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/f5d6c432998f7a924209b748b35c35821cc8f827",
-                "reference": "f5d6c432998f7a924209b748b35c35821cc8f827",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/bb045881188d7ef2bac45f8495fb17e90d7e0116",
+                "reference": "bb045881188d7ef2bac45f8495fb17e90d7e0116",
                 "shasum": ""
             },
             "require": {
@@ -391,7 +391,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2020-04-16T11:10:10+00:00"
+            "time": "2020-04-17T13:42:07+00:00"
         },
         {
             "name": "league/commonmark",
@@ -399,12 +399,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/commonmark.git",
-                "reference": "915bd10f66edfbd289310ed1c97a70c0da95cef2"
+                "reference": "5f4ff069b816e05ea77d8f9e13d7441177e03644"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/915bd10f66edfbd289310ed1c97a70c0da95cef2",
-                "reference": "915bd10f66edfbd289310ed1c97a70c0da95cef2",
+                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/5f4ff069b816e05ea77d8f9e13d7441177e03644",
+                "reference": "5f4ff069b816e05ea77d8f9e13d7441177e03644",
                 "shasum": ""
             },
             "require": {
@@ -422,7 +422,7 @@
                 "github/gfm": "0.29.0",
                 "michelf/php-markdown": "~1.4",
                 "mikehaertl/php-shellcommand": "^1.4",
-                "phpstan/phpstan-shim": "^0.11.5",
+                "phpstan/phpstan": "^0.12",
                 "phpunit/phpunit": "^7.5",
                 "scrutinizer/ocular": "^1.5",
                 "symfony/finder": "^4.2"
@@ -465,7 +465,7 @@
                 "md",
                 "parser"
             ],
-            "time": "2020-04-14T18:33:51+00:00"
+            "time": "2020-04-18T20:45:50+00:00"
         },
         {
             "name": "league/flysystem",
@@ -1581,12 +1581,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "1055c1180fac014787843d41e12aaf1bdf0c2f3a"
+                "reference": "ec5bd254c223786f5fa2bb49a1e705c1b8e7cee2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/1055c1180fac014787843d41e12aaf1bdf0c2f3a",
-                "reference": "1055c1180fac014787843d41e12aaf1bdf0c2f3a",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/ec5bd254c223786f5fa2bb49a1e705c1b8e7cee2",
+                "reference": "ec5bd254c223786f5fa2bb49a1e705c1b8e7cee2",
                 "shasum": ""
             },
             "require": {
@@ -1628,7 +1628,7 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
-            "time": "2020-04-06T10:16:26+00:00"
+            "time": "2020-04-18T20:40:08+00:00"
         },
         {
             "name": "symfony/http-kernel",
@@ -1726,12 +1726,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/mime.git",
-                "reference": "1df684a32d0ac3aa589b5620a7949a8ec0fd7d89"
+                "reference": "e2c903bce82b6840609a910cad7dd0fa148dad7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/mime/zipball/1df684a32d0ac3aa589b5620a7949a8ec0fd7d89",
-                "reference": "1df684a32d0ac3aa589b5620a7949a8ec0fd7d89",
+                "url": "https://api.github.com/repos/symfony/mime/zipball/e2c903bce82b6840609a910cad7dd0fa148dad7c",
+                "reference": "e2c903bce82b6840609a910cad7dd0fa148dad7c",
                 "shasum": ""
             },
             "require": {
@@ -1781,7 +1781,7 @@
                 "mime",
                 "mime-type"
             ],
-            "time": "2020-04-16T15:13:28+00:00"
+            "time": "2020-04-18T20:50:29+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -3364,12 +3364,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "ddcb7e792135db4780856e846038dda99071f604"
+                "reference": "e1bc8c44c85bdbf35b318e37febb83c1d2890359"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/ddcb7e792135db4780856e846038dda99071f604",
-                "reference": "ddcb7e792135db4780856e846038dda99071f604",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/e1bc8c44c85bdbf35b318e37febb83c1d2890359",
+                "reference": "e1bc8c44c85bdbf35b318e37febb83c1d2890359",
                 "shasum": ""
             },
             "require": {
@@ -3452,7 +3452,7 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2020-04-15T18:52:01+00:00"
+            "time": "2020-04-19T11:16:53+00:00"
         },
         {
             "name": "fzaninotto/faker",
@@ -4566,12 +4566,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "85db88c71826fa462dfe62594f8c9202b0eed9d3"
+                "reference": "f0ea7efc286285ecceb8d02ccacc0618fada066f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/85db88c71826fa462dfe62594f8c9202b0eed9d3",
-                "reference": "85db88c71826fa462dfe62594f8c9202b0eed9d3",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/f0ea7efc286285ecceb8d02ccacc0618fada066f",
+                "reference": "f0ea7efc286285ecceb8d02ccacc0618fada066f",
                 "shasum": ""
             },
             "require": {
@@ -4600,7 +4600,7 @@
                 "MIT"
             ],
             "description": "PHPStan - PHP Static Analysis Tool",
-            "time": "2020-04-17T06:48:27+00:00"
+            "time": "2020-04-19T13:49:37+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -6209,16 +6209,16 @@
         },
         {
             "name": "webmozart/assert",
-            "version": "1.7.0",
+            "version": "1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webmozart/assert.git",
-                "reference": "aed98a490f9a8f78468232db345ab9cf606cf598"
+                "reference": "ab2cb0b3b559010b75981b1bdce728da3ee90ad6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozart/assert/zipball/aed98a490f9a8f78468232db345ab9cf606cf598",
-                "reference": "aed98a490f9a8f78468232db345ab9cf606cf598",
+                "url": "https://api.github.com/repos/webmozart/assert/zipball/ab2cb0b3b559010b75981b1bdce728da3ee90ad6",
+                "reference": "ab2cb0b3b559010b75981b1bdce728da3ee90ad6",
                 "shasum": ""
             },
             "require": {
@@ -6226,7 +6226,7 @@
                 "symfony/polyfill-ctype": "^1.8"
             },
             "conflict": {
-                "vimeo/psalm": "<3.6.0"
+                "vimeo/psalm": "<3.9.1"
             },
             "require-dev": {
                 "phpunit/phpunit": "^4.8.36 || ^7.5.13"
@@ -6253,7 +6253,7 @@
                 "check",
                 "validate"
             ],
-            "time": "2020-02-14T12:15:55+00:00"
+            "time": "2020-04-18T12:12:48+00:00"
         }
     ],
     "aliases": [],
