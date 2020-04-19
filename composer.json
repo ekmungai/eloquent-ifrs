@@ -1,6 +1,6 @@
 {
     "name": "ekmungai/laravel-ifrs",
-    "description": "La",
+    "description": "Laravel Double Entry Accounting with focus on IFRS Compliant Reporting",
     "keywords": ["accounting", "laravel", "reporting"],
     "type": "library",
     "license": "MIT",
@@ -17,7 +17,8 @@
     "minimum-stability": "dev",
     "require": {
         "php": "^7.2",
-        "laravel/framework": "^6.2"
+		"illuminate/database": "^7.0",
+		"illuminate/auth": "^7.0"
     },
     "require-dev": {
         "facade/ignition": "^1.4",

@@ -13,7 +13,7 @@ class IFRSServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->mergeConfigFrom(__DIR__.'/../config/ifrs.php', 'ifrs');
     }
 
     /**
