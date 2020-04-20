@@ -1,0 +1,83 @@
+{
+    "name": "Ekmungai\\IFRS\\Reports\\TrialBalance",
+    "line": 13,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Ekmungai\\IFRS\\Reports",
+    "file": "C:\\laravel-ifrs\\config\/..\/src\\Reports\\TrialBalance.php",
+    "relative_file": null,
+    "hash": "ceb8b6261e168a2ea386976a866fd92faf18a4b6",
+    "parent": "Ekmungai\\IFRS\\Reports\\FinancialStatement",
+    "modifiers": 0,
+    "is_trait": false,
+    "is_interface": false,
+    "aliases": {
+        "Account": "Ekmungai\\IFRS\\Models\\Account"
+    },
+    "errors": [],
+    "interfaces": [],
+    "traits": [],
+    "properties": [],
+    "methods": {
+        "__construct": {
+            "name": "__construct",
+            "line": 15,
+            "short_desc": "Construct Financial Statement for the given period",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "year": {
+                    "name": "year",
+                    "line": 15,
+                    "short_desc": null,
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "string",
+                    "default": "null",
+                    "variadic": false,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "getSections": {
+            "name": "getSections",
+            "line": 28,
+            "short_desc": "Get Trial Balance Sections.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "void",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": {
+                "codeCoverageIgnore": [
+                    [
+                        ""
+                    ]
+                ]
+            },
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        }
+    },
+    "constants": []
+}

@@ -1,0 +1,68 @@
+{
+    "name": "Ekmungai\\IFRS\\Interfaces\\Sells",
+    "line": 16,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": {
+        "author": [
+            [
+                "emung"
+            ]
+        ]
+    },
+    "namespace": "Ekmungai\\IFRS\\Interfaces",
+    "file": "C:\\laravel-ifrs\\config\/..\/src\\Interfaces\\Sells.php",
+    "relative_file": null,
+    "hash": "c242e5f13169bb989413070c114b8d6927789c53",
+    "parent": null,
+    "modifiers": null,
+    "is_trait": false,
+    "is_interface": true,
+    "aliases": [],
+    "errors": [],
+    "interfaces": [],
+    "traits": [],
+    "properties": [],
+    "methods": {
+        "save": {
+            "name": "save",
+            "line": 21,
+            "short_desc": "Validate Selling Transaction Main Account.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "void",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "post": {
+            "name": "post",
+            "line": 26,
+            "short_desc": "Validate Selling Transaction LineItems.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "void",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        }
+    },
+    "constants": []
+}

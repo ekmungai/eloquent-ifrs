@@ -1,0 +1,406 @@
+{
+    "name": "Ekmungai\\IFRS\\Models\\Assignment",
+    "line": 43,
+    "short_desc": "Class Assignment",
+    "long_desc": "",
+    "hint": null,
+    "tags": {
+        "package": [
+            [
+                "Ekmungai\\Laravel-IFRS"
+            ]
+        ],
+        "property": [
+            [
+                [
+                    [
+                        "\\Ekmungai\\IFRS\\Models\\Entity",
+                        false
+                    ]
+                ],
+                "entity",
+                ""
+            ],
+            [
+                [
+                    [
+                        "\\Ekmungai\\IFRS\\Interfaces\\Assignable",
+                        false
+                    ]
+                ],
+                "transaction",
+                ""
+            ],
+            [
+                [
+                    [
+                        "\\Ekmungai\\IFRS\\Interfaces\\Clearable",
+                        false
+                    ]
+                ],
+                "cleared",
+                ""
+            ],
+            [
+                [
+                    [
+                        "float",
+                        false
+                    ]
+                ],
+                "amount",
+                ""
+            ],
+            [
+                [
+                    [
+                        "\\Ekmungai\\IFRS\\Models\\Carbon",
+                        false
+                    ]
+                ],
+                "destroyed_at",
+                ""
+            ],
+            [
+                [
+                    [
+                        "\\Ekmungai\\IFRS\\Models\\Carbon",
+                        false
+                    ]
+                ],
+                "deleted_at",
+                ""
+            ]
+        ]
+    },
+    "namespace": "Ekmungai\\IFRS\\Models",
+    "file": "C:\\laravel-ifrs\\config\/..\/src\\Models\\Assignment.php",
+    "relative_file": null,
+    "hash": "69dfdce9bcf4f11b018e06276bfddbec61cd3dec",
+    "parent": "Illuminate\\Database\\Eloquent\\Model",
+    "modifiers": 0,
+    "is_trait": false,
+    "is_interface": false,
+    "aliases": {
+        "Model": "Illuminate\\Database\\Eloquent\\Model",
+        "SoftDeletes": "Illuminate\\Database\\Eloquent\\SoftDeletes",
+        "Segragatable": "Ekmungai\\IFRS\\Interfaces\\Segragatable",
+        "Assignable": "Ekmungai\\IFRS\\Interfaces\\Assignable",
+        "Clearable": "Ekmungai\\IFRS\\Interfaces\\Clearable",
+        "Segragating": "Ekmungai\\IFRS\\Traits\\Segragating",
+        "InsufficientBalance": "Ekmungai\\IFRS\\Exceptions\\InsufficientBalance",
+        "OverClearance": "Ekmungai\\IFRS\\Exceptions\\OverClearance",
+        "SelfClearance": "Ekmungai\\IFRS\\Exceptions\\SelfClearance",
+        "UnassignableTransaction": "Ekmungai\\IFRS\\Exceptions\\UnassignableTransaction",
+        "UnclearableTransaction": "Ekmungai\\IFRS\\Exceptions\\UnclearableTransaction",
+        "UnpostedAssignment": "Ekmungai\\IFRS\\Exceptions\\UnpostedAssignment",
+        "InvalidClearanceAccount": "Ekmungai\\IFRS\\Exceptions\\InvalidClearanceAccount",
+        "InvalidClearanceCurrency": "Ekmungai\\IFRS\\Exceptions\\InvalidClearanceCurrency",
+        "InvalidClearanceEntry": "Ekmungai\\IFRS\\Exceptions\\InvalidClearanceEntry",
+        "NegativeAmount": "Ekmungai\\IFRS\\Exceptions\\NegativeAmount"
+    },
+    "errors": [],
+    "interfaces": {
+        "Ekmungai\\IFRS\\Interfaces\\Segragatable": "Ekmungai\\IFRS\\Interfaces\\Segragatable"
+    },
+    "traits": {
+        "Ekmungai\\IFRS\\Traits\\Segragating": "Ekmungai\\IFRS\\Traits\\Segragating",
+        "Illuminate\\Database\\Eloquent\\SoftDeletes": "Illuminate\\Database\\Eloquent\\SoftDeletes"
+    },
+    "properties": {
+        "entity": {
+            "name": "entity",
+            "line": 43,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "\\Ekmungai\\IFRS\\Models\\Entity",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": []
+        },
+        "transaction": {
+            "name": "transaction",
+            "line": 43,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "\\Ekmungai\\IFRS\\Interfaces\\Assignable",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": []
+        },
+        "cleared": {
+            "name": "cleared",
+            "line": 43,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "\\Ekmungai\\IFRS\\Interfaces\\Clearable",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": []
+        },
+        "amount": {
+            "name": "amount",
+            "line": 43,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "float",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": []
+        },
+        "destroyed_at": {
+            "name": "destroyed_at",
+            "line": 43,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "\\Ekmungai\\IFRS\\Models\\Carbon",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": []
+        },
+        "deleted_at": {
+            "name": "deleted_at",
+            "line": 43,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "\\Ekmungai\\IFRS\\Models\\Carbon",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": []
+        }
+    },
+    "methods": {
+        "new": {
+            "name": "new",
+            "line": 57,
+            "short_desc": "Construct new Assignment.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Ekmungai\\IFRS\\Models\\Assignment",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 9,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "transaction": {
+                    "name": "transaction",
+                    "line": 57,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Ekmungai\\IFRS\\Interfaces\\Assignable",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": {
+                        "nodeType": "Name_FullyQualified",
+                        "parts": [
+                            "Ekmungai",
+                            "IFRS",
+                            "Interfaces",
+                            "Assignable"
+                        ],
+                        "attributes": {
+                            "startLine": 57,
+                            "endLine": 57
+                        }
+                    },
+                    "default": null,
+                    "variadic": false,
+                    "is_by_ref": false
+                },
+                "cleared": {
+                    "name": "cleared",
+                    "line": 57,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Ekmungai\\IFRS\\Interfaces\\Clearable",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": {
+                        "nodeType": "Name_FullyQualified",
+                        "parts": [
+                            "Ekmungai",
+                            "IFRS",
+                            "Interfaces",
+                            "Clearable"
+                        ],
+                        "attributes": {
+                            "startLine": 57,
+                            "endLine": 57
+                        }
+                    },
+                    "default": null,
+                    "variadic": false,
+                    "is_by_ref": false
+                },
+                "amount": {
+                    "name": "amount",
+                    "line": 57,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "float",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "float",
+                    "default": null,
+                    "variadic": false,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "transaction": {
+            "name": "transaction",
+            "line": 75,
+            "short_desc": "Transaction to be cleared.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Illuminate\\Database\\Eloquent\\Relations\\BelongsTo",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "cleared": {
+            "name": "cleared",
+            "line": 85,
+            "short_desc": "Transaction|Balance to be cleared.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Illuminate\\Database\\Eloquent\\Relations\\MorphTo",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "attributes": {
+            "name": "attributes",
+            "line": 95,
+            "short_desc": "Assignment attributes.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "object",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "save": {
+            "name": "save",
+            "line": 104,
+            "short_desc": "Assignment Validation.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "bool",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "options": {
+                    "name": "options",
+                    "line": 104,
+                    "short_desc": null,
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "array",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "array",
+                    "default": "[]",
+                    "variadic": false,
+                    "is_by_ref": false
+                }
+            }
+        }
+    },
+    "constants": []
+}

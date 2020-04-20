@@ -1,0 +1,167 @@
+{
+    "name": "Ekmungai\\IFRS\\Interfaces\\Fetchable",
+    "line": 21,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": {
+        "author": [
+            [
+                "emung"
+            ]
+        ]
+    },
+    "namespace": "Ekmungai\\IFRS\\Interfaces",
+    "file": "C:\\laravel-ifrs\\config\/..\/src\\Interfaces\\Fetchable.php",
+    "relative_file": null,
+    "hash": "6217495d5df0d454e2887dac2ed7a014ee4383bb",
+    "parent": null,
+    "modifiers": null,
+    "is_trait": false,
+    "is_interface": true,
+    "aliases": {
+        "Currency": "Ekmungai\\IFRS\\Models\\Currency",
+        "Account": "Ekmungai\\IFRS\\Models\\Account",
+        "Carbon": "Carbon\\Carbon",
+        "Collection": "Illuminate\\Support\\Collection"
+    },
+    "errors": [],
+    "interfaces": [],
+    "traits": [],
+    "properties": [],
+    "methods": {
+        "fetch": {
+            "name": "fetch",
+            "line": 28,
+            "short_desc": "Fetch Transaction by given filters.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Illuminate\\Support\\Collection",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 9,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "startTime": {
+                    "name": "startTime",
+                    "line": 29,
+                    "short_desc": null,
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Carbon\\Carbon",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": {
+                        "nodeType": "Name_FullyQualified",
+                        "parts": [
+                            "Carbon",
+                            "Carbon"
+                        ],
+                        "attributes": {
+                            "startLine": 29,
+                            "endLine": 29
+                        }
+                    },
+                    "default": "null",
+                    "variadic": false,
+                    "is_by_ref": false
+                },
+                "endTime": {
+                    "name": "endTime",
+                    "line": 30,
+                    "short_desc": null,
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Carbon\\Carbon",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": {
+                        "nodeType": "Name_FullyQualified",
+                        "parts": [
+                            "Carbon",
+                            "Carbon"
+                        ],
+                        "attributes": {
+                            "startLine": 30,
+                            "endLine": 30
+                        }
+                    },
+                    "default": "null",
+                    "variadic": false,
+                    "is_by_ref": false
+                },
+                "account": {
+                    "name": "account",
+                    "line": 31,
+                    "short_desc": null,
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Ekmungai\\IFRS\\Models\\Account",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": {
+                        "nodeType": "Name_FullyQualified",
+                        "parts": [
+                            "Ekmungai",
+                            "IFRS",
+                            "Models",
+                            "Account"
+                        ],
+                        "attributes": {
+                            "startLine": 31,
+                            "endLine": 31
+                        }
+                    },
+                    "default": "null",
+                    "variadic": false,
+                    "is_by_ref": false
+                },
+                "currency": {
+                    "name": "currency",
+                    "line": 32,
+                    "short_desc": null,
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Ekmungai\\IFRS\\Models\\Currency",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": {
+                        "nodeType": "Name_FullyQualified",
+                        "parts": [
+                            "Ekmungai",
+                            "IFRS",
+                            "Models",
+                            "Currency"
+                        ],
+                        "attributes": {
+                            "startLine": 32,
+                            "endLine": 32
+                        }
+                    },
+                    "default": "null",
+                    "variadic": false,
+                    "is_by_ref": false
+                }
+            }
+        }
+    },
+    "constants": []
+}

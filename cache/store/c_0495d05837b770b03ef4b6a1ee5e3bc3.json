@@ -1,0 +1,367 @@
+{
+    "name": "Ekmungai\\IFRS\\Models\\Entity",
+    "line": 32,
+    "short_desc": "Class Entity",
+    "long_desc": "",
+    "hint": null,
+    "tags": {
+        "package": [
+            [
+                "Ekmungai\\Laravel-IFRS"
+            ]
+        ],
+        "property": [
+            [
+                [
+                    [
+                        "\\Ekmungai\\IFRS\\Models\\Currency",
+                        false
+                    ]
+                ],
+                "currency",
+                ""
+            ],
+            [
+                [
+                    [
+                        "string",
+                        false
+                    ]
+                ],
+                "name",
+                ""
+            ],
+            [
+                [
+                    [
+                        "bool",
+                        false
+                    ]
+                ],
+                "multi_currency",
+                ""
+            ],
+            [
+                [
+                    [
+                        "integer",
+                        false
+                    ]
+                ],
+                "year_start",
+                ""
+            ],
+            [
+                [
+                    [
+                        "\\Carbon\\Carbon",
+                        false
+                    ]
+                ],
+                "destroyed_at",
+                ""
+            ],
+            [
+                [
+                    [
+                        "\\Carbon\\Carbon",
+                        false
+                    ]
+                ],
+                "deleted_at",
+                ""
+            ]
+        ]
+    },
+    "namespace": "Ekmungai\\IFRS\\Models",
+    "file": "C:\\laravel-ifrs\\config\/..\/src\\Models\\Entity.php",
+    "relative_file": null,
+    "hash": "cc8a3c3a4539345fa1e78da9aa33039fe2fa9370",
+    "parent": "Illuminate\\Database\\Eloquent\\Model",
+    "modifiers": 0,
+    "is_trait": false,
+    "is_interface": false,
+    "aliases": {
+        "Carbon": "Carbon\\Carbon",
+        "Model": "Illuminate\\Database\\Eloquent\\Model",
+        "SoftDeletes": "Illuminate\\Database\\Eloquent\\SoftDeletes",
+        "Recyclable": "Ekmungai\\IFRS\\Interfaces\\Recyclable",
+        "Recycling": "Ekmungai\\IFRS\\Traits\\Recycling"
+    },
+    "errors": [],
+    "interfaces": {
+        "Ekmungai\\IFRS\\Interfaces\\Recyclable": "Ekmungai\\IFRS\\Interfaces\\Recyclable"
+    },
+    "traits": {
+        "Illuminate\\Database\\Eloquent\\SoftDeletes": "Illuminate\\Database\\Eloquent\\SoftDeletes",
+        "Ekmungai\\IFRS\\Traits\\Recycling": "Ekmungai\\IFRS\\Traits\\Recycling"
+    },
+    "properties": {
+        "currency": {
+            "name": "currency",
+            "line": 32,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "\\Ekmungai\\IFRS\\Models\\Currency",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": []
+        },
+        "name": {
+            "name": "name",
+            "line": 32,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "string",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": []
+        },
+        "multi_currency": {
+            "name": "multi_currency",
+            "line": 32,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "bool",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": []
+        },
+        "year_start": {
+            "name": "year_start",
+            "line": 32,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "integer",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": []
+        },
+        "destroyed_at": {
+            "name": "destroyed_at",
+            "line": 32,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "\\Carbon\\Carbon",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": []
+        },
+        "deleted_at": {
+            "name": "deleted_at",
+            "line": 32,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "\\Carbon\\Carbon",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": []
+        }
+    },
+    "methods": {
+        "new": {
+            "name": "new",
+            "line": 45,
+            "short_desc": "Construct new Entity.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Ekmungai\\IFRS\\Models\\Entity",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 9,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "name": {
+                    "name": "name",
+                    "line": 45,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "string",
+                    "default": null,
+                    "variadic": false,
+                    "is_by_ref": false
+                },
+                "currency": {
+                    "name": "currency",
+                    "line": 45,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Ekmungai\\IFRS\\Models\\Currency",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": {
+                        "nodeType": "Name_FullyQualified",
+                        "parts": [
+                            "Ekmungai",
+                            "IFRS",
+                            "Models",
+                            "Currency"
+                        ],
+                        "attributes": {
+                            "startLine": 45,
+                            "endLine": 45
+                        }
+                    },
+                    "default": null,
+                    "variadic": false,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "users": {
+            "name": "users",
+            "line": 60,
+            "short_desc": "Users associated with the reporting Entity.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Illuminate\\Database\\Eloquent\\Relations\\HasMany",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "currency": {
+            "name": "currency",
+            "line": 70,
+            "short_desc": "Entity's Reporting Currency.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Illuminate\\Database\\Eloquent\\Relations\\BelongsTo",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "defaultRate": {
+            "name": "defaultRate",
+            "line": 80,
+            "short_desc": "Reporting Currency Default Rate.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Ekmungai\\IFRS\\Models\\ExchangeRate",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "reportingPeriods": {
+            "name": "reportingPeriods",
+            "line": 99,
+            "short_desc": "Entity's Reporting Periods.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Illuminate\\Database\\Eloquent\\Relations\\HasMany",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "attributes": {
+            "name": "attributes",
+            "line": 109,
+            "short_desc": "Entity attributes",
+            "long_desc": "",
+            "hint": [
+                [
+                    "object",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        }
+    },
+    "constants": []
+}

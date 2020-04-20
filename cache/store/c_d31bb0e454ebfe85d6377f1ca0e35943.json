@@ -1,0 +1,628 @@
+{
+    "name": "Ekmungai\\IFRS\\Models\\LineItem",
+    "line": 39,
+    "short_desc": "Class LineItem",
+    "long_desc": "",
+    "hint": null,
+    "tags": {
+        "package": [
+            [
+                "Ekmungai\\Laravel-IFRS"
+            ]
+        ],
+        "property": [
+            [
+                [
+                    [
+                        "\\Ekmungai\\IFRS\\Models\\Entity",
+                        false
+                    ]
+                ],
+                "entity",
+                ""
+            ],
+            [
+                [
+                    [
+                        "\\Ekmungai\\IFRS\\Models\\Transaction",
+                        false
+                    ]
+                ],
+                "transaction",
+                ""
+            ],
+            [
+                [
+                    [
+                        "\\Ekmungai\\IFRS\\Models\\Vat",
+                        false
+                    ]
+                ],
+                "vat",
+                ""
+            ],
+            [
+                [
+                    [
+                        "\\Ekmungai\\IFRS\\Models\\Account",
+                        false
+                    ]
+                ],
+                "account",
+                ""
+            ],
+            [
+                [
+                    [
+                        "\\Ekmungai\\IFRS\\Models\\Account",
+                        false
+                    ]
+                ],
+                "vatAccount",
+                ""
+            ],
+            [
+                [
+                    [
+                        "\\Ekmungai\\IFRS\\Models\\Carbon",
+                        false
+                    ]
+                ],
+                "date",
+                ""
+            ],
+            [
+                [
+                    [
+                        "int",
+                        false
+                    ]
+                ],
+                "quantity",
+                ""
+            ],
+            [
+                [
+                    [
+                        "float",
+                        false
+                    ]
+                ],
+                "amount",
+                ""
+            ],
+            [
+                [
+                    [
+                        "\\Ekmungai\\IFRS\\Models\\Carbon",
+                        false
+                    ]
+                ],
+                "destroyed_at",
+                ""
+            ],
+            [
+                [
+                    [
+                        "\\Ekmungai\\IFRS\\Models\\Carbon",
+                        false
+                    ]
+                ],
+                "deleted_at",
+                ""
+            ]
+        ]
+    },
+    "namespace": "Ekmungai\\IFRS\\Models",
+    "file": "C:\\laravel-ifrs\\config\/..\/src\\Models\\LineItem.php",
+    "relative_file": null,
+    "hash": "fd2276cca6821318059e2ea61ed448176e45bb9f",
+    "parent": "Illuminate\\Database\\Eloquent\\Model",
+    "modifiers": 0,
+    "is_trait": false,
+    "is_interface": false,
+    "aliases": {
+        "Model": "Illuminate\\Database\\Eloquent\\Model",
+        "SoftDeletes": "Illuminate\\Database\\Eloquent\\SoftDeletes",
+        "Recyclable": "Ekmungai\\IFRS\\Interfaces\\Recyclable",
+        "Segragatable": "Ekmungai\\IFRS\\Interfaces\\Segragatable",
+        "Segragating": "Ekmungai\\IFRS\\Traits\\Segragating",
+        "Recycling": "Ekmungai\\IFRS\\Traits\\Recycling",
+        "MissingVatAccount": "Ekmungai\\IFRS\\Exceptions\\MissingVatAccount",
+        "NegativeAmount": "Ekmungai\\IFRS\\Exceptions\\NegativeAmount"
+    },
+    "errors": [],
+    "interfaces": {
+        "Ekmungai\\IFRS\\Interfaces\\Recyclable": "Ekmungai\\IFRS\\Interfaces\\Recyclable",
+        "Ekmungai\\IFRS\\Interfaces\\Segragatable": "Ekmungai\\IFRS\\Interfaces\\Segragatable"
+    },
+    "traits": {
+        "Ekmungai\\IFRS\\Traits\\Segragating": "Ekmungai\\IFRS\\Traits\\Segragating",
+        "Illuminate\\Database\\Eloquent\\SoftDeletes": "Illuminate\\Database\\Eloquent\\SoftDeletes",
+        "Ekmungai\\IFRS\\Traits\\Recycling": "Ekmungai\\IFRS\\Traits\\Recycling"
+    },
+    "properties": {
+        "entity": {
+            "name": "entity",
+            "line": 39,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "\\Ekmungai\\IFRS\\Models\\Entity",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": []
+        },
+        "transaction": {
+            "name": "transaction",
+            "line": 39,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "\\Ekmungai\\IFRS\\Models\\Transaction",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": []
+        },
+        "vat": {
+            "name": "vat",
+            "line": 39,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "\\Ekmungai\\IFRS\\Models\\Vat",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": []
+        },
+        "account": {
+            "name": "account",
+            "line": 39,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "\\Ekmungai\\IFRS\\Models\\Account",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": []
+        },
+        "vatAccount": {
+            "name": "vatAccount",
+            "line": 39,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "\\Ekmungai\\IFRS\\Models\\Account",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": []
+        },
+        "date": {
+            "name": "date",
+            "line": 39,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "\\Ekmungai\\IFRS\\Models\\Carbon",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": []
+        },
+        "quantity": {
+            "name": "quantity",
+            "line": 39,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "int",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": []
+        },
+        "amount": {
+            "name": "amount",
+            "line": 39,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "float",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": []
+        },
+        "destroyed_at": {
+            "name": "destroyed_at",
+            "line": 39,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "\\Ekmungai\\IFRS\\Models\\Carbon",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": []
+        },
+        "deleted_at": {
+            "name": "deleted_at",
+            "line": 39,
+            "short_desc": "",
+            "long_desc": null,
+            "hint": [
+                [
+                    "\\Ekmungai\\IFRS\\Models\\Carbon",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": null,
+            "default": null,
+            "errors": []
+        }
+    },
+    "methods": {
+        "new": {
+            "name": "new",
+            "line": 57,
+            "short_desc": "Construct new LineItem.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Ekmungai\\IFRS\\Models\\LineItem",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 9,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "account": {
+                    "name": "account",
+                    "line": 58,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Ekmungai\\IFRS\\Models\\Account",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": {
+                        "nodeType": "Name_FullyQualified",
+                        "parts": [
+                            "Ekmungai",
+                            "IFRS",
+                            "Models",
+                            "Account"
+                        ],
+                        "attributes": {
+                            "startLine": 58,
+                            "endLine": 58
+                        }
+                    },
+                    "default": null,
+                    "variadic": false,
+                    "is_by_ref": false
+                },
+                "vat": {
+                    "name": "vat",
+                    "line": 59,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Ekmungai\\IFRS\\Models\\Vat",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": {
+                        "nodeType": "Name_FullyQualified",
+                        "parts": [
+                            "Ekmungai",
+                            "IFRS",
+                            "Models",
+                            "Vat"
+                        ],
+                        "attributes": {
+                            "startLine": 59,
+                            "endLine": 59
+                        }
+                    },
+                    "default": null,
+                    "variadic": false,
+                    "is_by_ref": false
+                },
+                "amount": {
+                    "name": "amount",
+                    "line": 60,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "float",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "float",
+                    "default": null,
+                    "variadic": false,
+                    "is_by_ref": false
+                },
+                "quantity": {
+                    "name": "quantity",
+                    "line": 61,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "int",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "int",
+                    "default": "1",
+                    "variadic": false,
+                    "is_by_ref": false
+                },
+                "descripion": {
+                    "name": "descripion",
+                    "line": 62,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "string",
+                    "default": "null",
+                    "variadic": false,
+                    "is_by_ref": false
+                },
+                "vatAccount": {
+                    "name": "vatAccount",
+                    "line": 63,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Ekmungai\\IFRS\\Models\\Account",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": {
+                        "nodeType": "Name_FullyQualified",
+                        "parts": [
+                            "Ekmungai",
+                            "IFRS",
+                            "Models",
+                            "Account"
+                        ],
+                        "attributes": {
+                            "startLine": 63,
+                            "endLine": 63
+                        }
+                    },
+                    "default": "null",
+                    "variadic": false,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "ledgers": {
+            "name": "ledgers",
+            "line": 82,
+            "short_desc": "LineItem Ledgers.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Illuminate\\Database\\Eloquent\\Relations\\HasMany",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "transaction": {
+            "name": "transaction",
+            "line": 92,
+            "short_desc": "LineItem Transaction.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Illuminate\\Database\\Eloquent\\Relations\\BelongsTo",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "account": {
+            "name": "account",
+            "line": 102,
+            "short_desc": "LineItem Account.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Illuminate\\Database\\Eloquent\\Relations\\BelongsTo",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "vat": {
+            "name": "vat",
+            "line": 112,
+            "short_desc": "LineItem VAT.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Illuminate\\Database\\Eloquent\\Relations\\BelongsTo",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "vatAccount": {
+            "name": "vatAccount",
+            "line": 122,
+            "short_desc": "LineItem Vat Account.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Illuminate\\Database\\Eloquent\\Relations\\HasOne",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "attributes": {
+            "name": "attributes",
+            "line": 132,
+            "short_desc": "LineItem attributes.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "object",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "save": {
+            "name": "save",
+            "line": 140,
+            "short_desc": "Check LineItem Vat.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "bool",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "options": {
+                    "name": "options",
+                    "line": 140,
+                    "short_desc": null,
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "array",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "array",
+                    "default": "[]",
+                    "variadic": false,
+                    "is_by_ref": false
+                }
+            }
+        }
+    },
+    "constants": []
+}

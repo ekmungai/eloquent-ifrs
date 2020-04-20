@@ -1,0 +1,514 @@
+{
+    "name": "Ekmungai\\IFRS\\Reports\\FinancialStatement",
+    "line": 22,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": {
+        "author": [
+            [
+                "emung"
+            ]
+        ]
+    },
+    "namespace": "Ekmungai\\IFRS\\Reports",
+    "file": "C:\\laravel-ifrs\\config\/..\/src\\Reports\\FinancialStatement.php",
+    "relative_file": null,
+    "hash": "82848384aad7423c634d37cc88fa8c54999b4050",
+    "parent": null,
+    "modifiers": 16,
+    "is_trait": false,
+    "is_interface": false,
+    "aliases": {
+        "Auth": "Illuminate\\Support\\Facades\\Auth",
+        "Account": "Ekmungai\\IFRS\\Models\\Account",
+        "Entity": "Ekmungai\\IFRS\\Models\\Entity",
+        "ReportingPeriod": "Ekmungai\\IFRS\\Models\\ReportingPeriod"
+    },
+    "errors": [],
+    "interfaces": [],
+    "traits": [],
+    "properties": {
+        "entity": {
+            "name": "entity",
+            "line": 30,
+            "short_desc": "Financial Statement Entity.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Ekmungai\\IFRS\\Models\\Entity",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 2,
+            "default": null,
+            "errors": []
+        },
+        "reportingPeriod": {
+            "name": "reportingPeriod",
+            "line": 37,
+            "short_desc": "Financial Statement Reporting Period.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "string",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 1,
+            "default": {
+                "nodeType": "Expr_ConstFetch",
+                "name": {
+                    "nodeType": "Name",
+                    "parts": [
+                        "null"
+                    ],
+                    "attributes": {
+                        "startLine": 37,
+                        "endLine": 37,
+                        "namespacedName": {
+                            "nodeType": "Name_FullyQualified",
+                            "parts": [
+                                "Ekmungai",
+                                "IFRS",
+                                "Reports",
+                                "null"
+                            ],
+                            "attributes": {
+                                "startLine": 37,
+                                "endLine": 37
+                            }
+                        }
+                    }
+                },
+                "attributes": {
+                    "startLine": 37,
+                    "endLine": 37
+                }
+            },
+            "errors": []
+        },
+        "balances": {
+            "name": "balances",
+            "line": 44,
+            "short_desc": "Financial Statement Balances.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "array",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 1,
+            "default": {
+                "nodeType": "Expr_Array",
+                "items": [
+                    {
+                        "nodeType": "Expr_ArrayItem",
+                        "key": {
+                            "nodeType": "Scalar_String",
+                            "value": "debit",
+                            "attributes": {
+                                "startLine": 45,
+                                "endLine": 45,
+                                "kind": 2
+                            }
+                        },
+                        "value": {
+                            "nodeType": "Scalar_LNumber",
+                            "value": 0,
+                            "attributes": {
+                                "startLine": 45,
+                                "endLine": 45,
+                                "kind": 10
+                            }
+                        },
+                        "byRef": false,
+                        "attributes": {
+                            "startLine": 45,
+                            "endLine": 45
+                        }
+                    },
+                    {
+                        "nodeType": "Expr_ArrayItem",
+                        "key": {
+                            "nodeType": "Scalar_String",
+                            "value": "credit",
+                            "attributes": {
+                                "startLine": 46,
+                                "endLine": 46,
+                                "kind": 2
+                            }
+                        },
+                        "value": {
+                            "nodeType": "Scalar_LNumber",
+                            "value": 0,
+                            "attributes": {
+                                "startLine": 46,
+                                "endLine": 46,
+                                "kind": 10
+                            }
+                        },
+                        "byRef": false,
+                        "attributes": {
+                            "startLine": 46,
+                            "endLine": 46
+                        }
+                    }
+                ],
+                "attributes": {
+                    "startLine": 44,
+                    "endLine": 47,
+                    "kind": 2
+                }
+            },
+            "errors": []
+        },
+        "accounts": {
+            "name": "accounts",
+            "line": 54,
+            "short_desc": "Financial Statement accounts.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "array",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 1,
+            "default": {
+                "nodeType": "Expr_Array",
+                "items": [],
+                "attributes": {
+                    "startLine": 54,
+                    "endLine": 54,
+                    "kind": 2
+                }
+            },
+            "errors": []
+        }
+    },
+    "methods": {
+        "printSection": {
+            "name": "printSection",
+            "line": 68,
+            "short_desc": "Print Statement Section",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Ekmungai\\IFRS\\Reports\\array[string,",
+                    false
+                ]
+            ],
+            "hint_desc": "float]",
+            "tags": {
+                "codeCoverageIgnore": [
+                    [
+                        ""
+                    ]
+                ]
+            },
+            "modifiers": 2,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "section": {
+                    "name": "section",
+                    "line": 68,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "string",
+                    "default": null,
+                    "variadic": false,
+                    "is_by_ref": false
+                },
+                "statement": {
+                    "name": "statement",
+                    "line": 68,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "string",
+                    "default": null,
+                    "variadic": false,
+                    "is_by_ref": false
+                },
+                "multiplier": {
+                    "name": "multiplier",
+                    "line": 68,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "int",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "int",
+                    "default": null,
+                    "variadic": false,
+                    "is_by_ref": false
+                },
+                "indent": {
+                    "name": "indent",
+                    "line": 68,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "string",
+                    "default": null,
+                    "variadic": false,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "__construct": {
+            "name": "__construct",
+            "line": 94,
+            "short_desc": "Construct Financial Statement for the given period",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "year": {
+                    "name": "year",
+                    "line": 94,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "string",
+                    "default": "null",
+                    "variadic": false,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "getReportingPeriod": {
+            "name": "getReportingPeriod",
+            "line": 107,
+            "short_desc": "Get Statement Reporting Period",
+            "long_desc": "",
+            "hint": [
+                [
+                    "string",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": {
+                "codeCoverageIgnore": [
+                    [
+                        ""
+                    ]
+                ]
+            },
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "setReportingPeriod": {
+            "name": "setReportingPeriod",
+            "line": 119,
+            "short_desc": "Set Statement Reporting period",
+            "long_desc": "",
+            "hint": [
+                [
+                    "void",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": {
+                "codeCoverageIgnore": [
+                    [
+                        ""
+                    ]
+                ]
+            },
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "reportingPeriod": {
+                    "name": "reportingPeriod",
+                    "line": 119,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "string",
+                    "default": null,
+                    "variadic": false,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "getEntity": {
+            "name": "getEntity",
+            "line": 131,
+            "short_desc": "Get Statements Entity.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Ekmungai\\IFRS\\Models\\Entity",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": {
+                "codeCoverageIgnore": [
+                    [
+                        ""
+                    ]
+                ]
+            },
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "setEntity": {
+            "name": "setEntity",
+            "line": 143,
+            "short_desc": "Set Statement Entity.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "void",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": {
+                "codeCoverageIgnore": [
+                    [
+                        ""
+                    ]
+                ]
+            },
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "entity": {
+                    "name": "entity",
+                    "line": 143,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Ekmungai\\IFRS\\Models\\Entity",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": {
+                        "nodeType": "Name_FullyQualified",
+                        "parts": [
+                            "Ekmungai",
+                            "IFRS",
+                            "Models",
+                            "Entity"
+                        ],
+                        "attributes": {
+                            "startLine": 143,
+                            "endLine": 143
+                        }
+                    },
+                    "default": null,
+                    "variadic": false,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "attributes": {
+            "name": "attributes",
+            "line": 153,
+            "short_desc": "Print Financial Statement attributes.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "array",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "getSections": {
+            "name": "getSections",
+            "line": 165,
+            "short_desc": "Get Statement Sections.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "void",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        }
+    },
+    "constants": []
+}

@@ -79,7 +79,7 @@ $entity = Entity::new("Example Company", $currency);
 $entity->save();
 
 ```
-We also need a VAT Rates that apply to the Entity:
+We also need the VAT Rates that apply to the Entity:
 
 ```
 use Ekmungai\IFRS\Models\Vat;

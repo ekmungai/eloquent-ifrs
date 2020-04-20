@@ -1,0 +1,73 @@
+{
+    "name": "Ekmungai\\IFRS\\Traits\\Segragating",
+    "line": 19,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Ekmungai\\IFRS\\Traits",
+    "file": "C:\\laravel-ifrs\\config\/..\/src\\Traits\\Segragating.php",
+    "relative_file": null,
+    "hash": "3348556a2c8a1dc84d33d9e9881f7d692b83a4a1",
+    "parent": null,
+    "modifiers": null,
+    "is_trait": true,
+    "is_interface": false,
+    "aliases": {
+        "Auth": "Illuminate\\Support\\Facades\\Auth",
+        "Entity": "Ekmungai\\IFRS\\Models\\Entity",
+        "EntityScope": "Ekmungai\\IFRS\\Scopes\\EntityScope",
+        "UnauthorizedUser": "Ekmungai\\IFRS\\Exceptions\\UnauthorizedUser"
+    },
+    "errors": [],
+    "interfaces": [],
+    "traits": [],
+    "properties": [],
+    "methods": {
+        "bootSegragating": {
+            "name": "bootSegragating",
+            "line": 29,
+            "short_desc": "Register EntityScope for Model.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "null",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": {
+                "codeCoverageIgnore": [
+                    [
+                        ""
+                    ]
+                ]
+            },
+            "modifiers": 9,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "entity": {
+            "name": "entity",
+            "line": 54,
+            "short_desc": "Model's Parent Entity.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Illuminate\\Database\\Eloquent\\Relations\\HasOne",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        }
+    },
+    "constants": []
+}

@@ -1,0 +1,256 @@
+{
+    "name": "Ekmungai\\IFRS\\Reports\\AccountSchedule",
+    "line": 21,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Ekmungai\\IFRS\\Reports",
+    "file": "C:\\laravel-ifrs\\config\/..\/src\\Reports\\AccountSchedule.php",
+    "relative_file": null,
+    "hash": "e0a44d3dd35ab6ffd1460473f312d020acc7117f",
+    "parent": "Ekmungai\\IFRS\\Reports\\AccountStatement",
+    "modifiers": 0,
+    "is_trait": false,
+    "is_interface": false,
+    "aliases": {
+        "Carbon": "Carbon\\Carbon",
+        "Balance": "Ekmungai\\IFRS\\Models\\Balance",
+        "Transaction": "Ekmungai\\IFRS\\Models\\Transaction",
+        "Currency": "Ekmungai\\IFRS\\Models\\Currency",
+        "ReportingPeriod": "Ekmungai\\IFRS\\Models\\ReportingPeriod",
+        "Account": "Ekmungai\\IFRS\\Models\\Account",
+        "MissingAccount": "Ekmungai\\IFRS\\Exceptions\\MissingAccount"
+    },
+    "errors": [],
+    "interfaces": [],
+    "traits": [],
+    "properties": {
+        "balances": {
+            "name": "balances",
+            "line": 29,
+            "short_desc": "Account Schedule balances.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "array",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 1,
+            "default": {
+                "nodeType": "Expr_Array",
+                "items": [
+                    {
+                        "nodeType": "Expr_ArrayItem",
+                        "key": {
+                            "nodeType": "Scalar_String",
+                            "value": "originalAmount",
+                            "attributes": {
+                                "startLine": 30,
+                                "endLine": 30,
+                                "kind": 2
+                            }
+                        },
+                        "value": {
+                            "nodeType": "Scalar_LNumber",
+                            "value": 0,
+                            "attributes": {
+                                "startLine": 30,
+                                "endLine": 30,
+                                "kind": 10
+                            }
+                        },
+                        "byRef": false,
+                        "attributes": {
+                            "startLine": 30,
+                            "endLine": 30
+                        }
+                    },
+                    {
+                        "nodeType": "Expr_ArrayItem",
+                        "key": {
+                            "nodeType": "Scalar_String",
+                            "value": "clearedAmount",
+                            "attributes": {
+                                "startLine": 31,
+                                "endLine": 31,
+                                "kind": 2
+                            }
+                        },
+                        "value": {
+                            "nodeType": "Scalar_LNumber",
+                            "value": 0,
+                            "attributes": {
+                                "startLine": 31,
+                                "endLine": 31,
+                                "kind": 10
+                            }
+                        },
+                        "byRef": false,
+                        "attributes": {
+                            "startLine": 31,
+                            "endLine": 31
+                        }
+                    },
+                    {
+                        "nodeType": "Expr_ArrayItem",
+                        "key": {
+                            "nodeType": "Scalar_String",
+                            "value": "unclearedAmount",
+                            "attributes": {
+                                "startLine": 32,
+                                "endLine": 32,
+                                "kind": 2
+                            }
+                        },
+                        "value": {
+                            "nodeType": "Scalar_LNumber",
+                            "value": 0,
+                            "attributes": {
+                                "startLine": 32,
+                                "endLine": 32,
+                                "kind": 10
+                            }
+                        },
+                        "byRef": false,
+                        "attributes": {
+                            "startLine": 32,
+                            "endLine": 32
+                        }
+                    }
+                ],
+                "attributes": {
+                    "startLine": 29,
+                    "endLine": 33,
+                    "kind": 2
+                }
+            },
+            "errors": []
+        }
+    },
+    "methods": {
+        "__construct": {
+            "name": "__construct",
+            "line": 76,
+            "short_desc": "Account Schedule for the account for the period.",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "account": {
+                    "name": "account",
+                    "line": 76,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Ekmungai\\IFRS\\Models\\Account",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": {
+                        "nodeType": "Name_FullyQualified",
+                        "parts": [
+                            "Ekmungai",
+                            "IFRS",
+                            "Models",
+                            "Account"
+                        ],
+                        "attributes": {
+                            "startLine": 76,
+                            "endLine": 76
+                        }
+                    },
+                    "default": "null",
+                    "variadic": false,
+                    "is_by_ref": false
+                },
+                "currency": {
+                    "name": "currency",
+                    "line": 76,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Ekmungai\\IFRS\\Models\\Currency",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": {
+                        "nodeType": "Name_FullyQualified",
+                        "parts": [
+                            "Ekmungai",
+                            "IFRS",
+                            "Models",
+                            "Currency"
+                        ],
+                        "attributes": {
+                            "startLine": 76,
+                            "endLine": 76
+                        }
+                    },
+                    "default": "null",
+                    "variadic": false,
+                    "is_by_ref": false
+                },
+                "endDate": {
+                    "name": "endDate",
+                    "line": 76,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Carbon\\Carbon",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": {
+                        "nodeType": "Name_FullyQualified",
+                        "parts": [
+                            "Carbon",
+                            "Carbon"
+                        ],
+                        "attributes": {
+                            "startLine": 76,
+                            "endLine": 76
+                        }
+                    },
+                    "default": "null",
+                    "variadic": false,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "getTransactions": {
+            "name": "getTransactions",
+            "line": 87,
+            "short_desc": "Get Account Schedule Transactions.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "void",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        }
+    },
+    "constants": []
+}

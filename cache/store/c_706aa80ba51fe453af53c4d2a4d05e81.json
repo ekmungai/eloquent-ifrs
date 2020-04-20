@@ -1,0 +1,68 @@
+{
+    "name": "Ekmungai\\IFRS\\Interfaces\\Segragatable",
+    "line": 16,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": {
+        "author": [
+            [
+                "emung"
+            ]
+        ]
+    },
+    "namespace": "Ekmungai\\IFRS\\Interfaces",
+    "file": "C:\\laravel-ifrs\\config\/..\/src\\Interfaces\\Segragatable.php",
+    "relative_file": null,
+    "hash": "a338be0198c9c80b762559c4c3e3824dfc0f21fb",
+    "parent": null,
+    "modifiers": null,
+    "is_trait": false,
+    "is_interface": true,
+    "aliases": [],
+    "errors": [],
+    "interfaces": [],
+    "traits": [],
+    "properties": [],
+    "methods": {
+        "bootSegragating": {
+            "name": "bootSegragating",
+            "line": 23,
+            "short_desc": "Register EntityScope for Model.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "null",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 9,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "entity": {
+            "name": "entity",
+            "line": 30,
+            "short_desc": "Model's Parent Entity.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Illuminate\\Database\\Eloquent\\Relations\\HasOne",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        }
+    },
+    "constants": []
+}

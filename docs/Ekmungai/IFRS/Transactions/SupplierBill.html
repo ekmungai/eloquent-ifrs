@@ -1,0 +1,1781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="index, follow, all" />
+    <title>Ekmungai\IFRS\Transactions\SupplierBill | Laravel IFRS API Documentation</title>
+
+            <link rel="stylesheet" type="text/css" href="../../../css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="../../../css/bootstrap-theme.min.css">
+        <link rel="stylesheet" type="text/css" href="../../../css/sami.css">
+        <script src="../../../js/jquery-1.11.1.min.js"></script>
+        <script src="../../../js/bootstrap.min.js"></script>
+        <script src="../../../js/typeahead.min.js"></script>
+        <script src="../../../sami.js"></script>
+        <meta name="MobileOptimized" content="width">
+        <meta name="HandheldFriendly" content="true">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    
+    
+    </head>
+
+    <body id="class" data-name="class:Ekmungai_IFRS_Transactions_SupplierBill" data-root-path="../../../">
+            <div id="content">
+        <div id="left-column">
+                <div id="control-panel">
+                <script>
+            $('option[data-version="'+window.projectVersion+'"]').prop('selected', true);
+        </script>
+        <form id="search-form" action="../../../search.html" method="GET">
+            <span class="glyphicon glyphicon-search"></span>
+            <input name="search"
+                   class="typeahead form-control"
+                   type="search"
+                   placeholder="Search">
+        </form>
+    </div>
+
+                <div id="api-tree"></div>
+
+        </div>
+        <div id="right-column">
+                <nav id="site-nav" class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-elements">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="../../../index.html">Laravel IFRS API Documentation</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-elements">
+                <ul class="nav navbar-nav">
+                    <li><a href="../../../classes.html">Classes</a></li>
+                                            <li><a href="../../../namespaces.html">Namespaces</a></li>
+                                        <li><a href="../../../interfaces.html">Interfaces</a></li>
+                    <li><a href="../../../traits.html">Traits</a></li>
+                    <li><a href="../../../doc-index.html">Index</a></li>
+                    <li><a href="../../../search.html">Search</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+                        <div class="namespace-breadcrumbs">
+            <ol class="breadcrumb">
+                <li><span class="label label-default">class</span></li>
+                        <li><a href="../../../Ekmungai.html">Ekmungai</a></li><li class="backslash">\</li><li><a href="../../../Ekmungai/IFRS.html">IFRS</a></li><li class="backslash">\</li><li><a href="../../../Ekmungai/IFRS/Transactions.html">Transactions</a></li><li class="backslash">\</li><li>SupplierBill</li>
+            </ol>
+        </div>
+                <div id="page-content">
+                
+    <div class="page-header">
+        <h1>
+            SupplierBill
+                
+        </h1>
+    </div>
+
+    <p>    class
+    <strong>SupplierBill</strong>        extends <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a>        implements
+        <a href="../../../Ekmungai/IFRS/Interfaces/Buys.html"><abbr title="Ekmungai\IFRS\Interfaces\Buys">Buys</abbr></a>, <a href="../../../Ekmungai/IFRS/Interfaces/Fetchable.html"><abbr title="Ekmungai\IFRS\Interfaces\Fetchable">Fetchable</abbr></a>, <a href="../../../Ekmungai/IFRS/Interfaces/Clearable.html"><abbr title="Ekmungai\IFRS\Interfaces\Clearable">Clearable</abbr></a>
+</p>
+
+        
+    
+
+    
+            <h2>Traits</h2>
+
+        
+    <div class="container-fluid underlined">
+                    <div class="row">
+                <div class="col-md-6">
+                                            <a href="../../../Ekmungai/IFRS/Traits/Buying.html"><abbr title="Ekmungai\IFRS\Traits\Buying">Buying</abbr></a>
+                                            
+                </div>
+                <div class="col-md-6">
+                    
+                </div>
+            </div>
+                    <div class="row">
+                <div class="col-md-6">
+                                            <a href="../../../Ekmungai/IFRS/Traits/Fetching.html"><abbr title="Ekmungai\IFRS\Traits\Fetching">Fetching</abbr></a>
+                                            
+                </div>
+                <div class="col-md-6">
+                    
+                </div>
+            </div>
+                    <div class="row">
+                <div class="col-md-6">
+                                            <a href="../../../Ekmungai/IFRS/Traits/Clearing.html"><abbr title="Ekmungai\IFRS\Traits\Clearing">Clearing</abbr></a>
+                                            
+                </div>
+                <div class="col-md-6">
+                    
+                </div>
+            </div>
+                    <div class="row">
+                <div class="col-md-6">
+                                            <a href="../../../Ekmungai/IFRS/Traits/Instantiating.html"><abbr title="Ekmungai\IFRS\Traits\Instantiating">Instantiating</abbr></a>
+                                            
+                </div>
+                <div class="col-md-6">
+                    
+                </div>
+            </div>
+                    <div class="row">
+                <div class="col-md-6">
+                                            <a href="../../../Ekmungai/IFRS/Traits/Finding.html"><abbr title="Ekmungai\IFRS\Traits\Finding">Finding</abbr></a>
+                                            
+                </div>
+                <div class="col-md-6">
+                    
+                </div>
+            </div>
+            </div>
+    
+            <h2>Constants</h2>
+
+            <table class="table table-condensed">
+                    <tr>
+                <td>PREFIX</td>
+                <td class="last">
+                    <p><em>Transaction Number prefix</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>CREDITED</td>
+                <td class="last">
+                    <p><em>Transaction Main Account Credit Entry</em></p>
+                    <p></p>
+                </td>
+            </tr>
+            </table>
+
+    
+            <h2>Properties</h2>
+
+            <table class="table table-condensed">
+                    <tr>
+                <td class="type" id="property_transaction">
+                                        protected                                        <a href="../../../Ekmungai/IFRS/Models/Transaction.html"><abbr title="Ekmungai\IFRS\Models\Transaction">Transaction</abbr></a>
+                </td>
+                <td>$transaction</td>
+                <td class="last">Transaction Object</td>
+                <td><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#property_transaction"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></small></td>
+            </tr>
+            </table>
+
+    
+            <h2>Methods</h2>
+
+            <div class="container-fluid underlined">
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_instantiate">instantiate</a>(string $type)
+        
+                                            <p>Instantiate IFRS Transaction of the given type.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Traits/Instantiating.html#method_instantiate"><abbr title="Ekmungai\IFRS\Traits\Instantiating">Instantiating</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_find">find</a>(int $id)
+        
+                                            <p>Instantiate IFRS Transaction with Transaction model from the given Id.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Traits/Finding.html#method_find"><abbr title="Ekmungai\IFRS\Traits\Finding">Finding</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_newTransaction">newTransaction</a>(string $prefix, bool $credited, <a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a> $account, <abbr title="Carbon\Carbon">Carbon</abbr> $date, string $narration, <a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a> $currency = null, <a href="../../../Ekmungai/IFRS/Models/ExchangeRate.html"><abbr title="Ekmungai\IFRS\Models\ExchangeRate">ExchangeRate</abbr></a> $exchangeRate = null, string $reference = null)
+        
+                                            <p>Construct IFRS Transaction with a new Transaction Object</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_newTransaction"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_existingTransaction">existingTransaction</a>(<a href="../../../Ekmungai/IFRS/Models/Transaction.html"><abbr title="Ekmungai\IFRS\Models\Transaction">Transaction</abbr></a> $transaction)
+        
+                                            <p>Add existing Transaction Object to IFRS Transaction</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_existingTransaction"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_refresh">refresh</a>()
+        
+                                            <p>Reload Transaction Model from the Database</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_refresh"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    bool
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_isPosted">isPosted</a>()
+        
+                                            <p>isPosted analog for Assignment model.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_isPosted"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getClearedType">getClearedType</a>()
+        
+                                            <p>getClearedType analog for Assignment model.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_getClearedType"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    bool
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_isCredited">isCredited</a>()
+        
+                                            <p>isCredited analog for Assignment model.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_isCredited"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_save">save</a>()
+        
+                                            <p>Validate Buying Transaction Main Account.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Traits/Buying.html#method_save"><abbr title="Ekmungai\IFRS\Traits\Buying">Buying</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    bool
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_delete">delete</a>()
+        
+                                            <p>Delete Transaction</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_delete"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_post">post</a>()
+        
+                                            <p>Validate Buying Transaction LineItems.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Traits/Buying.html#method_post"><abbr title="Ekmungai\IFRS\Traits\Buying">Buying</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    int
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getId">getId</a>()
+        
+                                            <p>get Transaction Id</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_getId"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getTransactionNo">getTransactionNo</a>()
+        
+                                            <p>Get Transaction Number</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_getTransactionNo"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_setTransactionNo">setTransactionNo</a>(string $transactionNo)
+        
+                                            <p>Set Transaction Number</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_setTransactionNo"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getDate">getDate</a>()
+        
+                                            <p>Get Transaction Date</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_getDate"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getAccount">getAccount</a>()
+        
+                                            <p>Get Transaction Main Account</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_getAccount"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_setAccount">setAccount</a>(<a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a> $account)
+        
+                                            <p>Set Transaction Main Account</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_setAccount"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getCurrency">getCurrency</a>()
+        
+                                            <p>Get Transaction Currency</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_getCurrency"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_setCurrency">setCurrency</a>(<a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a> $currency)
+        
+                                            <p>Set Transaction Currency</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_setCurrency"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../../Ekmungai/IFRS/Models/ExchangeRate.html"><abbr title="Ekmungai\IFRS\Models\ExchangeRate">ExchangeRate</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getExchangeRate">getExchangeRate</a>()
+        
+                                            <p>Get Transaction Exchange Rate</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_getExchangeRate"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_setExchangeRate">setExchangeRate</a>(<a href="../../../Ekmungai/IFRS/Models/ExchangeRate.html"><abbr title="Ekmungai\IFRS\Models\ExchangeRate">ExchangeRate</abbr></a> $exchangeRate)
+        
+                                            <p>Set Transaction Exchange Rate</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_setExchangeRate"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getNarration">getNarration</a>()
+        
+                                            <p>Get Transaction Narration</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_getNarration"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_setNarration">setNarration</a>(string $narration)
+        
+                                            <p>Set Transaction Exchange Rate</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_setNarration"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getReference">getReference</a>()
+        
+                                            <p>Get Transaction Reference</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_getReference"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_setReference">setReference</a>(string $reference)
+        
+                                            <p>Set Transaction Reference</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_setReference"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_addLineItem">addLineItem</a>(<a href="../../../Ekmungai/IFRS/Models/LineItem.html"><abbr title="Ekmungai\IFRS\Models\LineItem">LineItem</abbr></a> $lineItem)
+        
+                                            <p>Add LineItem to Transaction</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_addLineItem"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_removeLineItem">removeLineItem</a>(<a href="../../../Ekmungai/IFRS/Models/LineItem.html"><abbr title="Ekmungai\IFRS\Models\LineItem">LineItem</abbr></a> $lineItem)
+        
+                                            <p>Remove LineItem from Transaction</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_removeLineItem"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getLineItems">getLineItems</a>()
+        
+                                            <p>Get Transaction LineItems</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_getLineItems"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    float
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getAmount">getAmount</a>()
+        
+                                            <p>Get Transaction Total Amount</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_getAmount"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;<abbr title="Illuminate\Support\Collection">Collection</abbr>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_fetch">fetch</a>(<abbr title="Carbon\Carbon">Carbon</abbr> $startTime = null, <abbr title="Carbon\Carbon">Carbon</abbr> $endTime = null, <a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a> $account = null, <a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a> $currency = null)
+        
+                                            <p>Fetch Transactions given the filters</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Traits/Fetching.html#method_fetch"><abbr title="Ekmungai\IFRS\Traits\Fetching">Fetching</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    float
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_clearedAmount">clearedAmount</a>()
+        
+                                            <p>SupplierBill Amount that has been Cleared</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <abbr title="Illuminate\Database\Eloquent\Relations\MorphMany">MorphMany</abbr>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_clearances">clearances</a>()
+        
+                                            <p>Cleared Model records.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Traits/Clearing.html#method_clearances"><abbr title="Ekmungai\IFRS\Traits\Clearing">Clearing</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;<a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_new">new</a>(<a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a> $account, <abbr title="Carbon\Carbon">Carbon</abbr> $date, string $narration, <a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a> $currency = null, <a href="../../../Ekmungai/IFRS/Models/ExchangeRate.html"><abbr title="Ekmungai\IFRS\Models\ExchangeRate">ExchangeRate</abbr></a> $exchangeRate = null, string $reference = null)
+        
+                                            <p>Construct new SupplierBill</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_setDate">setDate</a>(<abbr title="Carbon\Carbon">Carbon</abbr> $date)
+        
+                                            <p>Set SupplierBill Date</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+            </div>
+
+
+        <h2>Details</h2>
+
+            <div id="method-details">
+                    <div class="method-item">
+                    <h3 id="method_instantiate">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Traits/Instantiating.html#method_instantiate"><abbr title="Ekmungai\IFRS\Traits\Instantiating">Instantiating</abbr></a> at         line 28</div>
+        <code>        static            <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a>
+    <strong>instantiate</strong>(string $type)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Instantiate IFRS Transaction of the given type.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$type</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_find">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Traits/Finding.html#method_find"><abbr title="Ekmungai\IFRS\Traits\Finding">Finding</abbr></a> at         line 29</div>
+        <code>        static            <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a>
+    <strong>find</strong>(int $id)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Instantiate IFRS Transaction with Transaction model from the given Id.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>int</td>
+                <td>$id</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_newTransaction">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_newTransaction"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a> at         line 57</div>
+        <code>                    void
+    <strong>newTransaction</strong>(string $prefix, bool $credited, <a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a> $account, <abbr title="Carbon\Carbon">Carbon</abbr> $date, string $narration, <a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a> $currency = null, <a href="../../../Ekmungai/IFRS/Models/ExchangeRate.html"><abbr title="Ekmungai\IFRS\Models\ExchangeRate">ExchangeRate</abbr></a> $exchangeRate = null, string $reference = null)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Construct IFRS Transaction with a new Transaction Object</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$prefix</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>bool</td>
+                <td>$credited</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a></td>
+                <td>$account</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><abbr title="Carbon\Carbon">Carbon</abbr></td>
+                <td>$date</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$narration</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a></td>
+                <td>$currency</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a href="../../../Ekmungai/IFRS/Models/ExchangeRate.html"><abbr title="Ekmungai\IFRS\Models\ExchangeRate">ExchangeRate</abbr></a></td>
+                <td>$exchangeRate</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$reference</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_existingTransaction">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_existingTransaction"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a> at         line 79</div>
+        <code>                    void
+    <strong>existingTransaction</strong>(<a href="../../../Ekmungai/IFRS/Models/Transaction.html"><abbr title="Ekmungai\IFRS\Models\Transaction">Transaction</abbr></a> $transaction)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Add existing Transaction Object to IFRS Transaction</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../../Ekmungai/IFRS/Models/Transaction.html"><abbr title="Ekmungai\IFRS\Models\Transaction">Transaction</abbr></a></td>
+                <td>$transaction</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_refresh">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_refresh"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a> at         line 87</div>
+        <code>                    void
+    <strong>refresh</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Reload Transaction Model from the Database</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_isPosted">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_isPosted"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a> at         line 97</div>
+        <code>                    bool
+    <strong>isPosted</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>isPosted analog for Assignment model.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>bool</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getClearedType">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_getClearedType"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a> at         line 107</div>
+        <code>                    string
+    <strong>getClearedType</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>getClearedType analog for Assignment model.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_isCredited">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_isCredited"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a> at         line 117</div>
+        <code>                    bool
+    <strong>isCredited</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>isCredited analog for Assignment model.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>bool</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_save">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Traits/Buying.html#method_save"><abbr title="Ekmungai\IFRS\Traits\Buying">Buying</abbr></a> at         line 21</div>
+        <code>                    void
+    <strong>save</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Validate Buying Transaction Main Account.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_delete">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_delete"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a> at         line 135</div>
+        <code>                    bool
+    <strong>delete</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Delete Transaction</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>bool</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_post">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Traits/Buying.html#method_post"><abbr title="Ekmungai\IFRS\Traits\Buying">Buying</abbr></a> at         line 33</div>
+        <code>                    void
+    <strong>post</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Validate Buying Transaction LineItems.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getId">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_getId"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a> at         line 153</div>
+        <code>                    int
+    <strong>getId</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>get Transaction Id</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>int</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getTransactionNo">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_getTransactionNo"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a> at         line 163</div>
+        <code>                    string
+    <strong>getTransactionNo</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Get Transaction Number</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setTransactionNo">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_setTransactionNo"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a> at         line 173</div>
+        <code>                    void
+    <strong>setTransactionNo</strong>(string $transactionNo)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Set Transaction Number</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$transactionNo</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getDate">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_getDate"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a> at         line 183</div>
+        <code>                    string
+    <strong>getDate</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Get Transaction Date</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getAccount">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_getAccount"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a> at         line 193</div>
+        <code>                    <a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a>
+    <strong>getAccount</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Get Transaction Main Account</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setAccount">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_setAccount"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a> at         line 203</div>
+        <code>                    void
+    <strong>setAccount</strong>(<a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a> $account)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Set Transaction Main Account</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a></td>
+                <td>$account</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getCurrency">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_getCurrency"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a> at         line 213</div>
+        <code>                    <a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a>
+    <strong>getCurrency</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Get Transaction Currency</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setCurrency">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_setCurrency"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a> at         line 223</div>
+        <code>                    void
+    <strong>setCurrency</strong>(<a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a> $currency)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Set Transaction Currency</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a></td>
+                <td>$currency</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getExchangeRate">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_getExchangeRate"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a> at         line 233</div>
+        <code>                    <a href="../../../Ekmungai/IFRS/Models/ExchangeRate.html"><abbr title="Ekmungai\IFRS\Models\ExchangeRate">ExchangeRate</abbr></a>
+    <strong>getExchangeRate</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Get Transaction Exchange Rate</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../../Ekmungai/IFRS/Models/ExchangeRate.html"><abbr title="Ekmungai\IFRS\Models\ExchangeRate">ExchangeRate</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setExchangeRate">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_setExchangeRate"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a> at         line 243</div>
+        <code>                    void
+    <strong>setExchangeRate</strong>(<a href="../../../Ekmungai/IFRS/Models/ExchangeRate.html"><abbr title="Ekmungai\IFRS\Models\ExchangeRate">ExchangeRate</abbr></a> $exchangeRate)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Set Transaction Exchange Rate</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../../Ekmungai/IFRS/Models/ExchangeRate.html"><abbr title="Ekmungai\IFRS\Models\ExchangeRate">ExchangeRate</abbr></a></td>
+                <td>$exchangeRate</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getNarration">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_getNarration"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a> at         line 253</div>
+        <code>                    string
+    <strong>getNarration</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Get Transaction Narration</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setNarration">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_setNarration"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a> at         line 263</div>
+        <code>                    void
+    <strong>setNarration</strong>(string $narration)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Set Transaction Exchange Rate</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$narration</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getReference">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_getReference"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a> at         line 273</div>
+        <code>                    string
+    <strong>getReference</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Get Transaction Reference</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setReference">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_setReference"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a> at         line 283</div>
+        <code>                    void
+    <strong>setReference</strong>(string $reference)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Set Transaction Reference</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$reference</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_addLineItem">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_addLineItem"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a> at         line 293</div>
+        <code>                    void
+    <strong>addLineItem</strong>(<a href="../../../Ekmungai/IFRS/Models/LineItem.html"><abbr title="Ekmungai\IFRS\Models\LineItem">LineItem</abbr></a> $lineItem)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Add LineItem to Transaction</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../../Ekmungai/IFRS/Models/LineItem.html"><abbr title="Ekmungai\IFRS\Models\LineItem">LineItem</abbr></a></td>
+                <td>$lineItem</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_removeLineItem">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_removeLineItem"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a> at         line 303</div>
+        <code>                    void
+    <strong>removeLineItem</strong>(<a href="../../../Ekmungai/IFRS/Models/LineItem.html"><abbr title="Ekmungai\IFRS\Models\LineItem">LineItem</abbr></a> $lineItem)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Remove LineItem from Transaction</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../../Ekmungai/IFRS/Models/LineItem.html"><abbr title="Ekmungai\IFRS\Models\LineItem">LineItem</abbr></a></td>
+                <td>$lineItem</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getLineItems">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_getLineItems"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a> at         line 313</div>
+        <code>                    array
+    <strong>getLineItems</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Get Transaction LineItems</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getAmount">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html#method_getAmount"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a> at         line 323</div>
+        <code>                    float
+    <strong>getAmount</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Get Transaction Total Amount</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>float</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_fetch">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Traits/Fetching.html#method_fetch"><abbr title="Ekmungai\IFRS\Traits\Fetching">Fetching</abbr></a> at         line 40</div>
+        <code>        static            <abbr title="Illuminate\Support\Collection">Collection</abbr>
+    <strong>fetch</strong>(<abbr title="Carbon\Carbon">Carbon</abbr> $startTime = null, <abbr title="Carbon\Carbon">Carbon</abbr> $endTime = null, <a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a> $account = null, <a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a> $currency = null)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Fetch Transactions given the filters</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><abbr title="Carbon\Carbon">Carbon</abbr></td>
+                <td>$startTime</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><abbr title="Carbon\Carbon">Carbon</abbr></td>
+                <td>$endTime</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a></td>
+                <td>$account</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a></td>
+                <td>$currency</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><abbr title="Illuminate\Support\Collection">Collection</abbr></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_clearedAmount">
+        <div class="location">at         line 101</div>
+        <code>                    float
+    <strong>clearedAmount</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>SupplierBill Amount that has been Cleared</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>float</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_clearances">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Traits/Clearing.html#method_clearances"><abbr title="Ekmungai\IFRS\Traits\Clearing">Clearing</abbr></a> at         line 36</div>
+        <code>                    <abbr title="Illuminate\Database\Eloquent\Relations\MorphMany">MorphMany</abbr>
+    <strong>clearances</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Cleared Model records.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><abbr title="Illuminate\Database\Eloquent\Relations\MorphMany">MorphMany</abbr></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_new">
+        <div class="location">at         line 61</div>
+        <code>        static            <a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a>
+    <strong>new</strong>(<a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a> $account, <abbr title="Carbon\Carbon">Carbon</abbr> $date, string $narration, <a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a> $currency = null, <a href="../../../Ekmungai/IFRS/Models/ExchangeRate.html"><abbr title="Ekmungai\IFRS\Models\ExchangeRate">ExchangeRate</abbr></a> $exchangeRate = null, string $reference = null)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Construct new SupplierBill</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a></td>
+                <td>$account</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><abbr title="Carbon\Carbon">Carbon</abbr></td>
+                <td>$date</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$narration</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a></td>
+                <td>$currency</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a href="../../../Ekmungai/IFRS/Models/ExchangeRate.html"><abbr title="Ekmungai\IFRS\Models\ExchangeRate">ExchangeRate</abbr></a></td>
+                <td>$exchangeRate</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$reference</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../../Ekmungai/IFRS/Transactions/AbstractTransaction.html"><abbr title="Ekmungai\IFRS\Transactions\AbstractTransaction">AbstractTransaction</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setDate">
+        <div class="location">at         line 90</div>
+        <code>                    void
+    <strong>setDate</strong>(<abbr title="Carbon\Carbon">Carbon</abbr> $date)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Set SupplierBill Date</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><abbr title="Carbon\Carbon">Carbon</abbr></td>
+                <td>$date</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+            </div>
+
+    
+            </div>
+                <div id="footer">
+        Generated by <a href="http://sami.sensiolabs.org/">Sami, the API Documentation Generator</a>.
+    </div>
+
+        </div>
+    </div>
+    </body>
+
+</html>

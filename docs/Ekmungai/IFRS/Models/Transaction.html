@@ -1,0 +1,1607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="index, follow, all" />
+    <title>Ekmungai\IFRS\Models\Transaction | Laravel IFRS API Documentation</title>
+
+            <link rel="stylesheet" type="text/css" href="../../../css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="../../../css/bootstrap-theme.min.css">
+        <link rel="stylesheet" type="text/css" href="../../../css/sami.css">
+        <script src="../../../js/jquery-1.11.1.min.js"></script>
+        <script src="../../../js/bootstrap.min.js"></script>
+        <script src="../../../js/typeahead.min.js"></script>
+        <script src="../../../sami.js"></script>
+        <meta name="MobileOptimized" content="width">
+        <meta name="HandheldFriendly" content="true">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    
+    
+    </head>
+
+    <body id="class" data-name="class:Ekmungai_IFRS_Models_Transaction" data-root-path="../../../">
+            <div id="content">
+        <div id="left-column">
+                <div id="control-panel">
+                <script>
+            $('option[data-version="'+window.projectVersion+'"]').prop('selected', true);
+        </script>
+        <form id="search-form" action="../../../search.html" method="GET">
+            <span class="glyphicon glyphicon-search"></span>
+            <input name="search"
+                   class="typeahead form-control"
+                   type="search"
+                   placeholder="Search">
+        </form>
+    </div>
+
+                <div id="api-tree"></div>
+
+        </div>
+        <div id="right-column">
+                <nav id="site-nav" class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-elements">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="../../../index.html">Laravel IFRS API Documentation</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-elements">
+                <ul class="nav navbar-nav">
+                    <li><a href="../../../classes.html">Classes</a></li>
+                                            <li><a href="../../../namespaces.html">Namespaces</a></li>
+                                        <li><a href="../../../interfaces.html">Interfaces</a></li>
+                    <li><a href="../../../traits.html">Traits</a></li>
+                    <li><a href="../../../doc-index.html">Index</a></li>
+                    <li><a href="../../../search.html">Search</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+                        <div class="namespace-breadcrumbs">
+            <ol class="breadcrumb">
+                <li><span class="label label-default">class</span></li>
+                        <li><a href="../../../Ekmungai.html">Ekmungai</a></li><li class="backslash">\</li><li><a href="../../../Ekmungai/IFRS.html">IFRS</a></li><li class="backslash">\</li><li><a href="../../../Ekmungai/IFRS/Models.html">Models</a></li><li class="backslash">\</li><li>Transaction</li>
+            </ol>
+        </div>
+                <div id="page-content">
+                
+    <div class="page-header">
+        <h1>
+            Transaction
+                
+        </h1>
+    </div>
+
+    <p>    class
+    <strong>Transaction</strong>        extends <abbr title="Illuminate\Database\Eloquent\Model">Model</abbr>        implements
+        <a href="../../../Ekmungai/IFRS/Interfaces/Assignable.html"><abbr title="Ekmungai\IFRS\Interfaces\Assignable">Assignable</abbr></a>, <a href="../../../Ekmungai/IFRS/Interfaces/Clearable.html"><abbr title="Ekmungai\IFRS\Interfaces\Clearable">Clearable</abbr></a>, <a href="../../../Ekmungai/IFRS/Interfaces/Segragatable.html"><abbr title="Ekmungai\IFRS\Interfaces\Segragatable">Segragatable</abbr></a>, <a href="../../../Ekmungai/IFRS/Interfaces/Recyclable.html"><abbr title="Ekmungai\IFRS\Interfaces\Recyclable">Recyclable</abbr></a>
+</p>
+
+        
+    
+
+            <div class="description">
+            <p>Class Transaction</p>                                </div>
+    
+            <h2>Traits</h2>
+
+        
+    <div class="container-fluid underlined">
+                    <div class="row">
+                <div class="col-md-6">
+                                            <a href="../../../Ekmungai/IFRS/Traits/Segragating.html"><abbr title="Ekmungai\IFRS\Traits\Segragating">Segragating</abbr></a>
+                                            
+                </div>
+                <div class="col-md-6">
+                    
+                </div>
+            </div>
+                    <div class="row">
+                <div class="col-md-6">
+                                            <abbr title="Illuminate\Database\Eloquent\SoftDeletes">SoftDeletes</abbr>
+                                            
+                </div>
+                <div class="col-md-6">
+                    
+                </div>
+            </div>
+                    <div class="row">
+                <div class="col-md-6">
+                                            <a href="../../../Ekmungai/IFRS/Traits/Recycling.html"><abbr title="Ekmungai\IFRS\Traits\Recycling">Recycling</abbr></a>
+                                            
+                </div>
+                <div class="col-md-6">
+                    
+                </div>
+            </div>
+                    <div class="row">
+                <div class="col-md-6">
+                                            <a href="../../../Ekmungai/IFRS/Traits/Assigning.html"><abbr title="Ekmungai\IFRS\Traits\Assigning">Assigning</abbr></a>
+                                            
+                </div>
+                <div class="col-md-6">
+                    
+                </div>
+            </div>
+                    <div class="row">
+                <div class="col-md-6">
+                                            <a href="../../../Ekmungai/IFRS/Traits/Clearing.html"><abbr title="Ekmungai\IFRS\Traits\Clearing">Clearing</abbr></a>
+                                            
+                </div>
+                <div class="col-md-6">
+                    
+                </div>
+            </div>
+            </div>
+    
+            <h2>Constants</h2>
+
+            <table class="table table-condensed">
+                    <tr>
+                <td>MODELNAME</td>
+                <td class="last">
+                    <p><em>Balance Model Name</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>CS</td>
+                <td class="last">
+                    <p><em>Transaction Types</em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>IN</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>CN</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>RC</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>CP</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>BL</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>DN</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>PY</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>CE</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+                    <tr>
+                <td>JN</td>
+                <td class="last">
+                    <p><em></em></p>
+                    <p></p>
+                </td>
+            </tr>
+            </table>
+
+    
+            <h2>Properties</h2>
+
+            <table class="table table-condensed">
+                    <tr>
+                <td class="type" id="property_transactionClasses">
+                    static                                                            array
+                </td>
+                <td>$transactionClasses</td>
+                <td class="last">Transaction Classes</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_entity">
+                                                                                <a href="../../../Ekmungai/IFRS/Models/Entity.html"><abbr title="Ekmungai\IFRS\Models\Entity">Entity</abbr></a>
+                </td>
+                <td>$entity</td>
+                <td class="last"></td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_exchangeRate">
+                                                                                <a href="../../../Ekmungai/IFRS/Models/ExchangeRate.html"><abbr title="Ekmungai\IFRS\Models\ExchangeRate">ExchangeRate</abbr></a>
+                </td>
+                <td>$exchangeRate</td>
+                <td class="last"></td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_account">
+                                                                                <a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a>
+                </td>
+                <td>$account</td>
+                <td class="last"></td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_currency">
+                                                                                <a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a>
+                </td>
+                <td>$currency</td>
+                <td class="last"></td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_date">
+                                                                                <abbr title="Carbon\Carbon">Carbon</abbr>
+                </td>
+                <td>$date</td>
+                <td class="last"></td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_reference">
+                                                                                string
+                </td>
+                <td>$reference</td>
+                <td class="last"></td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_transaction_no">
+                                                                                string
+                </td>
+                <td>$transaction_no</td>
+                <td class="last"></td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_transaction_type">
+                                                                                string
+                </td>
+                <td>$transaction_type</td>
+                <td class="last"></td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_narration">
+                                                                                string
+                </td>
+                <td>$narration</td>
+                <td class="last"></td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_credited">
+                                                                                bool
+                </td>
+                <td>$credited</td>
+                <td class="last"></td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_amount">
+                                                                                float
+                </td>
+                <td>$amount</td>
+                <td class="last"></td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_destroyed_at">
+                                                                                <abbr title="Carbon\Carbon">Carbon</abbr>
+                </td>
+                <td>$destroyed_at</td>
+                <td class="last"></td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_deleted_at">
+                                                                                <abbr title="Carbon\Carbon">Carbon</abbr>
+                </td>
+                <td>$deleted_at</td>
+                <td class="last"></td>
+                <td></td>
+            </tr>
+            </table>
+
+    
+            <h2>Methods</h2>
+
+            <div class="container-fluid underlined">
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;null
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_bootSegragating">bootSegragating</a>()
+        
+                                            <p>Register EntityScope for Model.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Traits/Segragating.html#method_bootSegragating"><abbr title="Ekmungai\IFRS\Traits\Segragating">Segragating</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <abbr title="Illuminate\Database\Eloquent\Relations\HasOne">HasOne</abbr>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_entity">entity</a>()
+        
+                                            <p>Model's Parent Entity.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Traits/Segragating.html#method_entity"><abbr title="Ekmungai\IFRS\Traits\Segragating">Segragating</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_bootRecycling">bootRecycling</a>()
+        
+                                            <p>Model recycling events.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Traits/Recycling.html#method_bootRecycling"><abbr title="Ekmungai\IFRS\Traits\Recycling">Recycling</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <abbr title="Illuminate\Database\Eloquent\Relations\MorphMany">MorphMany</abbr>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_recycled">recycled</a>()
+        
+                                            <p>Recycled Model records.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Traits/Recycling.html#method_recycled"><abbr title="Ekmungai\IFRS\Traits\Recycling">Recycling</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_balance">balance</a>()
+        
+                                            <p>Balance Remaining on Transaction.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Traits/Assigning.html#method_balance"><abbr title="Ekmungai\IFRS\Traits\Assigning">Assigning</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_clearedAmount">clearedAmount</a>()
+        
+                                            <p>Cleared Transaction amount.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Traits/Clearing.html#method_clearedAmount"><abbr title="Ekmungai\IFRS\Traits\Clearing">Clearing</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <abbr title="Illuminate\Database\Eloquent\Relations\MorphMany">MorphMany</abbr>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_clearances">clearances</a>()
+        
+                                            <p>Cleared Model records.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Traits/Clearing.html#method_clearances"><abbr title="Ekmungai\IFRS\Traits\Clearing">Clearing</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getType">getType</a>(string $type)
+        
+                                            <p>Get Human Readable Transaction type</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getTypes">getTypes</a>(array $types)
+        
+                                            <p>Get Human Readable Transaction types</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;<a href="../../../Ekmungai/IFRS/Models/Transaction.html"><abbr title="Ekmungai\IFRS\Models\Transaction">Transaction</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_new">new</a>(<a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a> $account, string $date, string $narration, <a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a> $currency = null, <a href="../../../Ekmungai/IFRS/Models/ExchangeRate.html"><abbr title="Ekmungai\IFRS\Models\ExchangeRate">ExchangeRate</abbr></a> $exchangeRate = null, string $reference = null)
+        
+                                            <p>Consctruct new Transaction</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_transactionNo">transactionNo</a>(string $type, <abbr title="Carbon\Carbon">Carbon</abbr> $date = null)
+        
+                                            <p>The next Transaction number for the transaction type and date.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    int
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getId">getId</a>()
+        
+                                            <p>getId analog for Assignment model.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    bool
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_isPosted">isPosted</a>()
+        
+                                            <p>isPosted analog for Assignment model.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    bool
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_isCredited">isCredited</a>()
+        
+                                            <p>isCredited analog for Assignment model.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getTransactionNo">getTransactionNo</a>()
+        
+                                            <p>getTransactionNo analog for Assignment model.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getClearedType">getClearedType</a>()
+        
+                                            <p>getClearedType analog for Assignment model.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <abbr title="Illuminate\Database\Eloquent\Relations\HasMany">HasMany</abbr>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_savedLineItems">savedLineItems</a>()
+        
+                                            <p>Transaction Saved Line Items.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <abbr title="Illuminate\Database\Eloquent\Relations\HasMany">HasMany</abbr>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_ledgers">ledgers</a>()
+        
+                                            <p>Transaction Ledgers.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <abbr title="Illuminate\Database\Eloquent\Relations\BelongsTo">BelongsTo</abbr>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_currency">currency</a>()
+        
+                                            <p>Transaction Currency.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <abbr title="Illuminate\Database\Eloquent\Relations\BelongsTo">BelongsTo</abbr>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_account">account</a>()
+        
+                                            <p>Transaction Account.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <abbr title="Illuminate\Database\Eloquent\Relations\BelongsTo">BelongsTo</abbr>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_exchangeRate">exchangeRate</a>()
+        
+                                            <p>Transaction Exchange Rate.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <abbr title="Illuminate\Database\Eloquent\Relations\HasMany">HasMany</abbr>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_assignments">assignments</a>()
+        
+                                            <p>Transaction Assignments.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    object
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_attributes">attributes</a>()
+        
+                                            <p>Transaction attributes.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getLineItems">getLineItems</a>()
+        
+                                            <p>Get Transaction LineItems.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_addLineItem">addLineItem</a>(<a href="../../../Ekmungai/IFRS/Models/LineItem.html"><abbr title="Ekmungai\IFRS\Models\LineItem">LineItem</abbr></a> $lineItem)
+        
+                                            <p>Add LineItem to Transaction LineItems.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_removeLineItem">removeLineItem</a>(<a href="../../../Ekmungai/IFRS/Models/LineItem.html"><abbr title="Ekmungai\IFRS\Models\LineItem">LineItem</abbr></a> $lineItem)
+        
+                                            <p>Remove LineItem from Transaction LineItems.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    bool
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_save">save</a>(array $options = [])
+        
+                                            <p>Relate LineItems to Transaction.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_post">post</a>()
+        
+                                            <p>Post Transaction to the Ledger.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    bool
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_delete">delete</a>()
+        
+                                            <p>Check Transaction Relationships.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+            </div>
+
+
+        <h2>Details</h2>
+
+            <div id="method-details">
+                    <div class="method-item">
+                    <h3 id="method_bootSegragating">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Traits/Segragating.html#method_bootSegragating"><abbr title="Ekmungai\IFRS\Traits\Segragating">Segragating</abbr></a> at         line 29</div>
+        <code>        static            null
+    <strong>bootSegragating</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Register EntityScope for Model.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>null</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_entity">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Traits/Segragating.html#method_entity"><abbr title="Ekmungai\IFRS\Traits\Segragating">Segragating</abbr></a> at         line 54</div>
+        <code>                    <abbr title="Illuminate\Database\Eloquent\Relations\HasOne">HasOne</abbr>
+    <strong>entity</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Model's Parent Entity.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><abbr title="Illuminate\Database\Eloquent\Relations\HasOne">HasOne</abbr></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_bootRecycling">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Traits/Recycling.html#method_bootRecycling"><abbr title="Ekmungai\IFRS\Traits\Recycling">Recycling</abbr></a> at         line 26</div>
+        <code>        static            void
+    <strong>bootRecycling</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Model recycling events.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_recycled">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Traits/Recycling.html#method_recycled"><abbr title="Ekmungai\IFRS\Traits\Recycling">Recycling</abbr></a> at         line 64</div>
+        <code>                    <abbr title="Illuminate\Database\Eloquent\Relations\MorphMany">MorphMany</abbr>
+    <strong>recycled</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Recycled Model records.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><abbr title="Illuminate\Database\Eloquent\Relations\MorphMany">MorphMany</abbr></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_balance">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Traits/Assigning.html#method_balance"><abbr title="Ekmungai\IFRS\Traits\Assigning">Assigning</abbr></a> at         line 22</div>
+        <code>                    
+    <strong>balance</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Balance Remaining on Transaction.</p>                                                </div>
+                <div class="tags">
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_clearedAmount">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Traits/Clearing.html#method_clearedAmount"><abbr title="Ekmungai\IFRS\Traits\Clearing">Clearing</abbr></a> at         line 22</div>
+        <code>                    
+    <strong>clearedAmount</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Cleared Transaction amount.</p>                                                </div>
+                <div class="tags">
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_clearances">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Traits/Clearing.html#method_clearances"><abbr title="Ekmungai\IFRS\Traits\Clearing">Clearing</abbr></a> at         line 36</div>
+        <code>                    <abbr title="Illuminate\Database\Eloquent\Relations\MorphMany">MorphMany</abbr>
+    <strong>clearances</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Cleared Model records.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><abbr title="Illuminate\Database\Eloquent\Relations\MorphMany">MorphMany</abbr></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getType">
+        <div class="location">at         line 145</div>
+        <code>        static            string
+    <strong>getType</strong>(string $type)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Get Human Readable Transaction type</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$type</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getTypes">
+        <div class="location">at         line 157</div>
+        <code>        static            array
+    <strong>getTypes</strong>(array $types)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Get Human Readable Transaction types</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$types</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_new">
+        <div class="location">at         line 179</div>
+        <code>        static            <a href="../../../Ekmungai/IFRS/Models/Transaction.html"><abbr title="Ekmungai\IFRS\Models\Transaction">Transaction</abbr></a>
+    <strong>new</strong>(<a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a> $account, string $date, string $narration, <a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a> $currency = null, <a href="../../../Ekmungai/IFRS/Models/ExchangeRate.html"><abbr title="Ekmungai\IFRS\Models\ExchangeRate">ExchangeRate</abbr></a> $exchangeRate = null, string $reference = null)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Consctruct new Transaction</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a></td>
+                <td>$account</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$date</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$narration</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a></td>
+                <td>$currency</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a href="../../../Ekmungai/IFRS/Models/ExchangeRate.html"><abbr title="Ekmungai\IFRS\Models\ExchangeRate">ExchangeRate</abbr></a></td>
+                <td>$exchangeRate</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$reference</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../../Ekmungai/IFRS/Models/Transaction.html"><abbr title="Ekmungai\IFRS\Models\Transaction">Transaction</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_transactionNo">
+        <div class="location">at         line 210</div>
+        <code>        static            string
+    <strong>transactionNo</strong>(string $type, <abbr title="Carbon\Carbon">Carbon</abbr> $date = null)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>The next Transaction number for the transaction type and date.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$type</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><abbr title="Carbon\Carbon">Carbon</abbr></td>
+                <td>$date</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getId">
+        <div class="location">at         line 228</div>
+        <code>                    int
+    <strong>getId</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>getId analog for Assignment model.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>int</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_isPosted">
+        <div class="location">at         line 236</div>
+        <code>                    bool
+    <strong>isPosted</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>isPosted analog for Assignment model.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>bool</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_isCredited">
+        <div class="location">at         line 246</div>
+        <code>                    bool
+    <strong>isCredited</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>isCredited analog for Assignment model.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>bool</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getTransactionNo">
+        <div class="location">at         line 256</div>
+        <code>                    string
+    <strong>getTransactionNo</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>getTransactionNo analog for Assignment model.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getClearedType">
+        <div class="location">at         line 266</div>
+        <code>                    string
+    <strong>getClearedType</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>getClearedType analog for Assignment model.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_savedLineItems">
+        <div class="location">at         line 276</div>
+        <code>                    <abbr title="Illuminate\Database\Eloquent\Relations\HasMany">HasMany</abbr>
+    <strong>savedLineItems</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Transaction Saved Line Items.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><abbr title="Illuminate\Database\Eloquent\Relations\HasMany">HasMany</abbr></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_ledgers">
+        <div class="location">at         line 286</div>
+        <code>                    <abbr title="Illuminate\Database\Eloquent\Relations\HasMany">HasMany</abbr>
+    <strong>ledgers</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Transaction Ledgers.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><abbr title="Illuminate\Database\Eloquent\Relations\HasMany">HasMany</abbr></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_currency">
+        <div class="location">at         line 296</div>
+        <code>                    <abbr title="Illuminate\Database\Eloquent\Relations\BelongsTo">BelongsTo</abbr>
+    <strong>currency</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Transaction Currency.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><abbr title="Illuminate\Database\Eloquent\Relations\BelongsTo">BelongsTo</abbr></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_account">
+        <div class="location">at         line 306</div>
+        <code>                    <abbr title="Illuminate\Database\Eloquent\Relations\BelongsTo">BelongsTo</abbr>
+    <strong>account</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Transaction Account.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><abbr title="Illuminate\Database\Eloquent\Relations\BelongsTo">BelongsTo</abbr></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_exchangeRate">
+        <div class="location">at         line 316</div>
+        <code>                    <abbr title="Illuminate\Database\Eloquent\Relations\BelongsTo">BelongsTo</abbr>
+    <strong>exchangeRate</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Transaction Exchange Rate.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><abbr title="Illuminate\Database\Eloquent\Relations\BelongsTo">BelongsTo</abbr></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_assignments">
+        <div class="location">at         line 326</div>
+        <code>                    <abbr title="Illuminate\Database\Eloquent\Relations\HasMany">HasMany</abbr>
+    <strong>assignments</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Transaction Assignments.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><abbr title="Illuminate\Database\Eloquent\Relations\HasMany">HasMany</abbr></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_attributes">
+        <div class="location">at         line 336</div>
+        <code>                    object
+    <strong>attributes</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Transaction attributes.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>object</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getLineItems">
+        <div class="location">at         line 346</div>
+        <code>                    array
+    <strong>getLineItems</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Get Transaction LineItems.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_addLineItem">
+        <div class="location">at         line 359</div>
+        <code>                    void
+    <strong>addLineItem</strong>(<a href="../../../Ekmungai/IFRS/Models/LineItem.html"><abbr title="Ekmungai\IFRS\Models\LineItem">LineItem</abbr></a> $lineItem)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Add LineItem to Transaction LineItems.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../../Ekmungai/IFRS/Models/LineItem.html"><abbr title="Ekmungai\IFRS\Models\LineItem">LineItem</abbr></a></td>
+                <td>$lineItem</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_removeLineItem">
+        <div class="location">at         line 375</div>
+        <code>                    void
+    <strong>removeLineItem</strong>(<a href="../../../Ekmungai/IFRS/Models/LineItem.html"><abbr title="Ekmungai\IFRS\Models\LineItem">LineItem</abbr></a> $lineItem)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Remove LineItem from Transaction LineItems.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../../Ekmungai/IFRS/Models/LineItem.html"><abbr title="Ekmungai\IFRS\Models\LineItem">LineItem</abbr></a></td>
+                <td>$lineItem</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_save">
+        <div class="location">at         line 397</div>
+        <code>                    bool
+    <strong>save</strong>(array $options = [])
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Relate LineItems to Transaction.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$options</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>bool</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_post">
+        <div class="location">at         line 411</div>
+        <code>                    void
+    <strong>post</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Post Transaction to the Ledger.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_delete">
+        <div class="location">at         line 425</div>
+        <code>                    bool
+    <strong>delete</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Check Transaction Relationships.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>bool</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+            </div>
+
+    
+            </div>
+                <div id="footer">
+        Generated by <a href="http://sami.sensiolabs.org/">Sami, the API Documentation Generator</a>.
+    </div>
+
+        </div>
+    </div>
+    </body>
+
+</html>

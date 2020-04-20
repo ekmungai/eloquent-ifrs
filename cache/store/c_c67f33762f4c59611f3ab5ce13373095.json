@@ -1,0 +1,68 @@
+{
+    "name": "Ekmungai\\IFRS\\Interfaces\\Buys",
+    "line": 16,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": {
+        "author": [
+            [
+                "emung"
+            ]
+        ]
+    },
+    "namespace": "Ekmungai\\IFRS\\Interfaces",
+    "file": "C:\\laravel-ifrs\\config\/..\/src\\Interfaces\\Buys.php",
+    "relative_file": null,
+    "hash": "c58a854916f0236cb61f4bc4c1f417c842daffb6",
+    "parent": null,
+    "modifiers": null,
+    "is_trait": false,
+    "is_interface": true,
+    "aliases": [],
+    "errors": [],
+    "interfaces": [],
+    "traits": [],
+    "properties": [],
+    "methods": {
+        "save": {
+            "name": "save",
+            "line": 23,
+            "short_desc": "Validate Buying Transaction Main Account.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "void",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "post": {
+            "name": "post",
+            "line": 30,
+            "short_desc": "Validate Buying Transaction LineItems.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "void",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        }
+    },
+    "constants": []
+}

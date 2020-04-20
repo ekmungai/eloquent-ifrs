@@ -1,0 +1,272 @@
+{
+    "name": "Ekmungai\\IFRS\\Reports\\IncomeStatement",
+    "line": 15,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Ekmungai\\IFRS\\Reports",
+    "file": "C:\\laravel-ifrs\\config\/..\/src\\Reports\\IncomeStatement.php",
+    "relative_file": null,
+    "hash": "58f7a6a12f20d9f1f9e642b2bdf4260051a6b830",
+    "parent": "Ekmungai\\IFRS\\Reports\\FinancialStatement",
+    "modifiers": 0,
+    "is_trait": false,
+    "is_interface": false,
+    "aliases": {
+        "Carbon": "Carbon\\Carbon",
+        "ReportingPeriod": "Ekmungai\\IFRS\\Models\\ReportingPeriod"
+    },
+    "errors": [],
+    "interfaces": [],
+    "traits": [],
+    "properties": {
+        "period": {
+            "name": "period",
+            "line": 34,
+            "short_desc": "Income Statement period.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "array",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 1,
+            "default": {
+                "nodeType": "Expr_Array",
+                "items": [
+                    {
+                        "nodeType": "Expr_ArrayItem",
+                        "key": {
+                            "nodeType": "Scalar_String",
+                            "value": "startDate",
+                            "attributes": {
+                                "startLine": 35,
+                                "endLine": 35,
+                                "kind": 2
+                            }
+                        },
+                        "value": {
+                            "nodeType": "Expr_ConstFetch",
+                            "name": {
+                                "nodeType": "Name",
+                                "parts": [
+                                    "null"
+                                ],
+                                "attributes": {
+                                    "startLine": 35,
+                                    "endLine": 35,
+                                    "namespacedName": {
+                                        "nodeType": "Name_FullyQualified",
+                                        "parts": [
+                                            "Ekmungai",
+                                            "IFRS",
+                                            "Reports",
+                                            "null"
+                                        ],
+                                        "attributes": {
+                                            "startLine": 35,
+                                            "endLine": 35
+                                        }
+                                    }
+                                }
+                            },
+                            "attributes": {
+                                "startLine": 35,
+                                "endLine": 35
+                            }
+                        },
+                        "byRef": false,
+                        "attributes": {
+                            "startLine": 35,
+                            "endLine": 35
+                        }
+                    },
+                    {
+                        "nodeType": "Expr_ArrayItem",
+                        "key": {
+                            "nodeType": "Scalar_String",
+                            "value": "endDate",
+                            "attributes": {
+                                "startLine": 36,
+                                "endLine": 36,
+                                "kind": 2
+                            }
+                        },
+                        "value": {
+                            "nodeType": "Expr_ConstFetch",
+                            "name": {
+                                "nodeType": "Name",
+                                "parts": [
+                                    "null"
+                                ],
+                                "attributes": {
+                                    "startLine": 36,
+                                    "endLine": 36,
+                                    "namespacedName": {
+                                        "nodeType": "Name_FullyQualified",
+                                        "parts": [
+                                            "Ekmungai",
+                                            "IFRS",
+                                            "Reports",
+                                            "null"
+                                        ],
+                                        "attributes": {
+                                            "startLine": 36,
+                                            "endLine": 36
+                                        }
+                                    }
+                                }
+                            },
+                            "attributes": {
+                                "startLine": 36,
+                                "endLine": 36
+                            }
+                        },
+                        "byRef": false,
+                        "attributes": {
+                            "startLine": 36,
+                            "endLine": 36
+                        }
+                    }
+                ],
+                "attributes": {
+                    "startLine": 34,
+                    "endLine": 37,
+                    "kind": 2
+                }
+            },
+            "errors": []
+        }
+    },
+    "methods": {
+        "__construct": {
+            "name": "__construct",
+            "line": 46,
+            "short_desc": "Construct Income Statement for the given period.",
+            "long_desc": "",
+            "hint": null,
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "startDate": {
+                    "name": "startDate",
+                    "line": 46,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "string",
+                    "default": "null",
+                    "variadic": false,
+                    "is_by_ref": false
+                },
+                "endDate": {
+                    "name": "endDate",
+                    "line": 46,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "string",
+                    "default": "null",
+                    "variadic": false,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "attributes": {
+            "name": "attributes",
+            "line": 72,
+            "short_desc": "Income Statement attributes.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "array",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        },
+        "toString": {
+            "name": "toString",
+            "line": 82,
+            "short_desc": "Print Income Statement.",
+            "long_desc": "",
+            "hint": [
+                [
+                    "void",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": {
+                "codeCoverageIgnore": [
+                    [
+                        ""
+                    ]
+                ]
+            },
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        }
+    },
+    "constants": {
+        "TITLE": {
+            "name": "TITLE",
+            "line": 23,
+            "short_desc": "Income Statement Sections",
+            "long_desc": ""
+        },
+        "OPERATING_REVENUES": {
+            "name": "OPERATING_REVENUES",
+            "line": 24,
+            "short_desc": "",
+            "long_desc": ""
+        },
+        "NON_OPERATING_REVENUES": {
+            "name": "NON_OPERATING_REVENUES",
+            "line": 25,
+            "short_desc": "",
+            "long_desc": ""
+        },
+        "OPERATING_EXPENSES": {
+            "name": "OPERATING_EXPENSES",
+            "line": 26,
+            "short_desc": "",
+            "long_desc": ""
+        },
+        "NON_OPERATING_EXPENSES": {
+            "name": "NON_OPERATING_EXPENSES",
+            "line": 27,
+            "short_desc": "",
+            "long_desc": ""
+        }
+    }
+}

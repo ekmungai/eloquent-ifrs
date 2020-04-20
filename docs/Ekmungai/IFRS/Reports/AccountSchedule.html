@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="index, follow, all" />
+    <title>Ekmungai\IFRS\Reports\AccountSchedule | Laravel IFRS API Documentation</title>
+
+            <link rel="stylesheet" type="text/css" href="../../../css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="../../../css/bootstrap-theme.min.css">
+        <link rel="stylesheet" type="text/css" href="../../../css/sami.css">
+        <script src="../../../js/jquery-1.11.1.min.js"></script>
+        <script src="../../../js/bootstrap.min.js"></script>
+        <script src="../../../js/typeahead.min.js"></script>
+        <script src="../../../sami.js"></script>
+        <meta name="MobileOptimized" content="width">
+        <meta name="HandheldFriendly" content="true">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    
+    
+    </head>
+
+    <body id="class" data-name="class:Ekmungai_IFRS_Reports_AccountSchedule" data-root-path="../../../">
+            <div id="content">
+        <div id="left-column">
+                <div id="control-panel">
+                <script>
+            $('option[data-version="'+window.projectVersion+'"]').prop('selected', true);
+        </script>
+        <form id="search-form" action="../../../search.html" method="GET">
+            <span class="glyphicon glyphicon-search"></span>
+            <input name="search"
+                   class="typeahead form-control"
+                   type="search"
+                   placeholder="Search">
+        </form>
+    </div>
+
+                <div id="api-tree"></div>
+
+        </div>
+        <div id="right-column">
+                <nav id="site-nav" class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-elements">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="../../../index.html">Laravel IFRS API Documentation</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-elements">
+                <ul class="nav navbar-nav">
+                    <li><a href="../../../classes.html">Classes</a></li>
+                                            <li><a href="../../../namespaces.html">Namespaces</a></li>
+                                        <li><a href="../../../interfaces.html">Interfaces</a></li>
+                    <li><a href="../../../traits.html">Traits</a></li>
+                    <li><a href="../../../doc-index.html">Index</a></li>
+                    <li><a href="../../../search.html">Search</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+                        <div class="namespace-breadcrumbs">
+            <ol class="breadcrumb">
+                <li><span class="label label-default">class</span></li>
+                        <li><a href="../../../Ekmungai.html">Ekmungai</a></li><li class="backslash">\</li><li><a href="../../../Ekmungai/IFRS.html">IFRS</a></li><li class="backslash">\</li><li><a href="../../../Ekmungai/IFRS/Reports.html">Reports</a></li><li class="backslash">\</li><li>AccountSchedule</li>
+            </ol>
+        </div>
+                <div id="page-content">
+                
+    <div class="page-header">
+        <h1>
+            AccountSchedule
+                
+        </h1>
+    </div>
+
+    <p>    class
+    <strong>AccountSchedule</strong>        extends <a href="../../../Ekmungai/IFRS/Reports/AccountStatement.html"><abbr title="Ekmungai\IFRS\Reports\AccountStatement">AccountStatement</abbr></a>
+</p>
+
+        
+    
+
+    
+    
+    
+            <h2>Properties</h2>
+
+            <table class="table table-condensed">
+                    <tr>
+                <td class="type" id="property_currency">
+                                        protected                                        <a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a>
+                </td>
+                <td>$currency</td>
+                <td class="last">Account Statement Currency.</td>
+                <td><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Reports/AccountStatement.html#property_currency"><abbr title="Ekmungai\IFRS\Reports\AccountStatement">AccountStatement</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_account">
+                                        protected                                        <a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a>
+                </td>
+                <td>$account</td>
+                <td class="last">Account Statement Account.</td>
+                <td><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Reports/AccountStatement.html#property_account"><abbr title="Ekmungai\IFRS\Reports\AccountStatement">AccountStatement</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_entity">
+                                        protected                                        <a href="../../../Ekmungai/IFRS/Models/Entity.html"><abbr title="Ekmungai\IFRS\Models\Entity">Entity</abbr></a>
+                </td>
+                <td>$entity</td>
+                <td class="last">Account Statement Entity.</td>
+                <td><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Reports/AccountStatement.html#property_entity"><abbr title="Ekmungai\IFRS\Reports\AccountStatement">AccountStatement</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_balances">
+                                                                                array
+                </td>
+                <td>$balances</td>
+                <td class="last">Account Schedule balances.</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_period">
+                                                                                array
+                </td>
+                <td>$period</td>
+                <td class="last">Account Statement period.</td>
+                <td><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Reports/AccountStatement.html#property_period"><abbr title="Ekmungai\IFRS\Reports\AccountStatement">AccountStatement</abbr></a></small></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_transactions">
+                                                                                array
+                </td>
+                <td>$transactions</td>
+                <td class="last">Account Statement transactions.</td>
+                <td><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Reports/AccountStatement.html#property_transactions"><abbr title="Ekmungai\IFRS\Reports\AccountStatement">AccountStatement</abbr></a></small></td>
+            </tr>
+            </table>
+
+    
+            <h2>Methods</h2>
+
+            <div class="container-fluid underlined">
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getCurrency">getCurrency</a>()
+        
+                                            <p>Get Statement Currency</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Reports/AccountStatement.html#method_getCurrency"><abbr title="Ekmungai\IFRS\Reports\AccountStatement">AccountStatement</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_setCurrency">setCurrency</a>(<a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a> $currency)
+        
+                                            <p>Set Statement Currency</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Reports/AccountStatement.html#method_setCurrency"><abbr title="Ekmungai\IFRS\Reports\AccountStatement">AccountStatement</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getAccount">getAccount</a>()
+        
+                                            <p>Get Statement Account</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Reports/AccountStatement.html#method_getAccount"><abbr title="Ekmungai\IFRS\Reports\AccountStatement">AccountStatement</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_setAccount">setAccount</a>(<a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a> $account)
+        
+                                            <p>Set Statement Account</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Reports/AccountStatement.html#method_setAccount"><abbr title="Ekmungai\IFRS\Reports\AccountStatement">AccountStatement</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../../Ekmungai/IFRS/Models/Entity.html"><abbr title="Ekmungai\IFRS\Models\Entity">Entity</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getEntity">getEntity</a>()
+        
+                                            <p>Get Statement Entity</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Reports/AccountStatement.html#method_getEntity"><abbr title="Ekmungai\IFRS\Reports\AccountStatement">AccountStatement</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_setEntity">setEntity</a>(<a href="../../../Ekmungai/IFRS/Models/Entity.html"><abbr title="Ekmungai\IFRS\Models\Entity">Entity</abbr></a> $entity)
+        
+                                            <p>Set Statement Entity</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Reports/AccountStatement.html#method_setEntity"><abbr title="Ekmungai\IFRS\Reports\AccountStatement">AccountStatement</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <abbr title="Illuminate\Database\Query\Builder">Builder</abbr>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_buildQuery">buildQuery</a>()
+        
+                                            <p>Build Statement Query</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Reports/AccountStatement.html#method_buildQuery"><abbr title="Ekmungai\IFRS\Reports\AccountStatement">AccountStatement</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_attributes">attributes</a>()
+        
+                                            <p>Print Account Statement attributes.</p>                </div>
+                <div class="col-md-2"><small>from&nbsp;<a href="../../../Ekmungai/IFRS/Reports/AccountStatement.html#method_attributes"><abbr title="Ekmungai\IFRS\Reports\AccountStatement">AccountStatement</abbr></a></small></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method___construct">__construct</a>(<a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a> $account = null, <a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a> $currency = null, <abbr title="Carbon\Carbon">Carbon</abbr> $endDate = null)
+        
+                                            <p>Account Schedule for the account for the period.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    void
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getTransactions">getTransactions</a>()
+        
+                                            <p>Get Account Schedule Transactions.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+            </div>
+
+
+        <h2>Details</h2>
+
+            <div id="method-details">
+                    <div class="method-item">
+                    <h3 id="method_getCurrency">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Reports/AccountStatement.html#method_getCurrency"><abbr title="Ekmungai\IFRS\Reports\AccountStatement">AccountStatement</abbr></a> at         line 83</div>
+        <code>                    <a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a>
+    <strong>getCurrency</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Get Statement Currency</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setCurrency">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Reports/AccountStatement.html#method_setCurrency"><abbr title="Ekmungai\IFRS\Reports\AccountStatement">AccountStatement</abbr></a> at         line 95</div>
+        <code>                    void
+    <strong>setCurrency</strong>(<a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a> $currency)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Set Statement Currency</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a></td>
+                <td>$currency</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getAccount">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Reports/AccountStatement.html#method_getAccount"><abbr title="Ekmungai\IFRS\Reports\AccountStatement">AccountStatement</abbr></a> at         line 107</div>
+        <code>                    <a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a>
+    <strong>getAccount</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Get Statement Account</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setAccount">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Reports/AccountStatement.html#method_setAccount"><abbr title="Ekmungai\IFRS\Reports\AccountStatement">AccountStatement</abbr></a> at         line 119</div>
+        <code>                    void
+    <strong>setAccount</strong>(<a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a> $account)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Set Statement Account</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a></td>
+                <td>$account</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getEntity">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Reports/AccountStatement.html#method_getEntity"><abbr title="Ekmungai\IFRS\Reports\AccountStatement">AccountStatement</abbr></a> at         line 131</div>
+        <code>                    <a href="../../../Ekmungai/IFRS/Models/Entity.html"><abbr title="Ekmungai\IFRS\Models\Entity">Entity</abbr></a>
+    <strong>getEntity</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Get Statement Entity</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../../Ekmungai/IFRS/Models/Entity.html"><abbr title="Ekmungai\IFRS\Models\Entity">Entity</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_setEntity">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Reports/AccountStatement.html#method_setEntity"><abbr title="Ekmungai\IFRS\Reports\AccountStatement">AccountStatement</abbr></a> at         line 143</div>
+        <code>                    void
+    <strong>setEntity</strong>(<a href="../../../Ekmungai/IFRS/Models/Entity.html"><abbr title="Ekmungai\IFRS\Models\Entity">Entity</abbr></a> $entity)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Set Statement Entity</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../../Ekmungai/IFRS/Models/Entity.html"><abbr title="Ekmungai\IFRS\Models\Entity">Entity</abbr></a></td>
+                <td>$entity</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_buildQuery">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Reports/AccountStatement.html#method_buildQuery"><abbr title="Ekmungai\IFRS\Reports\AccountStatement">AccountStatement</abbr></a> at         line 153</div>
+        <code>                    <abbr title="Illuminate\Database\Query\Builder">Builder</abbr>
+    <strong>buildQuery</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Build Statement Query</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><abbr title="Illuminate\Database\Query\Builder">Builder</abbr></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_attributes">
+        <div class="location">in <a href="../../../Ekmungai/IFRS/Reports/AccountStatement.html#method_attributes"><abbr title="Ekmungai\IFRS\Reports\AccountStatement">AccountStatement</abbr></a> at         line 184</div>
+        <code>                    array
+    <strong>attributes</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Print Account Statement attributes.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method___construct">
+        <div class="location">at         line 76</div>
+        <code>                    
+    <strong>__construct</strong>(<a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a> $account = null, <a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a> $currency = null, <abbr title="Carbon\Carbon">Carbon</abbr> $endDate = null)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Account Schedule for the account for the period.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../../Ekmungai/IFRS/Models/Account.html"><abbr title="Ekmungai\IFRS\Models\Account">Account</abbr></a></td>
+                <td>$account</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a href="../../../Ekmungai/IFRS/Models/Currency.html"><abbr title="Ekmungai\IFRS\Models\Currency">Currency</abbr></a></td>
+                <td>$currency</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><abbr title="Carbon\Carbon">Carbon</abbr></td>
+                <td>$endDate</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getTransactions">
+        <div class="location">at         line 87</div>
+        <code>                    void
+    <strong>getTransactions</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Get Account Schedule Transactions.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>void</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+            </div>
+
+    
+            </div>
+                <div id="footer">
+        Generated by <a href="http://sami.sensiolabs.org/">Sami, the API Documentation Generator</a>.
+    </div>
+
+        </div>
+    </div>
+    </body>
+
+</html>

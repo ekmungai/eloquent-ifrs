@@ -1,0 +1,291 @@
+{
+    "name": "Ekmungai\\IFRS\\Transactions\\SupplierBill",
+    "line": 27,
+    "short_desc": "",
+    "long_desc": "",
+    "hint": null,
+    "tags": [],
+    "namespace": "Ekmungai\\IFRS\\Transactions",
+    "file": "C:\\laravel-ifrs\\config\/..\/src\\Transactions\\SupplierBill.php",
+    "relative_file": null,
+    "hash": "815788753b389b40922a0d7f6792ed5d0e7b87b7",
+    "parent": "Ekmungai\\IFRS\\Transactions\\AbstractTransaction",
+    "modifiers": 0,
+    "is_trait": false,
+    "is_interface": false,
+    "aliases": {
+        "Carbon": "Carbon\\Carbon",
+        "Account": "Ekmungai\\IFRS\\Models\\Account",
+        "Currency": "Ekmungai\\IFRS\\Models\\Currency",
+        "ExchangeRate": "Ekmungai\\IFRS\\Models\\ExchangeRate",
+        "Transaction": "Ekmungai\\IFRS\\Models\\Transaction",
+        "Buys": "Ekmungai\\IFRS\\Interfaces\\Buys",
+        "Fetchable": "Ekmungai\\IFRS\\Interfaces\\Fetchable",
+        "Buying": "Ekmungai\\IFRS\\Traits\\Buying",
+        "Fetching": "Ekmungai\\IFRS\\Traits\\Fetching",
+        "Clearable": "Ekmungai\\IFRS\\Interfaces\\Clearable",
+        "Clearing": "Ekmungai\\IFRS\\Traits\\Clearing"
+    },
+    "errors": [],
+    "interfaces": {
+        "Ekmungai\\IFRS\\Interfaces\\Buys": "Ekmungai\\IFRS\\Interfaces\\Buys",
+        "Ekmungai\\IFRS\\Interfaces\\Fetchable": "Ekmungai\\IFRS\\Interfaces\\Fetchable",
+        "Ekmungai\\IFRS\\Interfaces\\Clearable": "Ekmungai\\IFRS\\Interfaces\\Clearable"
+    },
+    "traits": {
+        "Ekmungai\\IFRS\\Traits\\Buying": "Ekmungai\\IFRS\\Traits\\Buying",
+        "Ekmungai\\IFRS\\Traits\\Fetching": "Ekmungai\\IFRS\\Traits\\Fetching",
+        "Ekmungai\\IFRS\\Traits\\Clearing": "Ekmungai\\IFRS\\Traits\\Clearing"
+    },
+    "properties": [],
+    "methods": {
+        "new": {
+            "name": "new",
+            "line": 61,
+            "short_desc": "Construct new SupplierBill",
+            "long_desc": "",
+            "hint": [
+                [
+                    "\\Ekmungai\\IFRS\\Transactions\\AbstractTransaction",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 9,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "account": {
+                    "name": "account",
+                    "line": 62,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Ekmungai\\IFRS\\Models\\Account",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": {
+                        "nodeType": "Name_FullyQualified",
+                        "parts": [
+                            "Ekmungai",
+                            "IFRS",
+                            "Models",
+                            "Account"
+                        ],
+                        "attributes": {
+                            "startLine": 62,
+                            "endLine": 62
+                        }
+                    },
+                    "default": null,
+                    "variadic": false,
+                    "is_by_ref": false
+                },
+                "date": {
+                    "name": "date",
+                    "line": 63,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Carbon\\Carbon",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": {
+                        "nodeType": "Name_FullyQualified",
+                        "parts": [
+                            "Carbon",
+                            "Carbon"
+                        ],
+                        "attributes": {
+                            "startLine": 63,
+                            "endLine": 63
+                        }
+                    },
+                    "default": null,
+                    "variadic": false,
+                    "is_by_ref": false
+                },
+                "narration": {
+                    "name": "narration",
+                    "line": 64,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "string",
+                    "default": null,
+                    "variadic": false,
+                    "is_by_ref": false
+                },
+                "currency": {
+                    "name": "currency",
+                    "line": 65,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Ekmungai\\IFRS\\Models\\Currency",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": {
+                        "nodeType": "Name_FullyQualified",
+                        "parts": [
+                            "Ekmungai",
+                            "IFRS",
+                            "Models",
+                            "Currency"
+                        ],
+                        "attributes": {
+                            "startLine": 65,
+                            "endLine": 65
+                        }
+                    },
+                    "default": "null",
+                    "variadic": false,
+                    "is_by_ref": false
+                },
+                "exchangeRate": {
+                    "name": "exchangeRate",
+                    "line": 66,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Ekmungai\\IFRS\\Models\\ExchangeRate",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": {
+                        "nodeType": "Name_FullyQualified",
+                        "parts": [
+                            "Ekmungai",
+                            "IFRS",
+                            "Models",
+                            "ExchangeRate"
+                        ],
+                        "attributes": {
+                            "startLine": 66,
+                            "endLine": 66
+                        }
+                    },
+                    "default": "null",
+                    "variadic": false,
+                    "is_by_ref": false
+                },
+                "reference": {
+                    "name": "reference",
+                    "line": 67,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "string",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": "string",
+                    "default": "null",
+                    "variadic": false,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "setDate": {
+            "name": "setDate",
+            "line": 90,
+            "short_desc": "Set SupplierBill Date",
+            "long_desc": "",
+            "hint": [
+                [
+                    "void",
+                    false
+                ]
+            ],
+            "hint_desc": null,
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": {
+                "date": {
+                    "name": "date",
+                    "line": 90,
+                    "short_desc": "",
+                    "long_desc": null,
+                    "hint": [
+                        [
+                            "\\Carbon\\Carbon",
+                            false
+                        ]
+                    ],
+                    "tags": [],
+                    "modifiers": {
+                        "nodeType": "Name_FullyQualified",
+                        "parts": [
+                            "Carbon",
+                            "Carbon"
+                        ],
+                        "attributes": {
+                            "startLine": 90,
+                            "endLine": 90
+                        }
+                    },
+                    "default": null,
+                    "variadic": false,
+                    "is_by_ref": false
+                }
+            }
+        },
+        "clearedAmount": {
+            "name": "clearedAmount",
+            "line": 101,
+            "short_desc": "SupplierBill Amount that has been Cleared",
+            "long_desc": "",
+            "hint": [
+                [
+                    "float",
+                    false
+                ]
+            ],
+            "hint_desc": "",
+            "tags": [],
+            "modifiers": 1,
+            "is_by_ref": "",
+            "exceptions": [],
+            "errors": [],
+            "parameters": []
+        }
+    },
+    "constants": {
+        "PREFIX": {
+            "name": "PREFIX",
+            "line": 39,
+            "short_desc": "Transaction Number prefix",
+            "long_desc": ""
+        },
+        "CREDITED": {
+            "name": "CREDITED",
+            "line": 47,
+            "short_desc": "Transaction Main Account Credit Entry",
+            "long_desc": ""
+        }
+    }
+}
