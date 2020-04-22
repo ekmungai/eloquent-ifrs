@@ -116,8 +116,8 @@ class Account extends Model implements Recyclable, Segragatable
     public static function new(
         string $name,
         string $account_type,
-        string $description,
-        Category $category,
+        string $description = null,
+        Category $category = null,
         Currency $currency = null,
         int $account_code = null
     ) : Account {
@@ -160,7 +160,7 @@ class Account extends Model implements Recyclable, Segragatable
             $closingBalance = $account->openingBalance + $account->currentBalance;
 
             if ($closingBalance <> 0) {
-                $categoryName = $account->category->name;
+                $categoryName = is_null($account->category)? $account->account_type: $account->category->name;
 
                 if (in_array($categoryName, $balances["sectionCategories"])) {
                     $balances["sectionCategories"][$categoryName]['accounts']->push($account->attributes());

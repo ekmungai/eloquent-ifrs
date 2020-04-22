@@ -12,10 +12,8 @@ $factory->define(
     function (Faker $faker) {
         return [
         'name' => $faker->name,
-        'description' => $faker->sentence,
         'account_type' => $faker->randomElement(array_keys(config('ifrs')['accounts'])),
         'entity_id' => factory('Ekmungai\IFRS\Models\Entity')->create()->id,
-        'category_id' => factory('Ekmungai\IFRS\Models\Category')->create()->id,
         'currency_id' => factory('Ekmungai\IFRS\Models\Currency')->create()->id,
         'code' => $faker->randomDigit,
         ];

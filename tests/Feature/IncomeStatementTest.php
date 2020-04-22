@@ -228,54 +228,30 @@ class IncomeStatementTest extends TestCase
         $nonOperatingExpenses = IncomeStatement::NON_OPERATING_EXPENSES;
 
         $this->assertEquals(
-            count($incomeStatement->accounts[$operatingRevenues][Account::OPERATING_REVENUE]),
-            2
-        );
-        $this->assertEquals(
             $incomeStatement->balances[$operatingRevenues][Account::OPERATING_REVENUE],
             -150
         );
 
-        $this->assertEquals(
-            count($incomeStatement->accounts[$operatingExpenses][Account::OPERATING_EXPENSE]),
-            1
-        );
         $this->assertEquals(
             $incomeStatement->balances[$operatingExpenses][Account::OPERATING_EXPENSE],
             100
         );
 
         $this->assertEquals(
-            count($incomeStatement->accounts[$nonOperatingRevenues][Account::NON_OPERATING_REVENUE]),
-            1
-        );
-        $this->assertEquals(
             $incomeStatement->balances[$nonOperatingRevenues][Account::NON_OPERATING_REVENUE],
             -200
         );
 
-        $this->assertEquals(
-            count($incomeStatement->accounts[$nonOperatingExpenses][Account::DIRECT_EXPENSE]),
-            1
-        );
         $this->assertEquals(
             $incomeStatement->balances[$nonOperatingExpenses][Account::DIRECT_EXPENSE],
             70
         );
 
         $this->assertEquals(
-            count($incomeStatement->accounts[$nonOperatingExpenses][Account::OVERHEAD_EXPENSE]),
-            1
-        );
-        $this->assertEquals(
             $incomeStatement->balances[$nonOperatingExpenses][Account::OVERHEAD_EXPENSE],
             70
         );
 
-        $this->assertEquals(
-            count($incomeStatement->accounts[$nonOperatingExpenses][Account::OTHER_EXPENSE]),
-            2
-        );
         $this->assertEquals(
             $incomeStatement->balances[$nonOperatingExpenses][Account::OTHER_EXPENSE],
             20

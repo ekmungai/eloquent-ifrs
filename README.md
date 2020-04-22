@@ -72,11 +72,8 @@ First we'll setup the Company (Reporting Entity) and required Accounts to record
 use Ekmungai\IFRS\Models\Entity;
 use Ekmungai\IFRS\Models\Currency;
 
-$currency = Currency::new("Euro", "EUR"); //Entities require a reporting currency
-$currency->save();
-
-$entity = Entity::new("Example Company", $currency);
-$entity->save();
+$currency = Currency::new("Euro", "EUR")->save(); //Entities require a reporting currency
+$entity = Entity::new("Example Company", $currency)->save();
 
 ```
 We also need the VAT Rates that apply to the Entity:
@@ -88,22 +85,10 @@ $outputVat = Vat::new(
     "Output VAT",           // VAT Name/Label
     "Standard Output Vat",  // VAT Description
     20                      // VAT Rate
-);
-$outputVat->save();
+)->save();
 
-$inputVat = Vat::new(
-    "Input VAT",
-    "Standard Input Vat",
-    10
-);
-$inputVat->save();
-
-$zeroVat = Vat::new(
-    "Zero VAT",
-    "Vat for Zero Vat Transactions",
-    0
-);
-$inputVat->save();
+$inputVat = Vat::new("Input VAT", "Standard Input Vat", 10)->save();
+$zeroVat = Vat::new("Zero VAT", "Vat for Zero Vat Transactions", 0)->save();
 ```
 
 We need a bank account to receive payments from Clients and make payments to Suppliers:
@@ -112,129 +97,64 @@ We need a bank account to receive payments from Clients and make payments to Sup
 use Ekmungai\IFRS\Models\Account;
 use Ekmungai\IFRS\Models\Category;
 
-$bankCategory = Category::new("Current Account", Account::BANK);
-$bankCategory->save();
-
 $bankAccount = Account::new(
     "Bank Account",                     // account name
     Account::BANK,                      // account type
-    "Company operations Bank Account",  // account description
-    $bankCategory,                      // account category
-);
-$bankAccount->save();
+)->save();
 ```
 
 Sales made need to be accounted for:
 
 ```
-$revenueCategory1 = Category::new("Cash Sales", Account::OPERATING_REVENUE);
-$revenueCategory1->save();
+$revenueCategory1 = Category::new("Cash Sales", Account::OPERATING_REVENUE)->save();
 
 $revenueAccount1 = Account::new(
     "Cash Sales Account",
     Account::OPERATING_REVENUE,
     "Account for recording Cash Sales",
     $revenueCategory1,
-);
-$revenueAccount1->save();
+)->save();
 
-$revenueCategory2 = Category::new("Credit Sales", Account::OPERATING_REVENUE);
-$revenueCategory2->save();
+$revenueCategory2 = Category::new("Credit Sales", Account::OPERATING_REVENUE)->save();
 
 $revenueAccount2 = Account::new(
     "Credit Sales Account",
     Account::OPERATING_REVENUE,
     "Account for recording Credit Sales",
     $revenueCategory2,
-);
-$revenueAccount->save();
+)->save();
 
 ```
 
 Sales made to Clients on credit need to be accounted for:
 
 ```
-$clientCategory = Category::new("Local Clients", Account::RECEIVABLE);
-$clientCategory->save();
-
-$clientAccount = Account::new(
-    "Example Client Account",
-    Account::RECEIVABLE,
-    "Example Client Account",
-    $clientCategory,
-);
-$clientAccount->save();
+$clientAccount = Account::new("Example Client Account", Account::RECEIVABLE)->save();
 ```
 
 Puchases from Suppliers made need to be accounted for:
 
 ```
-$supplierCategory = Category::new("Local Suppliers", Account::PAYABLE);
-$supplierCategory->save();
-
-$supplierAccount = Account::new(
-    "Example Supplier Account",
-    Account::Account::PAYABLE,
-    "Example Supplier Account",
-    $supplierCategory,
-);
-$supplierAccount->save();
+$supplierAccount = Account::new("Example Supplier Account", Account::Account::PAYABLE)->save();
 ```
 
 Operations Expenses made need to be accounted for:
 
 ```
-$cosCategory = Category::new("Cash Expenses", Account::OPERATING_EXPENSE);
-$cosCategory->save();
-
-$cosAccount = Account::new(
-    "Operations Expense Account",
-    Account::OPERATING_EXPENSE,
-    "Account for recording Cost of Goods/Services Sold",
-    $cosCategory,
-);
-$cosAccount->save();
+$cosAccount = Account::new("Operations Expense Account", Account::OPERATING_EXPENSE)->save();
 ```
 
 Asset Purchases made need to be accounted for:
 
 ```
-$assetCategory = Category::new("Office Equipment", Account::NON_CURRENT_ASSET);
-$assetCategory->save();
-
-$assetAccount = Account::new(
-    "Office Equipment Account",
-    Account::NON_CURRENT_ASSET,
-    "Account for recording Office Equipment Purchases and Disposals",
-    $assetCategory,
-);
-$assetAccount->save();
+$assetAccount = Account::new("Office Equipment Account", Account::NON_CURRENT_ASSET)->save();
 
 ```
 Finally we need accounts for VAT:
 
 ```
-$vatCategory1 = Category::new("Sales VAT", Account::CONTROL_ACCOUNT);
-$vatCategory1->save();
-
-$salesVatAccount = Account::new(
-    "Sales VAT Account",
-    Account::CONTROL_ACCOUNT,
-    "Account for recording Vat from Sales",
-    $vatCategory1,
-);
-$salesVatAccount->save();
-
-$vatCategory2 = Category::new("Input VAT", Account::CONTROL_ACCOUNT);
-$vatCategory2->save();
-
-$purchasesVatAccount = Account::new(
-    "Input VAT Account",
-    Account::CONTROL_ACCOUNT,
-    "Account for recording Vat from Purchases",
-    $vatCategory2,
-);
-$purchasesVatAccount->save();
+$salesVatAccount = Account::new("Sales VAT Account", Account::CONTROL_ACCOUNT)->save();
+$purchasesVatAccount = Account::new("Input VAT Account", Account::CONTROL_ACCOUNT)->save();
 
 ```
 
@@ -247,8 +167,7 @@ $cashSale = CashSale::new(
     $bankAccount,         // Main Account
     Carbon::now(),        // Transaction Date(time)
     "Example Cash Sale"   // Transaction Narration
-);
-$cashSale->save(); // Intermediate save does not record the transaction in the Ledger
+)->save(); // Intermediate save does not record the transaction in the Ledger
 
 ```
 So far the Transaction has only one side of the double entry, so we create a Line Item for the other side:
@@ -263,8 +182,7 @@ $cashSaleLineItem = LineItem::new(
     1,                                  // Quantity
     "Example Cash Sale Line Item",      // Item Narration
     $salesVatAccount                    // Vat Account
-);
-$cashSaleLineItem->save();
+)->save();
 
 $cashSale->addLineItem($cashSaleLineItem);
 $cashSale->post(); // This posts the Transaction to the Ledger
@@ -275,31 +193,14 @@ Client Invioces are almost identical to Cash Sales, only replacing the Bank Acco
 ```
 use Ekmungai\IFRS\Transactions\ClientInvoice;
 
-$clientInvoice = ClientInvoice::new(
-    $clientAccount,
-    Carbon::now(),
-    "Example Credit Sale"
-);
+$clientInvoice = ClientInvoice::new($clientAccount, Carbon::now(), "Example Credit Sale");
 
-$clientInvoiceLineItem = LineItem::new(
-    $revenueAccount2,                   // Revenue Account
-    $outputVat,                         // Output VAT
-    50,                                 // Item Price
-    2,                                  // Quantity
-    "Example Credit Sale Line Item",    // Item Narration
-    $salesVatAccount                    // Vat Account
-);
+$clientInvoiceLineItem = LineItem::new($revenueAccount2, $outputVat, 50, 2, "Example Credit Sale Line Item", $salesVatAccount);
 
-/**
-* Line Item save may be skipped as saving the
-* Transaction saves the all its Line Items automatically
-*/
+//Line Item save may be skipped as saving the Transaction saves the all its Line Items automatically
 $clientInvoice->addLineItem($clientInvoiceLineItem);
 
-/**
-* Transaction save may be skipped as post()
-* saves the Transaction automatically
-*/
+//Transaction save may be skipped as post() saves the Transaction automatically
 $clientInvoice->post();
 
 ```
@@ -308,23 +209,9 @@ Then we have a Cash Purchase:
 ```
 use Ekmungai\IFRS\Transactions\CashPurchase;
 
-$cashPurchase = CashPurchase::new(
-    $bankAccount,
-    Carbon::now(),
-    "Example Cash Purchase"
-);
-
-$cashPurchaseLineItem = LineItem::new(
-    $cosAccount,                        // Cost of Sales Account
-    $inputVat,                          // Input VAT
-    25,                                 // Item Price
-    4,                                  // Quantity
-    "Example Cash Purchase Line Item",  // Item Narration
-    $purchaseVatAccount                 // Vat Account
-);
-
-$cashPurchase->addLineItem($cashPurchaseLineItem);
-$cashPurchase->post();
+$cashPurchase = CashPurchase::new($bankAccount, Carbon::now(), "Example Cash Purchase")
+->addLineItem(LineItem::new($cosAccount, $inputVat, 25, 4, "Example Cash Purchase Line Item", $purchaseVatAccount))
+->post();
 
 ```
 Asset Purchase on credit:
@@ -332,23 +219,9 @@ Asset Purchase on credit:
 ```
 use Ekmungai\IFRS\Transactions\SupplierBill;
 
-$supplierBill = SupplierBill::new(
-    $supplierAccount,
-    Carbon::now(),
-    "Example Credit Purchase"
-);
-
-$supplierBillLineItem = LineItem::new(
-    $assetAccount,                      // Asset Account
-    $inputVat,                          // Input VAT
-    25,                                 // Item Price
-    4,                                  // Quantity
-    "Example Credit Purchase Line Item",// Item Narration
-    $purchaseVatAccount                 // Vat Account
-);
-
-$supplierBill->addLineItem($supplierBillLineItem);
-$supplierBill->post();
+SupplierBill::new($supplierAccount, Carbon::now(), "Example Credit Purchase")
+->addLineItem(LineItem::new($assetAccount, $inputVat, 25, 4, "Example Credit Purchase Line Item", $purchaseVatAccount))
+->post();
 
 ```
 Finally lets record a partial payment received from the client:
@@ -356,23 +229,9 @@ Finally lets record a partial payment received from the client:
 ```
 use Ekmungai\IFRS\Transactions\ClientReceipt;
 
-$clientReceipt = ClientReceipt::new(
-    $clientAccount,
-    Carbon::now(),
-    "Example Client Payment"
-);
-
-$clientReceiptLineItem = LineItem::new(
-    $bankAccount,                       // Bank Account
-    $zeroVat,                           // Zero VAT
-    50,                                 // Amount Received
-    1,                                  // Default Line Item Quantity
-    "Part payment for Client Invoice",  // Item Narration
-    null                                // Vat Account is not needed
-);
-
-$clientReceipt->addLineItem($clientReceiptLineItem);
-$clientReceipt->post();
+ClientReceipt::new($clientAccount, Carbon::now(), "Example Client Payment")
+->addLineItem(LineItem::new($bankAccount, $zeroVat, 50, 1, "Part payment for Client Invoice")
+->post();
 
 ```
 We can assign this receipt to partially clear the Invoice above:
@@ -387,8 +246,7 @@ $assignment = Assignment::new(
     $clientReceipt,   // Clearing Transaction
     $clientInvoice,   // Transaction being cleared
     50                // Amount to be cleared
-);
-$assignment->save();
+)->save();
 
 echo $clientInvoice->clearedAmount(); //50
 echo $clientReceipt->balance(); //0: The Receipt has been assigned fully to the Invoice
@@ -400,10 +258,8 @@ We have now some Transactions in the Ledger, so lets generate some reports. Firs
 use Ekmungai\IFRS\Models\ReportingPeriod;
 
 $period = ReportingPeriod::new(
-    1,     // Reporting period count
-    2020   // Calendar Year
-);
-$period->save();
+  2020   // Calendar Year
+)->save();
 
 ```
 We begin by generating the Income Statement (Profit and Loss):
@@ -414,8 +270,7 @@ use Ekmungai\IFRS\Reports\IncomeStatement;
 $incomeStatement = new IncomeStatement(
     "2020-01-01",   // Report start date
     "2020-12-31",   // Report end date
-);
-$incomeStatement->getSections();// Fetch balances from the ledger and store them internally
+)->getSections();// Fetch balances from the ledger and store them internally
 
 ```
 At this point the Income Statement object contains an array of sections as defined in the configuration with total balances for each section. Printing the statement to a string yields:
@@ -425,7 +280,7 @@ At this point the Income Statement object contains an array of sections as defin
 * this function is only for demonstration and
 * debugging use and should never be called in production
 */
-$incomeStatement->toString();
+dd($incomeStatement->toString());
 
 Example Company
 Income Statement
@@ -462,14 +317,13 @@ use Ekmungai\IFRS\Reports\BalanceSheet;
 
 $balanceSheet = new BalanceSheet(
     "2020-12-31"  // Report end date
-);
-$balanceSheet->getSections();
+)->getSections();
 
 /**
 * again to emphasize, this function is only for demonstration and
 * debugging use and should never be called in production
 */
-$balanceSheet->toString();
+dd($balanceSheet->toString());
 
 Example Company
 Balance Sheet
@@ -507,8 +361,7 @@ In the above example:
 use Ekmungai\IFRS\Reports\AccountStatement;
 use Ekmungai\IFRS\Reports\AccountSchedule;
 
-$statement = new AccountStatement($clientAccount);
-$statement->getTransactions();
+$statement = new AccountStatement($clientAccount)->getTransactions();
 
 dd($statement->transactions);
 
@@ -517,8 +370,7 @@ array:2[
   ["transaction" => ClientReceipt, "debit" => 0, "credit" => 50, "balance" => 70]
 ]
 
-$schedule = new AccountSchedule($clientAccount, $currency);
-$schedule->getTransactions();
+$schedule = new AccountSchedule($clientAccount, $currency)->getTransactions();
 
 dd($schedule->transactions);
 

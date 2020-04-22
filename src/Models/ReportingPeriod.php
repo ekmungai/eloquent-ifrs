@@ -48,7 +48,7 @@ class ReportingPeriod extends Model implements Segragatable, Recyclable
      *
      * @return ReportingPeriod
      */
-    public static function new(int $periodCount, int $year) : ReportingPeriod
+    public static function new(int $periodCount = 1, int $year) : ReportingPeriod
     {
         $reportingPeriod = new ReportingPeriod();
 

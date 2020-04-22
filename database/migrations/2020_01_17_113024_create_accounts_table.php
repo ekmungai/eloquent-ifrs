@@ -26,7 +26,7 @@ class CreateAccountsTable extends Migration
 
                 // relationships
                 $table->unsignedBigInteger('entity_id');
-                $table->unsignedBigInteger('category_id');
+                $table->unsignedBigInteger('category_id')->nullable();
                 $table->unsignedBigInteger('currency_id');
 
                 // constraints
@@ -37,7 +37,7 @@ class CreateAccountsTable extends Migration
                 // attributes
                 $table->integer('code');
                 $table->string('name', 255);
-                $table->string('description', 1000);
+                $table->string('description', 1000)->nullable();
                 $table->enum(
                     'account_type',
                     array_keys(config('ifrs')['accounts'])
