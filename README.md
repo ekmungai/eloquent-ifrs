@@ -1,6 +1,7 @@
 # Laravel IFRS
 
 [![Build Status](https://travis-ci.com/ekmungai/laravel-ifrs.svg?branch=master)](https://travis-ci.com/ekmungai/laravel-ifrs)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/34cffeedd8edbbc14380/test_coverage)](https://codeclimate.com/github/ekmungai/laravel-ifrs/test_coverage)
 ![PHP 7.2](https://img.shields.io/badge/PHP-7.2-blue.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
