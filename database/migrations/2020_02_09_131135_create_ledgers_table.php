@@ -43,6 +43,7 @@ class CreateLedgersTable extends Migration
             $table->dateTime('date', 0);
             $table->enum('entry_type', [Balance::D,Balance::C]);
             $table->decimal('amount', 13, 4);
+            $table->string('hash', 500);
 
             // *permanent* deletion
             $table->dateTime('destroyed_at')->nullable();

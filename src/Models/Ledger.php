@@ -187,6 +187,45 @@ class Ledger extends Model implements Segragatable
     }
 
     /**
+     * Hash Ledger contents
+     *
+     * @return string
+     */
+    public function hashed() {
+        $ledger = [];
+
+        $ledger[] = $this->entity_id;
+        $ledger[] = $this->transaction_id;
+        $ledger[] = $this->vat_id;
+        $ledger[] = $this->post_account;
+        $ledger[] = $this->folio_account;
+        $ledger[] = $this->line_item_id;
+        $ledger[] = $this->date;
+        $ledger[] = $this->entry_type;
+        $ledger[] = $this->amount;
+        $ledger[] = $this->hash;
+        $ledger[] = $this->created_at;
+
+        $previousLedgerId = $this->id - 1;
+        $previousLedger = Ledger::find($previousLedgerId);
+        $previousHash = isNull($previousLedger)? env('APP_KEY', 'test hash') : $previousLedger->hash;
+
+        return password_hash(utf8_encode(implode($ledger)));
+    }
+
+    /**
+     * Add Ledger hash.
+     */
+    public function save(array $options = []): bool
+    {
+        parent::save();
+
+        $this->hash = $this->hashed();
+
+        return parent::save();
+    }
+
+    /**
      * Get Account's contribution to the Transaction total amount.
      *
      * @param Account $account
