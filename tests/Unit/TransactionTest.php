@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use Carbon\Carbon;
+use DB;
 
 use Ekmungai\IFRS\Tests\TestCase;
 
@@ -17,6 +18,7 @@ use Ekmungai\IFRS\Models\ReportingPeriod;
 use Ekmungai\IFRS\Models\Transaction;
 use Ekmungai\IFRS\Models\User;
 use Ekmungai\IFRS\Models\Vat;
+use Ekmungai\IFRS\Models\Ledger;
 
 use Ekmungai\IFRS\Transactions\JournalEntry;
 use Ekmungai\IFRS\Transactions\ClientInvoice;
@@ -368,5 +370,42 @@ class TransactionTest extends TestCase
         $cleared->refresh();
 
         $this->assertEquals($transaction->balance(), 125);
+    }
+
+    /**
+     * Test Transaction Integrity Check.
+     *
+     * @return void
+     */
+    public function testIntegrityCheck()
+    {
+        $account = factory(Account::class)->create([
+            'account_type' => Account::RECEIVABLE,
+        ]);
+
+        $transaction = ClientInvoice::new($account, Carbon::now(), $this->faker->word);
+
+        $line = Lineitem::new(
+            factory(Account::class)->create([
+                'account_type' => Account::OPERATING_REVENUE
+            ]),
+            factory(Vat::class)->create(["rate" => 0]),
+            125
+            );
+        $transaction->addLineItem($line);
+        $transaction->post();
+
+        $this->assertEquals($account->closingBalance(), 125);
+        $this->assertTrue($transaction->checkIntegrity());
+
+        //Change Transaction Ledger amounts
+        DB::statement('update ledgers set amount = 100 where id IN (1,2)');
+
+        // account balance has changed
+        $this->assertEquals($account->closingBalance(), 100);
+
+        $transaction->refresh();
+        //but transaction integrity is compromised
+        $this->assertFalse($transaction->checkIntegrity());
     }
 }

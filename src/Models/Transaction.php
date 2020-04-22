@@ -444,7 +444,7 @@ class Transaction extends Model implements Assignable, Clearable, Segragatable, 
     public function checkIntegrity(): bool
     {
         // verify transaction ledger hashes
-        $this->ledgers->every(function ($ledger, $key) {
+        return $this->ledgers->every(function ($ledger, $key) {
             return password_verify($ledger->hashed(), $ledger->hash);
         });
     }

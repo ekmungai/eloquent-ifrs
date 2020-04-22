@@ -203,14 +203,14 @@ class Ledger extends Model implements Segragatable
         $ledger[] = $this->date;
         $ledger[] = $this->entry_type;
         $ledger[] = $this->amount;
-        $ledger[] = $this->hash;
         $ledger[] = $this->created_at;
 
         $previousLedgerId = $this->id - 1;
         $previousLedger = Ledger::find($previousLedgerId);
-        $previousHash = isNull($previousLedger)? env('APP_KEY', 'test hash') : $previousLedger->hash;
+        $previousHash = is_null($previousLedger)? env('APP_KEY', 'test hash') : $previousLedger->hash;
+        $ledger[] = $previousHash;
 
-        return password_hash(utf8_encode(implode($ledger)));
+        return utf8_encode(implode($ledger));
     }
 
     /**
@@ -220,7 +220,10 @@ class Ledger extends Model implements Segragatable
     {
         parent::save();
 
-        $this->hash = $this->hashed();
+        $this->hash = password_hash(
+            $this->hashed(),
+            config('ifrs')['hashing_algorithm']
+        );
 
         return parent::save();
     }

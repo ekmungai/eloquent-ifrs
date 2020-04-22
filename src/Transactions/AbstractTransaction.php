@@ -120,6 +120,16 @@ abstract class AbstractTransaction implements Instantiable, Findable
     }
 
     /**
+     * Check Transaction Integrity..
+     *
+     * @return bool
+     */
+    public function checkIntegrity()
+    {
+        return $this->transaction->checkIntegrity();
+    }
+
+    /**
      * Save Transaction
      */
     public function save(): void
