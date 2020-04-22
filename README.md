@@ -7,7 +7,7 @@
 
 This Package enables any Laravel application to generate [International Financial Reporting Standards}(www.ifrs.org) compatible Accounting Reports.
 
-With a fluent interface for creating Accounts, Transactions and Reports, this package enables any Laravel application to produce Financial Reports as close to [International Financial Reporting Standards}(www.ifrs.org) as possible.
+With a fluent interface for creating Accounts, Transactions and Reports, this package enables any Laravel application to produce Financial Reports as close to [International Financial Reporting Standards](www.ifrs.org) as possible.
 
 The package supports multiple Entities (Companies), Account Categorization, Transaction assignment, Start of Year Opening Balances and accounting for VAT Transactions. Transactions are also protected against tampering via direct database changes ensuring the integrity of the ledger.
 
@@ -110,15 +110,15 @@ Sales made need to be accounted for:
 $revenueAccount1 = Account::new(
     "Cash Sales Account",
     Account::OPERATING_REVENUE,
-    "Account for recording Cash Sales",
-    Category::new("Cash Sales", Account::OPERATING_REVENUE)->save(),
+    "Account for recording Cash Sales", // this is optional
+    Category::new("Cash Sales", Account::OPERATING_REVENUE)->save(), // this is optional
 )->save();
 
 $revenueAccount2 = Account::new(
     "Credit Sales Account",
     Account::OPERATING_REVENUE,
-    "Account for recording Credit Sales",
-    Category::new("Credit Sales", Account::OPERATING_REVENUE)->save(),
+    "Account for recording Credit Sales", // this is optional
+    Category::new("Credit Sales", Account::OPERATING_REVENUE)->save(), // this is optional
 )->save();
 
 ```
