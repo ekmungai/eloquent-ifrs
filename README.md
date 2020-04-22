@@ -6,9 +6,9 @@
 
 Laravel Double Entry Accounting with a focus on International Financial Reporting Standards Compliant Reporting.
 
-With a fluent interface for creating Accounts, Transactions and Reports, this package transforms your Business Objects into Standard Accounting Reports such as an Income Statement (Profit and Loss) and a Balance Sheet.
+With a fluent interface for creating Accounts, Transactions and Reports, this package enables any Laravel application to produce Financial Reports as close to [International Financial Reporting Standards}(www.ifrs.org) as possible.
 
-The package supports multiple Entities (Companies), Account Categorization, Transaction assignment, Start of Year Opening Balances and accounting for VAT Transactions. Transactions are also protected tampering via direct database changes ensuring the integrity of the ledger.
+The package supports multiple Entities (Companies), Account Categorization, Transaction assignment, Start of Year Opening Balances and accounting for VAT Transactions. Transactions are also protected against tampering via direct database changes ensuring the integrity of the ledger.
 
 ## Table of contents
 1. [Installation](#installation)
@@ -106,22 +106,18 @@ $bankAccount = Account::new(
 Sales made need to be accounted for:
 
 ```
-$revenueCategory1 = Category::new("Cash Sales", Account::OPERATING_REVENUE)->save();
-
 $revenueAccount1 = Account::new(
     "Cash Sales Account",
     Account::OPERATING_REVENUE,
     "Account for recording Cash Sales",
-    $revenueCategory1,
+    Category::new("Cash Sales", Account::OPERATING_REVENUE)->save(),
 )->save();
-
-$revenueCategory2 = Category::new("Credit Sales", Account::OPERATING_REVENUE)->save();
 
 $revenueAccount2 = Account::new(
     "Credit Sales Account",
     Account::OPERATING_REVENUE,
     "Account for recording Credit Sales",
-    $revenueCategory2,
+    Category::new("Credit Sales", Account::OPERATING_REVENUE)->save(),
 )->save();
 
 ```
@@ -193,15 +189,14 @@ Client Invioces are almost identical to Cash Sales, only replacing the Bank Acco
 ```
 use Ekmungai\IFRS\Transactions\ClientInvoice;
 
-$clientInvoice = ClientInvoice::new($clientAccount, Carbon::now(), "Example Credit Sale");
 
-$clientInvoiceLineItem = LineItem::new($revenueAccount2, $outputVat, 50, 2, "Example Credit Sale Line Item", $salesVatAccount);
-
+$clientInvoice = ClientInvoice::new($clientAccount, Carbon::now(), "Example Credit Sale")
 //Line Item save may be skipped as saving the Transaction saves the all its Line Items automatically
-$clientInvoice->addLineItem($clientInvoiceLineItem);
-
+->addLineItem(
+  $LineItem::new($revenueAccount2, $outputVat, 50, 2, "Example Credit Sale Line Item", $salesVatAccount)
+)
 //Transaction save may be skipped as post() saves the Transaction automatically
-$clientInvoice->post();
+->post();
 
 ```
 Then we have a Cash Purchase:
@@ -210,7 +205,9 @@ Then we have a Cash Purchase:
 use Ekmungai\IFRS\Transactions\CashPurchase;
 
 $cashPurchase = CashPurchase::new($bankAccount, Carbon::now(), "Example Cash Purchase")
-->addLineItem(LineItem::new($cosAccount, $inputVat, 25, 4, "Example Cash Purchase Line Item", $purchaseVatAccount))
+->addLineItem(
+  LineItem::new($cosAccount, $inputVat, 25, 4, "Example Cash Purchase Line Item", $purchaseVatAccount)
+)
 ->post();
 
 ```
@@ -220,7 +217,9 @@ Asset Purchase on credit:
 use Ekmungai\IFRS\Transactions\SupplierBill;
 
 SupplierBill::new($supplierAccount, Carbon::now(), "Example Credit Purchase")
-->addLineItem(LineItem::new($assetAccount, $inputVat, 25, 4, "Example Credit Purchase Line Item", $purchaseVatAccount))
+->addLineItem(
+  LineItem::new($assetAccount, $inputVat, 25, 4, "Example Credit Purchase Line Item", $purchaseVatAccount)
+)
 ->post();
 
 ```
@@ -257,9 +256,7 @@ We have now some Transactions in the Ledger, so lets generate some reports. Firs
 ```
 use Ekmungai\IFRS\Models\ReportingPeriod;
 
-$period = ReportingPeriod::new(
-  2020   // Calendar Year
-)->save();
+$period = ReportingPeriod::new(2020)->save();
 
 ```
 We begin by generating the Income Statement (Profit and Loss):
