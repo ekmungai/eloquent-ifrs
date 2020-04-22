@@ -8,7 +8,7 @@ Laravel Double Entry Accounting with a focus on International Financial Reportin
 
 With a fluent interface for creating Accounts, Transactions and Reports, this package transforms your Business Objects into Standard Accounting Reports such as an Income Statement (Profit and Loss) and a Balance Sheet.
 
-The package supports multiple Entities (Companies), Account Categorization, Transaction assignment, Start of Year Opening Balances and accounting for VAT Transactions.
+The package supports multiple Entities (Companies), Account Categorization, Transaction assignment, Start of Year Opening Balances and accounting for VAT Transactions. Transactions are also protected tampering via direct database changes ensuring the integrity of the ledger.
 
 ## Table of contents
 1. [Installation](#installation)

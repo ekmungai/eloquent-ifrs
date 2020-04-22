@@ -207,7 +207,7 @@ class Ledger extends Model implements Segragatable
 
         $previousLedgerId = $this->id - 1;
         $previousLedger = Ledger::find($previousLedgerId);
-        $previousHash = is_null($previousLedger)? env('APP_KEY', 'test hash') : $previousLedger->hash;
+        $previousHash = is_null($previousLedger)? env('APP_KEY', 'test application key') : $previousLedger->hash;
         $ledger[] = $previousHash;
 
         return utf8_encode(implode($ledger));
