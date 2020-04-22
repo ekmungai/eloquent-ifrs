@@ -4,7 +4,7 @@
 ![PHP 7.2](https://img.shields.io/badge/PHP-7.2-blue.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-Laravel Double Entry Accounting with a focus on International Financial Reporting Standards Compliant Reporting.
+This Package enables any Laravel application to generate [International Financial Reporting Standards}(www.ifrs.org) compatible Accounting Reports.
 
 With a fluent interface for creating Accounts, Transactions and Reports, this package enables any Laravel application to produce Financial Reports as close to [International Financial Reporting Standards}(www.ifrs.org) as possible.
 
