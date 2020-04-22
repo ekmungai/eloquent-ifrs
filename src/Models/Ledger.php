@@ -200,7 +200,7 @@ class Ledger extends Model implements Segragatable
         $ledger[] = $this->post_account;
         $ledger[] = $this->folio_account;
         $ledger[] = $this->line_item_id;
-        $ledger[] = $this->date;
+        $ledger[] = is_string($this->date)? $this->date : $this->date->format('Y-m-d G:H:s');
         $ledger[] = $this->entry_type;
         $ledger[] = $this->amount;
         $ledger[] = $this->created_at;
