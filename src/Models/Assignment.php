@@ -99,9 +99,8 @@ class Assignment extends Model implements Segragatable
 
     /**
      * Assignment Validation.
-     *
      */
-    public function save(array $options = []) : bool
+    public function validate() : void
     {
         $transactionType = $this->transaction->transaction_type;
         $cleared_type = $this->cleared->transaction_type;
@@ -137,6 +136,17 @@ class Assignment extends Model implements Segragatable
         if ($this->cleared->amount - $this->cleared->clearedAmount() < $this->amount) {
             throw new OverClearance($cleared_type, $this->amount);
         }
+    }
+
+    /**
+     * Assignment Validation.
+     */
+    public function save(array $options = []) : bool
+    {
+        $this->validate();
+
+        $transactionType = $this->transaction->transaction_type;
+        $cleared_type = $this->cleared->transaction_type;
 
         // Assignable Transactions
         $assignable = [
@@ -146,7 +156,6 @@ class Assignment extends Model implements Segragatable
             Transaction::DN,
             Transaction::JN
         ];
-
 
         if (!in_array($transactionType, $assignable)) {
             throw new UnassignableTransaction($transactionType, $assignable);

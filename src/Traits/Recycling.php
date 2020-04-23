@@ -45,7 +45,6 @@ trait Recycling
                 }
             }
         );
-
         static::restoring(
             function ($model) {
                 if (Auth::check()) {

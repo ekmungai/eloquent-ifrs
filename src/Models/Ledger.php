@@ -97,7 +97,6 @@ class Ledger extends Model implements Segragatable
      */
     public static function post(Transaction $transaction) : void
     {
-
         //Remove current ledgers if any prior to creating new ones
         $transaction->ledgers()->delete();
 
