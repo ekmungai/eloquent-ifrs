@@ -2,12 +2,13 @@
 
 [![Build Status](https://travis-ci.com/ekmungai/laravel-ifrs.svg?branch=master)](https://travis-ci.com/ekmungai/laravel-ifrs)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/34cffeedd8edbbc14380/test_coverage)](https://codeclimate.com/github/ekmungai/laravel-ifrs/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/34cffeedd8edbbc14380/maintainability)](https://codeclimate.com/github/ekmungai/laravel-ifrs/maintainability)
 ![PHP 7.2](https://img.shields.io/badge/PHP-7.2-blue.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-This Package enables any Laravel application to generate [International Financial Reporting Standards}(www.ifrs.org) compatible Accounting Reports.
+This Package enables any Laravel application to generate [International Financial Reporting Standards](www.ifrs.org) compatible Accounting Reports.
 
-With a fluent interface for creating Accounts, Transactions and Reports, this package enables any Laravel application to produce Financial Reports as close to [International Financial Reporting Standards](www.ifrs.org) as possible.
+With a fluent interface for Accounts, Transactions and Reports, this package enables any Laravel application to produce IFRS compliant Financial Reports.
 
 The package supports multiple Entities (Companies), Account Categorization, Transaction assignment, Start of Year Opening Balances and accounting for VAT Transactions. Transactions are also protected against tampering via direct database changes ensuring the integrity of the ledger.
 
@@ -92,9 +93,10 @@ $inputVat = Vat::new("Input VAT", "Standard Input Vat", 10)->save();
 $zeroVat = Vat::new("Zero VAT", "Vat for Zero Vat Transactions", 0)->save();
 ```
 
-We need a bank account to receive payments from Clients and make payments to Suppliers:
+Now we'll set up some Accounts:
 
 ```
+
 use Ekmungai\IFRS\Models\Account;
 use Ekmungai\IFRS\Models\Category;
 
@@ -102,55 +104,32 @@ $bankAccount = Account::new(
     "Bank Account",                     // account name
     Account::BANK,                      // account type
 )->save();
-```
 
-Sales made need to be accounted for:
-
-```
 $revenueAccount1 = Account::new(
     "Cash Sales Account",
     Account::OPERATING_REVENUE,
-    "Account for recording Cash Sales", // this is optional
-    Category::new("Cash Sales", Account::OPERATING_REVENUE)->save(), // this is optional
+    "Account for recording Cash Sales", // optional account description
+    Category::new("Cash Sales", Account::OPERATING_REVENUE)->save(), // optional account category
 )->save();
 
 $revenueAccount2 = Account::new(
     "Credit Sales Account",
     Account::OPERATING_REVENUE,
-    "Account for recording Credit Sales", // this is optional
-    Category::new("Credit Sales", Account::OPERATING_REVENUE)->save(), // this is optional
+    "Account for recording Credit Sales",
+    Category::new("Credit Sales", Account::OPERATING_REVENUE)->save(),
 )->save();
 
-```
 
-Sales made to Clients on credit need to be accounted for:
-
-```
 $clientAccount = Account::new("Example Client Account", Account::RECEIVABLE)->save();
-```
 
-Puchases from Suppliers made need to be accounted for:
-
-```
 $supplierAccount = Account::new("Example Supplier Account", Account::Account::PAYABLE)->save();
-```
 
-Operations Expenses made need to be accounted for:
+$opexAccount = Account::new("Operations Expense Account", Account::OPERATING_EXPENSE)->save();
 
-```
-$cosAccount = Account::new("Operations Expense Account", Account::OPERATING_EXPENSE)->save();
-```
-
-Asset Purchases made need to be accounted for:
-
-```
 $assetAccount = Account::new("Office Equipment Account", Account::NON_CURRENT_ASSET)->save();
 
-```
-Finally we need accounts for VAT:
-
-```
 $salesVatAccount = Account::new("Sales VAT Account", Account::CONTROL_ACCOUNT)->save();
+
 $purchasesVatAccount = Account::new("Input VAT Account", Account::CONTROL_ACCOUNT)->save();
 
 ```
@@ -185,11 +164,10 @@ $cashSale->addLineItem($cashSaleLineItem);
 $cashSale->post(); // This posts the Transaction to the Ledger
 
 ```
-Client Invioces are almost identical to Cash Sales, only replacing the Bank Account with a Client Account:
+The rest of the transactions:
 
 ```
 use Ekmungai\IFRS\Transactions\ClientInvoice;
-
 
 $clientInvoice = ClientInvoice::new($clientAccount, Carbon::now(), "Example Credit Sale")
 //Line Item save may be skipped as saving the Transaction saves the all its Line Items automatically
@@ -199,34 +177,20 @@ $clientInvoice = ClientInvoice::new($clientAccount, Carbon::now(), "Example Cred
 //Transaction save may be skipped as post() saves the Transaction automatically
 ->post();
 
-```
-Then we have a Cash Purchase:
-
-```
 use Ekmungai\IFRS\Transactions\CashPurchase;
 
 $cashPurchase = CashPurchase::new($bankAccount, Carbon::now(), "Example Cash Purchase")
 ->addLineItem(
-  LineItem::new($cosAccount, $inputVat, 25, 4, "Example Cash Purchase Line Item", $purchaseVatAccount)
-)
-->post();
+  LineItem::new($opexAccount, $inputVat, 25, 4, "Example Cash Purchase Line Item", $purchaseVatAccount)
+)->post();
 
-```
-Asset Purchase on credit:
-
-```
 use Ekmungai\IFRS\Transactions\SupplierBill;
 
 SupplierBill::new($supplierAccount, Carbon::now(), "Example Credit Purchase")
 ->addLineItem(
   LineItem::new($assetAccount, $inputVat, 25, 4, "Example Credit Purchase Line Item", $purchaseVatAccount)
-)
-->post();
+)->post();
 
-```
-Finally lets record a partial payment received from the client:
-
-```
 use Ekmungai\IFRS\Transactions\ClientReceipt;
 
 ClientReceipt::new($clientAccount, Carbon::now(), "Example Client Payment")
@@ -234,7 +198,7 @@ ClientReceipt::new($clientAccount, Carbon::now(), "Example Client Payment")
 ->post();
 
 ```
-We can assign this receipt to partially clear the Invoice above:
+We can assign the receipt to partially clear the Invoice above:
 
 ```
 use Ekmungai\IFRS\Models\Assignment;
@@ -260,7 +224,7 @@ use Ekmungai\IFRS\Models\ReportingPeriod;
 $period = ReportingPeriod::new(2020)->save();
 
 ```
-We begin by generating the Income Statement (Profit and Loss):
+The Income Statement (Profit and Loss):
 
 ```
 use Ekmungai\IFRS\Reports\IncomeStatement;
@@ -270,10 +234,6 @@ $incomeStatement = new IncomeStatement(
     "2020-12-31",   // Report end date
 )->getSections();// Fetch balances from the ledger and store them internally
 
-```
-At this point the Income Statement object contains an array of sections as defined in the configuration with total balances for each section. Printing the statement to a string yields:
-
-```
 /**
 * this function is only for demonstration and
 * debugging use and should never be called in production
@@ -308,7 +268,7 @@ Net Profit                   100
                         ===============
 
 ```
-Next we generate the Balance Sheet:
+The Balance Sheet:
 
 ```
 use Ekmungai\IFRS\Reports\BalanceSheet;
