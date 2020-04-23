@@ -6,7 +6,7 @@
 ![PHP 7.2](https://img.shields.io/badge/PHP-7.2-blue.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-This Package enables any Laravel application to generate [International Financial Reporting Standards](www.ifrs.org) compatible Accounting Reports.
+This Package enables any Laravel application to generate [International Financial Reporting Standards](https://www.ifrs.org/issued-standards/list-of-standards/conceptual-framework/) compatible Accounting Reports.
 
 With a fluent interface for Accounts, Transactions and Reports, this package enables any Laravel application to produce IFRS compliant Financial Reports.
 
@@ -365,4 +365,4 @@ This software is distributed for free under the MIT License
 
 
 ## References
-This package is heavily influenced by [simple-accounts-3](https://github.com/chippyash/simple-accounts-3) and [scottlaurent/accounting](https://github.com/scottlaurent/accounting).
+This package is heavily influenced by [chippyash/simple-accounts-3](https://github.com/chippyash/simple-accounts-3) and [scottlaurent/accounting](https://github.com/scottlaurent/accounting).
