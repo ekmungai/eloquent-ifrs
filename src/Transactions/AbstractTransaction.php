@@ -17,6 +17,7 @@ use Ekmungai\IFRS\Traits\Finding;
 use Ekmungai\IFRS\Traits\Instantiating;
 
 use Ekmungai\IFRS\Models\LineItem;
+use Ekmungai\IFRS\Models\Balance;
 use Ekmungai\IFRS\Models\Currency;
 use Ekmungai\IFRS\Models\ExchangeRate;
 use Ekmungai\IFRS\Models\Account;
@@ -333,9 +334,16 @@ abstract class AbstractTransaction implements Instantiable, Findable
     public function getAmount(): float
     {
         $amount = 0;
-        foreach ($this->getLineItems() as $lineItem) {
-            $amount += $lineItem->amount;
-            $amount += $lineItem->amount * $lineItem->vat->rate / 100;
+
+        if ($this->isPosted()) {
+            foreach ($this->transaction->ledgers->where("entry_type",Balance::D) as $ledger) {
+                $amount += $ledger->amount / $this->transaction->exchangeRate->rate;
+            }
+        }else {
+            foreach ($this->getLineItems() as $lineItem) {
+                $amount += $lineItem->amount;
+                $amount += $lineItem->amount * $lineItem->vat->rate / 100;
+            }
         }
         return $amount;
     }

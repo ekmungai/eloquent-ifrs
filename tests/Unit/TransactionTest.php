@@ -395,17 +395,17 @@ class TransactionTest extends TestCase
         $transaction->addLineItem($line);
         $transaction->post();
 
-        $this->assertEquals($account->closingBalance(), 125);
+        $this->assertEquals($transaction->getAmount(), 125);
         $this->assertTrue($transaction->checkIntegrity());
 
         //Change Transaction Ledger amounts
         DB::statement('update ledgers set amount = 100 where id IN (1,2)');
 
-        // account balance has changed
-        $this->assertEquals($account->closingBalance(), 100);
-
+        // Transaction amount has changed
         $transaction->refresh();
-        //but transaction integrity is compromised
+        $this->assertEquals($transaction->getAmount(), 100);
+
+        //but Transaction Integrity is compromised
         $this->assertFalse($transaction->checkIntegrity());
     }
 }
