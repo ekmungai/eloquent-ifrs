@@ -105,20 +105,7 @@ $bankAccount = Account::new(
     Account::BANK,                      // account type
 )->save();
 
-$revenueAccount1 = Account::new(
-    "Cash Sales Account",
-    Account::OPERATING_REVENUE,
-    "Account for recording Cash Sales", // optional account description
-    Category::new("Cash Sales", Account::OPERATING_REVENUE)->save(), // optional account category
-)->save();
-
-$revenueAccount2 = Account::new(
-    "Credit Sales Account",
-    Account::OPERATING_REVENUE,
-    "Account for recording Credit Sales",
-    Category::new("Credit Sales", Account::OPERATING_REVENUE)->save(),
-)->save();
-
+$revenueAccount = Account::new("Sales Account",Account::OPERATING_REVENUE)->save();
 
 $clientAccount = Account::new("Example Client Account", Account::RECEIVABLE)->save();
 
@@ -152,7 +139,7 @@ So far the Transaction has only one side of the double entry, so we create a Lin
 use Ekmungai\IFRS\models\LineItem;
 
 $cashSaleLineItem = LineItem::new(
-    $revenueAccount1,                   // Revenue Account
+    $revenueAccount,                   // Revenue Account
     $outputVat,                         // Output VAT
     100,                                // Item Price
     1,                                  // Quantity
@@ -172,7 +159,7 @@ use Ekmungai\IFRS\Transactions\ClientInvoice;
 $clientInvoice = ClientInvoice::new($clientAccount, Carbon::now(), "Example Credit Sale")
 //Line Item save may be skipped as saving the Transaction saves the all its Line Items automatically
 ->addLineItem(
-  $LineItem::new($revenueAccount2, $outputVat, 50, 2, "Example Credit Sale Line Item", $salesVatAccount)
+  $LineItem::new($revenueAccount, $outputVat, 50, 2, "Example Credit Sale Line Item", $salesVatAccount)
 )
 //Transaction save may be skipped as post() saves the Transaction automatically
 ->post();
