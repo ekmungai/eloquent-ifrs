@@ -6,12 +6,11 @@
 ![PHP 7.2](https://img.shields.io/badge/PHP-7.2-blue.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-This Package enables any Laravel application to generate [International Financial Reporting Standards](https://www.ifrs.org/issued-standards/list-of-standards/conceptual-framework/) compatible Accounting Reports.
+This Package enables any Laravel application to generate [International Financial Reporting Standards](https://www.ifrs.org/issued-standards/list-of-standards/conceptual-framework/) compatible Financial Statements by providing a fully featured and configurable Double Entry accounting subsystem.
 
-With a fluent interface for Accounts, Transactions and Reports, this package enables any Laravel application to produce IFRS compliant Financial Reports.
+The package supports multiple Entities (Companies), Account Categorization, Transaction assignment, Start of Year Opening Balances and accounting for VAT Transactions. Transactions are also protected against tampering via direct database changes ensuring the integrity of the Ledger.
 
-The package supports multiple Entities (Companies), Account Categorization, Transaction assignment, Start of Year Opening Balances and accounting for VAT Transactions. Transactions are also protected against tampering via direct database changes ensuring the integrity of the ledger.
-
+The motivation for this package can be found in details on my blog post [here](https://karanjamungai.com/posts/accounting_software/)
 ## Table of contents
 1. [Installation](#installation)
 2. [Configuration](#configuration)
@@ -98,11 +97,10 @@ Now we'll set up some Accounts:
 ```
 
 use Ekmungai\IFRS\Models\Account;
-use Ekmungai\IFRS\Models\Category;
 
 $bankAccount = Account::new(
-    "Bank Account",                     // account name
-    Account::BANK,                      // account type
+    "Bank Account",         // account name
+    Account::BANK,          // account type
 )->save();
 
 $revenueAccount = Account::new("Sales Account",Account::OPERATING_REVENUE)->save();
@@ -139,7 +137,7 @@ So far the Transaction has only one side of the double entry, so we create a Lin
 use Ekmungai\IFRS\models\LineItem;
 
 $cashSaleLineItem = LineItem::new(
-    $revenueAccount,                   // Revenue Account
+    $revenueAccount,                    // Revenue Account
     $outputVat,                         // Output VAT
     100,                                // Item Price
     1,                                  // Quantity
