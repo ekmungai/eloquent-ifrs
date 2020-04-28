@@ -9,6 +9,7 @@
 use Ekmungai\IFRS\Models\Account;
 use Ekmungai\IFRS\Models\Balance;
 use Ekmungai\IFRS\Models\Transaction;
+use Ekmungai\IFRS\Models\ReportingPeriod;
 
 use Ekmungai\IFRS\Reports\IncomeStatement;
 use Ekmungai\IFRS\Reports\BalanceSheet;
@@ -109,8 +110,8 @@ return [
     ],
 
     'balances' => [
-        Balance::D => _('Debit'),
-        Balance::C => _('Credit'),
+        Balance::DEBIT => _('Debit'),
+        Balance::CREDIT => _('Credit'),
     ],
 
     'reporting_period_status' => [

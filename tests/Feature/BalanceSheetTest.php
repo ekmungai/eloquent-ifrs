@@ -34,7 +34,7 @@ class BalanceSheetTest extends TestCase
             "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::INVENTORY
             ])->id,
-            "balance_type" => Balance::D,
+            "balance_type" => Balance::DEBIT,
             "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
@@ -46,7 +46,7 @@ class BalanceSheetTest extends TestCase
             "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
                 "account_type" => Account::CURRENT_LIABILITY
             ])->id,
-            "balance_type" => Balance::C,
+            "balance_type" => Balance::CREDIT,
             "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,

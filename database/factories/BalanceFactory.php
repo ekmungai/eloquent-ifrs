@@ -24,8 +24,8 @@ $factory->define(Balance::class, function (Faker $faker) {
             ]),
         'reference' => $faker->word,
         'balance_type' =>  $faker->randomElement([
-            Balance::D,
-            Balance::C
+            Balance::DEBIT,
+            Balance::CREDIT
         ]),
         'amount' => $faker->randomFloat(2),
     ];

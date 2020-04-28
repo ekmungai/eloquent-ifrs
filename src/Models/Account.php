@@ -233,7 +233,7 @@ class Account extends Model implements Recyclable, Segragatable
         $balance = 0;
         foreach ($this->balances->where("year", $year) as $record) {
             $amount = $record->amount/$record->exchangeRate->rate;
-            $record->balance_type == Balance::D ? $balance += $amount : $balance -= $amount;
+            $record->balance_type == Balance::DEBIT ? $balance += $amount : $balance -= $amount;
         }
         return $balance;
     }

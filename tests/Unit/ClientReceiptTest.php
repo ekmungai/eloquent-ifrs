@@ -70,8 +70,8 @@ class ClientReceiptTest extends TestCase
 
         $clientReceipt->post();
 
-        $debit = Ledger::where("entry_type", Balance::D)->get()[0];
-        $credit = Ledger::where("entry_type", Balance::C)->get()[0];
+        $debit = Ledger::where("entry_type", Balance::DEBIT)->get()[0];
+        $credit = Ledger::where("entry_type", Balance::CREDIT)->get()[0];
 
         $this->assertEquals($debit->post_account, $lineItem->account_id);
         $this->assertEquals($debit->folio_account, $clientReceipt->getAccount()->id);

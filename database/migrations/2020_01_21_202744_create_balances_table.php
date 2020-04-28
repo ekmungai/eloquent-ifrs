@@ -45,7 +45,7 @@ class CreateBalancesTable extends Migration
                 Transaction::BL,
                 Transaction::JN
             ])->default(Transaction::JN);
-            $table->enum('balance_type', [Balance::D, Balance::C])->default(Balance::D);
+            $table->enum('balance_type', [Balance::DEBIT, Balance::CREDIT])->default(Balance::DEBIT);
             $table->decimal('amount', 13, 4);
 
             // *permanent* deletion

@@ -41,7 +41,7 @@ class AccountBalanceTest extends TestCase
             Carbon::now()->year,
             $this->faker->word,
             $this->faker->randomFloat(2),
-            Balance::D,
+            Balance::DEBIT,
             Transaction::JN,
             $currency,
             $exchangeRate
@@ -127,7 +127,7 @@ class AccountBalanceTest extends TestCase
             Carbon::now()->year,
             $this->faker->word,
             $this->faker->randomFloat(2),
-            Balance::D,
+            Balance::DEBIT,
             Transaction::CN
         );
         $balance->save();
@@ -170,7 +170,7 @@ class AccountBalanceTest extends TestCase
             Carbon::now()->year,
             $this->faker->word,
             -100,
-            Balance::D,
+            Balance::DEBIT,
             Transaction::JN
         );
         $this->expectException(NegativeAmount::class);

@@ -60,8 +60,8 @@ class JournalEntryTest extends TestCase
         $journalEntry->post();
 
         $ledgers = Ledger::where("transaction_id", $journalEntry->getId())->get();
-        $debit = $ledgers->where("entry_type", Balance::D)->first();
-        $credit = $ledgers->where("entry_type", Balance::C)->first();
+        $debit = $ledgers->where("entry_type", Balance::DEBIT)->first();
+        $credit = $ledgers->where("entry_type", Balance::CREDIT)->first();
 
         $this->assertEquals($debit->folio_account, $journalEntry->getAccount()->id);
         $this->assertEquals($debit->post_account, $lineItem->account_id);
@@ -98,8 +98,8 @@ class JournalEntryTest extends TestCase
 
         $ledgers = Ledger::where("transaction_id", $journalEntry2->getId())->get();
 
-        $debits = $ledgers->where("entry_type", Balance::D);
-        $credits = $ledgers->where("entry_type", Balance::C);
+        $debits = $ledgers->where("entry_type", Balance::DEBIT);
+        $credits = $ledgers->where("entry_type", Balance::CREDIT);
 
         $debit1 = $debits->where("amount", 50)->first();
         $credit1 = $credits->where("amount", 50)->first();

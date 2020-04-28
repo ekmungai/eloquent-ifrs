@@ -336,7 +336,7 @@ abstract class AbstractTransaction implements Instantiable, Findable
         $amount = 0;
 
         if ($this->isPosted()) {
-            foreach ($this->transaction->ledgers->where("entry_type",Balance::D) as $ledger) {
+            foreach ($this->transaction->ledgers->where("entry_type",Balance::DEBIT) as $ledger) {
                 $amount += $ledger->amount / $this->transaction->exchangeRate->rate;
             }
         }else {

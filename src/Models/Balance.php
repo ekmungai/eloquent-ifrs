@@ -68,8 +68,8 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
      * @var string
      */
 
-    const D = "D";
-    const C = "C";
+    const DEBIT = "D";
+    const CREDIT = "C";
 
     /**
      * Get Human Readable Balance Type.
@@ -120,7 +120,7 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
         string $year,
         string $transaction_no,
         float $amount,
-        string $balance_type = Balance::D,
+        string $balance_type = Balance::DEBIT,
         string $transaction_type = Transaction::JN,
         Currency $currency = null,
         ExchangeRate $exchangeRate = null,
@@ -168,7 +168,7 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
      */
     public function isCredited() : bool
     {
-        return $this->balance_type == Balance::C;
+        return $this->balance_type == Balance::CREDIT;
     }
 
     /**
@@ -258,8 +258,8 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
             throw new InvalidBalanceTransaction($transactionTypes);
         }
 
-        if (!in_array($this->balance_type, [Balance::D, Balance::C])) {
-            throw new InvalidBalance([Balance::D, Balance::C]);
+        if (!in_array($this->balance_type, [Balance::DEBIT, Balance::CREDIT])) {
+            throw new InvalidBalance([Balance::DEBIT, Balance::CREDIT]);
         }
 
         if (in_array($this->account->account_type, $accountTypes)) {

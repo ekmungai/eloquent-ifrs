@@ -44,7 +44,7 @@ class LedgerTest extends TestCase
         $transaction->addLineItem($lineItem);
         $transaction->post();
 
-        $ledger = Ledger::where("entry_type", Balance::C)->first();
+        $ledger = Ledger::where("entry_type", Balance::CREDIT)->first();
 
         $this->assertEquals($ledger->transaction->transaction_no, $transaction->getTransactionNo());
         $this->assertEquals($ledger->postAccount->name, $account->name);
@@ -106,14 +106,14 @@ class LedgerTest extends TestCase
 
         factory(Ledger::class, 3)->create([
             "post_account" => $account->id,
-            "entry_type" => Balance::D,
+            "entry_type" => Balance::DEBIT,
             "date" => Carbon::now(),
             "amount" => 50
         ]);
 
         factory(Ledger::class, 2)->create([
             "post_account" => $account->id,
-            "entry_type" => Balance::C,
+            "entry_type" => Balance::CREDIT,
             "date" => Carbon::now(),
             "amount" => 95
         ]);

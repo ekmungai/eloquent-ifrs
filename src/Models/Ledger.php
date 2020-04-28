@@ -64,11 +64,11 @@ class Ledger extends Model implements Segragatable
         $folio = new Ledger();
 
         if (boolval($transaction->credited)) {
-            $post->entry_type = Balance::C;
-            $folio->entry_type = Balance::D;
+            $post->entry_type = Balance::CREDIT;
+            $folio->entry_type = Balance::DEBIT;
         } else {
-            $post->entry_type = Balance::D;
-            $folio->entry_type = Balance::C;
+            $post->entry_type = Balance::DEBIT;
+            $folio->entry_type = Balance::CREDIT;
         }
 
         // identical double entry data
@@ -105,11 +105,11 @@ class Ledger extends Model implements Segragatable
             $folio = new Ledger();
 
             if (boolval($transaction->credited)) {
-                $post->entry_type = Balance::C;
-                $folio->entry_type = Balance::D;
+                $post->entry_type = Balance::CREDIT;
+                $folio->entry_type = Balance::DEBIT;
             } else {
-                $post->entry_type = Balance::D;
-                $folio->entry_type = Balance::C;
+                $post->entry_type = Balance::DEBIT;
+                $folio->entry_type = Balance::CREDIT;
             }
 
             // identical double entry data
@@ -246,7 +246,7 @@ class Ledger extends Model implements Segragatable
 
         foreach ($query->get() as $record) {
             $amount = $record->amount/$record->transaction->exchangeRate->rate;
-            $record->entry_type == Balance::D ? $contribution += $amount : $contribution -= $amount;
+            $record->entry_type == Balance::DEBIT ? $contribution += $amount : $contribution -= $amount;
         }
         return $contribution;
     }
@@ -264,7 +264,7 @@ class Ledger extends Model implements Segragatable
     {
         $debits = Ledger::where([
             "post_account" => $account->id,
-            "entry_type" => Balance::D,
+            "entry_type" => Balance::DEBIT,
         ])
         ->where("date", ">=", $startDate)
         ->where("date", "<=", $endDate)
@@ -272,7 +272,7 @@ class Ledger extends Model implements Segragatable
 
         $credits = Ledger::where([
             "post_account" => $account->id,
-            "entry_type" => Balance::C,
+            "entry_type" => Balance::CREDIT,
         ])
         ->where("date", ">=", $startDate)
         ->where("date", "<=", $endDate)

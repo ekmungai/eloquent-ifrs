@@ -41,7 +41,7 @@ class CreateLedgersTable extends Migration
 
             // attributes
             $table->dateTime('date', 0);
-            $table->enum('entry_type', [Balance::D,Balance::C]);
+            $table->enum('entry_type', [Balance::DEBIT,Balance::CREDIT]);
             $table->decimal('amount', 13, 4);
             $table->string('hash', 500)->nullable();
 

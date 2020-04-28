@@ -170,7 +170,7 @@ class AccountTest extends TestCase
 
         factory(Balance::class, 3)->create([
             "account_id" => $account->id,
-            "balance_type" => Balance::D,
+            "balance_type" => Balance::DEBIT,
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1,
             ])->id,
@@ -180,7 +180,7 @@ class AccountTest extends TestCase
 
         factory(Balance::class, 2)->create([
             "account_id" => $account->id,
-            "balance_type" => Balance::C,
+            "balance_type" => Balance::CREDIT,
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1,
             ])->id,
@@ -204,7 +204,7 @@ class AccountTest extends TestCase
 
         factory(Balance::class, 3)->create([
             "account_id" => $account->id,
-            "balance_type" => Balance::D,
+            "balance_type" => Balance::DEBIT,
             "exchange_rate_id" => $rate->id,
             "year" => Carbon::now()->addYear()->year,
             "amount" => 100
@@ -212,7 +212,7 @@ class AccountTest extends TestCase
 
         factory(Balance::class, 2)->create([
             "account_id" => $account->id,
-            "balance_type" => Balance::C,
+            "balance_type" => Balance::CREDIT,
             "exchange_rate_id" => $rate->id,
             "year" => Carbon::now()->addYear()->year,
             "amount" => 80
@@ -241,14 +241,14 @@ class AccountTest extends TestCase
 
         factory(Ledger::class, 3)->create([
             "post_account" => $account->id,
-            "entry_type" => Balance::D,
+            "entry_type" => Balance::DEBIT,
             "date" => Carbon::now(),
             "amount" => 50
         ]);
 
         factory(Ledger::class, 2)->create([
             "post_account" => $account->id,
-            "entry_type" => Balance::C,
+            "entry_type" => Balance::CREDIT,
             "date" => Carbon::now(),
             "amount" => 40
         ]);
@@ -257,7 +257,7 @@ class AccountTest extends TestCase
 
         factory(Balance::class)->create([
             "account_id" => $account->id,
-            "balance_type" => Balance::D,
+            "balance_type" => Balance::DEBIT,
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1,
             ])->id,
@@ -319,7 +319,7 @@ class AccountTest extends TestCase
         factory(Balance::class, 3)->create([
             "year" => date("Y"),
             "account_id" => $account1->id,
-            "balance_type" => Balance::D,
+            "balance_type" => Balance::DEBIT,
             "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
@@ -329,7 +329,7 @@ class AccountTest extends TestCase
         factory(Balance::class, 2)->create([
             "year" => date("Y"),
             "account_id" => $account1->id,
-            "balance_type" => Balance::C,
+            "balance_type" => Balance::CREDIT,
             "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
@@ -426,7 +426,7 @@ class AccountTest extends TestCase
 
         factory(Balance::class)->create([
             "account_id" => $account->id,
-            "balance_type" => Balance::D,
+            "balance_type" => Balance::DEBIT,
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1,
             ])->id,

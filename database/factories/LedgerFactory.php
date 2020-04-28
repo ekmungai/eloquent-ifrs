@@ -16,8 +16,8 @@ $factory->define(Ledger::class, function (Faker $faker) {
         'line_item_id' => factory('Ekmungai\IFRS\Models\LineItem')->create()->id,
         'date' => $faker->dateTimeThisMonth(),
         'entry_type' => $faker->randomElement([
-            Balance::D,
-            Balance::C
+            Balance::DEBIT,
+            Balance::CREDIT
         ]),
         'amount' => $faker->randomFloat(2),
     ];

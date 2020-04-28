@@ -68,7 +68,7 @@ class AccountStatementTest extends TestCase
         //opening balances
         factory(Balance::class, 3)->create([
             "account_id" => $account->id,
-            "balance_type" => Balance::D,
+            "balance_type" => Balance::DEBIT,
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1,
             ])->id,
@@ -78,7 +78,7 @@ class AccountStatementTest extends TestCase
 
         factory(Balance::class, 2)->create([
             "account_id" => $account->id,
-            "balance_type" => Balance::C,
+            "balance_type" => Balance::CREDIT,
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1,
             ])->id,
@@ -278,7 +278,7 @@ class AccountStatementTest extends TestCase
         //opening balances
         factory(Balance::class, 3)->create([
             "account_id" => $account->id,
-            "balance_type" => Balance::D,
+            "balance_type" => Balance::DEBIT,
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1,
             ])->id,
@@ -288,7 +288,7 @@ class AccountStatementTest extends TestCase
 
         factory(Balance::class, 2)->create([
             "account_id" => $account->id,
-            "balance_type" => Balance::C,
+            "balance_type" => Balance::CREDIT,
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1,
             ])->id,
@@ -416,7 +416,7 @@ class AccountStatementTest extends TestCase
         //opening balances
         factory(Balance::class, 3)->create([
             "account_id" => $account->id,
-            "balance_type" => Balance::C,
+            "balance_type" => Balance::CREDIT,
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1,
             ])->id,
@@ -426,7 +426,7 @@ class AccountStatementTest extends TestCase
 
         factory(Balance::class, 2)->create([
             "account_id" => $account->id,
-            "balance_type" => Balance::D,
+            "balance_type" => Balance::DEBIT,
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1,
             ])->id,

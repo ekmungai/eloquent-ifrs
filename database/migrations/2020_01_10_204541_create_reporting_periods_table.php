@@ -35,7 +35,7 @@ class CreateReportingPeriodsTable extends Migration
                 $table->integer('period_count');
                 $table->enum('status', [
                     ReportingPeriod::OPEN,
-                    ReportingPeriod::ClOSED,
+                    ReportingPeriod::CLOSED,
                     ReportingPeriod::ADJUSTING
                 ])->default(ReportingPeriod::OPEN);
                 $table->year('year');

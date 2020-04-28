@@ -66,7 +66,7 @@ class AccountScheduleTest extends TestCase
         //opening balances
         $balance = factory(Balance::class)->create([
             "account_id" => $account->id,
-            "balance_type" => Balance::D,
+            "balance_type" => Balance::DEBIT,
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1,
             ])->id,
@@ -209,7 +209,7 @@ class AccountScheduleTest extends TestCase
         //opening balances
         $balance = factory(Balance::class)->create([
             "account_id" => $account->id,
-            "balance_type" => Balance::C,
+            "balance_type" => Balance::CREDIT,
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1,
             ])->id,

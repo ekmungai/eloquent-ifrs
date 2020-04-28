@@ -69,8 +69,8 @@ class ClientInvoiceTest extends TestCase
 
         $clientInvoice->post();
 
-        $debit = Ledger::where("entry_type", Balance::D)->get()[0];
-        $credit = Ledger::where("entry_type", Balance::C)->get()[0];
+        $debit = Ledger::where("entry_type", Balance::DEBIT)->get()[0];
+        $credit = Ledger::where("entry_type", Balance::CREDIT)->get()[0];
 
         $this->assertEquals($debit->post_account, $clientInvoice->getAccount()->id);
         $this->assertEquals($debit->folio_account, $lineItem->account_id);
@@ -79,8 +79,8 @@ class ClientInvoiceTest extends TestCase
         $this->assertEquals($debit->amount, 100);
         $this->assertEquals($credit->amount, 100);
 
-        $vat_debit = Ledger::where("entry_type", Balance::D)->get()[1];
-        $vat_credit = Ledger::where("entry_type", Balance::C)->get()[1];
+        $vat_debit = Ledger::where("entry_type", Balance::DEBIT)->get()[1];
+        $vat_credit = Ledger::where("entry_type", Balance::CREDIT)->get()[1];
 
         $this->assertEquals($vat_debit->post_account, $clientInvoice->getAccount()->id);
         $this->assertEquals($vat_debit->folio_account, $lineItem->vat_account_id);
