@@ -42,12 +42,14 @@ class Entity extends Model implements Recyclable
      *
      * @return Entity
      */
-    public static function new(string $name, Currency $currency) : Entity
+    public static function new(string $name, Currency $currency, int $yearStart = 1, bool $multiCurrency = false) : Entity
     {
         $entity = new Entity();
 
         $entity->name = $name;
         $entity->currency_id = $currency->id;
+        $entity->year_start = $yearStart;
+        $entity->multi_currency = $multiCurrency;
 
         return $entity;
     }
