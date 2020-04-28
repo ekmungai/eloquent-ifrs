@@ -1,8 +1,8 @@
-# Laravel IFRS
+# Eloquent IFRS
 
-[![Build Status](https://travis-ci.com/ekmungai/laravel-ifrs.svg?branch=master)](https://travis-ci.com/ekmungai/laravel-ifrs)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/34cffeedd8edbbc14380/test_coverage)](https://codeclimate.com/github/ekmungai/laravel-ifrs/test_coverage)
-[![Maintainability](https://api.codeclimate.com/v1/badges/34cffeedd8edbbc14380/maintainability)](https://codeclimate.com/github/ekmungai/laravel-ifrs/maintainability)
+[![Build Status](https://travis-ci.com/ekmungai/eloquent-ifrs.svg?branch=master)](https://travis-ci.com/ekmungai/eloquent-ifrs)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/34cffeedd8edbbc14380/test_coverage)](https://codeclimate.com/github/ekmungai/eloquent-ifrs/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/34cffeedd8edbbc14380/maintainability)](https://codeclimate.com/github/ekmungai/eloquent-ifrs/maintainability)
 ![PHP 7.2](https://img.shields.io/badge/PHP-7.2-blue.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
@@ -10,7 +10,7 @@ This Package enables any Laravel application to generate [International Financia
 
 The package supports multiple Entities (Companies), Account Categorization, Transaction assignment, Start of Year Opening Balances and accounting for VAT Transactions. Transactions are also protected against tampering via direct database changes ensuring the integrity of the Ledger.
 
-The motivation for this package can be found in details on my blog post [here](https://karanjamungai.com/posts/accounting_software/)
+The motivation for this package can be found in detail on my blog post [here](https://karanjamungai.com/posts/accounting_software/)
 ## Table of contents
 1. [Installation](#installation)
 2. [Configuration](#configuration)
@@ -23,12 +23,12 @@ The motivation for this package can be found in details on my blog post [here](h
 
 ## Installation
 
-Use composer to Install the package into your laravel application. Laravel IFRS requires PHP version 7.2 and Laravel Framework version 5.0 and above.
+Use composer to Install the package into your laravel or lumen application. Laravel IFRS requires PHP version 7.2 and Laravel or Lumen version 5.0 and above.
 
 #### For production
 
 ```
-composer require "ekmungai/laravel-ifrs"
+composer require "ekmungai/eloquent-ifrs"
 composer install --no-dev
 ```
 
@@ -43,21 +43,21 @@ php artisan migrate
 Clone this repo, and then run Composer in local repo root to pull in dependencies.
 
 ```
-git clone git@github.com/ekmungai/laravel-ifrs laravel-ifrs
-cd laravel-ifrs
+git clone git@github.com/ekmungai/eloquent-ifrs eloquent-ifrs
+cd eloquent-ifrs
 composer update
 ```
 
 To run the tests:
 
 ```
-cd laravel-ifrs
+cd eloquent-ifrs
 vendor/bin/phpunit
 ```
 
 ## Configuration
 
-The package installs with the default settings as regards the names of Accounts/Transactions Types, Report Titles and Section names as well as Accounts Codes. To adjust these settings use the Laravel artisan publish command to install the ifrs configuration to your applications config folder where you can edit it.
+The package installs with the default settings as regards the names of Accounts/Transactions Types, Report Titles and Section names as well as Accounts Codes. To adjust these settings use the Laravel artisan publish command to install the ifrs configuration to your application's config folder where you can edit it.
 
 ```
 php artisan vendor:publish
@@ -329,7 +329,7 @@ I am acutely aware that as a professionally trained Accountant I may have used s
 
 ## Contributing
 
-1. Fork it (<https://github.com/ekmungai/laravel-ifrs/fork>)
+1. Fork it (<https://github.com/ekmungai/eloquent-ifrs/fork>)
 2. Create your feature branch (`git checkout -b feature/fooBar`)
 3. Write tests for the feature
 3. Commit your changes (`git commit -am 'Add some fooBar'`)
