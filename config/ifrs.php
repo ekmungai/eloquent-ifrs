@@ -113,6 +113,12 @@ return [
         Balance::C => _('Credit'),
     ],
 
+    'reporting_period_status' => [
+        ReportingPeriod::OPEN => _('Open'),
+        ReportingPeriod::CLOSED => _('Closed'),
+        ReportingPeriod::ADJUSTING => _('Adjusting'),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Balance Sheet Accounts

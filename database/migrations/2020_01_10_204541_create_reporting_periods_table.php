@@ -9,6 +9,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Ekmungai\IFRS\Models\ReportingPeriod;
 
 class CreateReportingPeriodsTable extends Migration
 {
@@ -32,7 +33,11 @@ class CreateReportingPeriodsTable extends Migration
 
                 // attributes
                 $table->integer('period_count');
-                $table->enum('status', ['open', 'closed', 'adjusting'])->default('open');
+                $table->enum('status', [
+                    ReportingPeriod::OPEN,
+                    ReportingPeriod::ClOSED,
+                    ReportingPeriod::ADJUSTING
+                ])->default(ReportingPeriod::OPEN);
                 $table->year('year');
 
                 // *permanent* deletion

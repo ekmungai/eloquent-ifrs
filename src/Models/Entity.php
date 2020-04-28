@@ -39,6 +39,8 @@ class Entity extends Model implements Recyclable
      *
      * @param string $name
      * @param Currency $currency
+     * @param int $yearStart
+     * @param bool $multiCurrency
      *
      * @return Entity
      */

@@ -41,19 +41,31 @@ class ReportingPeriod extends Model implements Segragatable, Recyclable
     use Recycling;
 
     /**
+     * Reporting Period Status
+     *
+     * @var string
+     */
+
+    const OPEN = "Open";
+    const CLOSED = "Closed";
+    const ADJUSTING = "Adjusting";
+
+    /**
      * Construct new ReportingPeriod
      *
      * @param int $periodCount
      * @param int $year
+     * @param string $status
      *
      * @return ReportingPeriod
      */
-    public static function new(int $periodCount = 1, int $year) : ReportingPeriod
+    public static function new(int $periodCount = 1, int $year, string $status = ReportingPeriod::OPEN) : ReportingPeriod
     {
         $reportingPeriod = new ReportingPeriod();
 
         $reportingPeriod->period_count = $periodCount;
         $reportingPeriod->year = $year;
+        $reportingPeriod->status = $status;
 
         return $reportingPeriod;
     }

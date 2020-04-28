@@ -57,7 +57,7 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
     /**
      * Balance Model Name
      *
-     * @var array
+     * @var string
      */
 
     const MODELNAME = "Ekmungai\IFRS\Models\Balance";
@@ -65,7 +65,7 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
     /**
      * Balance Type
      *
-     * @var array
+     * @var string
      */
 
     const D = "D";
