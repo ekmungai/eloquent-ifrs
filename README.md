@@ -1,8 +1,8 @@
 # Eloquent IFRS
 
 [![Build Status](https://travis-ci.com/ekmungai/eloquent-ifrs.svg?branch=master)](https://travis-ci.com/ekmungai/eloquent-ifrs)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/34cffeedd8edbbc14380/test_coverage)](https://codeclimate.com/github/ekmungai/eloquent-ifrs/test_coverage)
-[![Maintainability](https://api.codeclimate.com/v1/badges/34cffeedd8edbbc14380/maintainability)](https://codeclimate.com/github/ekmungai/eloquent-ifrs/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/7afac1253d0f662d1cfd/test_coverage)](https://codeclimate.com/github/ekmungai/eloquent-ifrs/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/7afac1253d0f662d1cfd/maintainability)](https://codeclimate.com/github/ekmungai/eloquent-ifrs/maintainability)
 ![PHP 7.2](https://img.shields.io/badge/PHP-7.2-blue.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
