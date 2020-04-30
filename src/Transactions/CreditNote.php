@@ -38,14 +38,6 @@ class CreditNote extends AbstractTransaction implements Sells, Fetchable, Assign
     const PREFIX = Transaction::CN;
 
     /**
-     * Transaction Main Account Credit Entry
-     *
-     * @var bool
-     */
-
-    const CREDITED = true;
-
-    /**
      * Consctruct new CreditNote
      *
      * @param Account $account
@@ -69,7 +61,7 @@ class CreditNote extends AbstractTransaction implements Sells, Fetchable, Assign
 
         $creditNote->newTransaction(
             self::PREFIX,
-            self::CREDITED,
+            true,
             $account,
             $date,
             $narration,

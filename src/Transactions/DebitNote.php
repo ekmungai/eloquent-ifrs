@@ -38,14 +38,6 @@ class DebitNote extends AbstractTransaction implements Buys, Fetchable, Assignab
     const PREFIX = Transaction::DN;
 
     /**
-     * Transaction Main Account Credit Entry
-     *
-     * @var bool
-     */
-
-    const CREDITED = false;
-
-    /**
      * Consctruct new DebitNote
      *
      * @param Account $account
@@ -69,7 +61,7 @@ class DebitNote extends AbstractTransaction implements Buys, Fetchable, Assignab
 
         $debitNote->newTransaction(
             self::PREFIX,
-            self::CREDITED,
+            false,
             $account,
             $date,
             $narration,

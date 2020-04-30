@@ -37,14 +37,6 @@ class JournalEntry extends AbstractTransaction implements Assignable, Clearable,
     const PREFIX = Transaction::JN;
 
     /**
-     * Transaction Main Account Credit Entry
-     *
-     * @var bool
-     */
-
-    const CREDITED = true;
-
-    /**
      * Construct new JournalEntry
      *
      * @param Account $account
@@ -68,7 +60,7 @@ class JournalEntry extends AbstractTransaction implements Assignable, Clearable,
 
         $journalEntry->newTransaction(
             self::PREFIX,
-            self::CREDITED,
+            true,
             $account,
             $date,
             $narration,

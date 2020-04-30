@@ -39,14 +39,6 @@ class SupplierBill extends AbstractTransaction implements Buys, Fetchable, Clear
     const PREFIX = Transaction::BL;
 
     /**
-     * Transaction Main Account Credit Entry
-     *
-     * @var bool
-     */
-
-    const CREDITED = true;
-
-    /**
      * Construct new SupplierBill
      *
      * @param Account $account
@@ -70,7 +62,7 @@ class SupplierBill extends AbstractTransaction implements Buys, Fetchable, Clear
 
         $supplierBill->newTransaction(
             self::PREFIX,
-            self::CREDITED,
+            true,
             $account,
             $date,
             $narration,

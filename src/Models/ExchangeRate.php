@@ -58,7 +58,6 @@ class ExchangeRate extends Model implements Segragatable, Recyclable
 
         $exchangeRate->valid_from = $validFrom;
         $exchangeRate->valid_to = $validto;
-        ;
         $exchangeRate->currency_id = $currency->id;
         $exchangeRate->rate = $rate;
 

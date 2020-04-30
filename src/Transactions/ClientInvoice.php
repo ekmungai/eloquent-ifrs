@@ -39,14 +39,6 @@ class ClientInvoice extends AbstractTransaction implements Sells, Fetchable, Cle
     const PREFIX = Transaction::IN;
 
     /**
-     * Transaction Main Account Credit Entry
-     *
-     * @var bool
-     */
-
-    const CREDITED = false;
-
-    /**
      * Construct new ClientInvoice
      *
      * @param Account $account
@@ -70,7 +62,7 @@ class ClientInvoice extends AbstractTransaction implements Sells, Fetchable, Cle
 
         $clientInvoice->newTransaction(
             self::PREFIX,
-            self::CREDITED,
+            false,
             $account,
             $date,
             $narration,

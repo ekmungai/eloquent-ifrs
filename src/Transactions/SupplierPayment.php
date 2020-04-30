@@ -39,14 +39,6 @@ class SupplierPayment extends AbstractTransaction implements Fetchable, Assignab
     const PREFIX = Transaction::PY;
 
     /**
-     * Transaction Main Account Credit Entry
-     *
-     * @var bool
-     */
-
-    const CREDITED = false;
-
-    /**
      * Construct new SupplierPayment
      *
      * @param Account $account
@@ -70,7 +62,7 @@ class SupplierPayment extends AbstractTransaction implements Fetchable, Assignab
 
         $supplierPayment->newTransaction(
             self::PREFIX,
-            self::CREDITED,
+            false,
             $account,
             $date,
             $narration,

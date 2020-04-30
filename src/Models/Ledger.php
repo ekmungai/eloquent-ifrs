@@ -125,7 +125,6 @@ class Ledger extends Model implements Segragatable
 
             $post->save();
             $folio->save();
-
             $transaction->amount += $lineItem->amount;
 
             if ($lineItem->vat->rate > 0) {

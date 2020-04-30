@@ -37,14 +37,6 @@ class CashSale extends AbstractTransaction implements Sells, Fetchable
     const PREFIX = Transaction::CS;
 
     /**
-     * Transaction Main Account Credit Entry
-     *
-     * @var bool
-     */
-
-    const CREDITED = false;
-
-    /**
      * Construct new CashSale
      *
      * @param Account $account
@@ -68,7 +60,7 @@ class CashSale extends AbstractTransaction implements Sells, Fetchable
 
         $cashSale->newTransaction(
             self::PREFIX,
-            self::CREDITED,
+            false,
             $account,
             $date,
             $narration,

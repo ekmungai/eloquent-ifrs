@@ -358,6 +358,10 @@ class Transaction extends Model implements Assignable, Clearable, Segragatable, 
      */
     public function addLineItem(LineItem $lineItem) : void
     {
+        if (count($lineItem->ledgers) > 0) {
+            throw new PostedTransaction();
+        }
+
         if ($lineItem->account->id == $this->account->id) {
             throw new RedundantTransaction();
         }

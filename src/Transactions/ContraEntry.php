@@ -36,14 +36,6 @@ class ContraEntry extends AbstractTransaction implements Fetchable
     const PREFIX = Transaction::CE;
 
     /**
-     * Transaction Main Account Credit Entry
-     *
-     * @var bool
-     */
-
-    const CREDITED = false;
-
-    /**
      * Consctruct new ContraEntry
      *
      * @param Account $account
@@ -67,7 +59,7 @@ class ContraEntry extends AbstractTransaction implements Fetchable
 
         $contraEntry->newTransaction(
             self::PREFIX,
-            self::CREDITED,
+            false,
             $account,
             $date,
             $narration,

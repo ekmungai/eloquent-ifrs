@@ -37,14 +37,6 @@ class CashPurchase extends AbstractTransaction implements Buys, Fetchable
     const PREFIX = Transaction::CP;
 
     /**
-     * Transaction Main Account Credit Entry
-     *
-     * @var bool
-     */
-
-    const CREDITED = true;
-
-    /**
      * Construct new CashPurchase
      *
      * @param Account $account
@@ -68,7 +60,7 @@ class CashPurchase extends AbstractTransaction implements Buys, Fetchable
 
         $cashPurchase->newTransaction(
             self::PREFIX,
-            self::CREDITED,
+            true,
             $account,
             $date,
             $narration,

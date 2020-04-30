@@ -38,7 +38,7 @@ trait Recycling
                         ]);
 
                     if ($model->forceDeleting) {
-                        $model->destroyed_at = Carbon::now()->toDateTimeString();
+                        $model->destroyed_at = $model->deleted_at = Carbon::now()->toDateTimeString();
                         $model->save();
                         $model->forceDeleting = false;
                     }

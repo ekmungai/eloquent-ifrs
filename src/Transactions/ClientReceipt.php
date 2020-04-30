@@ -39,14 +39,6 @@ class ClientReceipt extends AbstractTransaction implements Fetchable, Assignable
     const PREFIX = Transaction::RC;
 
     /**
-     * Transaction Main Account Credit Entry
-     *
-     * @var bool
-     */
-
-    const CREDITED = true;
-
-    /**
      * Construct new ClientReceipt
      * @param Account $account
      * @param Carbon $date
@@ -69,7 +61,7 @@ class ClientReceipt extends AbstractTransaction implements Fetchable, Assignable
 
         $clientReceipt->newTransaction(
             self::PREFIX,
-            self::CREDITED,
+            true,
             $account,
             $date,
             $narration,
