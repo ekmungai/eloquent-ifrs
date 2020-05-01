@@ -1,6 +1,6 @@
 <?php
 /**
- * Laravel IFRS Accounting
+ * Eloquent IFRS Accounting
  *
  * @author Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
@@ -8,21 +8,22 @@
  */
 namespace Ekmungai\IFRS\Models;
 
+use Illuminate\Support\Facades\Auth;
+
 use Carbon\Carbon;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Auth;
 
 use Ekmungai\IFRS\Interfaces\Segragatable;
 use Ekmungai\IFRS\Interfaces\Recyclable;
 use Ekmungai\IFRS\Interfaces\Assignable;
 use Ekmungai\IFRS\Interfaces\Clearable;
 
-use Ekmungai\IFRS\Traits\Recycling;
-use Ekmungai\IFRS\Traits\Segragating;
 use Ekmungai\IFRS\Traits\Assigning;
 use Ekmungai\IFRS\Traits\Clearing;
+use Ekmungai\IFRS\Traits\Recycling;
+use Ekmungai\IFRS\Traits\Segragating;
 
 use Ekmungai\IFRS\Exceptions\MissingLineItem;
 use Ekmungai\IFRS\Exceptions\RedundantTransaction;
@@ -32,7 +33,7 @@ use Ekmungai\IFRS\Exceptions\HangingClearances;
 /**
  * Class Transaction
  *
- * @package Ekmungai\Laravel-IFRS
+ * @package Ekmungai\Eloquent-IFRS
  *
  * @property Entity $entity
  * @property ExchangeRate $exchangeRate
@@ -48,13 +49,13 @@ use Ekmungai\IFRS\Exceptions\HangingClearances;
  * @property Carbon $destroyed_at
  * @property Carbon $deleted_at
  */
-class Transaction extends Model implements Assignable, Clearable, Segragatable, Recyclable
+class Transaction extends Model implements Segragatable, Recyclable, Clearable, Assignable
 {
     use Segragating;
     use SoftDeletes;
     use Recycling;
-    use Assigning;
     use Clearing;
+    use Assigning;
 
     /**
      * Balance Model Name
@@ -98,6 +99,24 @@ class Transaction extends Model implements Assignable, Clearable, Segragatable, 
         self::PY => 'SupplierPayment',
         self::CE => 'ContraEntry',
         self::JN => 'JournalEntry'
+    ];
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'currency_id',
+        'exchange_rate_id',
+        'account_id',
+        'date',
+        'narration',
+        'reference',
+        'amount',
+        'credited',
+        'transaction_type',
+        'transaction_no'
     ];
 
     /**
@@ -165,41 +184,6 @@ class Transaction extends Model implements Assignable, Clearable, Segragatable, 
     }
 
     /**
-     * Consctruct new Transaction
-     *
-     * @param Account $account
-     * @param string $date
-     * @param string $narration
-     * @param Currency $currency
-     * @param ExchangeRate $exchangeRate
-     * @param string $reference
-     *
-     * @return Transaction
-     */
-    public static function new(
-        Account $account,
-        string $date,
-        string $narration,
-        Currency $currency = null,
-        ExchangeRate $exchangeRate = null,
-        string $reference = null
-    ) : Transaction {
-        $entity = Auth::user()->entity;
-
-        $transaction = new Transaction();
-
-        $transaction->currency_id = !is_null($currency)? $currency->id : Auth::user()->entity->currency_id;
-        $transaction->exchange_rate_id = !is_null($exchangeRate)? $exchangeRate->id : $entity->defaultRate()->id;
-        $transaction->account_id = $account->id;
-        $transaction->date = $date;
-        $transaction->narration = $narration;
-        $transaction->reference = $reference;
-        $transaction->amount = 0;
-
-        return $transaction;
-    }
-
-    /**
      * The next Transaction number for the transaction type and date.
      *
      * @param string $type
@@ -220,6 +204,27 @@ class Transaction extends Model implements Assignable, Clearable, Segragatable, 
         return $type.str_pad((string) $period_count, 2, "0", STR_PAD_LEFT)
         ."/".
         str_pad((string) $next_id, 4, "0", STR_PAD_LEFT);
+    }
+
+    public function __construct($attributes = []) {
+
+        $entity = Auth::user()->entity;
+
+        if (!isset($attributes['currency_id'])) {
+            $attributes['currency_id'] = $entity->currency_id;
+        }
+
+        if (!isset($attributes['exchange_rate_id'])) {
+            $attributes['exchange_rate_id'] = $entity->defaultRate()->id;
+        }
+
+        if (!isset($attributes['date'])) {
+            $attributes['date'] = Carbon::now();
+        }
+
+        $attributes['amount'] = 0;
+
+        return parent::__construct($attributes);
     }
 
     /**
@@ -400,6 +405,11 @@ class Transaction extends Model implements Assignable, Clearable, Segragatable, 
      */
     public function save(array $options = []): bool
     {
+        $this->transaction_no = Transaction::transactionNo(
+            $this->transaction_type,
+            Carbon::parse($this->date)
+        );
+
         $save = parent::save();
         $this->saveLineItems();
 

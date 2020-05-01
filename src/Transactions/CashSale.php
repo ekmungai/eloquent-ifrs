@@ -1,6 +1,6 @@
 <?php
 /**
- * Laravel IFRS Accounting
+ * Eloquent IFRS Accounting
  *
  * @author Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
@@ -8,22 +8,18 @@
  */
 namespace Ekmungai\IFRS\Transactions;
 
-use Carbon\Carbon;
-
 use Ekmungai\IFRS\Interfaces\Sells;
 use Ekmungai\IFRS\Interfaces\Fetchable;
 
 use Ekmungai\IFRS\Traits\Selling;
 use Ekmungai\IFRS\Traits\Fetching;
 
-use Ekmungai\IFRS\Models\Currency;
-use Ekmungai\IFRS\Models\ExchangeRate;
 use Ekmungai\IFRS\Models\Transaction;
 use Ekmungai\IFRS\Models\Account;
 
 use Ekmungai\IFRS\Exceptions\MainAccount;
 
-class CashSale extends AbstractTransaction implements Sells, Fetchable
+class CashSale extends Transaction implements Sells, Fetchable
 {
     use Selling;
     use Fetching;
@@ -39,48 +35,15 @@ class CashSale extends AbstractTransaction implements Sells, Fetchable
     /**
      * Construct new CashSale
      *
-     * @param Account $account
-     * @param Carbon $date
-     * @param string $narration
-     * @param Currency $currency
-     * @param ExchangeRate $exchangeRate
-     * @param string $reference
+     * @param array $attributes
      *
-     * @return AbstractTransaction
      */
-    public static function new(
-        Account $account,
-        Carbon $date,
-        string $narration,
-        Currency $currency = null,
-        ExchangeRate $exchangeRate = null,
-        string $reference = null
-    ) : AbstractTransaction {
-        $cashSale = parent::instantiate(self::PREFIX);
+    public function __construct($attributes = []) {
 
-        $cashSale->newTransaction(
-            self::PREFIX,
-            false,
-            $account,
-            $date,
-            $narration,
-            $currency,
-            $exchangeRate,
-            $reference
-        );
+        $attributes['credited'] = false;
+        $attributes['transaction_type'] = self::PREFIX;
 
-        return $cashSale;
-    }
-
-    /**
-     * Set CashSale Date
-     *
-     * @param Carbon $date
-     */
-    public function setDate(Carbon $date): void
-    {
-        $this->transaction->date = $date;
-        $this->transaction->transaction_no  = Transaction::transactionNo(self::PREFIX, $date);
+        parent::__construct($attributes);
     }
 
     /**
@@ -92,6 +55,6 @@ class CashSale extends AbstractTransaction implements Sells, Fetchable
             throw new MainAccount(self::PREFIX, Account::BANK);
         }
 
-        $this->transaction->save();
+        parent::save();
     }
 }

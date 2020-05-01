@@ -1,12 +1,12 @@
 {
-    "name": "ekmungai/laravel-ifrs",
-    "description": "Laravel Double Entry Accounting with focus on IFRS Compliant Reporting",
-    "keywords": ["accounting", "laravel", "reporting"],
+    "name": "ekmungai/eloquent-ifrs",
+    "description": "Eloquent Double Entry Accounting with focus on IFRS Compliant Reporting",
+    "keywords": ["accounting", "eloquent", "laravel", "lumen" "reporting"],
     "type": "library",
     "license": "MIT",
     "support": {
-        "issues": "https://github.com/ekmungai/laravel-ifrs/issues",
-        "source": "https://github.com/ekmungai/laravel-ifrs"
+        "issues": "https://github.com/ekmungai/eloquent-ifrs/issues",
+        "source": "https://github.com/ekmungai/eloquent-ifrs"
     },
     "authors": [
         {
@@ -19,7 +19,7 @@
         "php": "^7.2",
 		"illuminate/database": "^6.0",
 		"illuminate/auth": "^6.0",
-        "sami/sami": "3.0.*"
+        "calebporzio/parental": "0.9"
     },
     "require-dev": {
         "facade/ignition": "^1.4",
@@ -31,8 +31,7 @@
         "phpmd/phpmd": "^2.8",
         "phpunit/phpunit": "^8.0",
         "squizlabs/php_codesniffer": "*",
-		"orchestra/testbench": "^4.7.0",
-        "phpdocumentor/phpdocumentor": "2.*"
+		"orchestra/testbench": "^4.7.0"
     },
 	"autoload": {
 		"psr-4": {

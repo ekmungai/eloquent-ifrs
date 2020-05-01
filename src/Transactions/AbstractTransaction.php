@@ -1,6 +1,6 @@
 <?php
 /**
- * Laravel IFRS Accounting
+ * Eloquent IFRS Accounting
  *
  * @author Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
@@ -67,9 +67,7 @@ abstract class AbstractTransaction implements Instantiable, Findable
     ) : void {
         $this->transaction = Transaction::new($account, $date, $narration, $currency, $exchangeRate, $reference);
 
-        $this->transaction->credited = $credited;
-        $this->transaction->transaction_type = $prefix;
-        $this->transaction->transaction_no  = Transaction::transactionNo($prefix, $date);
+
     }
 
     /**

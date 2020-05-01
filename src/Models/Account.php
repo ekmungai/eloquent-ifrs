@@ -1,6 +1,6 @@
 <?php
 /**
- * Laravel IFRS Accounting
+ * Eloquent IFRS Accounting
  *
  * @author Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
@@ -26,7 +26,7 @@ use Carbon\Carbon;
 /**
  * Class Account
  *
- * @package Ekmungai\Laravel-IFRS
+ * @package Ekmungai\Eloquent-IFRS
  *
  * @property Entity $entity
  * @property Category $category

@@ -1,6 +1,6 @@
 <?php
 /**
- * Laravel IFRS Accounting
+ * Eloquent IFRS Accounting
  *
  * @author Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
@@ -18,7 +18,7 @@ use Ekmungai\IFRS\Traits\Recycling;
 /**
  * Class Currency
  *
- * @package Ekmungai\Laravel-IFRS
+ * @package Ekmungai\Eloquent-IFRS
  *
  * @property string $currency_code
  * @property string $name

@@ -1,6 +1,6 @@
 <?php
 /**
- * Laravel IFRS Accounting
+ * Eloquent IFRS Accounting
  *
  * @author Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
@@ -20,7 +20,7 @@ use Ekmungai\IFRS\Traits\Segragating;
 /**
  * Class Vat
  *
- * @package Ekmungai\Laravel-IFRS
+ * @package Ekmungai\Eloquent-IFRS
  *
  * @property Entity $entity
  * @property string $code

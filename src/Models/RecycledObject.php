@@ -1,6 +1,6 @@
 <?php
 /**
- * Laravel IFRS Accounting
+ * Eloquent IFRS Accounting
  *
  * @author Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
@@ -11,7 +11,7 @@ namespace Ekmungai\IFRS\Models;
 /**
  * Class RecycledObject
  *
- * @package Ekmungai\Laravel-IFRS
+ * @package Ekmungai\Eloquent-IFRS
  *
  * @property Entity $entity
  * @property Recyclable $recyclable

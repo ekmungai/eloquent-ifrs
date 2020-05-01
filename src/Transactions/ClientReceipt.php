@@ -1,6 +1,6 @@
 <?php
 /**
- * Laravel IFRS Accounting
+ * Eloquent IFRS Accounting
  *
  * @author Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
@@ -8,11 +8,7 @@
  */
 namespace Ekmungai\IFRS\Transactions;
 
-use Carbon\Carbon;
-
 use Ekmungai\IFRS\Models\Account;
-use Ekmungai\IFRS\Models\Currency;
-use Ekmungai\IFRS\Models\ExchangeRate;
 use Ekmungai\IFRS\Models\Transaction;
 
 use Ekmungai\IFRS\Interfaces\Fetchable;
@@ -25,7 +21,7 @@ use Ekmungai\IFRS\Exceptions\VatCharge;
 use Ekmungai\IFRS\Interfaces\Assignable;
 use Ekmungai\IFRS\Traits\Assigning;
 
-class ClientReceipt extends AbstractTransaction implements Fetchable, Assignable
+class ClientReceipt extends Transaction implements Fetchable, Assignable
 {
     use Fetching;
     use Assigning;
@@ -40,48 +36,16 @@ class ClientReceipt extends AbstractTransaction implements Fetchable, Assignable
 
     /**
      * Construct new ClientReceipt
-     * @param Account $account
-     * @param Carbon $date
-     * @param string $narration
-     * @param Currency $currency
-     * @param ExchangeRate $exchangeRate
-     * @param string $reference
      *
-     * @return AbstractTransaction
-     */
-    public static function new(
-        Account $account,
-        Carbon $date,
-        string $narration,
-        Currency $currency = null,
-        ExchangeRate $exchangeRate = null,
-        string $reference = null
-    ) : AbstractTransaction {
-        $clientReceipt = parent::instantiate(self::PREFIX);
-
-        $clientReceipt->newTransaction(
-            self::PREFIX,
-            true,
-            $account,
-            $date,
-            $narration,
-            $currency,
-            $exchangeRate,
-            $reference
-        );
-
-        return $clientReceipt;
-    }
-
-    /**
-     * Set ClientReceipt Date
+     * @param array $attributes
      *
-     * @param Carbon $date
      */
-    public function setDate(Carbon $date): void
-    {
-        $this->transaction->date = $date;
-        $this->transaction->transaction_no  = Transaction::transactionNo(self::PREFIX, $date);
+    public function __construct($attributes = []) {
+
+        $attributes['credited'] = true;
+        $attributes['transaction_type'] = self::PREFIX;
+
+        parent::__construct($attributes);
     }
 
     /**
@@ -93,7 +57,7 @@ class ClientReceipt extends AbstractTransaction implements Fetchable, Assignable
             throw new MainAccount(self::PREFIX, Account::RECEIVABLE);
         }
 
-        $this->transaction->save();
+        parent::save();
     }
 
     /**
@@ -113,15 +77,6 @@ class ClientReceipt extends AbstractTransaction implements Fetchable, Assignable
             }
         }
 
-        $this->transaction->post();
-    }
-
-    /**
-     * ClientReceipt Unassigned Amount Balance
-     * @return float
-     */
-    public function balance(): float
-    {
-        return $this->transaction->balance();
+        parent::post();
     }
 }

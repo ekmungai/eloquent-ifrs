@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use Carbon\Carbon;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 use Ekmungai\IFRS\Tests\TestCase;
 
@@ -18,7 +18,6 @@ use Ekmungai\IFRS\Models\ReportingPeriod;
 use Ekmungai\IFRS\Models\Transaction;
 use Ekmungai\IFRS\Models\User;
 use Ekmungai\IFRS\Models\Vat;
-use Ekmungai\IFRS\Models\Ledger;
 
 use Ekmungai\IFRS\Transactions\JournalEntry;
 use Ekmungai\IFRS\Transactions\ClientInvoice;
@@ -43,14 +42,24 @@ class TransactionTest extends TestCase
             "rate" => 1
         ]);
 
-        $transaction = JournalEntry::new($account, Carbon::now(), $this->faker->word, $currency);
+        $transaction = new JournalEntry([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $currency->id
+        ]);
 
         $transaction->addLineItem(factory(LineItem::class)->create([
             "amount" => 100,
         ]));
         $transaction->post();
 
-        $cleared = JournalEntry::new($account, Carbon::now(), $this->faker->word, $currency);
+        $cleared = new JournalEntry([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $currency->id
+        ]);
         $cleared->setCredited(false);
         $cleared->addLineItem(factory(LineItem::class)->create([
             "amount" => 50,
@@ -59,13 +68,11 @@ class TransactionTest extends TestCase
 
         factory(Assignment::class, 5)->create(
             [
-                'transaction_id'=> $transaction->getId(),
-                'cleared_id'=> $cleared->getId(),
+                'transaction_id'=> $transaction->id,
+                'cleared_id'=> $cleared->id,
                 "amount" => 10,
             ]
         );
-
-        $transaction = Transaction::find($transaction->getId());
 
         $this->assertEquals($transaction->currency->name, $currency->name);
         $this->assertEquals($transaction->account->name, $account->name);
