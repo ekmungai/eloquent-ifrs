@@ -4,29 +4,29 @@ namespace Tests\Feature;
 
 use Carbon\Carbon;
 
-use Ekmungai\IFRS\Tests\TestCase;
+use IFRS\Tests\TestCase;
 
-use Ekmungai\IFRS\Models\Account;
-use Ekmungai\IFRS\Models\Balance;
-use Ekmungai\IFRS\Models\ExchangeRate;
-use Ekmungai\IFRS\Models\LineItem;
-use Ekmungai\IFRS\Models\ReportingPeriod;
-use Ekmungai\IFRS\Models\User;
+use IFRS\Models\Account;
+use IFRS\Models\Balance;
+use IFRS\Models\ExchangeRate;
+use IFRS\Models\LineItem;
+use IFRS\Models\ReportingPeriod;
+use IFRS\Models\User;
 
-use Ekmungai\IFRS\Reports\AccountStatement;
+use IFRS\Reports\AccountStatement;
 
-use Ekmungai\IFRS\Transactions\CashSale;
-use Ekmungai\IFRS\Transactions\ContraEntry;
-use Ekmungai\IFRS\Transactions\ClientReceipt;
-use Ekmungai\IFRS\Transactions\CashPurchase;
-use Ekmungai\IFRS\Transactions\SupplierPayment;
-use Ekmungai\IFRS\Transactions\JournalEntry;
-use Ekmungai\IFRS\Transactions\ClientInvoice;
-use Ekmungai\IFRS\Transactions\CreditNote;
-use Ekmungai\IFRS\Transactions\SupplierBill;
-use Ekmungai\IFRS\Transactions\DebitNote;
+use IFRS\Transactions\CashSale;
+use IFRS\Transactions\ContraEntry;
+use IFRS\Transactions\ClientReceipt;
+use IFRS\Transactions\CashPurchase;
+use IFRS\Transactions\SupplierPayment;
+use IFRS\Transactions\JournalEntry;
+use IFRS\Transactions\ClientInvoice;
+use IFRS\Transactions\CreditNote;
+use IFRS\Transactions\SupplierBill;
+use IFRS\Transactions\DebitNote;
 
-use Ekmungai\IFRS\Exceptions\MissingAccount;
+use IFRS\Exceptions\MissingAccount;
 
 class AccountStatementTest extends TestCase
 {
@@ -87,15 +87,19 @@ class AccountStatementTest extends TestCase
         ]);
 
         //Cash Sale Transaction
-        $cashSale = CashSale::new($account, Carbon::now(), $this->faker->word);
+        $cashSale = new CashSale([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
         $cashSale->save();
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
-            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 "account_type" => Account::OPERATING_REVENUE
             ])->id,
         ]);
@@ -104,18 +108,18 @@ class AccountStatementTest extends TestCase
         $cashSale->post();
 
         //Credit Contra Entry Transaction
-        $creditContraEntry = ContraEntry::new(
-            factory('Ekmungai\IFRS\Models\Account')->create([
+        $creditContraEntry = new ContraEntry([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 'account_type' => Account::BANK,
-            ]),
-            Carbon::now(),
-            $this->faker->word
-        );
+            ])->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
             "account_id" => $account->id,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -124,14 +128,18 @@ class AccountStatementTest extends TestCase
         $creditContraEntry->post();
 
         //Debit Contra Entry Transaction
-        $debitContraEntry = ContraEntry::new($account, Carbon::now(), $this->faker->word);
+        $debitContraEntry = new ContraEntry([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
-            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 "account_type" => Account::BANK
             ])->id,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -140,18 +148,18 @@ class AccountStatementTest extends TestCase
         $debitContraEntry->post();
 
         //Client Receipt Transaction
-        $clientReceipt = ClientReceipt::new(
-            factory('Ekmungai\IFRS\Models\Account')->create([
-                "account_type" => Account::RECEIVABLE
-            ]),
-            Carbon::now(),
-            $this->faker->word
-        );
+        $clientReceipt = new ClientReceipt([
+            "account_id" => factory('IFRS\Models\Account')->create([
+                'account_type' => Account::RECEIVABLE,
+            ])->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
             "account_id" => $account->id,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -160,12 +168,16 @@ class AccountStatementTest extends TestCase
         $clientReceipt->post();
 
         //Cash Purchase Transaction
-        $cashPurchase = CashPurchase::new($account, Carbon::now(), $this->faker->word);
+        $cashPurchase = new CashPurchase([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 75,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create(["rate" => 16])->id,
-            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create(["rate" => 16])->id,
+            "account_id" => factory('IFRS\Models\Account')->create([
                 "account_type" => Account::OTHER_EXPENSE
             ])->id,
         ]);
@@ -174,17 +186,17 @@ class AccountStatementTest extends TestCase
         $cashPurchase->post();
 
         //Supplier Payment Transaction
-        $supplierPayment = SupplierPayment::new(
-            factory('Ekmungai\IFRS\Models\Account')->create([
-                "account_type" => Account::PAYABLE
-            ]),
-            Carbon::now(),
-            $this->faker->word
-        );
+        $supplierPayment = new SupplierPayment([
+            "account_id" => factory('IFRS\Models\Account')->create([
+                'account_type' => Account::PAYABLE,
+            ])->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
             "account_id" => $account->id,
@@ -194,11 +206,15 @@ class AccountStatementTest extends TestCase
         $supplierPayment->post();
 
         //Credit Journal Entry Transaction
-        $creditJournalEntry = JournalEntry::new($account, Carbon::now(), $this->faker->word);
+        $creditJournalEntry = new JournalEntry([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -207,16 +223,16 @@ class AccountStatementTest extends TestCase
         $creditJournalEntry->post();
 
         //Debit Joutnal Entry Transaction
-        $debitJournalEntry = JournalEntry::new(
-            factory('Ekmungai\IFRS\Models\Account')->create(),
-            Carbon::now(),
-            $this->faker->word
-        );
+        $debitJournalEntry = new JournalEntry([
+            "account_id" => factory('IFRS\Models\Account')->create()->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
             "account_id" => $account->id,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -229,35 +245,35 @@ class AccountStatementTest extends TestCase
 
         $this->assertEquals($statement->balances['opening'], 70);
 
-        $this->assertEquals($statement->transactions[0]->id, $cashSale->getId());
+        $this->assertEquals($statement->transactions[0]->id, $cashSale->id);
         $this->assertEquals($statement->transactions[0]->debit, $cashSale->getAmount());
         $this->assertEquals($statement->transactions[0]->balance, 186);
 
-        $this->assertEquals($statement->transactions[1]->id, $creditContraEntry->getId());
+        $this->assertEquals($statement->transactions[1]->id, $creditContraEntry->id);
         $this->assertEquals($statement->transactions[1]->credit, $creditContraEntry->getAmount());
         $this->assertEquals($statement->transactions[1]->balance, 136);
 
-        $this->assertEquals($statement->transactions[2]->id, $debitContraEntry->getId());
+        $this->assertEquals($statement->transactions[2]->id, $debitContraEntry->id);
         $this->assertEquals($statement->transactions[2]->debit, $debitContraEntry->getAmount());
         $this->assertEquals($statement->transactions[2]->balance, 186);
 
-        $this->assertEquals($statement->transactions[3]->id, $clientReceipt->getId());
+        $this->assertEquals($statement->transactions[3]->id, $clientReceipt->id);
         $this->assertEquals($statement->transactions[3]->debit, $clientReceipt->getAmount());
         $this->assertEquals($statement->transactions[3]->balance, 286);
 
-        $this->assertEquals($statement->transactions[4]->id, $cashPurchase->getId());
+        $this->assertEquals($statement->transactions[4]->id, $cashPurchase->id);
         $this->assertEquals($statement->transactions[4]->credit, $cashPurchase->getAmount());
         $this->assertEquals($statement->transactions[4]->balance, 199);
 
-        $this->assertEquals($statement->transactions[5]->id, $supplierPayment->getId());
+        $this->assertEquals($statement->transactions[5]->id, $supplierPayment->id);
         $this->assertEquals($statement->transactions[5]->credit, $supplierPayment->getAmount());
         $this->assertEquals($statement->transactions[5]->balance, 149);
 
-        $this->assertEquals($statement->transactions[6]->id, $creditJournalEntry->getId());
+        $this->assertEquals($statement->transactions[6]->id, $creditJournalEntry->id);
         $this->assertEquals($statement->transactions[6]->credit, $creditJournalEntry->getAmount());
         $this->assertEquals($statement->transactions[6]->balance, 99);
 
-        $this->assertEquals($statement->transactions[7]->id, $debitJournalEntry->getId());
+        $this->assertEquals($statement->transactions[7]->id, $debitJournalEntry->id);
         $this->assertEquals($statement->transactions[7]->debit, $debitJournalEntry->getAmount());
         $this->assertEquals($statement->transactions[7]->balance, 149);
 
@@ -297,12 +313,16 @@ class AccountStatementTest extends TestCase
         ]);
 
         //Client Invoice Transaction
-        $clientInvoice = ClientInvoice::new($account, Carbon::now(), $this->faker->word);
+        $clientInvoice = new ClientInvoice([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create(["rate" => 16])->id,
-            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create(["rate" => 16])->id,
+            "account_id" => factory('IFRS\Models\Account')->create([
                 "account_type" => Account::OPERATING_REVENUE
             ])->id,
         ]);
@@ -311,14 +331,18 @@ class AccountStatementTest extends TestCase
         $clientInvoice->post();
 
         //Credit Note Transaction
-        $creditNote = CreditNote::new($account, Carbon::now(), $this->faker->word);
+        $creditNote = new CreditNote([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
-            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 "account_type" => Account::OPERATING_REVENUE
             ])->id,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
         ]);
@@ -327,14 +351,18 @@ class AccountStatementTest extends TestCase
         $creditNote->post();
 
         //Client Receipt Transaction
-        $clientReceipt = ClientReceipt::new($account, Carbon::now(), $this->faker->word);
+        $clientReceipt = new ClientReceipt([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 "account_type" => Account::BANK
             ])->id,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -343,11 +371,15 @@ class AccountStatementTest extends TestCase
         $clientReceipt->post();
 
         //Credit Journal Entry Transaction
-        $creditJournalEntry = JournalEntry::new($account, Carbon::now(), $this->faker->word);
+        $creditJournalEntry = new JournalEntry([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -356,16 +388,16 @@ class AccountStatementTest extends TestCase
         $creditJournalEntry->post();
 
         //Debit Journal Entry Transaction
-        $debitJournalEntry = JournalEntry::new(
-            factory('Ekmungai\IFRS\Models\Account')->create(),
-            Carbon::now(),
-            $this->faker->word
-        );
+        $debitJournalEntry = new JournalEntry([
+            "account_id" => factory('IFRS\Models\Account')->create()->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
             "account_id" => $account->id,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -379,23 +411,23 @@ class AccountStatementTest extends TestCase
         //dd($statement->toString());
         $this->assertEquals($statement->balances['opening'], 70);
 
-        $this->assertEquals($statement->transactions[0]->id, $clientInvoice->getId());
+        $this->assertEquals($statement->transactions[0]->id, $clientInvoice->id);
         $this->assertEquals($statement->transactions[0]->debit, $clientInvoice->getAmount());
         $this->assertEquals($statement->transactions[0]->balance, 186);
 
-        $this->assertEquals($statement->transactions[1]->id, $creditNote->getId());
+        $this->assertEquals($statement->transactions[1]->id, $creditNote->id);
         $this->assertEquals($statement->transactions[1]->credit, $creditNote->getAmount());
         $this->assertEquals($statement->transactions[1]->balance, 128);
 
-        $this->assertEquals($statement->transactions[2]->id, $clientReceipt->getId());
+        $this->assertEquals($statement->transactions[2]->id, $clientReceipt->id);
         $this->assertEquals($statement->transactions[2]->credit, $clientReceipt->getAmount());
         $this->assertEquals($statement->transactions[2]->balance, 28);
 
-        $this->assertEquals($statement->transactions[3]->id, $creditJournalEntry->getId());
+        $this->assertEquals($statement->transactions[3]->id, $creditJournalEntry->id);
         $this->assertEquals($statement->transactions[3]->credit, $creditJournalEntry->getAmount());
         $this->assertEquals($statement->transactions[3]->balance, -22);
 
-        $this->assertEquals($statement->transactions[4]->id, $debitJournalEntry->getId());
+        $this->assertEquals($statement->transactions[4]->id, $debitJournalEntry->id);
         $this->assertEquals($statement->transactions[4]->debit, $debitJournalEntry->getAmount());
         $this->assertEquals($statement->transactions[4]->balance, 28);
 
@@ -435,12 +467,16 @@ class AccountStatementTest extends TestCase
         ]);
 
         //Supplier Bill Transaction
-        $supplierBill = SupplierBill::new($account, Carbon::now(), $this->faker->word);
+        $supplierBill = new SupplierBill([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create(["rate" => 16])->id,
-            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create(["rate" => 16])->id,
+            "account_id" => factory('IFRS\Models\Account')->create([
                 "account_type" => Account::OPERATING_EXPENSE
             ])->id,
         ]);
@@ -449,14 +485,18 @@ class AccountStatementTest extends TestCase
         $supplierBill->post();
 
         //Debit Note Transaction
-        $debitNote = DebitNote::new($account, Carbon::now(), $this->faker->word);
+        $debitNote = new DebitNote([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
-            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 "account_type" => Account::OVERHEAD_EXPENSE
             ])->id,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
         ]);
@@ -465,14 +505,18 @@ class AccountStatementTest extends TestCase
         $debitNote->post();
 
         //Supplier Payment Transaction
-        $supplierPayment = SupplierPayment::new($account, Carbon::now(), $this->faker->word);
+        $supplierPayment = new SupplierPayment([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 "account_type" => Account::BANK
             ])->id,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -481,11 +525,15 @@ class AccountStatementTest extends TestCase
         $supplierPayment->post();
 
         //Credit Journal Entry Transaction
-        $creditJournalEntry = JournalEntry::new($account, Carbon::now(), $this->faker->word);
+        $creditJournalEntry = new JournalEntry([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -494,16 +542,16 @@ class AccountStatementTest extends TestCase
         $creditJournalEntry->post();
 
         //Debit Journal Entry Transaction
-        $debitJournalEntry = JournalEntry::new(
-            factory('Ekmungai\IFRS\Models\Account')->create(),
-            Carbon::now(),
-            $this->faker->word
-        );
+        $debitJournalEntry = new JournalEntry([
+            "account_id" => factory('IFRS\Models\Account')->create()->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
             "account_id" => $account->id,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -516,23 +564,23 @@ class AccountStatementTest extends TestCase
 
         $this->assertEquals($statement->balances['opening'], -70);
 
-        $this->assertEquals($statement->transactions[0]->id, $supplierBill->getId());
+        $this->assertEquals($statement->transactions[0]->id, $supplierBill->id);
         $this->assertEquals($statement->transactions[0]->credit, $supplierBill->getAmount());
         $this->assertEquals($statement->transactions[0]->balance, -186);
 
-        $this->assertEquals($statement->transactions[1]->id, $debitNote->getId());
+        $this->assertEquals($statement->transactions[1]->id, $debitNote->id);
         $this->assertEquals($statement->transactions[1]->debit, $debitNote->getAmount());
         $this->assertEquals($statement->transactions[1]->balance, -128);
 
-        $this->assertEquals($statement->transactions[2]->id, $supplierPayment->getId());
+        $this->assertEquals($statement->transactions[2]->id, $supplierPayment->id);
         $this->assertEquals($statement->transactions[2]->debit, $supplierPayment->getAmount());
         $this->assertEquals($statement->transactions[2]->balance, -28);
 
-        $this->assertEquals($statement->transactions[3]->id, $creditJournalEntry->getId());
+        $this->assertEquals($statement->transactions[3]->id, $creditJournalEntry->id);
         $this->assertEquals($statement->transactions[3]->credit, $creditJournalEntry->getAmount());
         $this->assertEquals($statement->transactions[3]->balance, -78);
 
-        $this->assertEquals($statement->transactions[4]->id, $debitJournalEntry->getId());
+        $this->assertEquals($statement->transactions[4]->id, $debitJournalEntry->id);
         $this->assertEquals($statement->transactions[4]->debit, $debitJournalEntry->getAmount());
         $this->assertEquals($statement->transactions[4]->balance, -28);
 

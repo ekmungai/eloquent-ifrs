@@ -2,17 +2,18 @@
 
 namespace Tests\Unit;
 
-use Ekmungai\IFRS\Tests\TestCase;
+use IFRS\Tests\TestCase;
 
 use Illuminate\Support\Facades\Auth;
 
-use Ekmungai\IFRS\Models\Currency;
-use Ekmungai\IFRS\Models\Entity;
-use Ekmungai\IFRS\Models\RecycledObject;
-use Ekmungai\IFRS\Models\User;
-use Ekmungai\IFRS\Models\Account;
+use IFRS\Models\Currency;
+use IFRS\Models\Entity;
+use IFRS\Models\RecycledObject;
+use IFRS\Models\ReportingPeriod;
+use IFRS\Models\User;
+use IFRS\Models\Account;
 
-use Ekmungai\IFRS\Exceptions\UnauthorizedUser;
+use IFRS\Exceptions\UnauthorizedUser;
 
 class EntityTest extends TestCase
 {
@@ -25,7 +26,10 @@ class EntityTest extends TestCase
     {
         $currency = factory(Currency::class)->create();
 
-        $entity = Entity::new($this->faker->company, $currency);
+        $entity = new Entity([
+            'name' => $this->faker->company,
+            'currency_id' => $currency->id,
+        ]);
         $entity->attributes();
         $entity->save();
 
@@ -33,8 +37,15 @@ class EntityTest extends TestCase
         $user->entity_id = $entity->id;
         $user->save();
 
+        $this->be($user);
+
+        $period = factory(ReportingPeriod::class)->create();
+        $period->entity_id = $entity->id;
+        $period->save();
+
         $this->assertEquals($user->entity->name, $entity->name);
         $this->assertEquals($entity->currency->name, $currency->name);
+        $this->assertEquals($entity->reportingPeriods[0]->year, $period->year);
     }
 
     /**
@@ -44,7 +55,10 @@ class EntityTest extends TestCase
      */
     public function testEntityRecycling()
     {
-        $entity = Entity::new($this->faker->company, factory(Currency::class)->create());
+        $entity = new Entity([
+            'name' => $this->faker->company,
+            'currency_id' => factory(Currency::class)->create()->id,
+        ]);
         $entity->delete();
 
         $recycled = RecycledObject::all()->first();

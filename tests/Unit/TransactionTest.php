@@ -5,27 +5,27 @@ namespace Tests\Unit;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
-use Ekmungai\IFRS\Tests\TestCase;
+use IFRS\Tests\TestCase;
 
-use Ekmungai\IFRS\Models\Account;
-use Ekmungai\IFRS\Models\Assignment;
-use Ekmungai\IFRS\Models\Currency;
-use Ekmungai\IFRS\Models\Entity;
-use Ekmungai\IFRS\Models\ExchangeRate;
-use Ekmungai\IFRS\Models\LineItem;
-use Ekmungai\IFRS\Models\RecycledObject;
-use Ekmungai\IFRS\Models\ReportingPeriod;
-use Ekmungai\IFRS\Models\Transaction;
-use Ekmungai\IFRS\Models\User;
-use Ekmungai\IFRS\Models\Vat;
+use IFRS\Models\Account;
+use IFRS\Models\Assignment;
+use IFRS\Models\Currency;
+use IFRS\Models\Entity;
+use IFRS\Models\ExchangeRate;
+use IFRS\Models\LineItem;
+use IFRS\Models\RecycledObject;
+use IFRS\Models\ReportingPeriod;
+use IFRS\Models\Transaction;
+use IFRS\Models\User;
+use IFRS\Models\Vat;
 
-use Ekmungai\IFRS\Transactions\JournalEntry;
-use Ekmungai\IFRS\Transactions\ClientInvoice;
+use IFRS\Transactions\JournalEntry;
+use IFRS\Transactions\ClientInvoice;
 
-use Ekmungai\IFRS\Exceptions\RedundantTransaction;
-use Ekmungai\IFRS\Exceptions\HangingClearances;
-use Ekmungai\IFRS\Exceptions\MissingLineItem;
-use Ekmungai\IFRS\Exceptions\PostedTransaction;
+use IFRS\Exceptions\RedundantTransaction;
+use IFRS\Exceptions\HangingClearances;
+use IFRS\Exceptions\MissingLineItem;
+use IFRS\Exceptions\PostedTransaction;
 
 class TransactionTest extends TestCase
 {
@@ -58,9 +58,10 @@ class TransactionTest extends TestCase
             "account_id" => $account->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-            "currency_id" => $currency->id
+            "currency_id" => $currency->id,
+            "credited" => false
         ]);
-        $cleared->setCredited(false);
+
         $cleared->addLineItem(factory(LineItem::class)->create([
             "amount" => 50,
         ]));
@@ -98,6 +99,10 @@ class TransactionTest extends TestCase
         $entity->currency_id = 2;
         $entity->save();
 
+        factory(ReportingPeriod::class)->create([
+            "year" => date("Y"),
+        ]);
+
         factory(Transaction::class, 3)->create();
 
         $this->assertEquals(count(Transaction::all()), 3);
@@ -127,43 +132,43 @@ class TransactionTest extends TestCase
      */
     public function testTransactionNumbers()
     {
-        $transaction = ClientInvoice::new(
-            factory(Account::class)->create([
+        $transaction = new ClientInvoice([
+            "account_id" => factory(Account::class)->create([
                 'account_type' => Account::RECEIVABLE,
-            ]),
-            Carbon::now(),
-            $this->faker->word
-        );
+            ])->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
         $transaction->save();
 
-        $this->assertEquals($transaction->getTransactionNo(), "IN0".$this->period->period_count."/0001");
+        $this->assertEquals($transaction->transaction_no, "IN0".$this->period->period_count."/0001");
 
-        $transaction = ClientInvoice::new(
-            factory(Account::class)->create([
+        $transaction = new ClientInvoice([
+            "account_id" => factory(Account::class)->create([
                 'account_type' => Account::RECEIVABLE,
-            ]),
-            Carbon::now(),
-            $this->faker->word
-        );
+            ])->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
         $transaction->save();
 
-        $this->assertEquals($transaction->getTransactionNo(), "IN0".$this->period->period_count."/0002");
+        $this->assertEquals($transaction->transaction_no, "IN0".$this->period->period_count."/0002");
 
         $period= factory(ReportingPeriod::class)->create([
             'period_count' => 2,
             'year' => Carbon::now()->addYear()->year,
         ]);
 
-        $transaction = ClientInvoice::new(
-            factory(Account::class)->create([
+        $transaction = new ClientInvoice([
+            "account_id" => factory(Account::class)->create([
                 'account_type' => Account::RECEIVABLE,
-            ]),
-            Carbon::now()->addYear(),
-            $this->faker->word
-        );
+            ])->id,
+            "date" => Carbon::now()->addYear(),
+            "narration" => $this->faker->word,
+        ]);
         $transaction->save();
 
-        $this->assertEquals($transaction->getTransactionNo(), "IN0".$period->period_count."/0001");
+        $this->assertEquals($transaction->transaction_no, "IN0".$period->period_count."/0001");
     }
 
     /**
@@ -174,9 +179,9 @@ class TransactionTest extends TestCase
     public function testTransactionLineItems()
     {
         $transaction = new Transaction();
-        $transaction->account_id = factory('Ekmungai\IFRS\Models\Account')->create()->id;
-        $transaction->exchange_rate_id = factory('Ekmungai\IFRS\Models\ExchangeRate')->create()->id;
-        $transaction->currency_id = factory('Ekmungai\IFRS\Models\Currency')->create()->id;
+        $transaction->account_id = factory('IFRS\Models\Account')->create()->id;
+        $transaction->exchange_rate_id = factory('IFRS\Models\ExchangeRate')->create()->id;
+        $transaction->currency_id = factory('IFRS\Models\Currency')->create()->id;
         $transaction->date = Carbon::now();
         $transaction->narration = $this->faker->word;
         $transaction->transaction_no = $this->faker->word;
@@ -235,20 +240,20 @@ class TransactionTest extends TestCase
      */
     public function testPostedTransactionRemoveLineItem()
     {
-        $transaction = JournalEntry::new(
-            factory('Ekmungai\IFRS\Models\Account')->create([
+        $transaction = new JournalEntry([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 'account_type' => Account::RECONCILIATION,
-            ]),
-            Carbon::now(),
-            $this->faker->word
-        );
+            ])->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
-            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 "account_type" => Account::RECONCILIATION
             ])->id,
         ]);
@@ -271,18 +276,18 @@ class TransactionTest extends TestCase
      */
     public function testRedundantTransaction()
     {
-        $account = factory('Ekmungai\IFRS\Models\Account')->create([
+        $account = factory('IFRS\Models\Account')->create([
             'account_type' => Account::RECONCILIATION,
         ]);
-        $transaction = JournalEntry::new(
-            $account,
-            Carbon::now(),
-            $this->faker->word
-        );
+        $transaction = new JournalEntry([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
             "account_id" => $account->id,
@@ -303,28 +308,42 @@ class TransactionTest extends TestCase
     {
         $account = factory(Account::class)->create();
 
-        $transaction = JournalEntry::new($account, Carbon::now(), $this->faker->word);
+        $transaction = new JournalEntry([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
-        $line = Lineitem::new(
-            factory(Account::class)->create(),
-            factory(Vat::class)->create(["rate" => 0]),
-            50
-        );
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create()->id,
+            'amount' => 50,
+        ]);
+
         $transaction->addLineItem($line);
         $transaction->post();
 
-        $cleared = JournalEntry::new($account, Carbon::now(), $this->faker->word);
-        $cleared->setCredited(false);
+        $cleared = new JournalEntry([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "credited" => false
+        ]);
 
-        $line = LineItem::new(
-            factory(Account::class)->create(),
-            factory(Vat::class)->create(["rate" => 0]),
-            50
-        );
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create()->id,
+            'amount' => 50,
+        ]);
         $cleared->addLineItem($line);
         $cleared->post();
 
-        $assignment = Assignment::new($transaction, $cleared, 50);
+        $assignment = new Assignment([
+            'transaction_id' => $transaction->id,
+            'cleared_id' => $cleared->id,
+            'cleared_type' => $cleared->getClearedType(),
+            'amount' => 50,
+        ]);
         $assignment->save();
 
         $this->expectException(HangingClearances::class);
@@ -346,37 +365,52 @@ class TransactionTest extends TestCase
             'account_type' => Account::RECEIVABLE,
         ]);
 
-        $transaction = JournalEntry::new($account, Carbon::now(), $this->faker->word);
+        $transaction = new JournalEntry([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
-        $line = Lineitem::new(
-            factory(Account::class)->create(),
-            factory(Vat::class)->create(["rate" => 0]),
-            125
-        );
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create()->id,
+            'amount' => 125,
+        ]);
+
         $transaction->addLineItem($line);
         $transaction->post();
 
-        $cleared = JournalEntry::new($account, Carbon::now(), $this->faker->word);
-        $cleared->setCredited(false);
+        $cleared = new JournalEntry([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "credited" => false
+        ]);
 
-        $line = Lineitem::new(
-            factory(Account::class)->create(),
-            factory(Vat::class)->create(["rate" => 0]),
-            100
-        );
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create()->id,
+            'amount' => 100,
+        ]);
         $cleared->addLineItem($line);
         $cleared->post();
 
-        $assignment = Assignment::new($transaction, $cleared, 50);
+        $assignment = new Assignment([
+            'transaction_id' => $transaction->id,
+            'cleared_id' => $cleared->id,
+            'cleared_type' => $cleared->getClearedType(),
+            'amount' => 50,
+        ]);
         $assignment->save();
+
+        $cleared = Transaction::find($cleared->id);
 
         $this->assertEquals($transaction->balance(), 75);
         $this->assertEquals($cleared->clearedAmount(), 50);
 
         $cleared->delete();
 
-        $transaction->refresh();
-        $cleared->refresh();
+        $transaction = Transaction::find($transaction->id);
 
         $this->assertEquals($transaction->balance(), 125);
     }
@@ -392,15 +426,19 @@ class TransactionTest extends TestCase
             'account_type' => Account::RECEIVABLE,
         ]);
 
-        $transaction = ClientInvoice::new($account, Carbon::now(), $this->faker->word);
+        $transaction = new ClientInvoice([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
-        $line = Lineitem::new(
-            factory(Account::class)->create([
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create([
                 'account_type' => Account::OPERATING_REVENUE
-            ]),
-            factory(Vat::class)->create(["rate" => 0]),
-            125
-            );
+            ])->id,
+            'amount' => 125,
+        ]);
         $transaction->addLineItem($line);
         $transaction->post();
 
@@ -410,11 +448,21 @@ class TransactionTest extends TestCase
         //Change Transaction Ledger amounts
         DB::statement('update ledgers set amount = 100 where id IN (1,2)');
 
+        $transaction = Transaction::find($transaction->id);
         // Transaction amount has changed
-        $transaction->refresh();
         $this->assertEquals($transaction->getAmount(), 100);
 
         //but Transaction Integrity is compromised
         $this->assertFalse($transaction->checkIntegrity());
+    }
+
+    /**
+     * Test Transaction Type Names
+     *
+     * @return void
+     */
+    public function testTransactionTypeNames()
+    {
+        $this->assertEquals(Transaction::getTypes([Transaction::IN,Transaction::CS]),["Client Invoice","Cash Sale"]);
     }
 }

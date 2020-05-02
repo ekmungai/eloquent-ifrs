@@ -6,29 +6,25 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Transactions;
+namespace IFRS\Transactions;
 
-use Carbon\Carbon;
+use IFRS\Models\Transaction;
 
+use IFRS\Interfaces\Buys;
+use IFRS\Interfaces\Fetchable;
 
-use Ekmungai\IFRS\Models\Account;
-use Ekmungai\IFRS\Models\Currency;
-use Ekmungai\IFRS\Models\ExchangeRate;
-use Ekmungai\IFRS\Models\Transaction;
+use IFRS\Traits\Buying;
+use IFRS\Traits\Fetching;
+use IFRS\Interfaces\Clearable;
+use IFRS\Traits\Clearing;
 
-use Ekmungai\IFRS\Interfaces\Buys;
-use Ekmungai\IFRS\Interfaces\Fetchable;
-
-use Ekmungai\IFRS\Traits\Buying;
-use Ekmungai\IFRS\Traits\Fetching;
-use Ekmungai\IFRS\Interfaces\Clearable;
-use Ekmungai\IFRS\Traits\Clearing;
-
-class SupplierBill extends AbstractTransaction implements Buys, Fetchable, Clearable
+class SupplierBill extends Transaction implements Buys, Fetchable, Clearable
 {
     use Buying;
     use Fetching;
     use Clearing;
+
+    use \Parental\HasParent;
 
     /**
      * Transaction Number prefix
@@ -39,59 +35,16 @@ class SupplierBill extends AbstractTransaction implements Buys, Fetchable, Clear
     const PREFIX = Transaction::BL;
 
     /**
-     * Construct new SupplierBill
+     * Construct new ContraEntry
      *
-     * @param Account $account
-     * @param Carbon $date
-     * @param string $narration
-     * @param Currency $currency
-     * @param ExchangeRate $exchangeRate
-     * @param string $reference
+     * @param array $attributes
      *
-     * @return AbstractTransaction
      */
-    public static function new(
-        Account $account,
-        Carbon $date,
-        string $narration,
-        Currency $currency = null,
-        ExchangeRate $exchangeRate = null,
-        string $reference = null
-    ) : AbstractTransaction {
-        $supplierBill = parent::instantiate(self::PREFIX);
+    public function __construct($attributes = []) {
 
-        $supplierBill->newTransaction(
-            self::PREFIX,
-            true,
-            $account,
-            $date,
-            $narration,
-            $currency,
-            $exchangeRate,
-            $reference
-        );
+        $attributes['credited'] = true;
+        $attributes['transaction_type'] = self::PREFIX;
 
-        return $supplierBill;
-    }
-
-    /**
-     * Set SupplierBill Date
-     *
-     * @param Carbon $date
-     */
-    public function setDate(Carbon $date): void
-    {
-        $this->transaction->date = $date;
-        $this->transaction->transaction_no  = Transaction::transactionNo(self::PREFIX, $date);
-    }
-
-    /**
-     * SupplierBill Amount that has been Cleared
-     *
-     * @return float
-     */
-    public function clearedAmount(): float
-    {
-        return $this->transaction->clearedAmount();
+        parent::__construct($attributes);
     }
 }

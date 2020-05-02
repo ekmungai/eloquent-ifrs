@@ -6,25 +6,25 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Traits;
+namespace IFRS\Traits;
 
-use Ekmungai\IFRS\Models\Account;
+use IFRS\Models\Account;
 
-use Ekmungai\IFRS\Exceptions\LineItemAccount;
-use Ekmungai\IFRS\Exceptions\MainAccount;
+use IFRS\Exceptions\LineItemAccount;
+use IFRS\Exceptions\MainAccount;
 
 trait Buying
 {
     /**
      * Validate Buying Transaction Main Account.
      */
-    public function save(): void
+    public function save(array $options = []): bool
     {
-        if (is_null($this->getAccount()) or $this->getAccount()->account_type != Account::PAYABLE) {
+        if (is_null($this->account) or $this->account->account_type != Account::PAYABLE) {
             throw new MainAccount(self::PREFIX, Account::PAYABLE);
         }
 
-        $this->transaction->save();
+        return parent::save();
     }
 
     /**
@@ -32,7 +32,7 @@ trait Buying
      */
     public function post(): void
     {
-        $this->save();
+        parent::save();
 
         $purchasable = [
             Account::OPERATING_EXPENSE,
@@ -50,6 +50,6 @@ trait Buying
             }
         }
 
-        $this->transaction->post();
+        parent::post();
     }
 }

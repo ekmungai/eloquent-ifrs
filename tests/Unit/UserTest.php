@@ -2,10 +2,10 @@
 
 namespace Tests\Unit;
 
-use Ekmungai\IFRS\Tests\TestCase;
+use IFRS\Tests\TestCase;
 
-use Ekmungai\IFRS\Models\RecycledObject;
-use Ekmungai\IFRS\Models\User;
+use IFRS\Models\RecycledObject;
+use IFRS\Models\User;
 
 class UserTest extends TestCase
 {

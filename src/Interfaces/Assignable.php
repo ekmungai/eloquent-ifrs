@@ -6,7 +6,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Interfaces;
+namespace IFRS\Interfaces;
 
 /**
  *
@@ -22,10 +22,4 @@ interface Assignable
      */
     public function balance();
 
-    /**
-     * Get Transaction Id.
-     *
-     * @return int
-     */
-    public function getId();
 }

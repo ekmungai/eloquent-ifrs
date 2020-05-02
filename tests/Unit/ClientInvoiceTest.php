@@ -6,18 +6,18 @@ use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Auth;
 
-use Ekmungai\IFRS\Tests\TestCase;
+use IFRS\Tests\TestCase;
 
-use Ekmungai\IFRS\Models\Account;
-use Ekmungai\IFRS\Models\Balance;
-use Ekmungai\IFRS\Models\Currency;
-use Ekmungai\IFRS\Models\LineItem;
-use Ekmungai\IFRS\Models\Ledger;
+use IFRS\Models\Account;
+use IFRS\Models\Balance;
+use IFRS\Models\Currency;
+use IFRS\Models\LineItem;
+use IFRS\Models\Ledger;
 
-use Ekmungai\IFRS\Transactions\ClientInvoice;
+use IFRS\Transactions\ClientInvoice;
 
-use Ekmungai\IFRS\Exceptions\LineItemAccount;
-use Ekmungai\IFRS\Exceptions\MainAccount;
+use IFRS\Exceptions\LineItemAccount;
+use IFRS\Exceptions\MainAccount;
 
 class ClientInvoiceTest extends TestCase
 {
@@ -32,13 +32,16 @@ class ClientInvoiceTest extends TestCase
             'account_type' => Account::RECEIVABLE,
         ]);
 
-        $clientInvoice = ClientInvoice::new($clientAccount, Carbon::now(), $this->faker->word);
-        $clientInvoice->setDate(Carbon::now());
+        $clientInvoice = new ClientInvoice([
+            "account_id" => $clientAccount->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
         $clientInvoice->save();
 
-        $this->assertEquals($clientInvoice->getAccount()->name, $clientAccount->name);
-        $this->assertEquals($clientInvoice->getAccount()->description, $clientAccount->description);
-        $this->assertEquals($clientInvoice->getTransactionNo(), "IN0".$this->period->period_count."/0001");
+        $this->assertEquals($clientInvoice->account->name, $clientAccount->name);
+        $this->assertEquals($clientInvoice->account->description, $clientAccount->description);
+        $this->assertEquals($clientInvoice->transaction_no, "IN0".$this->period->period_count."/0001");
     }
 
     /**
@@ -48,20 +51,20 @@ class ClientInvoiceTest extends TestCase
      */
     public function testPostClientInvoiceTransaction()
     {
-        $clientInvoice = ClientInvoice::new(
-            factory('Ekmungai\IFRS\Models\Account')->create([
+        $clientInvoice = new ClientInvoice([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 'account_type' => Account::RECEIVABLE,
-            ]),
-            Carbon::now(),
-            $this->faker->word
-        );
+            ])->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
-            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 "account_type" => Account::OPERATING_REVENUE
             ])->id,
         ]);
@@ -72,9 +75,9 @@ class ClientInvoiceTest extends TestCase
         $debit = Ledger::where("entry_type", Balance::DEBIT)->get()[0];
         $credit = Ledger::where("entry_type", Balance::CREDIT)->get()[0];
 
-        $this->assertEquals($debit->post_account, $clientInvoice->getAccount()->id);
+        $this->assertEquals($debit->post_account, $clientInvoice->account->id);
         $this->assertEquals($debit->folio_account, $lineItem->account_id);
-        $this->assertEquals($credit->folio_account, $clientInvoice->getAccount()->id);
+        $this->assertEquals($credit->folio_account, $clientInvoice->account->id);
         $this->assertEquals($credit->post_account, $lineItem->account_id);
         $this->assertEquals($debit->amount, 100);
         $this->assertEquals($credit->amount, 100);
@@ -82,9 +85,9 @@ class ClientInvoiceTest extends TestCase
         $vat_debit = Ledger::where("entry_type", Balance::DEBIT)->get()[1];
         $vat_credit = Ledger::where("entry_type", Balance::CREDIT)->get()[1];
 
-        $this->assertEquals($vat_debit->post_account, $clientInvoice->getAccount()->id);
+        $this->assertEquals($vat_debit->post_account, $clientInvoice->account->id);
         $this->assertEquals($vat_debit->folio_account, $lineItem->vat_account_id);
-        $this->assertEquals($vat_credit->folio_account, $clientInvoice->getAccount()->id);
+        $this->assertEquals($vat_credit->folio_account, $clientInvoice->account->id);
         $this->assertEquals($vat_credit->post_account, $lineItem->vat_account_id);
         $this->assertEquals($vat_debit->amount, 16);
         $this->assertEquals($vat_credit->amount, 16);
@@ -99,22 +102,22 @@ class ClientInvoiceTest extends TestCase
      */
     public function testClientInvoiceLineItemAccount()
     {
-        $clientInvoice = ClientInvoice::new(
-            factory('Ekmungai\IFRS\Models\Account')->create([
+        $clientInvoice = new ClientInvoice([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 'account_type' => Account::RECEIVABLE,
-            ]),
-            Carbon::now(),
-            $this->faker->word
-        );
+            ])->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
         $this->expectException(LineItemAccount::class);
         $this->expectExceptionMessage('Client Invoice LineItem Account must be of type Operating Revenue');
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
-            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 "account_type" => Account::RECONCILIATION
             ])->id,
         ]);
@@ -130,23 +133,23 @@ class ClientInvoiceTest extends TestCase
      */
     public function testClientInvoiceMainAccount()
     {
-        $clientInvoice = ClientInvoice::new(
-            factory('Ekmungai\IFRS\Models\Account')->create([
+        $clientInvoice = new ClientInvoice([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 'account_type' => Account::RECONCILIATION,
-            ]),
-            Carbon::now(),
-            $this->faker->word
-        );
+            ])->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
         $this->expectException(MainAccount::class);
         $this->expectExceptionMessage('Client Invoice Main Account must be of type Receivable');
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
-            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
-                "account_type" => Account::RECONCILIATION
+            "account_id" => factory('IFRS\Models\Account')->create([
+                "account_type" => Account::OPERATING_REVENUE
             ])->id,
         ]);
         $clientInvoice->addLineItem($lineItem);
@@ -164,15 +167,15 @@ class ClientInvoiceTest extends TestCase
         $account = factory(Account::class)->create([
             'account_type' => Account::RECEIVABLE,
         ]);
-        $transaction = ClientInvoice::new(
-            $account,
-            Carbon::now(),
-            $this->faker->word
-        );
+        $transaction = new ClientInvoice([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
         $transaction->save();
 
-        $found = ClientInvoice::find($transaction->getId());
-        $this->assertEquals($found->getTransactionNo(), $transaction->getTransactionNo());
+        $found = ClientInvoice::find($transaction->id);
+        $this->assertEquals($found->transaction_no, $transaction->transaction_no);
     }
 
     /**
@@ -185,21 +188,22 @@ class ClientInvoiceTest extends TestCase
         $account = factory(Account::class)->create([
             'account_type' => Account::RECEIVABLE,
         ]);
-        $transaction = ClientInvoice::new(
-            $account,
-            Carbon::now(),
-            $this->faker->word
-        );
+        $transaction = new ClientInvoice([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
         $transaction->save();
 
         $account2 = factory(Account::class)->create([
             'account_type' => Account::RECEIVABLE,
         ]);
-        $transaction2 = ClientInvoice::new(
-            $account2,
-            Carbon::now()->addWeeks(2),
-            $this->faker->word
-        );
+
+        $transaction2 = new ClientInvoice([
+            "account_id" => $account2->id,
+            "date" => Carbon::now()->addWeeks(2),
+            "narration" => $this->faker->word,
+        ]);
         $transaction2->save();
 
         // startTime Filter

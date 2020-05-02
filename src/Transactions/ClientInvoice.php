@@ -6,23 +6,25 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Transactions;
+namespace IFRS\Transactions;
 
-use Ekmungai\IFRS\Models\Transaction;
+use IFRS\Models\Transaction;
 
-use Ekmungai\IFRS\Interfaces\Sells;
-use Ekmungai\IFRS\Interfaces\Fetchable;
+use IFRS\Interfaces\Sells;
+use IFRS\Interfaces\Fetchable;
 
-use Ekmungai\IFRS\Traits\Selling;
-use Ekmungai\IFRS\Traits\Fetching;
-use Ekmungai\IFRS\Interfaces\Clearable;
-use Ekmungai\IFRS\Traits\Clearing;
+use IFRS\Traits\Selling;
+use IFRS\Traits\Fetching;
+use IFRS\Interfaces\Clearable;
+use IFRS\Traits\Clearing;
 
 class ClientInvoice extends Transaction implements Sells, Fetchable, Clearable
 {
     use Selling;
     use Fetching;
     use Clearing;
+
+    use \Parental\HasParent;
 
     /**
      * Transaction Number prefix

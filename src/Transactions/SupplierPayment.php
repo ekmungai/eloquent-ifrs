@@ -6,29 +6,27 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Transactions;
+namespace IFRS\Transactions;
 
-use Carbon\Carbon;
+use IFRS\Models\Account;
+use IFRS\Models\Transaction;
 
-use Ekmungai\IFRS\Models\Account;
-use Ekmungai\IFRS\Models\Currency;
-use Ekmungai\IFRS\Models\ExchangeRate;
-use Ekmungai\IFRS\Models\Transaction;
+use IFRS\Interfaces\Fetchable;
 
-use Ekmungai\IFRS\Interfaces\Fetchable;
+use IFRS\Traits\Fetching;
 
-use Ekmungai\IFRS\Traits\Fetching;
+use IFRS\Exceptions\MainAccount;
+use IFRS\Exceptions\LineItemAccount;
+use IFRS\Exceptions\VatCharge;
+use IFRS\Interfaces\Assignable;
+use IFRS\Traits\Assigning;
 
-use Ekmungai\IFRS\Exceptions\MainAccount;
-use Ekmungai\IFRS\Exceptions\LineItemAccount;
-use Ekmungai\IFRS\Exceptions\VatCharge;
-use Ekmungai\IFRS\Interfaces\Assignable;
-use Ekmungai\IFRS\Traits\Assigning;
-
-class SupplierPayment extends AbstractTransaction implements Fetchable, Assignable
+class SupplierPayment extends Transaction implements Fetchable, Assignable
 {
     use Fetching;
     use Assigning;
+
+    use \Parental\HasParent;
 
     /**
      * Transaction Number prefix
@@ -39,62 +37,29 @@ class SupplierPayment extends AbstractTransaction implements Fetchable, Assignab
     const PREFIX = Transaction::PY;
 
     /**
-     * Construct new SupplierPayment
+     * Construct new ContraEntry
      *
-     * @param Account $account
-     * @param Carbon $date
-     * @param string $narration
-     * @param Currency $currency
-     * @param ExchangeRate $exchangeRate
-     * @param string $reference
+     * @param array $attributes
      *
-     * @return AbstractTransaction
      */
-    public static function new(
-        Account $account,
-        Carbon $date,
-        string $narration,
-        Currency $currency = null,
-        ExchangeRate $exchangeRate = null,
-        string $reference = null
-    ) : AbstractTransaction {
-        $supplierPayment = parent::instantiate(self::PREFIX);
+    public function __construct($attributes = []) {
 
-        $supplierPayment->newTransaction(
-            self::PREFIX,
-            false,
-            $account,
-            $date,
-            $narration,
-            $currency,
-            $exchangeRate,
-            $reference
-        );
+        $attributes['credited'] = false;
+        $attributes['transaction_type'] = self::PREFIX;
 
-        return $supplierPayment;
-    }
-
-    /**
-     * Set SupplierPayment Date
-     *
-     * @param Carbon $date
-     */
-    public function setDate(Carbon $date): void
-    {
-        $this->transaction->date = $date;
-        $this->transaction->transaction_no  = Transaction::transactionNo(self::PREFIX, $date);
+        parent::__construct($attributes);
     }
 
     /**
      * Validate SupplierPayment Main Account
      */
-    public function save(): void
+    public function save(array $options = []): bool
     {
-        if (is_null($this->getAccount()) or $this->getAccount()->account_type != Account::PAYABLE) {
+        if (is_null($this->account) or $this->account->account_type != Account::PAYABLE) {
             throw new MainAccount(self::PREFIX, Account::PAYABLE);
         }
 
-        $this->transaction->save();
+        return parent::save();
     }
 
     /**
@@ -114,16 +79,6 @@ class SupplierPayment extends AbstractTransaction implements Fetchable, Assignab
             }
         }
 
-        $this->transaction->post();
-    }
-
-    /**
-     * SupplierPayment Unassigned Amount Balance
-     *
-     * @return float
-     */
-    public function balance(): float
-    {
-        return $this->transaction->balance();
+        parent::post();
     }
 }

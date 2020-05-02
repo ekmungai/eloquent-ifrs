@@ -6,28 +6,25 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Transactions;
+namespace IFRS\Transactions;
 
-use Carbon\Carbon;
+use IFRS\Models\Transaction;
 
-use Ekmungai\IFRS\Models\Account;
-use Ekmungai\IFRS\Models\Currency;
-use Ekmungai\IFRS\Models\ExchangeRate;
-use Ekmungai\IFRS\Models\Transaction;
+use IFRS\Interfaces\Sells;
+use IFRS\Interfaces\Fetchable;
 
-use Ekmungai\IFRS\Interfaces\Sells;
-use Ekmungai\IFRS\Interfaces\Fetchable;
+use IFRS\Traits\Selling;
+use IFRS\Traits\Fetching;
+use IFRS\Interfaces\Assignable;
+use IFRS\Traits\Assigning;
 
-use Ekmungai\IFRS\Traits\Selling;
-use Ekmungai\IFRS\Traits\Fetching;
-use Ekmungai\IFRS\Interfaces\Assignable;
-use Ekmungai\IFRS\Traits\Assigning;
-
-class CreditNote extends AbstractTransaction implements Sells, Fetchable, Assignable
+class CreditNote extends Transaction implements Sells, Fetchable, Assignable
 {
     use Selling;
     use Fetching;
     use Assigning;
+
+    use \Parental\HasParent;
 
     /**
      * Transaction Number prefix
@@ -38,59 +35,16 @@ class CreditNote extends AbstractTransaction implements Sells, Fetchable, Assign
     const PREFIX = Transaction::CN;
 
     /**
-     * Consctruct new CreditNote
+     * Construct new ContraEntry
      *
-     * @param Account $account
-     * @param Carbon $date
-     * @param string $narration
-     * @param Currency $currency
-     * @param ExchangeRate $exchangeRate
-     * @param string $reference
+     * @param array $attributes
      *
-     * @return AbstractTransaction
      */
-    public static function new(
-        Account $account,
-        Carbon $date,
-        string $narration,
-        Currency $currency = null,
-        ExchangeRate $exchangeRate = null,
-        string $reference = null
-    ) : AbstractTransaction {
-        $creditNote = parent::instantiate(self::PREFIX);
+    public function __construct($attributes = []) {
 
-        $creditNote->newTransaction(
-            self::PREFIX,
-            true,
-            $account,
-            $date,
-            $narration,
-            $currency,
-            $exchangeRate,
-            $reference
-        );
+        $attributes['credited'] = true;
+        $attributes['transaction_type'] = self::PREFIX;
 
-        return $creditNote;
-    }
-
-    /**
-     * Set CreditNote Date
-     *
-     * @param Carbon $date
-     */
-    public function setDate(Carbon $date): void
-    {
-        $this->transaction->date = $date;
-        $this->transaction->transaction_no  = Transaction::transactionNo(self::PREFIX, $date);
-    }
-
-    /**
-     * CreditNote Unassigned Amount Balance
-     *
-     * @return float
-     */
-    public function balance(): float
-    {
-        return $this->transaction->balance();
+        parent::__construct($attributes);
     }
 }

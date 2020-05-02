@@ -6,16 +6,16 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Models;
+namespace IFRS\Models;
 
 use Carbon\Carbon;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use Ekmungai\IFRS\Interfaces\Segragatable;
+use IFRS\Interfaces\Segragatable;
 
-use Ekmungai\IFRS\Traits\Segragating;
+use IFRS\Traits\Segragating;
 
 /**
  * Class Ledger
@@ -161,7 +161,7 @@ class Ledger extends Model implements Segragatable
      */
     public function postAccount()
     {
-        return $this->HasOne('Ekmungai\IFRS\Models\Account', 'id', 'post_account');
+        return $this->HasOne('IFRS\Models\Account', 'id', 'post_account');
     }
 
     /**
@@ -171,7 +171,7 @@ class Ledger extends Model implements Segragatable
      */
     public function folioAccount()
     {
-        return $this->HasOne('Ekmungai\IFRS\Models\Account', 'id', 'folio_account');
+        return $this->HasOne('IFRS\Models\Account', 'id', 'folio_account');
     }
 
     /**
@@ -181,7 +181,7 @@ class Ledger extends Model implements Segragatable
      */
     public function lineItem()
     {
-        return $this->BelongsTo('Ekmungai\IFRS\Models\LineItem', 'line_item_id', 'id');
+        return $this->BelongsTo('IFRS\Models\LineItem', 'line_item_id', 'id');
     }
 
     /**
@@ -198,7 +198,7 @@ class Ledger extends Model implements Segragatable
         $ledger[] = $this->post_account;
         $ledger[] = $this->folio_account;
         $ledger[] = $this->line_item_id;
-        $ledger[] = is_string($this->date)? $this->date : $this->date->format('Y-m-d G:H:s');
+        $ledger[] = is_string($this->date)? $this->date : $this->date->format('Y-m-d H:i:s');
         $ledger[] = $this->entry_type;
         $ledger[] = $this->amount;
         $ledger[] = $this->created_at;

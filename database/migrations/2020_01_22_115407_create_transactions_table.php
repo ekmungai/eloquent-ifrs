@@ -9,7 +9,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Ekmungai\IFRS\Models\Transaction;
+use IFRS\Models\Transaction;
 
 class CreateTransactionsTable extends Migration
 {
@@ -53,7 +53,7 @@ class CreateTransactionsTable extends Migration
             ]);
             $table->string('narration', 1000);
             $table->boolean('credited')->default(true);
-            $table->decimal('amount', 13, 4);
+            $table->decimal('amount', 13, 4)->default(0);
 
             // *permanent* deletion
             $table->dateTime('destroyed_at')->nullable();

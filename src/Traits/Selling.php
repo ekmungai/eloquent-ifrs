@@ -6,25 +6,25 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Traits;
+namespace IFRS\Traits;
 
-use Ekmungai\IFRS\Models\Account;
+use IFRS\Models\Account;
 
-use Ekmungai\IFRS\Exceptions\MainAccount;
-use Ekmungai\IFRS\Exceptions\LineItemAccount;
+use IFRS\Exceptions\MainAccount;
+use IFRS\Exceptions\LineItemAccount;
 
 trait Selling
 {
     /**
      * Validate Selling Transaction Main Account.
      */
-    public function save(): void
+    public function save(array $options = []): bool
     {
-        if (is_null($this->getAccount()) or $this->getAccount()->account_type != Account::RECEIVABLE) {
+        if (is_null($this->account) or $this->account->account_type != Account::RECEIVABLE) {
             throw new MainAccount(self::PREFIX, Account::RECEIVABLE);
         }
 
-        $this->transaction->save();
+        return parent::save();
     }
 
     /**
@@ -32,7 +32,7 @@ trait Selling
      */
     public function post(): void
     {
-        $this->save();
+        parent::save();
 
         foreach ($this->getLineItems() as $lineItem) {
             if ($lineItem->account->account_type != Account::OPERATING_REVENUE) {
@@ -40,6 +40,6 @@ trait Selling
             }
         }
 
-        $this->transaction->post();
+        parent::post();
     }
 }

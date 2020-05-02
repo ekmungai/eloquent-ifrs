@@ -2,18 +2,18 @@
 
 namespace Tests\Unit;
 
-use Ekmungai\IFRS\Tests\TestCase;
+use IFRS\Tests\TestCase;
 
 
 use Carbon\Carbon;
 
-use Ekmungai\IFRS\Models\Account;
-use Ekmungai\IFRS\Models\Balance;
-use Ekmungai\IFRS\Models\Ledger;
-use Ekmungai\IFRS\Models\LineItem;
-use Ekmungai\IFRS\Models\Vat;
+use IFRS\Models\Account;
+use IFRS\Models\Balance;
+use IFRS\Models\Ledger;
+use IFRS\Models\LineItem;
+use IFRS\Models\Vat;
 
-use Ekmungai\IFRS\Transactions\JournalEntry;
+use IFRS\Transactions\JournalEntry;
 
 class LedgerTest extends TestCase
 {
@@ -28,25 +28,24 @@ class LedgerTest extends TestCase
         $lineAccount = factory(Account::class)->create();
         $vat = factory(Vat::class)->create(["rate"=>0]);
 
-        $transaction = JournalEntry::new(
-            $account,
-            Carbon::now(),
-            $this->faker->word
-        );
+        $transaction = new JournalEntry([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
-        $lineItem = LineItem::new(
-            $lineAccount,
-            $vat,
-            50
-        );
-        $lineItem->save();
+        $lineItem = factory(LineItem::class)->create([
+            "account_id" => $lineAccount->id,
+            "amount" => 50,
+            "vat_id" => $vat->id,
+        ]);
 
         $transaction->addLineItem($lineItem);
         $transaction->post();
 
         $ledger = Ledger::where("entry_type", Balance::CREDIT)->first();
 
-        $this->assertEquals($ledger->transaction->transaction_no, $transaction->getTransactionNo());
+        $this->assertEquals($ledger->transaction->transaction_no, $transaction->transaction_no);
         $this->assertEquals($ledger->postAccount->name, $account->name);
         $this->assertEquals($ledger->folioAccount->name, $lineAccount->name);
         $this->assertEquals($ledger->lineItem->id, $lineItem->id);
@@ -64,35 +63,33 @@ class LedgerTest extends TestCase
         $lineAccount2 = factory(Account::class)->create();
         $vat = factory(Vat::class)->create(["rate"=>0]);
 
-        $transaction = JournalEntry::new(
-            $account,
-            Carbon::now(),
-            $this->faker->word
-        );
+        $transaction = new JournalEntry([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
-        $lineItem1 = LineItem::new(
-            $lineAccount1,
-            $vat,
-            75
-        );
-        $lineItem1->save();
+        $lineItem1 = factory(LineItem::class)->create([
+            "account_id" => $lineAccount1->id,
+            "amount" => 75,
+            "vat_id" => $vat->id,
+        ]);
 
         $transaction->addLineItem($lineItem1);
 
-        $lineItem2 = LineItem::new(
-            $lineAccount2,
-            $vat,
-            120
-        );
-        $lineItem2->save();
+        $lineItem2 = factory(LineItem::class)->create([
+            "account_id" => $lineAccount2->id,
+            "amount" => 120,
+            "vat_id" => $vat->id,
+        ]);
 
         $transaction->addLineItem($lineItem2);
 
         $transaction->post();
 
         $this->assertEquals($transaction->getAmount(), 195);
-        $this->assertEquals(Ledger::contribution($lineAccount1, $transaction->getId()), 75);
-        $this->assertEquals(Ledger::contribution($lineAccount2, $transaction->getId()), 120);
+        $this->assertEquals(Ledger::contribution($lineAccount1, $transaction->id), 75);
+        $this->assertEquals(Ledger::contribution($lineAccount2, $transaction->id), 120);
     }
 
     /**

@@ -1,16 +1,14 @@
 <?php
 
-namespace Ekmungai\IFRS\Tests;
+namespace IFRS\Tests;
 
 use Faker\Factory as Faker;
 
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Config;
 use Orchestra\Testbench\TestCase as Orchestra;
 
-use Ekmungai\IFRS\IFRSServiceProvider;
-use Ekmungai\IFRS\Models\ReportingPeriod;
-use Ekmungai\IFRS\Models\User;
+use IFRS\IFRSServiceProvider;
+use IFRS\Models\ReportingPeriod;
+use IFRS\Models\User;
 
 abstract class TestCase extends Orchestra
 {

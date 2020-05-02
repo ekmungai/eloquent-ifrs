@@ -6,14 +6,14 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Models;
+namespace IFRS\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use Ekmungai\IFRS\Interfaces\Recyclable;
+use IFRS\Interfaces\Recyclable;
 
-use Ekmungai\IFRS\Traits\Recycling;
+use IFRS\Traits\Recycling;
 
 /**
  * Class Currency
@@ -31,22 +31,14 @@ class Currency extends Model implements Recyclable
     use Recycling;
 
     /**
-     * Construct new Currency.
+     * The attributes that are mass assignable.
      *
-     * @param string $name
-     * @param string $currencyCode
-     *
-     * @return Currency
+     * @var array
      */
-    public static function new(string $name, string $currencyCode) : Currency
-    {
-        $currency = new Currency();
-
-        $currency->name = $name;
-        $currency->currency_code = $currencyCode;
-
-        return $currency;
-    }
+    protected $fillable = [
+        'name',
+        'currency_code',
+    ];
 
     /**
      * Currency Exchange Rates.

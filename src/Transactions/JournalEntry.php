@@ -6,17 +6,17 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Transactions;
+namespace IFRS\Transactions;
 
-use Ekmungai\IFRS\Models\Transaction;
+use IFRS\Models\Transaction;
 
-use Ekmungai\IFRS\Interfaces\Assignable;
-use Ekmungai\IFRS\Interfaces\Clearable;
-use Ekmungai\IFRS\Interfaces\Fetchable;
+use IFRS\Interfaces\Assignable;
+use IFRS\Interfaces\Clearable;
+use IFRS\Interfaces\Fetchable;
 
-use Ekmungai\IFRS\Traits\Assigning;
-use Ekmungai\IFRS\Traits\Clearing;
-use Ekmungai\IFRS\Traits\Fetching;
+use IFRS\Traits\Assigning;
+use IFRS\Traits\Clearing;
+use IFRS\Traits\Fetching;
 
 /**
  * Class JournalEntry
@@ -61,18 +61,11 @@ class JournalEntry extends Transaction implements Assignable, Clearable, Fetchab
      */
     public function __construct($attributes = []) {
 
-        $attributes['credited'] = true;
+        if (!isset($attributes['credited'])) {
+            $attributes['credited'] = true;
+        }
         $attributes['transaction_type'] = self::PREFIX;
 
         parent::__construct($attributes);
-    }
-
-    /**
-     * Set if JournalEntry Main Account is Credited in the Transaction
-     *
-     */
-    public function setCredited(bool $credited): void
-    {
-        $this->credited = $credited;
     }
 }

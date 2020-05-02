@@ -4,7 +4,7 @@
  * @var \Illuminate\Database\Eloquent\Factory $factory
  */
 
-use Ekmungai\IFRS\Models\ReportingPeriod;
+use IFRS\Models\ReportingPeriod;
 use Faker\Generator as Faker;
 
 $factory->define(
@@ -13,7 +13,7 @@ $factory->define(
         return [
         'period_count' => $faker->randomDigit,
         'year' => $faker->year,
-        'entity_id' => factory('Ekmungai\IFRS\Models\Entity')->create()->id,
+        'entity_id' => factory('IFRS\Models\Entity')->create()->id,
         ];
     }
 );

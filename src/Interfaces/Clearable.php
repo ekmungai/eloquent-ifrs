@@ -6,7 +6,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Interfaces;
+namespace IFRS\Interfaces;
 
 /**
  *
@@ -21,20 +21,6 @@ interface Clearable
      * @return float
      */
     public function clearedAmount();
-
-    /**
-     * Cleared Transaction number.
-     *
-     * @return string
-     */
-    public function getTransactionNo();
-
-    /**
-     * Get Transaction Id.
-     *
-     * @return int
-     */
-    public function getId();
 
     /**
      * Cleared Object type.

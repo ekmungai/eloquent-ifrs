@@ -6,9 +6,9 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Interfaces;
+namespace IFRS\Interfaces;
 
-use Ekmungai\IFRS\Transactions\AbstractTransaction;
+use IFRS\Transactions\AbstractTransaction;
 
 /**
  *

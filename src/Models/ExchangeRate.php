@@ -6,18 +6,16 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Models;
-
-use Carbon\Carbon;
+namespace IFRS\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use Ekmungai\IFRS\Interfaces\Segragatable;
-use Ekmungai\IFRS\Interfaces\Recyclable;
+use IFRS\Interfaces\Segragatable;
+use IFRS\Interfaces\Recyclable;
 
-use Ekmungai\IFRS\Traits\Segragating;
-use Ekmungai\IFRS\Traits\Recycling;
+use IFRS\Traits\Segragating;
+use IFRS\Traits\Recycling;
 
 /**
  * Class ExchangeRate
@@ -39,30 +37,16 @@ class ExchangeRate extends Model implements Segragatable, Recyclable
     use Recycling;
 
     /**
-     * Construct new Exchange Rate.
+     * The attributes that are mass assignable.
      *
-     * @param Carbon $validFrom
-     * @param Carbon $validto
-     * @param Currency $currency
-     * @param float $rate
-     *
-     * @return ExchangeRate
+     * @var array
      */
-    public static function new(
-        Carbon $validFrom,
-        Carbon $validto = null,
-        Currency $currency,
-        float $rate = 1.0
-    ) : ExchangeRate {
-        $exchangeRate = new ExchangeRate();
-
-        $exchangeRate->valid_from = $validFrom;
-        $exchangeRate->valid_to = $validto;
-        $exchangeRate->currency_id = $currency->id;
-        $exchangeRate->rate = $rate;
-
-        return $exchangeRate;
-    }
+    protected $fillable = [
+        'valid_from',
+        'valid_to',
+        'currency_id',
+        'rate',
+    ];
 
     /**
      * Exchange Rate Currency.

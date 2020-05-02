@@ -6,17 +6,17 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Reports;
+namespace IFRS\Reports;
 
 use Carbon\Carbon;
 
-use Ekmungai\IFRS\Models\Balance;
-use Ekmungai\IFRS\Models\Transaction;
-use Ekmungai\IFRS\Models\Currency;
-use Ekmungai\IFRS\Models\ReportingPeriod;
-use Ekmungai\IFRS\Models\Account;
+use IFRS\Models\Balance;
+use IFRS\Models\Transaction;
+use IFRS\Models\Currency;
+use IFRS\Models\ReportingPeriod;
+use IFRS\Models\Account;
 
-use Ekmungai\IFRS\Exceptions\MissingAccount;
+use IFRS\Exceptions\MissingAccount;
 
 class AccountSchedule extends AccountStatement
 {

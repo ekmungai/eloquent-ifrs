@@ -6,9 +6,9 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Reports;
+namespace IFRS\Reports;
 
-use Ekmungai\IFRS\Models\Account;
+use IFRS\Models\Account;
 
 class TrialBalance extends FinancialStatement
 {

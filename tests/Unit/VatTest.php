@@ -2,11 +2,11 @@
 
 namespace Tests\Unit;
 
-use Ekmungai\IFRS\Tests\TestCase;
+use IFRS\Tests\TestCase;
 
-use Ekmungai\IFRS\Models\RecycledObject;
-use Ekmungai\IFRS\Models\User;
-use Ekmungai\IFRS\Models\Vat;
+use IFRS\Models\RecycledObject;
+use IFRS\Models\User;
+use IFRS\Models\Vat;
 
 class VatTest extends TestCase
 {
@@ -23,7 +23,11 @@ class VatTest extends TestCase
 
         $this->be($user);
 
-        $vat = Vat::new($this->faker->word, $this->faker->word, 10);
+        $vat = new Vat([
+            'name' => $this->faker->name,
+            'code' => $this->faker->randomLetter(),
+            'rate' => 10,
+        ]);
         $vat->attributes();
         $vat->save();
 
@@ -40,7 +44,11 @@ class VatTest extends TestCase
      */
     public function testVatRecycling()
     {
-        $vat = Vat::new($this->faker->word, $this->faker->word, 10);
+        $vat = new Vat([
+            'name' => $this->faker->name,
+            'code' => $this->faker->randomLetter(),
+            'rate' => 10,
+        ]);
         $vat->delete();
 
         $recycled = RecycledObject::all()->first();

@@ -6,17 +6,17 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Models;
+namespace IFRS\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use Ekmungai\IFRS\Interfaces\Recyclable;
-use Ekmungai\IFRS\Interfaces\Segragatable;
+use IFRS\Interfaces\Recyclable;
+use IFRS\Interfaces\Segragatable;
 
-use Ekmungai\IFRS\Traits\Recycling;
-use Ekmungai\IFRS\Traits\Segragating;
+use IFRS\Traits\Recycling;
+use IFRS\Traits\Segragating;
 
 /**
  * Class User

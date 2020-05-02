@@ -4,7 +4,7 @@
  * @var \Illuminate\Database\Eloquent\Factory $factory
  */
 
-use Ekmungai\IFRS\Models\Currency;
+use IFRS\Models\Currency;
 
 use Faker\Generator as Faker;
 

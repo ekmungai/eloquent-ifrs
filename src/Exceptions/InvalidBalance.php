@@ -6,9 +6,9 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Exceptions;
+namespace IFRS\Exceptions;
 
-use Ekmungai\IFRS\Models\Balance;
+use IFRS\Models\Balance;
 
 class InvalidBalance extends IFRSException
 {

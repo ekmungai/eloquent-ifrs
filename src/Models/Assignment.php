@@ -6,27 +6,25 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Models;
+namespace IFRS\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use Ekmungai\IFRS\Interfaces\Segragatable;
-use Ekmungai\IFRS\Interfaces\Assignable;
-use Ekmungai\IFRS\Interfaces\Clearable;
+use IFRS\Interfaces\Segragatable;
 
-use Ekmungai\IFRS\Traits\Segragating;
+use IFRS\Traits\Segragating;
 
-use Ekmungai\IFRS\Exceptions\InsufficientBalance;
-use Ekmungai\IFRS\Exceptions\OverClearance;
-use Ekmungai\IFRS\Exceptions\SelfClearance;
-use Ekmungai\IFRS\Exceptions\UnassignableTransaction;
-use Ekmungai\IFRS\Exceptions\UnclearableTransaction;
-use Ekmungai\IFRS\Exceptions\UnpostedAssignment;
-use Ekmungai\IFRS\Exceptions\InvalidClearanceAccount;
-use Ekmungai\IFRS\Exceptions\InvalidClearanceCurrency;
-use Ekmungai\IFRS\Exceptions\InvalidClearanceEntry;
-use Ekmungai\IFRS\Exceptions\NegativeAmount;
+use IFRS\Exceptions\InsufficientBalance;
+use IFRS\Exceptions\OverClearance;
+use IFRS\Exceptions\SelfClearance;
+use IFRS\Exceptions\UnassignableTransaction;
+use IFRS\Exceptions\UnclearableTransaction;
+use IFRS\Exceptions\UnpostedAssignment;
+use IFRS\Exceptions\InvalidClearanceAccount;
+use IFRS\Exceptions\InvalidClearanceCurrency;
+use IFRS\Exceptions\InvalidClearanceEntry;
+use IFRS\Exceptions\NegativeAmount;
 
 /**
  * Class Assignment
@@ -46,26 +44,16 @@ class Assignment extends Model implements Segragatable
     use SoftDeletes;
 
     /**
-     * Construct new Assignment.
+     * The attributes that are mass assignable.
      *
-     * @param Assignable $transaction
-     * @param Clearable $cleared
-     * @param float $amount
-     *
-     * @return Assignment
+     * @var array
      */
-    public static function new(Assignable $transaction, Clearable $cleared, float $amount) : Assignment
-    {
-        $assignment = new Assignment();
-
-        $assignment->transaction_id = $transaction->getId();
-        $assignment->cleared_id = $cleared->getId();
-        $assignment->cleared_type = $cleared->getClearedType();
-
-        $assignment->amount = $amount;
-
-        return $assignment;
-    }
+    protected $fillable = [
+        'transaction_id',
+        'cleared_id',
+        'cleared_type',
+        'amount',
+    ];
 
     /**
      * Transaction to be cleared.
@@ -102,7 +90,9 @@ class Assignment extends Model implements Segragatable
      */
     public function validate() : void
     {
+
         $transactionType = $this->transaction->transaction_type;
+
         $cleared_type = $this->cleared->transaction_type;
 
         if ($this->amount < 0) {

@@ -6,7 +6,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Exceptions;
+namespace IFRS\Exceptions;
 
 class NegativeAmount extends IFRSException
 {

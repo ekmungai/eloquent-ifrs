@@ -6,7 +6,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Models;
+namespace IFRS\Models;
 
 /**
  * Class RecycledObject
@@ -22,9 +22,9 @@ namespace Ekmungai\IFRS\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use Ekmungai\IFRS\Interfaces\Segragatable;
+use IFRS\Interfaces\Segragatable;
 
-use Ekmungai\IFRS\Traits\Segragating;
+use IFRS\Traits\Segragating;
 
 class RecycledObject extends Model implements Segragatable
 {

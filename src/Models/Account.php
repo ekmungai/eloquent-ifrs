@@ -6,21 +6,21 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Models;
+namespace IFRS\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
-use Ekmungai\IFRS\Interfaces\Recyclable;
-use Ekmungai\IFRS\Interfaces\Segragatable;
+use IFRS\Interfaces\Recyclable;
+use IFRS\Interfaces\Segragatable;
 
-use Ekmungai\IFRS\Traits\Segragating;
-use Ekmungai\IFRS\Traits\Recycling;
+use IFRS\Traits\Segragating;
+use IFRS\Traits\Recycling;
 
-use Ekmungai\IFRS\Exceptions\MissingAccountType;
-use Ekmungai\IFRS\Exceptions\HangingTransactions;
+use IFRS\Exceptions\MissingAccountType;
+use IFRS\Exceptions\HangingTransactions;
 use Carbon\Carbon;
 
 /**
@@ -73,6 +73,31 @@ class Account extends Model implements Recyclable, Segragatable
     const RECONCILIATION = 'RECONCILIATION';
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'account_type',
+        'account_id',
+        'currency_id',
+        'category_id',
+        'code',
+    ];
+
+    /**
+     * Construct new Account.
+     */
+    public function __construct($attributes = []) {
+
+        if (!isset($attributes['currency_id'])) {
+            $attributes['currency_id'] = Auth::user()->entity->currency_id;
+        }
+        return parent::__construct($attributes);
+    }
+
+    /**
      * Get Human Readable Account Type.
      *
      * @param string $type
@@ -99,38 +124,6 @@ class Account extends Model implements Recyclable, Segragatable
             $typeNames[] = Account::getType($type);
         }
         return $typeNames;
-    }
-
-    /**
-     * Construct new Account.
-     *
-     * @param string $name
-     * @param string $account_type
-     * @param string $description
-     * @param Category $category
-     * @param Currency $currency
-     * @param int $account_code
-     *
-     * @return Account
-     */
-    public static function new(
-        string $name,
-        string $account_type,
-        string $description = null,
-        Category $category = null,
-        Currency $currency = null,
-        int $account_code = null
-    ) : Account {
-        $account = new Account();
-
-        $account->currency_id = !is_null($currency)? $currency->id : Auth::user()->entity->currency_id;
-        $account->name = $name;
-        $account->account_type  = $account_type;
-        $account->description = $description;
-        $account->category_id = $category->id;
-        $account->code = $account_code;
-
-        return $account;
     }
 
     /**

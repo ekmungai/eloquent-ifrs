@@ -6,18 +6,18 @@ use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Auth;
 
-use Ekmungai\IFRS\Tests\TestCase;
+use IFRS\Tests\TestCase;
 
-use Ekmungai\IFRS\Models\Account;
-use Ekmungai\IFRS\Models\Balance;
-use Ekmungai\IFRS\Models\Ledger;
-use Ekmungai\IFRS\Models\LineItem;
-use Ekmungai\IFRS\Models\Currency;
+use IFRS\Models\Account;
+use IFRS\Models\Balance;
+use IFRS\Models\Ledger;
+use IFRS\Models\LineItem;
+use IFRS\Models\Currency;
 
-use Ekmungai\IFRS\Transactions\CashPurchase;
+use IFRS\Transactions\CashPurchase;
 
-use Ekmungai\IFRS\Exceptions\LineItemAccount;
-use Ekmungai\IFRS\Exceptions\MainAccount;
+use IFRS\Exceptions\LineItemAccount;
+use IFRS\Exceptions\MainAccount;
 
 class CashPurchaseTest extends TestCase
 {
@@ -32,13 +32,16 @@ class CashPurchaseTest extends TestCase
             'account_type' => Account::BANK,
         ]);
 
-        $cashPurchase = CashPurchase::new($bankAccount, Carbon::now(), $this->faker->word);
-        $cashPurchase->setDate(Carbon::now());
+        $cashPurchase = new CashPurchase([
+            "account_id" => $bankAccount->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
         $cashPurchase->save();
 
-        $this->assertEquals($cashPurchase->getAccount()->name, $bankAccount->name);
-        $this->assertEquals($cashPurchase->getAccount()->description, $bankAccount->description);
-        $this->assertEquals($cashPurchase->getTransactionNo(), "CP0".$this->period->period_count."/0001");
+        $this->assertEquals($cashPurchase->account->name, $bankAccount->name);
+        $this->assertEquals($cashPurchase->account->description, $bankAccount->description);
+        $this->assertEquals($cashPurchase->transaction_no, "CP0".$this->period->period_count."/0001");
     }
 
     /**
@@ -48,20 +51,20 @@ class CashPurchaseTest extends TestCase
      */
     public function testPostCashPurchaseTransaction()
     {
-        $cashPurchase = CashPurchase::new(
-            factory('Ekmungai\IFRS\Models\Account')->create([
+        $cashPurchase = new CashPurchase([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 'account_type' => Account::BANK,
-            ]),
-            Carbon::now(),
-            $this->faker->word
-        );
+            ])->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
-            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 "account_type" => Account::OPERATING_EXPENSE
             ])->id,
         ]);
@@ -73,18 +76,18 @@ class CashPurchaseTest extends TestCase
         $credit = Ledger::where("entry_type", Balance::CREDIT)->get()[0];
 
         $this->assertEquals($debit->post_account, $lineItem->account_id);
-        $this->assertEquals($debit->folio_account, $cashPurchase->getAccount()->id);
+        $this->assertEquals($debit->folio_account, $cashPurchase->account->id);
         $this->assertEquals($credit->folio_account, $lineItem->account_id);
-        $this->assertEquals($credit->post_account, $cashPurchase->getAccount()->id);
+        $this->assertEquals($credit->post_account, $cashPurchase->account->id);
         $this->assertEquals($debit->amount, 100);
         $this->assertEquals($credit->amount, 100);
 
         $vat_debit = Ledger::where("entry_type", Balance::DEBIT)->get()[1];
         $vat_credit = Ledger::where("entry_type", Balance::CREDIT)->get()[1];
 
-        $this->assertEquals($vat_debit->folio_account, $cashPurchase->getAccount()->id);
+        $this->assertEquals($vat_debit->folio_account, $cashPurchase->account->id);
         $this->assertEquals($vat_debit->post_account, $lineItem->vat_account_id);
-        $this->assertEquals($vat_credit->post_account, $cashPurchase->getAccount()->id);
+        $this->assertEquals($vat_credit->post_account, $cashPurchase->account->id);
         $this->assertEquals($vat_credit->folio_account, $lineItem->vat_account_id);
         $this->assertEquals($vat_debit->amount, 16);
         $this->assertEquals($vat_credit->amount, 16);
@@ -99,13 +102,14 @@ class CashPurchaseTest extends TestCase
      */
     public function testCashPurchaseLineItemAccount()
     {
-        $cashPurchase = CashPurchase::new(
-            factory('Ekmungai\IFRS\Models\Account')->create([
+        $cashPurchase = new CashPurchase([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 'account_type' => Account::BANK,
-            ]),
-            Carbon::now(),
-            $this->faker->word
-        );
+            ])->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
+
         $this->expectException(LineItemAccount::class);
         $this->expectExceptionMessage(
             "Cash Purchase LineItem Account must be of type "
@@ -115,10 +119,10 @@ class CashPurchaseTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
-            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 "account_type" => Account::RECONCILIATION
             ])->id,
         ]);
@@ -134,23 +138,23 @@ class CashPurchaseTest extends TestCase
      */
     public function testCashPurchaseMainAccount()
     {
-        $cashPurchase = CashPurchase::new(
-            factory('Ekmungai\IFRS\Models\Account')->create([
+        $cashPurchase = new CashPurchase([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 'account_type' => Account::RECONCILIATION,
-            ]),
-            Carbon::now(),
-            $this->faker->word
-        );
+            ])->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
         $this->expectException(MainAccount::class);
         $this->expectExceptionMessage('Cash Purchase Main Account must be of type Bank');
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
-            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
-                "account_type" => Account::RECONCILIATION
+            "account_id" => factory('IFRS\Models\Account')->create([
+                "account_type" => Account::OPERATING_EXPENSE
             ])->id,
         ]);
         $cashPurchase->addLineItem($lineItem);
@@ -168,16 +172,18 @@ class CashPurchaseTest extends TestCase
         $account = factory(Account::class)->create([
             'account_type' => Account::BANK,
         ]);
-        $transaction = CashPurchase::new(
-            $account,
-            Carbon::now(),
-            $this->faker->word
-        );
+        $transaction = new CashPurchase([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
         $transaction->save();
 
-        $found = CashPurchase::find($transaction->getId());
-        $this->assertEquals($found->getTransactionNo(), $transaction->getTransactionNo());
+        $found = CashPurchase::find($transaction->id);
+        $this->assertEquals($found->transaction_no, $transaction->transaction_no);
     }
+
+
 
     /**
      * Test Cash Purchase Fetch.
@@ -189,21 +195,21 @@ class CashPurchaseTest extends TestCase
         $account = factory(Account::class)->create([
             'account_type' => Account::BANK,
         ]);
-        $transaction = CashPurchase::new(
-            $account,
-            Carbon::now(),
-            $this->faker->word
-        );
+        $transaction = new CashPurchase([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
         $transaction->save();
 
         $account2 = factory(Account::class)->create([
             'account_type' => Account::BANK,
         ]);
-        $transaction2 = CashPurchase::new(
-            $account2,
-            Carbon::now()->addWeeks(2),
-            $this->faker->word
-        );
+        $transaction2 = new CashPurchase([
+            "account_id" => $account2->id,
+            "date" => Carbon::now()->addWeeks(2),
+            "narration" => $this->faker->word,
+        ]);
         $transaction2->save();
 
         // startTime Filter

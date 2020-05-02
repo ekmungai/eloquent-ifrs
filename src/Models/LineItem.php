@@ -6,19 +6,19 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Models;
+namespace IFRS\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use Ekmungai\IFRS\Interfaces\Recyclable;
-use Ekmungai\IFRS\Interfaces\Segragatable;
+use IFRS\Interfaces\Recyclable;
+use IFRS\Interfaces\Segragatable;
 
-use Ekmungai\IFRS\Traits\Segragating;
-use Ekmungai\IFRS\Traits\Recycling;
+use IFRS\Traits\Segragating;
+use IFRS\Traits\Recycling;
 
-use Ekmungai\IFRS\Exceptions\MissingVatAccount;
-use Ekmungai\IFRS\Exceptions\NegativeAmount;
+use IFRS\Exceptions\MissingVatAccount;
+use IFRS\Exceptions\NegativeAmount;
 
 /**
  * Class LineItem
@@ -43,36 +43,18 @@ class LineItem extends Model implements Recyclable, Segragatable
     use Recycling;
 
     /**
-     * Construct new LineItem.
+     * The attributes that are mass assignable.
      *
-     * @param Account $account
-     * @param Vat $vat
-     * @param float $amount
-     * @param int $quantity
-     * @param string $descripion
-     * @param Account $vatAccount
-     *
-     * @return LineItem
+     * @var array
      */
-    public static function new(
-        Account $account,
-        Vat $vat,
-        float $amount,
-        int $quantity = 1,
-        string $descripion = null,
-        Account $vatAccount = null
-    ) : LineItem {
-        $lineItem = new LineItem();
-
-        $lineItem->account_id = $account->id;
-        $lineItem->vat_id  = $vat->id;
-        $lineItem->amount = $amount;
-        $lineItem->quantity = $quantity;
-        $lineItem->description = $descripion;
-        $lineItem->vat_account_id = !is_null($vatAccount)? $vatAccount->id : $vatAccount;
-
-        return $lineItem;
-    }
+    protected $fillable = [
+        'account_id',
+        'vat_id',
+        'amount',
+        'quantity',
+        'description',
+        'vat_account_id',
+    ];
 
     /**
      * LineItem Ledgers.
@@ -81,7 +63,7 @@ class LineItem extends Model implements Recyclable, Segragatable
      */
     public function ledgers()
     {
-        return $this->HasMany('Ekmungai\IFRS\Models\Ledger', 'line_item_id', 'id');
+        return $this->HasMany('IFRS\Models\Ledger', 'line_item_id', 'id');
     }
 
     /**
@@ -121,7 +103,7 @@ class LineItem extends Model implements Recyclable, Segragatable
      */
     public function vatAccount()
     {
-        return $this->HasOne('Ekmungai\IFRS\Models\Account', 'id', 'vat_account_id');
+        return $this->HasOne('IFRS\Models\Account', 'id', 'vat_account_id');
     }
 
     /**

@@ -6,7 +6,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Models;
+namespace IFRS\Models;
 
 use Carbon\Carbon;
 
@@ -14,13 +14,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
-use Ekmungai\IFRS\Interfaces\Segragatable;
-use Ekmungai\IFRS\Interfaces\Recyclable;
+use IFRS\Interfaces\Segragatable;
+use IFRS\Interfaces\Recyclable;
 
-use Ekmungai\IFRS\Traits\Segragating;
-use Ekmungai\IFRS\Traits\Recycling;
+use IFRS\Traits\Segragating;
+use IFRS\Traits\Recycling;
 
-use Ekmungai\IFRS\Exceptions\MissingReportingPeriod;
+use IFRS\Exceptions\MissingReportingPeriod;
 
 /**
  * Class ReportingPeriod
@@ -51,23 +51,25 @@ class ReportingPeriod extends Model implements Segragatable, Recyclable
     const ADJUSTING = "Adjusting";
 
     /**
-     * Construct new ReportingPeriod
+     * The attributes that are mass assignable.
      *
-     * @param int $periodCount
-     * @param int $year
-     * @param string $status
-     *
-     * @return ReportingPeriod
+     * @var array
      */
-    public static function new(int $periodCount = 1, int $year, string $status = ReportingPeriod::OPEN) : ReportingPeriod
-    {
-        $reportingPeriod = new ReportingPeriod();
+    protected $fillable = [
+        'period_count',
+        'year',
+        'status',
+    ];
 
-        $reportingPeriod->period_count = $periodCount;
-        $reportingPeriod->year = $year;
-        $reportingPeriod->status = $status;
+    /**
+     * Construct new Account.
+     */
+    public function __construct($attributes = []) {
 
-        return $reportingPeriod;
+        if (!isset($attributes['status'])) {
+            $attributes['status'] = ReportingPeriod::OPEN;
+        }
+        return parent::__construct($attributes);
     }
 
     /**

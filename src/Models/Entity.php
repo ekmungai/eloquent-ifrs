@@ -6,16 +6,16 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Models;
+namespace IFRS\Models;
 
 use Carbon\Carbon;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use Ekmungai\IFRS\Interfaces\Recyclable;
+use IFRS\Interfaces\Recyclable;
 
-use Ekmungai\IFRS\Traits\Recycling;
+use IFRS\Traits\Recycling;
 
 /**
  * Class Entity
@@ -35,26 +35,16 @@ class Entity extends Model implements Recyclable
     use Recycling;
 
     /**
-     * Construct new Entity.
+     * The attributes that are mass assignable.
      *
-     * @param string $name
-     * @param Currency $currency
-     * @param int $yearStart
-     * @param bool $multiCurrency
-     *
-     * @return Entity
+     * @var array
      */
-    public static function new(string $name, Currency $currency, int $yearStart = 1, bool $multiCurrency = false) : Entity
-    {
-        $entity = new Entity();
-
-        $entity->name = $name;
-        $entity->currency_id = $currency->id;
-        $entity->year_start = $yearStart;
-        $entity->multi_currency = $multiCurrency;
-
-        return $entity;
-    }
+    protected $fillable = [
+        'name',
+        'currency_id',
+        'year_start',
+        'multi_currency',
+    ];
 
     /**
      * Users associated with the reporting Entity.
@@ -89,7 +79,11 @@ class Entity extends Model implements Recyclable
             "valid_from" => Carbon::now(),
         ])->first();
 
-        $new = ExchangeRate::new(Carbon::now(), null, $this->currency);
+        $new = new ExchangeRate([
+            'valid_from' => Carbon::now(),
+            'currency_id' => $this->currency->id,
+        ]);
+
         $new->save();
 
         return !is_null($existing)? $existing : $new;

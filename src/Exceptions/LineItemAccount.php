@@ -6,10 +6,10 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Exceptions;
+namespace IFRS\Exceptions;
 
-use Ekmungai\IFRS\Models\Transaction;
-use Ekmungai\IFRS\Models\Account;
+use IFRS\Models\Transaction;
+use IFRS\Models\Account;
 
 class LineItemAccount extends IFRSException
 {

@@ -6,28 +6,26 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Models;
-
-use Carbon\Carbon;
+namespace IFRS\Models;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use Ekmungai\IFRS\Reports\IncomeStatement;
+use IFRS\Reports\IncomeStatement;
 
-use Ekmungai\IFRS\Interfaces\Recyclable;
-use Ekmungai\IFRS\Interfaces\Clearable;
-use Ekmungai\IFRS\Interfaces\Segragatable;
+use IFRS\Interfaces\Recyclable;
+use IFRS\Interfaces\Clearable;
+use IFRS\Interfaces\Segragatable;
 
-use Ekmungai\IFRS\Traits\Recycling;
-use Ekmungai\IFRS\Traits\Segragating;
-use Ekmungai\IFRS\Traits\Clearing;
+use IFRS\Traits\Recycling;
+use IFRS\Traits\Segragating;
+use IFRS\Traits\Clearing;
 
-use Ekmungai\IFRS\Exceptions\InvalidAccountClassBalance;
-use Ekmungai\IFRS\Exceptions\InvalidBalanceTransaction;
-use Ekmungai\IFRS\Exceptions\InvalidBalance;
-use Ekmungai\IFRS\Exceptions\NegativeAmount;
+use IFRS\Exceptions\InvalidAccountClassBalance;
+use IFRS\Exceptions\InvalidBalanceTransaction;
+use IFRS\Exceptions\InvalidBalance;
+use IFRS\Exceptions\NegativeAmount;
 
 /**
  * Class Balance
@@ -60,7 +58,7 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
      * @var string
      */
 
-    const MODELNAME = "Ekmungai\IFRS\Models\Balance";
+    const MODELNAME = "IFRS\Models\Balance";
 
     /**
      * Balance Type
@@ -70,6 +68,49 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
 
     const DEBIT = "D";
     const CREDIT = "C";
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'currency_id',
+        'exchange_rate_id',
+        'account_id',
+        'year',
+        'transaction_no',
+        'reference',
+        'balance_type',
+        'transaction_type',
+        'amount'
+    ];
+
+    /**
+     * Construct new Transaction.
+     */
+    public function __construct($attributes = []) {
+
+        $entity = Auth::user()->entity;
+
+        if (!isset($attributes['currency_id'])) {
+            $attributes['currency_id'] = $entity->currency_id;
+        }
+
+        if (!isset($attributes['exchange_rate_id'])) {
+            $attributes['exchange_rate_id'] = $entity->defaultRate()->id;
+        }
+
+        if (!isset($attributes['transaction_type'])) {
+            $attributes['transaction_type'] = Transaction::JN;
+        }
+
+        if (!isset($attributes['balance_type'])) {
+            $attributes['balance_type'] = Balance::DEBIT;
+        }
+
+        return parent::__construct($attributes);
+    }
 
     /**
      * Get Human Readable Balance Type.
@@ -98,49 +139,6 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
             $typeNames[] = Balance::getType($type);
         }
         return $typeNames;
-    }
-
-    /**
-     * Construct new Balance.
-     *
-     * @param Account $account
-     * @param string $year
-     * @param string $transaction_no
-     * @param float $amount
-     * @param string $balance_type
-     * @param string $transaction_type
-     * @param Currency $currency
-     * @param ExchangeRate $exchangeRate
-     * @param string $reference
-     *
-     * @return Balance
-     */
-    public static function new(
-        Account $account,
-        string $year,
-        string $transaction_no,
-        float $amount,
-        string $balance_type = Balance::DEBIT,
-        string $transaction_type = Transaction::JN,
-        Currency $currency = null,
-        ExchangeRate $exchangeRate = null,
-        string $reference = null
-    ) : Balance {
-        $entity = Auth::user()->entity;
-
-        $balance = new Balance();
-
-        $balance->currency_id = !is_null($currency)? $currency->id : Auth::user()->entity->currency_id;
-        $balance->exchange_rate_id = !is_null($exchangeRate)? $exchangeRate->id : $entity->defaultRate()->id;
-        $balance->account_id = $account->id;
-        $balance->year  = Carbon::parse($year);
-        $balance->transaction_no = $transaction_no;
-        $balance->amount = $amount;
-        $balance->balance_type = $balance_type;
-        $balance->transaction_type = $transaction_type;
-        $balance->reference = $reference;
-
-        return $balance;
     }
 
     /**

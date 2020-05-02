@@ -6,13 +6,13 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Reports;
+namespace IFRS\Reports;
 
 use Illuminate\Support\Facades\Auth;
 
-use Ekmungai\IFRS\Models\Account;
-use Ekmungai\IFRS\Models\Entity;
-use Ekmungai\IFRS\Models\ReportingPeriod;
+use IFRS\Models\Account;
+use IFRS\Models\Entity;
+use IFRS\Models\ReportingPeriod;
 
 /**
  *
@@ -124,7 +124,7 @@ abstract class FinancialStatement
     /**
      * Get Statements Entity.
      *
-     * @return \Ekmungai\IFRS\Models\Entity
+     * @return \IFRS\Models\Entity
      *
      * @codeCoverageIgnore
      */
@@ -136,7 +136,7 @@ abstract class FinancialStatement
     /**
      * Set Statement Entity.
      *
-     * @param \Ekmungai\IFRS\Models\Entity $entity
+     * @param \IFRS\Models\Entity $entity
      *
      * @codeCoverageIgnore
      */

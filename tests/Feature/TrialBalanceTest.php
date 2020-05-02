@@ -4,21 +4,21 @@ namespace Tests\Feature;
 
 use Carbon\Carbon;
 
-use Ekmungai\IFRS\Tests\TestCase;
+use IFRS\Tests\TestCase;
 
-use Ekmungai\IFRS\Models\Account;
-use Ekmungai\IFRS\Models\Balance;
-use Ekmungai\IFRS\Models\LineItem;
+use IFRS\Models\Account;
+use IFRS\Models\Balance;
+use IFRS\Models\LineItem;
 
-use Ekmungai\IFRS\Reports\BalanceSheet;
-use Ekmungai\IFRS\Reports\IncomeStatement;
-use Ekmungai\IFRS\Reports\TrialBalance;
+use IFRS\Reports\BalanceSheet;
+use IFRS\Reports\IncomeStatement;
+use IFRS\Reports\TrialBalance;
 
-use Ekmungai\IFRS\Transactions\JournalEntry;
-use Ekmungai\IFRS\Transactions\SupplierBill;
-use Ekmungai\IFRS\Transactions\CashPurchase;
-use Ekmungai\IFRS\Transactions\ContraEntry;
-use Ekmungai\IFRS\Transactions\ClientInvoice;
+use IFRS\Transactions\JournalEntry;
+use IFRS\Transactions\SupplierBill;
+use IFRS\Transactions\CashPurchase;
+use IFRS\Transactions\ContraEntry;
+use IFRS\Transactions\ClientInvoice;
 
 class TrialBalanceTest extends TestCase
 {
@@ -48,20 +48,20 @@ class TrialBalanceTest extends TestCase
             "year" => date("Y"),
             "account_id" => $nonCurrentAsset,
             "balance_type" => Balance::DEBIT,
-            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
         ]);
 
         //transaction
-        $bill = SupplierBill::new(
-            factory('Ekmungai\IFRS\Models\Account')->create([
+        $bill = new SupplierBill([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 'account_type' => Account::PAYABLE,
-            ]),
-            Carbon::now(),
-            $this->faker->word
-        );
+            ])->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $bill->addLineItem(
             factory(LineItem::class)->create(["account_id" => $nonCurrentAsset])
@@ -78,14 +78,18 @@ class TrialBalanceTest extends TestCase
             "year" => date("Y"),
             "account_id" => $contraAsset,
             "balance_type" => Balance::DEBIT,
-            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
         ]);
 
         //transaction
-        $journal = JournalEntry::new($contraAsset, Carbon::now(), $this->faker->word);
+        $journal = new JournalEntry([
+            "account_id" => $contraAsset->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $journal->addLineItem(factory(LineItem::class)->create());
         $journal->post();
@@ -100,20 +104,20 @@ class TrialBalanceTest extends TestCase
             "year" => date("Y"),
             "account_id" => $inventory,
             "balance_type" => Balance::DEBIT,
-            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
         ]);
 
         //transaction
-        $cashPurchase = CashPurchase::new(
-            factory('Ekmungai\IFRS\Models\Account')->create([
+        $cashPurchase = new CashPurchase([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 'account_type' => Account::BANK,
-            ]),
-            Carbon::now(),
-            $this->faker->word
-        );
+            ])->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $cashPurchase->addLineItem(factory(LineItem::class)->create(["account_id" => $inventory]));
         $cashPurchase->post();
@@ -128,24 +132,24 @@ class TrialBalanceTest extends TestCase
             "year" => date("Y"),
             "account_id" => $bank,
             "balance_type" => Balance::DEBIT,
-            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
         ]);
 
         //transaction
-        $contraEntry = ContraEntry::new(
-            factory('Ekmungai\IFRS\Models\Account')->create([
+        $contraEntry = new ContraEntry([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 'account_type' => Account::BANK,
-            ]),
-            Carbon::now(),
-            $this->faker->word
-        );
+            ])->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $contraEntry->addLineItem(factory(LineItem::class)->create([
             "account_id" => $bank,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]));
@@ -161,14 +165,18 @@ class TrialBalanceTest extends TestCase
             "year" => date("Y"),
             "account_id" => $currentAsset,
             "balance_type" => Balance::DEBIT,
-            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
         ]);
 
         //transaction
-        $journalEntry = JournalEntry::new($currentAsset, Carbon::now(), $this->faker->word);
+        $journalEntry = new JournalEntry([
+            "account_id" => $currentAsset->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $journalEntry->addLineItem(factory(LineItem::class)->create());
         $journalEntry->post();
@@ -183,17 +191,21 @@ class TrialBalanceTest extends TestCase
             "year" => date("Y"),
             "account_id" => $receivable,
             "balance_type" => Balance::DEBIT,
-            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
         ]);
 
         //transaction
-        $clientInvoice = ClientInvoice::new($receivable, Carbon::now(), $this->faker->word);
+        $clientInvoice = new ClientInvoice([
+            "account_id" => $receivable->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $clientInvoice->addLineItem(factory(LineItem::class)->create([
-            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 'account_type' => Account::OPERATING_REVENUE,
             ])->id,
         ]));
@@ -214,14 +226,18 @@ class TrialBalanceTest extends TestCase
             "year" => date("Y"),
             "account_id" => $nonCurrentLiability,
             "balance_type" => Balance::CREDIT,
-            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
         ]);
 
         //transaction
-        $journalEntry = JournalEntry::new($nonCurrentLiability, Carbon::now(), $this->faker->word);
+        $journalEntry = new JournalEntry([
+            "account_id" => $nonCurrentLiability->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $journalEntry->addLineItem(factory(LineItem::class)->create());
         $journalEntry->post();
@@ -236,14 +252,18 @@ class TrialBalanceTest extends TestCase
             "year" => date("Y"),
             "account_id" => $controlAccount,
             "balance_type" => Balance::CREDIT,
-            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
         ]);
 
         //transaction
-        $journalEntry = JournalEntry::new($controlAccount, Carbon::now(), $this->faker->word);
+        $journalEntry = new JournalEntry([
+            "account_id" => $controlAccount->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $journalEntry->addLineItem(factory(LineItem::class)->create());
         $journalEntry->post();
@@ -258,14 +278,18 @@ class TrialBalanceTest extends TestCase
             "year" => date("Y"),
             "account_id" => $currentLiability,
             "balance_type" => Balance::CREDIT,
-            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
         ]);
 
         //transaction
-        $journalEntry = JournalEntry::new($currentLiability, Carbon::now(), $this->faker->word);
+        $journalEntry = new JournalEntry([
+            "account_id" => $currentLiability->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $journalEntry->addLineItem(factory(LineItem::class)->create());
         $journalEntry->post();
@@ -280,14 +304,18 @@ class TrialBalanceTest extends TestCase
             "year" => date("Y"),
             "account_id" => $payable,
             "balance_type" => Balance::CREDIT,
-            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
         ]);
 
         //transaction
-        $bill = SupplierBill::new($payable, Carbon::now(), $this->faker->word);
+        $bill = new SupplierBill([
+            "account_id" => $payable->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $bill->addLineItem(factory(LineItem::class)->create(["account_id" => $nonCurrentAsset]));
         $bill->post();
@@ -302,14 +330,18 @@ class TrialBalanceTest extends TestCase
             "year" => date("Y"),
             "account_id" => $reconciliation,
             "balance_type" => Balance::CREDIT,
-            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
         ]);
 
         //transaction
-        $journalEntry = JournalEntry::new($reconciliation, Carbon::now(), $this->faker->word);
+        $journalEntry = new JournalEntry([
+            "account_id" => $reconciliation->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $journalEntry->addLineItem(factory(LineItem::class)->create());
         $journalEntry->post();
@@ -329,14 +361,18 @@ class TrialBalanceTest extends TestCase
             "year" => date("Y"),
             "account_id" => $equity,
             "balance_type" => Balance::CREDIT,
-            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
         ]);
 
         //transaction
-        $journalEntry = JournalEntry::new($equity, Carbon::now(), $this->faker->word);
+        $journalEntry = new JournalEntry([
+            "account_id" => $equity->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $journalEntry->addLineItem(factory(LineItem::class)->create());
         $journalEntry->post();
@@ -352,7 +388,11 @@ class TrialBalanceTest extends TestCase
          ]);
 
         //transaction
-        $clientInvoice = ClientInvoice::new($receivable, Carbon::now(), $this->faker->word);
+        $clientInvoice = new ClientInvoice([
+            "account_id" => $receivable->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $clientInvoice->addLineItem(factory(LineItem::class)->create([
             "account_id" => $operatingIncome->id,
@@ -364,13 +404,13 @@ class TrialBalanceTest extends TestCase
          ]);
 
         //transaction
-        $cashPurchase = CashPurchase::new(
-            factory('Ekmungai\IFRS\Models\Account')->create([
+        $cashPurchase = new CashPurchase([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 'account_type' => Account::BANK,
-            ]),
-            Carbon::now(),
-            $this->faker->word
-        );
+            ])->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $cashPurchase->addLineItem(factory(LineItem::class)->create(["account_id" => $operatingExpenses]));
         $cashPurchase->post();
@@ -386,7 +426,11 @@ class TrialBalanceTest extends TestCase
         ]);
 
         //transaction
-        $journalEntry = JournalEntry::new($nonOperatingRevenue, Carbon::now(), $this->faker->word);
+        $journalEntry = new JournalEntry([
+            "account_id" => $nonOperatingRevenue->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $journalEntry->addLineItem(factory(LineItem::class)->create());
         $journalEntry->post();
@@ -396,7 +440,11 @@ class TrialBalanceTest extends TestCase
         ]);
 
         //transaction
-        $bill = SupplierBill::new($payable, Carbon::now(), $this->faker->word);
+        $bill = new SupplierBill([
+            "account_id" => $payable->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $bill->addLineItem(factory(LineItem::class)->create(["account_id" => $directExpense]));
         $bill->post();
@@ -406,13 +454,13 @@ class TrialBalanceTest extends TestCase
         ]);
 
         //transaction
-        $cashPurchase = CashPurchase::new(
-            factory('Ekmungai\IFRS\Models\Account')->create([
+        $cashPurchase = new CashPurchase([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 'account_type' => Account::BANK,
-            ]),
-            Carbon::now(),
-            $this->faker->word
-        );
+            ])->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $cashPurchase->addLineItem(factory(LineItem::class)->create(["account_id" => $overheadExpense]));
         $cashPurchase->post();
@@ -422,7 +470,11 @@ class TrialBalanceTest extends TestCase
         ]);
 
         //transaction
-        $bill = SupplierBill::new($payable, Carbon::now(), $this->faker->word);
+        $bill = new SupplierBill([
+            "account_id" => $payable->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $bill->addLineItem(factory(LineItem::class)->create(["account_id" => $otherExpense]));
         $bill->post();

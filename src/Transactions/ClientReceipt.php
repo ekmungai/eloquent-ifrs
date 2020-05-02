@@ -6,25 +6,27 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Transactions;
+namespace IFRS\Transactions;
 
-use Ekmungai\IFRS\Models\Account;
-use Ekmungai\IFRS\Models\Transaction;
+use IFRS\Models\Account;
+use IFRS\Models\Transaction;
 
-use Ekmungai\IFRS\Interfaces\Fetchable;
+use IFRS\Interfaces\Fetchable;
 
-use Ekmungai\IFRS\Traits\Fetching;
+use IFRS\Traits\Fetching;
 
-use Ekmungai\IFRS\Exceptions\MainAccount;
-use Ekmungai\IFRS\Exceptions\LineItemAccount;
-use Ekmungai\IFRS\Exceptions\VatCharge;
-use Ekmungai\IFRS\Interfaces\Assignable;
-use Ekmungai\IFRS\Traits\Assigning;
+use IFRS\Exceptions\MainAccount;
+use IFRS\Exceptions\LineItemAccount;
+use IFRS\Exceptions\VatCharge;
+use IFRS\Interfaces\Assignable;
+use IFRS\Traits\Assigning;
 
 class ClientReceipt extends Transaction implements Fetchable, Assignable
 {
     use Fetching;
     use Assigning;
+
+    use \Parental\HasParent;
 
     /**
      * Transaction Number prefix
@@ -51,13 +53,13 @@ class ClientReceipt extends Transaction implements Fetchable, Assignable
     /**
      * Validate ClientReceipt Main Account
      */
-    public function save(): void
+    public function save(array $options = []): bool
     {
-        if (is_null($this->getAccount()) or $this->getAccount()->account_type != Account::RECEIVABLE) {
+        if (is_null($this->account) or $this->account->account_type != Account::RECEIVABLE) {
             throw new MainAccount(self::PREFIX, Account::RECEIVABLE);
         }
 
-        parent::save();
+        return parent::save();
     }
 
     /**

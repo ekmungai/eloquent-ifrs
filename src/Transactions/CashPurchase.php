@@ -6,23 +6,25 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Transactions;
+namespace IFRS\Transactions;
 
-use Ekmungai\IFRS\Interfaces\Fetchable;
-use Ekmungai\IFRS\Interfaces\Buys;
+use IFRS\Interfaces\Fetchable;
+use IFRS\Interfaces\Buys;
 
-use Ekmungai\IFRS\Traits\Buying;
-use Ekmungai\IFRS\Traits\Fetching;
+use IFRS\Traits\Buying;
+use IFRS\Traits\Fetching;
 
-use Ekmungai\IFRS\Models\Account;
-use Ekmungai\IFRS\Models\Transaction;
+use IFRS\Models\Account;
+use IFRS\Models\Transaction;
 
-use Ekmungai\IFRS\Exceptions\MainAccount;
+use IFRS\Exceptions\MainAccount;
 
 class CashPurchase extends Transaction implements Buys, Fetchable
 {
     use Buying;
     use Fetching;
+
+    use \Parental\HasParent;
 
     /**
      * Transaction Number prefix
@@ -49,12 +51,12 @@ class CashPurchase extends Transaction implements Buys, Fetchable
     /**
      * Validate CashPurchase Main Account
      */
-    public function save(): void
+    public function save(array $options = []): bool
     {
-        if (is_null($this->getAccount()) or $this->getAccount()->account_type != Account::BANK) {
+        if (is_null($this->account) or $this->account->account_type != Account::BANK) {
             throw new MainAccount(self::PREFIX, Account::BANK);
         }
 
-        parent::save();
+        return parent::save();
     }
 }

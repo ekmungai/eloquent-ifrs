@@ -4,20 +4,20 @@ namespace Tests\Unit;
 
 use Carbon\Carbon;
 
-use Ekmungai\IFRS\Tests\TestCase;
+use IFRS\Tests\TestCase;
 
-use Ekmungai\IFRS\Models\Account;
-use Ekmungai\IFRS\Models\Balance;
-use Ekmungai\IFRS\Models\Currency;
-use Ekmungai\IFRS\Models\ExchangeRate;
-use Ekmungai\IFRS\Models\RecycledObject;
-use Ekmungai\IFRS\Models\User;
-use Ekmungai\IFRS\Models\Transaction;
+use IFRS\Models\Account;
+use IFRS\Models\Balance;
+use IFRS\Models\Currency;
+use IFRS\Models\ExchangeRate;
+use IFRS\Models\RecycledObject;
+use IFRS\Models\User;
+use IFRS\Models\Transaction;
 
-use Ekmungai\IFRS\Exceptions\InvalidBalanceTransaction;
-use Ekmungai\IFRS\Exceptions\InvalidAccountClassBalance;
-use Ekmungai\IFRS\Exceptions\InvalidBalance;
-use Ekmungai\IFRS\Exceptions\NegativeAmount;
+use IFRS\Exceptions\InvalidBalanceTransaction;
+use IFRS\Exceptions\InvalidAccountClassBalance;
+use IFRS\Exceptions\InvalidBalance;
+use IFRS\Exceptions\NegativeAmount;
 
 class AccountBalanceTest extends TestCase
 {
@@ -36,16 +36,18 @@ class AccountBalanceTest extends TestCase
 
         $exchangeRate = factory(ExchangeRate::class)->create();
 
-        $balance = Balance::new(
-            $account,
-            Carbon::now()->year,
-            $this->faker->word,
-            $this->faker->randomFloat(2),
-            Balance::DEBIT,
-            Transaction::JN,
-            $currency,
-            $exchangeRate
-        );
+        $balance = new Balance([
+            'exchange_rate_id' => $exchangeRate->id,
+            'currency_id' => $currency->id,
+            'account_id' => $account->id,
+            'year' => Carbon::now()->year,
+            'transaction_no' => $this->faker->word,
+            'transaction_type' => Transaction::JN,
+            'reference' => $this->faker->word,
+            'balance_type' =>  Balance::DEBIT,
+            'amount' => $this->faker->randomFloat(2),
+        ]);
+        $balance->save();
 
         $this->assertEquals($balance->currency->name, $currency->name);
         $this->assertEquals($balance->account->name, $account->name);
@@ -102,7 +104,7 @@ class AccountBalanceTest extends TestCase
         $this->expectExceptionMessage('Income Statement Accounts cannot have Opening Balances');
 
         factory(Balance::class)->create([
-            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 "account_type" => Account::OPERATING_REVENUE
             ])->id,
         ]);
@@ -120,17 +122,9 @@ class AccountBalanceTest extends TestCase
             'Opening Balance Transaction must be one of: Client Invoice, Supplier Bill, Journal Entry'
         );
 
-        $balance = Balance::new(
-            factory('Ekmungai\IFRS\Models\Account')->create([
-                "account_type" => Account::RECEIVABLE
-            ]),
-            Carbon::now()->year,
-            $this->faker->word,
-            $this->faker->randomFloat(2),
-            Balance::DEBIT,
-            Transaction::CN
-        );
-        $balance->save();
+        factory(Balance::class)->create([
+            'transaction_type' => Transaction::CN,
+        ]);
     }
 
     /**
@@ -143,39 +137,23 @@ class AccountBalanceTest extends TestCase
         $this->expectException(InvalidBalance::class);
         $this->expectExceptionMessage('Opening Balance Type must be one of: Debit, Credit');
 
-        $balance = Balance::new(
-            factory('Ekmungai\IFRS\Models\Account')->create([
-                "account_type" => Account::RECEIVABLE
-            ]),
-            Carbon::now()->year,
-            $this->faker->word,
-            $this->faker->randomFloat(2),
-            'X',
-            Transaction::JN
-        );
-        $balance->save();
+        factory(Balance::class)->create([
+            "balance_type" => "X"
+        ]);
     }
 
     /**
-     * Test Negative Amount.
+     * Test Balance Negative Amount.
      *
      * @return void
      */
-    public function testNegativeAmount()
+    public function testBalanceNegativeAmount()
     {
-        $balance = Balance::new(
-            factory('Ekmungai\IFRS\Models\Account')->create([
-                "account_type" => Account::RECEIVABLE
-            ]),
-            Carbon::now()->year,
-            $this->faker->word,
-            -100,
-            Balance::DEBIT,
-            Transaction::JN
-        );
         $this->expectException(NegativeAmount::class);
         $this->expectExceptionMessage('Balance Amount cannot be negative');
 
-        $balance->save();
+        factory(Balance::class)->create([
+            "amount" => -100
+        ]);
     }
 }

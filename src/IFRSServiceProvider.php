@@ -1,6 +1,6 @@
 <?php
 
-namespace Ekmungai\IFRS;
+namespace IFRS;
 
 use Illuminate\Support\ServiceProvider;
 

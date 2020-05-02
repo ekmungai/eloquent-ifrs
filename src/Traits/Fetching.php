@@ -6,19 +6,17 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Traits;
+namespace IFRS\Traits;
 
 use Carbon\Carbon;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
-use Ekmungai\IFRS\Transactions\AbstractTransaction;
-
-use Ekmungai\IFRS\Models\Account;
-use Ekmungai\IFRS\Models\ReportingPeriod;
-use Ekmungai\IFRS\Models\Transaction;
-use Ekmungai\IFRS\Models\Currency;
+use IFRS\Models\Account;
+use IFRS\Models\ReportingPeriod;
+use IFRS\Models\Transaction;
+use IFRS\Models\Currency;
 
 /**
  *
@@ -70,11 +68,6 @@ trait Fetching
             $query->where("currency_id", $entity->currency->id);
         }
 
-        return $query->get()->map(function ($model, $key) {
-            $item = AbstractTransaction::instantiate(self::PREFIX);
-            $item->existingTransaction($model);
-
-            return $item;
-        });
+        return $query->get();
     }
 }

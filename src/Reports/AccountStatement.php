@@ -6,20 +6,20 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Reports;
+namespace IFRS\Reports;
 
 use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-use Ekmungai\IFRS\Models\Account;
-use Ekmungai\IFRS\Models\Currency;
-use Ekmungai\IFRS\Models\Entity;
-use Ekmungai\IFRS\Models\ReportingPeriod;
-use Ekmungai\IFRS\Models\Ledger;
+use IFRS\Models\Account;
+use IFRS\Models\Currency;
+use IFRS\Models\Entity;
+use IFRS\Models\ReportingPeriod;
+use IFRS\Models\Ledger;
 
-use Ekmungai\IFRS\Exceptions\MissingAccount;
+use IFRS\Exceptions\MissingAccount;
 use Illuminate\Database\Query\Builder;
 
 class AccountStatement
@@ -76,7 +76,7 @@ class AccountStatement
     /**
      * Get Statement Currency
      *
-     * @return \Ekmungai\IFRS\Models\Currency
+     * @return \IFRS\Models\Currency
      *
      * @codeCoverageIgnore
      */
@@ -88,7 +88,7 @@ class AccountStatement
     /**
      * Set Statement Currency
      *
-     * @param \Ekmungai\IFRS\Models\Currency $currency
+     * @param \IFRS\Models\Currency $currency
      *
      * @codeCoverageIgnore
      */
@@ -100,7 +100,7 @@ class AccountStatement
     /**
      * Get Statement Account
      *
-     * @return \Ekmungai\IFRS\Models\Account
+     * @return \IFRS\Models\Account
      *
      * @codeCoverageIgnore
      */
@@ -112,7 +112,7 @@ class AccountStatement
     /**
      * Set Statement Account
      *
-     * @param \Ekmungai\IFRS\Models\Account $account
+     * @param \IFRS\Models\Account $account
      *
      * @codeCoverageIgnore
      */
@@ -124,7 +124,7 @@ class AccountStatement
     /**
      * Get Statement Entity
      *
-     * @return \Ekmungai\IFRS\Models\Entity
+     * @return \IFRS\Models\Entity
      *
      * @codeCoverageIgnore
      */
@@ -136,7 +136,7 @@ class AccountStatement
     /**
      * Set Statement Entity
      *
-     * @param \Ekmungai\IFRS\Models\Entity $entity
+     * @param \IFRS\Models\Entity $entity
      *
      * @codeCoverageIgnore
      */

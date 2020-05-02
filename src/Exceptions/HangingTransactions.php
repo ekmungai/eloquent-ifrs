@@ -6,7 +6,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT See LICENSE.md
  */
-namespace Ekmungai\IFRS\Exceptions;
+namespace IFRS\Exceptions;
 
 class HangingTransactions extends IFRSException
 {

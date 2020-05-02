@@ -2,11 +2,11 @@
 
 namespace Tests\Unit;
 
-use Ekmungai\IFRS\Tests\TestCase;
+use IFRS\Tests\TestCase;
 
-use Ekmungai\IFRS\Models\Category;
-use Ekmungai\IFRS\Models\RecycledObject;
-use Ekmungai\IFRS\Models\User;
+use IFRS\Models\Category;
+use IFRS\Models\RecycledObject;
+use IFRS\Models\User;
 
 class CategoryTest extends TestCase
 {
@@ -23,12 +23,12 @@ class CategoryTest extends TestCase
 
         $this->be($user);
 
-        $category = Category::new(
-            $this->faker->word,
-            $this->faker->randomElement(
+        $category = new Category([
+            'name' => $this->faker->word,
+            'category_type' => $this->faker->randomElement(
                 array_keys(config('ifrs')['accounts'])
-            )
-        );
+                ),
+        ]);
         $category->save();
 
         $category->attributes();
@@ -46,12 +46,12 @@ class CategoryTest extends TestCase
      */
     public function testCategoryRecycling()
     {
-        $category = Category::new(
-            $this->faker->word,
-            $this->faker->randomElement(
+        $category = new Category([
+            'name' => $this->faker->word,
+            'category_type' => $this->faker->randomElement(
                 array_keys(config('ifrs')['accounts'])
-            )
-        );
+                ),
+        ]);
         $category->save();
 
         $recycled = RecycledObject::all()->first();

@@ -6,7 +6,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Models;
+namespace IFRS\Models;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -15,20 +15,20 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use Ekmungai\IFRS\Interfaces\Segragatable;
-use Ekmungai\IFRS\Interfaces\Recyclable;
-use Ekmungai\IFRS\Interfaces\Assignable;
-use Ekmungai\IFRS\Interfaces\Clearable;
+use IFRS\Interfaces\Segragatable;
+use IFRS\Interfaces\Recyclable;
+use IFRS\Interfaces\Assignable;
+use IFRS\Interfaces\Clearable;
 
-use Ekmungai\IFRS\Traits\Assigning;
-use Ekmungai\IFRS\Traits\Clearing;
-use Ekmungai\IFRS\Traits\Recycling;
-use Ekmungai\IFRS\Traits\Segragating;
+use IFRS\Traits\Assigning;
+use IFRS\Traits\Clearing;
+use IFRS\Traits\Recycling;
+use IFRS\Traits\Segragating;
 
-use Ekmungai\IFRS\Exceptions\MissingLineItem;
-use Ekmungai\IFRS\Exceptions\RedundantTransaction;
-use Ekmungai\IFRS\Exceptions\PostedTransaction;
-use Ekmungai\IFRS\Exceptions\HangingClearances;
+use IFRS\Exceptions\MissingLineItem;
+use IFRS\Exceptions\RedundantTransaction;
+use IFRS\Exceptions\PostedTransaction;
+use IFRS\Exceptions\HangingClearances;
 
 /**
  * Class Transaction
@@ -58,12 +58,12 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     use Assigning;
 
     /**
-     * Balance Model Name
+     * Transaction Model Name
      *
      * @var array
      */
 
-    const MODELNAME = "Ekmungai\IFRS\Models\Transaction";
+    const MODELNAME = "IFRS\Models\Transaction";
 
     /**
      * Transaction Types
@@ -113,11 +113,32 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
         'date',
         'narration',
         'reference',
-        'amount',
         'credited',
         'transaction_type',
         'transaction_no'
     ];
+
+    /**
+     * Construct new Transaction.
+     */
+    public function __construct($attributes = []) {
+
+        $entity = Auth::user()->entity;
+
+        if (!isset($attributes['currency_id'])) {
+            $attributes['currency_id'] = $entity->currency_id;
+        }
+
+        if (!isset($attributes['exchange_rate_id'])) {
+            $attributes['exchange_rate_id'] = $entity->defaultRate()->id;
+        }
+
+        if (!isset($attributes['date'])) {
+            $attributes['date'] = Carbon::now();
+        }
+
+        return parent::__construct($attributes);
+    }
 
     /**
      * Transaction LineItems
@@ -206,35 +227,6 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
         str_pad((string) $next_id, 4, "0", STR_PAD_LEFT);
     }
 
-    public function __construct($attributes = []) {
-
-        $entity = Auth::user()->entity;
-
-        if (!isset($attributes['currency_id'])) {
-            $attributes['currency_id'] = $entity->currency_id;
-        }
-
-        if (!isset($attributes['exchange_rate_id'])) {
-            $attributes['exchange_rate_id'] = $entity->defaultRate()->id;
-        }
-
-        if (!isset($attributes['date'])) {
-            $attributes['date'] = Carbon::now();
-        }
-
-        $attributes['amount'] = 0;
-
-        return parent::__construct($attributes);
-    }
-
-    /**
-     * getId analog for Assignment model.
-     */
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
     /**
      * isPosted analog for Assignment model.
      */
@@ -254,16 +246,6 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     }
 
     /**
-     * getTransactionNo analog for Assignment model.
-     *
-     * @return string
-     */
-    public function getTransactionNo() : string
-    {
-        return $this->transaction_no;
-    }
-
-    /**
      * getClearedType analog for Assignment model.
      *
      * @return string
@@ -280,7 +262,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      */
     public function savedLineItems()
     {
-        return $this->HasMany('Ekmungai\IFRS\Models\LineItem', 'transaction_id', 'id');
+        return $this->HasMany('IFRS\Models\LineItem', 'transaction_id', 'id');
     }
 
     /**
@@ -290,7 +272,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      */
     public function ledgers()
     {
-        return $this->HasMany('Ekmungai\IFRS\Models\Ledger', 'transaction_id', 'id');
+        return $this->HasMany('IFRS\Models\Ledger', 'transaction_id', 'id');
     }
 
     /**
@@ -330,7 +312,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      */
     public function assignments()
     {
-        return $this->HasMany('Ekmungai\IFRS\Models\Assignment', 'transaction_id', 'id');
+        return $this->HasMany('IFRS\Models\Assignment', 'transaction_id', 'id');
     }
 
     /**
@@ -461,5 +443,27 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
         return $this->ledgers->every(function ($ledger, $key) {
             return password_verify($ledger->hashed(), $ledger->hash);
         });
+    }
+
+    /**
+     * Get Transaction Total Amount
+     *
+     * @return float
+     */
+    public function getAmount(): float
+    {
+        $amount = 0;
+
+        if ($this->isPosted()) {
+            foreach ($this->ledgers->where("entry_type",Balance::DEBIT) as $ledger) {
+                $amount += $ledger->amount / $this->exchangeRate->rate;
+            }
+        }else {
+            foreach ($this->getLineItems() as $lineItem) {
+                $amount += $lineItem->amount;
+                $amount += $lineItem->amount * $lineItem->vat->rate / 100;
+            }
+        }
+        return $amount;
     }
 }

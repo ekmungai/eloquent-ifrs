@@ -2,15 +2,17 @@
 
 namespace Tests\Unit;
 
-use Ekmungai\IFRS\Tests\TestCase;
+use IFRS\Tests\TestCase;
+
+use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Auth;
 
-use Ekmungai\IFRS\Models\RecycledObject;
-use Ekmungai\IFRS\Models\ReportingPeriod;
-use Ekmungai\IFRS\Models\User;
+use IFRS\Models\RecycledObject;
+use IFRS\Models\ReportingPeriod;
+use IFRS\Models\User;
 
-use Ekmungai\IFRS\Exceptions\MissingReportingPeriod;
+use IFRS\Exceptions\MissingReportingPeriod;
 
 class ReportingPeriodTest extends TestCase
 {
@@ -23,7 +25,12 @@ class ReportingPeriodTest extends TestCase
     {
         $entity = Auth::user()->entity;
 
-        $period = ReportingPeriod::new(1, date("Y"));
+        $period = new ReportingPeriod([
+            'period_count' => 1,
+            'year' => Carbon::now()->year,
+        ]);
+        $period->save();
+
         $period->attributes();
         $this->assertEquals($entity->reportingPeriods->last()->year, $period->year);
     }
@@ -54,7 +61,11 @@ class ReportingPeriodTest extends TestCase
      */
     public function testReportingPeriodRecycling()
     {
-        $period = ReportingPeriod::new(1, date("Y"));
+        $period = new ReportingPeriod([
+            'period_count' => 1,
+            'year' => Carbon::now()->year,
+        ]);
+
         $period->delete();
 
         $recycled = RecycledObject::all()->first();

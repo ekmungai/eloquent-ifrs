@@ -4,7 +4,7 @@
  * @var \Illuminate\Database\Eloquent\Factory $factory
  */
 
-use Ekmungai\IFRS\Models\Entity;
+use IFRS\Models\Entity;
 use Faker\Generator as Faker;
 
 $factory->define(
@@ -12,7 +12,7 @@ $factory->define(
     function (Faker $faker) {
         return [
         'name' => $faker->company,
-        'currency_id' => factory('Ekmungai\IFRS\Models\Currency')->create()->id,
+        'currency_id' => factory('IFRS\Models\Currency')->create()->id,
         ];
     }
 );

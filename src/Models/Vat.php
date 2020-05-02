@@ -6,16 +6,16 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Models;
+namespace IFRS\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use Ekmungai\IFRS\Interfaces\Segragatable;
-use Ekmungai\IFRS\Interfaces\Recyclable;
+use IFRS\Interfaces\Segragatable;
+use IFRS\Interfaces\Recyclable;
 
-use Ekmungai\IFRS\Traits\Recycling;
-use Ekmungai\IFRS\Traits\Segragating;
+use IFRS\Traits\Recycling;
+use IFRS\Traits\Segragating;
 
 /**
  * Class Vat
@@ -36,24 +36,15 @@ class Vat extends Model implements Segragatable, Recyclable
     use Recycling;
 
     /**
-     * Construct new Vat
+     * The attributes that are mass assignable.
      *
-     * @param string $name
-     * @param string $code
-     * @param float $rate
-     *
-     * @return Vat
+     * @var array
      */
-    public static function new(string $name, string $code, float $rate) : Vat
-    {
-        $vat = new Vat();
-
-        $vat->name = $name;
-        $vat->code = $code;
-        $vat->rate = $rate;
-
-        return $vat;
-    }
+    protected $fillable = [
+        'name',
+        'code',
+        'rate',
+    ];
 
     /**
      * Vat attributes.

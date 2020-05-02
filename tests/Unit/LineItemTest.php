@@ -2,16 +2,16 @@
 
 namespace Tests\Unit;
 
-use Ekmungai\IFRS\Tests\TestCase;
+use IFRS\Tests\TestCase;
 
-use Ekmungai\IFRS\Models\Account;
-use Ekmungai\IFRS\Models\LineItem;
-use Ekmungai\IFRS\Models\User;
-use Ekmungai\IFRS\Models\Vat;
-use Ekmungai\IFRS\Models\Transaction;
+use IFRS\Models\Account;
+use IFRS\Models\LineItem;
+use IFRS\Models\User;
+use IFRS\Models\Vat;
+use IFRS\Models\Transaction;
 
-use Ekmungai\IFRS\Exceptions\MissingVatAccount;
-use Ekmungai\IFRS\Exceptions\NegativeAmount;
+use IFRS\Exceptions\MissingVatAccount;
+use IFRS\Exceptions\NegativeAmount;
 
 class LineItemTest extends TestCase
 {
@@ -27,15 +27,16 @@ class LineItemTest extends TestCase
         $vatAccount = factory(Account::class)->create();
         $vat = factory(Vat::class)->create();
 
-        $lineItem = LineItem::new(
-            $account,
-            $vat,
-            50,
-            1,
-            null,
-            $vatAccount
-        );
+        $lineItem = new LineItem([
+            'vat_id' => $vat->id,
+            'account_id' => $account->id,
+            'vat_account_id' => $vatAccount->id,
+            'description' => $this->faker->sentence,
+            'quantity' => 1,
+            'amount' => 50,
+        ]);
         $lineItem->save();
+        $lineItem->attributes();
 
         $transaction->addLineItem($lineItem);
         $transaction->post();
@@ -59,11 +60,11 @@ class LineItemTest extends TestCase
 
         $this->be($user);
 
-        $lineItem = LineItem::new(
-            factory(Account::class)->create(),
-            factory(Vat::class)->create(["rate" => 0]),
-            100
-        );
+        $lineItem = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create()->id,
+            'amount' => 100,
+        ]);
         $lineItem->save();
 
         $this->assertEquals(count(LineItem::all()), 1);
@@ -80,11 +81,11 @@ class LineItemTest extends TestCase
     public function testMissingVatAccount()
     {
         $vat = factory(Vat::class)->create(["rate" => 10]);
-        $lineItem = LineItem::new(
-            factory(Account::class)->create(),
-            $vat,
-            100
-        );
+        $lineItem = new LineItem([
+            'vat_id' => $vat->id,
+            'account_id' => factory(Account::class)->create()->id,
+            'amount' => 100,
+        ]);
         $this->expectException(MissingVatAccount::class);
         $this->expectExceptionMessage($vat->name.' LineItem requires a Vat Account');
 
@@ -98,11 +99,11 @@ class LineItemTest extends TestCase
      */
     public function testNegativeAmount()
     {
-        $lineItem = LineItem::new(
-            factory(Account::class)->create(),
-            factory(Vat::class)->create(["rate" => 0]),
-            -100
-        );
+        $lineItem = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create()->id,
+            'amount' => -100,
+        ]);
         $this->expectException(NegativeAmount::class);
         $this->expectExceptionMessage('LineItem Amount cannot be negative');
 

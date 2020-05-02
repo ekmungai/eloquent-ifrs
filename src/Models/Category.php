@@ -6,16 +6,16 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Models;
+namespace IFRS\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
-use Ekmungai\IFRS\Interfaces\Segragatable;
-use Ekmungai\IFRS\Interfaces\Recyclable;
+use IFRS\Interfaces\Segragatable;
+use IFRS\Interfaces\Recyclable;
 
-use Ekmungai\IFRS\Traits\Segragating;
-use Ekmungai\IFRS\Traits\Recycling;
+use IFRS\Traits\Segragating;
+use IFRS\Traits\Recycling;
 
 /**
  * Class Category
@@ -35,22 +35,14 @@ class Category extends Model implements Segragatable, Recyclable
     use Recycling;
 
     /**
-     * Construct new Category.
+     * The attributes that are mass assignable.
      *
-     * @param string $name
-     * @param string $categoryType
-     *
-     * @return Category
+     * @var array
      */
-    public static function new(string $name, string $categoryType) : Category
-    {
-        $category = new Category();
-
-        $category->name = $name;
-        $category->category_type = $categoryType;
-
-        return $category;
-    }
+    protected $fillable = [
+        'name',
+        'category_type',
+    ];
 
     /**
      * Category attributes.

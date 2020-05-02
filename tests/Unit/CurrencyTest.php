@@ -2,11 +2,11 @@
 
 namespace Tests\Unit;
 
-use Ekmungai\IFRS\Tests\TestCase;
+use IFRS\Tests\TestCase;
 
-use Ekmungai\IFRS\Models\Currency;
-use Ekmungai\IFRS\Models\ExchangeRate;
-use Ekmungai\IFRS\Models\RecycledObject;
+use IFRS\Models\Currency;
+use IFRS\Models\ExchangeRate;
+use IFRS\Models\RecycledObject;
 
 class CurrencyTest extends TestCase
 {
@@ -17,7 +17,10 @@ class CurrencyTest extends TestCase
      */
     public function testCurrencyRelationships()
     {
-        $currency = Currency::new($this->faker->word, $this->faker->currencyCode);
+        $currency = new Currency([
+            'name' => $this->faker->word,
+            'currency_code' => $this->faker->currencyCode,
+        ]);
         $currency->attributes();
         $currency->save();
 
@@ -40,7 +43,10 @@ class CurrencyTest extends TestCase
      */
     public function testCurrencyRecycling()
     {
-        $currency = Currency::new($this->faker->word, $this->faker->currencyCode);
+        $currency = new Currency([
+            'name' => $this->faker->word,
+            'currency_code' => $this->faker->currencyCode,
+        ]);
         $currency->delete();
 
         $recycled = RecycledObject::all()->first();

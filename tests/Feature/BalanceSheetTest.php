@@ -4,18 +4,18 @@ namespace Tests\Feature;
 
 use Carbon\Carbon;
 
-use Ekmungai\IFRS\Tests\TestCase;
+use IFRS\Tests\TestCase;
 
-use Ekmungai\IFRS\Models\Account;
-use Ekmungai\IFRS\Models\Balance;
-use Ekmungai\IFRS\Models\LineItem;
+use IFRS\Models\Account;
+use IFRS\Models\Balance;
+use IFRS\Models\LineItem;
 
-use Ekmungai\IFRS\Reports\BalanceSheet;
-use Ekmungai\IFRS\Reports\IncomeStatement;
+use IFRS\Reports\BalanceSheet;
+use IFRS\Reports\IncomeStatement;
 
-use Ekmungai\IFRS\Transactions\SupplierBill;
-use Ekmungai\IFRS\Transactions\CashSale;
-use Ekmungai\IFRS\Transactions\JournalEntry;
+use IFRS\Transactions\SupplierBill;
+use IFRS\Transactions\CashSale;
+use IFRS\Transactions\JournalEntry;
 
 class BalanceSheetTest extends TestCase
 {
@@ -31,11 +31,11 @@ class BalanceSheetTest extends TestCase
 
         factory(Balance::class)->create([
             "year" => date("Y"),
-            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 "account_type" => Account::INVENTORY
             ])->id,
             "balance_type" => Balance::DEBIT,
-            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
@@ -43,79 +43,83 @@ class BalanceSheetTest extends TestCase
 
         factory(Balance::class)->create([
             "year" => date("Y"),
-            "account_id" => factory('Ekmungai\IFRS\Models\Account')->create([
+            "account_id" => factory('IFRS\Models\Account')->create([
                 "account_type" => Account::CURRENT_LIABILITY
             ])->id,
             "balance_type" => Balance::CREDIT,
-            "exchange_rate_id" => factory('Ekmungai\IFRS\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create([
                 "rate" => 1
             ])->id,
             "amount" => 100
         ]);
 
-        $bill = SupplierBill::new(
-            factory(Account::class)->create([
+        $bill = new SupplierBill([
+            "account_id" => factory(Account::class)->create([
                 'account_type' => Account::PAYABLE,
-            ]),
-            Carbon::now(),
-            $this->faker->word
-        );
+            ])->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
-        $lineItem =  LineItem::new(
-            factory('Ekmungai\IFRS\Models\Account')->create([
+        $lineItem =  factory(LineItem::class)->create([
+            "amount" => 100,
+            "vat_id" => factory('IFRS\Models\Vat')->create([
+                "rate" => 16
+            ])->id,
+            "account_id" => factory('IFRS\Models\Account')->create([
                 "account_type" => Account::NON_CURRENT_ASSET
-            ]),
-            factory('Ekmungai\IFRS\Models\Vat')->create(["rate" => 16]),
-            100,
-            1,
-            null,
-            factory('Ekmungai\IFRS\Models\Account')->create([
+            ])->id,
+            "vat_account_id" => factory('IFRS\Models\Account')->create([
                 "account_type" => Account::CONTROL_ACCOUNT
-            ])
-        );
+            ])->id,
+        ]);
+
         $bill->addLineItem($lineItem);
         $bill->post();
 
-        $cashSale = CashSale::new(
-            factory(Account::class)->create([
+        $cashSale = new CashSale([
+            "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
-            ]),
-            Carbon::now(),
-            $this->faker->word
-        );
+            ])->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
-        $lineItem =  LineItem::new(
-            factory('Ekmungai\IFRS\Models\Account')->create([
+        $lineItem =  factory(LineItem::class)->create([
+            "amount" => 200,
+            "vat_id" => factory('IFRS\Models\Vat')->create([
+                "rate" => 16
+            ])->id,
+            "account_id" => factory('IFRS\Models\Account')->create([
                 "account_type" => Account::OPERATING_REVENUE
-            ]),
-            factory('Ekmungai\IFRS\Models\Vat')->create(["rate" => 16]),
-            200,
-            1,
-            null,
-            factory('Ekmungai\IFRS\Models\Account')->create([
+            ])->id,
+            "vat_account_id" => factory('IFRS\Models\Account')->create([
                 "account_type" => Account::CONTROL_ACCOUNT
-            ])
-        );
+            ])->id,
+        ]);
+
         $cashSale->addLineItem($lineItem);
 
         $cashSale->post();
 
-        $journalEntry = JournalEntry::new(
-            factory(Account::class)->create([
+        $journalEntry = new JournalEntry([
+            "account_id" => factory(Account::class)->create([
                 'account_type' => Account::EQUITY,
-            ]),
-            Carbon::now(),
-            $this->faker->word
-        );
+            ])->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "credited" => false,
+        ]);
 
-        $lineItem = LineItem::new(
-            factory('Ekmungai\IFRS\Models\Account')->create([
+        $lineItem = factory(LineItem::class)->create([
+            "amount" => 70,
+            "vat_id" => factory('IFRS\Models\Vat')->create([
+                "rate" => 0
+            ])->id,
+            "account_id" => factory('IFRS\Models\Account')->create([
                 "account_type" => Account::RECONCILIATION
-            ]),
-            factory('Ekmungai\IFRS\Models\Vat')->create(["rate" => 0]),
-            70
-        );
-        $journalEntry->setCredited(false);
+            ])->id,
+        ]);
         $journalEntry->addLineItem($lineItem);
         $journalEntry->post();
 

@@ -6,10 +6,10 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
-namespace Ekmungai\IFRS\Traits;
+namespace IFRS\Traits;
 
-use Ekmungai\IFRS\Models\Transaction;
-use Ekmungai\IFRS\Transactions\AbstractTransaction;
+use IFRS\Models\Transaction;
+use IFRS\Transactions\AbstractTransaction;
 
 /**
  *
@@ -27,7 +27,7 @@ trait Instantiating
      */
     public static function instantiate(string $type) : AbstractTransaction
     {
-        $transactionclass = 'Ekmungai\IFRS\Transactions\\'.Transaction::$transactionClasses[$type];
+        $transactionclass = 'IFRS\Transactions\\'.Transaction::$transactionClasses[$type];
         return new $transactionclass;
     }
 }

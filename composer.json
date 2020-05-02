@@ -1,7 +1,7 @@
 {
     "name": "ekmungai/eloquent-ifrs",
     "description": "Eloquent Double Entry Accounting with focus on IFRS Compliant Reporting",
-    "keywords": ["accounting", "eloquent", "laravel", "lumen" "reporting"],
+    "keywords": ["accounting", "eloquent", "laravel", "lumen", "reporting"],
     "type": "library",
     "license": "MIT",
     "support": {
@@ -35,7 +35,7 @@
     },
 	"autoload": {
 		"psr-4": {
-			"Ekmungai\\IFRS\\": "src"
+			"IFRS\\": "src"
 			},
 			"classmap": [
 				"database/factories"
@@ -43,7 +43,7 @@
 		},
 	"autoload-dev": {
 		"psr-4": {
-			"Ekmungai\\IFRS\\Tests\\": "tests"
+			"IFRS\\Tests\\": "tests"
 		}
 	},
 	"extra": {

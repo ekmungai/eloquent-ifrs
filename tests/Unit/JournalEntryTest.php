@@ -6,15 +6,15 @@ use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Auth;
 
-use Ekmungai\IFRS\Tests\TestCase;
+use IFRS\Tests\TestCase;
 
-use Ekmungai\IFRS\Models\Account;
-use Ekmungai\IFRS\Models\Balance;
-use Ekmungai\IFRS\Models\Currency;
-use Ekmungai\IFRS\Models\LineItem;
-use Ekmungai\IFRS\Models\Ledger;
+use IFRS\Models\Account;
+use IFRS\Models\Balance;
+use IFRS\Models\Currency;
+use IFRS\Models\LineItem;
+use IFRS\Models\Ledger;
 
-use Ekmungai\IFRS\Transactions\JournalEntry;
+use IFRS\Transactions\JournalEntry;
 
 class JournalEntryTest extends TestCase
 {
@@ -27,13 +27,16 @@ class JournalEntryTest extends TestCase
     {
         $mainAccount = factory(Account::class)->create();
 
-        $journalEntry = JournalEntry::new($mainAccount, Carbon::now(), $this->faker->word);
-        $journalEntry->setDate(Carbon::now());
+        $journalEntry = new JournalEntry([
+            "account_id" => $mainAccount->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
         $journalEntry->save();
 
-        $this->assertEquals($journalEntry->getAccount()->name, $mainAccount->name);
-        $this->assertEquals($journalEntry->getAccount()->description, $mainAccount->description);
-        $this->assertEquals($journalEntry->getTransactionNo(), "JN0".$this->period->period_count."/0001");
+        $this->assertEquals($journalEntry->account->name, $mainAccount->name);
+        $this->assertEquals($journalEntry->account->description, $mainAccount->description);
+        $this->assertEquals($journalEntry->transaction_no, "JN0".$this->period->period_count."/0001");
     }
 
     /**
@@ -43,15 +46,15 @@ class JournalEntryTest extends TestCase
      */
     public function testPostJournalEntryTransaction()
     {
-        $journalEntry = JournalEntry::new(
-            factory('Ekmungai\IFRS\Models\Account')->create(),
-            Carbon::now(),
-            $this->faker->word
-        );
+        $journalEntry = new JournalEntry([
+            "account_id" => factory('IFRS\Models\Account')->create()->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
@@ -59,35 +62,35 @@ class JournalEntryTest extends TestCase
 
         $journalEntry->post();
 
-        $ledgers = Ledger::where("transaction_id", $journalEntry->getId())->get();
+        $ledgers = Ledger::where("transaction_id", $journalEntry->id)->get();
         $debit = $ledgers->where("entry_type", Balance::DEBIT)->first();
         $credit = $ledgers->where("entry_type", Balance::CREDIT)->first();
 
-        $this->assertEquals($debit->folio_account, $journalEntry->getAccount()->id);
+        $this->assertEquals($debit->folio_account, $journalEntry->account->id);
         $this->assertEquals($debit->post_account, $lineItem->account_id);
-        $this->assertEquals($credit->post_account, $journalEntry->getAccount()->id);
+        $this->assertEquals($credit->post_account, $journalEntry->account->id);
         $this->assertEquals($credit->folio_account, $lineItem->account_id);
         $this->assertEquals($debit->amount, 100);
         $this->assertEquals($credit->amount, 100);
 
         $this->assertEquals($journalEntry->getAmount(), 100);
 
-        $journalEntry2 = JournalEntry::new(
-            factory('Ekmungai\IFRS\Models\Account')->create(),
-            Carbon::now(),
-            $this->faker->word
-        );
-        $journalEntry2->setCredited(false);
+        $journalEntry2 = new JournalEntry([
+            "account_id" => factory('IFRS\Models\Account')->create()->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "credited" => false,
+        ]);
 
         $lineItem1 = factory(LineItem::class)->create([
             "amount" => 50,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create([
                 "rate" => 0
             ])->id,
         ]);
         $lineItem2 = factory(LineItem::class)->create([
             "amount" => 25,
-            "vat_id" => factory('Ekmungai\IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create([
                 "rate" => 16
             ])->id,
         ]);
@@ -96,7 +99,7 @@ class JournalEntryTest extends TestCase
 
         $journalEntry2->post();
 
-        $ledgers = Ledger::where("transaction_id", $journalEntry2->getId())->get();
+        $ledgers = Ledger::where("transaction_id", $journalEntry2->id)->get();
 
         $debits = $ledgers->where("entry_type", Balance::DEBIT);
         $credits = $ledgers->where("entry_type", Balance::CREDIT);
@@ -111,21 +114,21 @@ class JournalEntryTest extends TestCase
         $credit3 = $credits->where("amount", 4)->first();
 
         // lineItem 1
-        $this->assertEquals($debit1->post_account, $journalEntry2->getAccount()->id);
+        $this->assertEquals($debit1->post_account, $journalEntry2->account->id);
         $this->assertEquals($debit1->folio_account, $lineItem1->account_id);
-        $this->assertEquals($credit1->folio_account, $journalEntry2->getAccount()->id);
+        $this->assertEquals($credit1->folio_account, $journalEntry2->account->id);
         $this->assertEquals($credit1->post_account, $lineItem1->account_id);
 
         // lineItem 2
-        $this->assertEquals($debit2->post_account, $journalEntry2->getAccount()->id);
+        $this->assertEquals($debit2->post_account, $journalEntry2->account->id);
         $this->assertEquals($debit2->folio_account, $lineItem2->account_id);
-        $this->assertEquals($credit2->folio_account, $journalEntry2->getAccount()->id);
+        $this->assertEquals($credit2->folio_account, $journalEntry2->account->id);
         $this->assertEquals($credit2->post_account, $lineItem2->account_id);
 
         // lineItem 2 Vat
-        $this->assertEquals($debit3->post_account, $journalEntry2->getAccount()->id);
+        $this->assertEquals($debit3->post_account, $journalEntry2->account->id);
         $this->assertEquals($debit3->folio_account, $lineItem2->vat_account_id);
-        $this->assertEquals($credit3->folio_account, $journalEntry2->getAccount()->id);
+        $this->assertEquals($credit3->folio_account, $journalEntry2->account->id);
         $this->assertEquals($credit3->post_account, $lineItem2->vat_account_id);
 
         $this->assertEquals($journalEntry2->getAmount(), 79);
@@ -141,15 +144,15 @@ class JournalEntryTest extends TestCase
         $account = factory(Account::class)->create([
             'account_type' => Account::BANK,
         ]);
-        $transaction = JournalEntry::new(
-            $account,
-            Carbon::now(),
-            $this->faker->word
-        );
+        $transaction = new JournalEntry([
+            "account_id" => $account,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
         $transaction->save();
 
-        $found = JournalEntry::find($transaction->getId());
-        $this->assertEquals($found->getTransactionNo(), $transaction->getTransactionNo());
+        $found = JournalEntry::find($transaction->id);
+        $this->assertEquals($found->transaction_no, $transaction->transaction_no);
     }
 
     /**
@@ -162,21 +165,22 @@ class JournalEntryTest extends TestCase
         $account = factory(Account::class)->create([
             'account_type' => Account::PAYABLE,
         ]);
-        $transaction = JournalEntry::new(
-            $account,
-            Carbon::now(),
-            $this->faker->word
-        );
+        $transaction = new JournalEntry([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
         $transaction->save();
+
 
         $account2 = factory(Account::class)->create([
             'account_type' => Account::PAYABLE,
         ]);
-        $transaction2 = JournalEntry::new(
-            $account2,
-            Carbon::now()->addWeeks(2),
-            $this->faker->word
-        );
+        $transaction2 = new JournalEntry([
+            "account_id" => $account2->id,
+            "date" => Carbon::now()->addWeeks(2),
+            "narration" => $this->faker->word,
+        ]);
         $transaction2->save();
 
         // startTime Filter
