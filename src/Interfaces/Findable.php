@@ -8,7 +8,8 @@
  */
 namespace IFRS\Interfaces;
 
-use IFRS\Transactions\AbstractTransaction;
+use IFRS\Models\Transaction;
+
 
 /**
  *
@@ -22,7 +23,7 @@ interface Findable
      *
      * @param int $id
      *
-     * @return AbstractTransaction
+     * @return Transaction
      */
-    public static function find(int $id): AbstractTransaction;
+    public static function find(int $id): Transaction;
 }

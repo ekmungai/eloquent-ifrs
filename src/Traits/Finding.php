@@ -10,8 +10,6 @@ namespace IFRS\Traits;
 
 use IFRS\Models\Transaction;
 
-use IFRS\Transactions\AbstractTransaction;
-
 /**
  *
  * @author emung
@@ -24,15 +22,10 @@ trait Finding
      *
      * @param int $id
      *
-     * @return AbstractTransaction
+     * @return Transaction
      */
-    public static function find(int $id) : AbstractTransaction
+    public static function find(int $id) : Transaction
     {
-        $model = Transaction::find($id);
-
-        $item = AbstractTransaction::instantiate($model->transaction_type);
-        $item->existingTransaction($model);
-
-        return $item;
+        return Transaction::find($id);
     }
 }
