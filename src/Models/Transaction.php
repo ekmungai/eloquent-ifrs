@@ -143,10 +143,10 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     /**
      * Transaction LineItems
      *
-     * @var array $lineItems
+     * @var array $items
      */
 
-    private $lineItems = [];
+    private $items = [];
 
     /**
      * Check if LineItem already exists.
@@ -157,7 +157,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      */
     private function lineItemExists(int $id = null)
     {
-        return collect($this->lineItems)->search(function ($item, $key) use ($id) {
+        return collect($this->items)->search(function ($item, $key) use ($id) {
             return $item->id == $id;
         });
     }
@@ -167,9 +167,9 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      */
     private function saveLineItems() : void
     {
-        if (count($this->lineItems)) {
-            $lineItem = array_pop($this->lineItems);
-            $this->savedLineItems()->save($lineItem);
+        if (count($this->items)) {
+            $lineItem = array_pop($this->items);
+            $this->lineItems()->save($lineItem);
 
             $this->saveLineItems();
         }
@@ -232,7 +232,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function savedLineItems()
+    public function lineItems()
     {
         return $this->HasMany('IFRS\Models\LineItem', 'transaction_id', 'id');
     }
@@ -354,10 +354,10 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      */
     public function getLineItems()
     {
-        foreach ($this->savedLineItems as $lineItem) {
+        foreach ($this->lineItems as $lineItem) {
             $this->addLineItem($lineItem);
         }
-        return $this->lineItems;
+        return $this->items;
     }
 
     /**
@@ -376,7 +376,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
         }
 
         if ($this->lineItemExists($lineItem->id) === false) {
-            $this->lineItems[] = $lineItem;
+            $this->items[] = $lineItem;
         }
     }
 
@@ -394,14 +394,14 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
         $key = $this->lineItemExists($lineItem->id);
 
         if ($key !== false) {
-            unset($this->lineItems[$key]);
+            unset($this->items[$key]);
         }
 
         $lineItem->transaction()->dissociate();
         $lineItem->save();
 
         // reload items to reflect changes
-        $this->load('savedLineItems');
+        $this->load('lineItems');
     }
 
     /**
@@ -418,7 +418,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
         $this->saveLineItems();
 
         // reload items to reflect changes
-        $this->load('savedLineItems');
+        $this->load('lineItems');
 
         return $save;
     }
