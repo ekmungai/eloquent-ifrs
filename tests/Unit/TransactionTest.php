@@ -186,7 +186,6 @@ class TransactionTest extends TestCase
         $transaction->narration = $this->faker->word;
         $transaction->transaction_no = $this->faker->word;
         $transaction->transaction_type = Transaction::JN;
-        $transaction->amount = $this->faker->randomFloat(2);
 
         $this->assertEquals($transaction->getLineItems(), []);
 

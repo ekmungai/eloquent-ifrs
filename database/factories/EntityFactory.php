@@ -13,6 +13,7 @@ $factory->define(
         return [
         'name' => $faker->company,
         'currency_id' => factory('IFRS\Models\Currency')->create()->id,
+        'multi_currency' => $faker->boolean(),
         ];
     }
 );

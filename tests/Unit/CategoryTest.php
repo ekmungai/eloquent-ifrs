@@ -4,12 +4,37 @@ namespace Tests\Unit;
 
 use IFRS\Tests\TestCase;
 
+use IFRS\Models\Account;
 use IFRS\Models\Category;
 use IFRS\Models\RecycledObject;
 use IFRS\Models\User;
 
 class CategoryTest extends TestCase
 {
+    /**
+     * Category Model relationships test.
+     *
+     * @return void
+     */
+    public function testCategoryRelationships()
+    {
+        $type = $this->faker->randomElement(
+            array_keys(config('ifrs')['accounts'])
+        );
+        $category = new Category([
+            'name' => $this->faker->word,
+            'category_type' => $type,
+        ]);
+        $category->save();
+
+        $account = factory(Account::class)->create([
+            "account_type" => $type,
+            "category_id" => $category->id,
+        ]);
+
+        $this->assertEquals($category->accounts->first()->name, $account->name);
+    }
+
     /**
      * Test Category model Entity Scope.
      *

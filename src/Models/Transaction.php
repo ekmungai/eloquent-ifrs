@@ -228,34 +228,6 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     }
 
     /**
-     * isPosted analog for Assignment model.
-     */
-    public function isPosted(): bool
-    {
-        return count($this->ledgers) > 0;
-    }
-
-    /**
-     * isCredited analog for Assignment model.
-     *
-     * @return bool
-     */
-    public function isCredited() : bool
-    {
-        return boolval($this->credited);
-    }
-
-    /**
-     * getClearedType analog for Assignment model.
-     *
-     * @return string
-     */
-    public function getClearedType() : string
-    {
-        return Transaction::MODELNAME;
-    }
-
-    /**
      * Transaction Saved Line Items.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -313,6 +285,56 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     public function assignments()
     {
         return $this->HasMany('IFRS\Models\Assignment', 'transaction_id', 'id');
+    }
+
+    /**
+     * isPosted analog for Assignment model.
+     */
+    public function isPosted(): bool
+    {
+        return count($this->ledgers) > 0;
+    }
+
+    /**
+     * isCredited analog for Assignment model.
+     *
+     * @return bool
+     */
+    public function isCredited() : bool
+    {
+        return boolval($this->credited);
+    }
+
+    /**
+     * getClearedType analog for Assignment model.
+     *
+     * @return string
+     */
+    public function getClearedType() : string
+    {
+        return Transaction::MODELNAME;
+    }
+
+    /**
+     * getAmount analog for Assignment model.
+     *
+     * @return float
+     */
+    public function getAmount(): float
+    {
+        $amount = 0;
+
+        if ($this->isPosted()) {
+            foreach ($this->ledgers->where("entry_type",Balance::DEBIT) as $ledger) {
+                $amount += $ledger->amount / $this->exchangeRate->rate;
+            }
+        }else {
+            foreach ($this->getLineItems() as $lineItem) {
+                $amount += $lineItem->amount;
+                $amount += $lineItem->amount * $lineItem->vat->rate / 100;
+            }
+        }
+        return $amount;
     }
 
     /**
@@ -443,27 +465,5 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
         return $this->ledgers->every(function ($ledger, $key) {
             return password_verify($ledger->hashed(), $ledger->hash);
         });
-    }
-
-    /**
-     * Get Transaction Total Amount
-     *
-     * @return float
-     */
-    public function getAmount(): float
-    {
-        $amount = 0;
-
-        if ($this->isPosted()) {
-            foreach ($this->ledgers->where("entry_type",Balance::DEBIT) as $ledger) {
-                $amount += $ledger->amount / $this->exchangeRate->rate;
-            }
-        }else {
-            foreach ($this->getLineItems() as $lineItem) {
-                $amount += $lineItem->amount;
-                $amount += $lineItem->amount * $lineItem->vat->rate / 100;
-            }
-        }
-        return $amount;
     }
 }

@@ -87,7 +87,7 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
     ];
 
     /**
-     * Construct new Transaction.
+     * Construct new Balance.
      */
     public function __construct($attributes = []) {
 
@@ -142,16 +142,6 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
     }
 
     /**
-     * getId analog for Assignment model.
-     *
-     * @return int
-     */
-    public function getId() : int
-    {
-        return $this->id;
-    }
-
-    /**
      * isPosted analog for Assignment model.
      */
     public function isPosted() : bool
@@ -180,13 +170,13 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
     }
 
     /**
-     * getTransactionNo analog for Assignment model.
+     * getAmount analog for Assignment model.
      *
      * @return string
      */
-    public function getTransactionNo() : string
+    public function getAmount() : string
     {
-        return $this->transaction_no;
+        return $this->amount;
     }
 
     /**

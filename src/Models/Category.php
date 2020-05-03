@@ -45,6 +45,16 @@ class Category extends Model implements Segragatable, Recyclable
     ];
 
     /**
+     * Category Accounts.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function accounts()
+    {
+        return $this->hasMany(Account::class);
+    }
+
+    /**
      * Category attributes.
      *
      * @return object

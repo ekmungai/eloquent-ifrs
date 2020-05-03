@@ -67,29 +67,6 @@ class Entity extends Model implements Recyclable
     }
 
     /**
-     * Reporting Currency Default Rate.
-     *
-     * @return ExchangeRate
-     */
-    public function defaultRate() : ExchangeRate
-    {
-        $existing = ExchangeRate::find([
-            "entity_id" => $this->id,
-            "currency_id" => $this->currency_id,
-            "valid_from" => Carbon::now(),
-        ])->first();
-
-        $new = new ExchangeRate([
-            'valid_from' => Carbon::now(),
-            'currency_id' => $this->currency->id,
-        ]);
-
-        $new->save();
-
-        return !is_null($existing)? $existing : $new;
-    }
-
-    /**
      * Entity's Reporting Periods.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -107,5 +84,28 @@ class Entity extends Model implements Recyclable
     public function attributes()
     {
         return (object) $this->attributes;
+    }
+
+    /**
+     * Reporting Currency Default Rate.
+     *
+     * @return ExchangeRate
+     */
+    public function defaultRate() : ExchangeRate
+    {
+        $existing = ExchangeRate::where([
+            "entity_id" => $this->id,
+            "currency_id" => $this->currency_id,
+            "valid_from" => Carbon::now(),
+        ])->first();
+
+        $new = new ExchangeRate([
+            'valid_from' => Carbon::now(),
+            'currency_id' => $this->currency->id,
+        ]);
+
+        $new->save();
+
+        return !is_null($existing)? $existing : $new;
     }
 }

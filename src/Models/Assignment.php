@@ -123,7 +123,7 @@ class Assignment extends Model implements Segragatable
             throw new InsufficientBalance($transactionType, $this->amount, $cleared_type);
         }
 
-        if ($this->cleared->amount - $this->cleared->clearedAmount() < $this->amount) {
+        if ($this->cleared->getAmount() - $this->cleared->clearedAmount() < $this->amount) {
             throw new OverClearance($cleared_type, $this->amount);
         }
     }

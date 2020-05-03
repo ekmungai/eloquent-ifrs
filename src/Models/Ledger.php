@@ -54,9 +54,9 @@ class Ledger extends Model implements Segragatable
      * @param LineItem $lineItem
      * @param Transaction $transaction
      *
-     * @return Transaction
+     * @return void
      */
-    private static function postVat(LineItem $lineItem, Transaction $transaction) : Transaction
+    private static function postVat(LineItem $lineItem, Transaction $transaction) : void
     {
         $amount = $lineItem->amount * $lineItem->vat->rate/100;
 
@@ -84,10 +84,6 @@ class Ledger extends Model implements Segragatable
 
         $post->save();
         $folio->save();
-
-        $transaction->amount += $amount;
-
-        return $transaction;
     }
 
     /**
@@ -128,9 +124,8 @@ class Ledger extends Model implements Segragatable
             $transaction->amount += $lineItem->amount;
 
             if ($lineItem->vat->rate > 0) {
-                $transaction = Ledger::postVat($lineItem, $transaction);
+                Ledger::postVat($lineItem, $transaction);
             }
-            $transaction->save();
         }
     }
 

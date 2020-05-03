@@ -53,7 +53,6 @@ class CreateTransactionsTable extends Migration
             ]);
             $table->string('narration', 1000);
             $table->boolean('credited')->default(true);
-            $table->decimal('amount', 13, 4)->default(0);
 
             // *permanent* deletion
             $table->dateTime('destroyed_at')->nullable();

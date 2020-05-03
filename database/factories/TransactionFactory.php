@@ -17,6 +17,5 @@ $factory->define(Transaction::class, function (Faker $faker) {
         'reference' => $faker->word,
         'narration' => $faker->sentence,
         'credited' =>  true,
-        'amount' => $faker->randomFloat(2),
     ];
 });
