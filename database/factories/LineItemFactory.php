@@ -12,7 +12,7 @@ $factory->define(LineItem::class, function (Faker $faker) {
         'transaction_id' => factory('IFRS\Models\Transaction')->create()->id,
         'account_id' => factory('IFRS\Models\Account')->create()->id,
         'vat_account_id' => factory('IFRS\Models\Account')->create()->id,
-        'description' => $faker->sentence,
+        'narration' => $faker->sentence,
         'quantity' => $faker->randomNumber(),
         'amount' => $faker->randomFloat(2),
     ];

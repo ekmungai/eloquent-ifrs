@@ -240,7 +240,7 @@ class AccountStatementTest extends TestCase
 
         $debitJournalEntry->post();
 
-        $statement = new AccountStatement($account);
+        $statement = new AccountStatement($account->id);
         $statement->getTransactions();
 
         $this->assertEquals($statement->balances['opening'], 70);
@@ -405,7 +405,7 @@ class AccountStatementTest extends TestCase
 
         $debitJournalEntry->post();
 
-        $statement = new AccountStatement($account);
+        $statement = new AccountStatement($account->id);
         $statement->getTransactions();
 
         //dd($statement->toString());
@@ -559,7 +559,7 @@ class AccountStatementTest extends TestCase
 
         $debitJournalEntry->post();
 
-        $statement = new AccountStatement($account);
+        $statement = new AccountStatement($account->id);
         $statement->getTransactions();
 
         $this->assertEquals($statement->balances['opening'], -70);

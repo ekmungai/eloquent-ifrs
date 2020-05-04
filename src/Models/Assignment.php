@@ -56,39 +56,9 @@ class Assignment extends Model implements Segragatable
     ];
 
     /**
-     * Transaction to be cleared.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function transaction()
-    {
-        return $this->belongsTo(Transaction::class);
-    }
-
-    /**
-     * Transaction|Balance to be cleared.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
-     */
-    public function cleared()
-    {
-        return $this->morphTo();
-    }
-
-    /**
-     * Assignment attributes.
-     *
-     * @return object
-     */
-    public function attributes()
-    {
-        return (object) $this->attributes;
-    }
-
-    /**
      * Assignment Validation.
      */
-    public function validate() : void
+    private function validate() : void
     {
 
         $transactionType = $this->transaction->transaction_type;
@@ -126,6 +96,36 @@ class Assignment extends Model implements Segragatable
         if ($this->cleared->getAmount() - $this->cleared->clearedAmount() < $this->amount) {
             throw new OverClearance($cleared_type, $this->amount);
         }
+    }
+
+    /**
+     * Transaction to be cleared.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class);
+    }
+
+    /**
+     * Transaction|Balance to be cleared.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
+    public function cleared()
+    {
+        return $this->morphTo();
+    }
+
+    /**
+     * Assignment attributes.
+     *
+     * @return object
+     */
+    public function attributes()
+    {
+        return (object) $this->attributes;
     }
 
     /**

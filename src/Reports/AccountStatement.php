@@ -74,83 +74,11 @@ class AccountStatement
     public $transactions = [];
 
     /**
-     * Get Statement Currency
-     *
-     * @return \IFRS\Models\Currency
-     *
-     * @codeCoverageIgnore
-     */
-    public function getCurrency()
-    {
-        return $this->currency;
-    }
-
-    /**
-     * Set Statement Currency
-     *
-     * @param \IFRS\Models\Currency $currency
-     *
-     * @codeCoverageIgnore
-     */
-    public function setCurrency($currency) : void
-    {
-        $this->currency = $currency;
-    }
-
-    /**
-     * Get Statement Account
-     *
-     * @return \IFRS\Models\Account
-     *
-     * @codeCoverageIgnore
-     */
-    public function getAccount()
-    {
-        return $this->account;
-    }
-
-    /**
-     * Set Statement Account
-     *
-     * @param \IFRS\Models\Account $account
-     *
-     * @codeCoverageIgnore
-     */
-    public function setAccount($account) : void
-    {
-        $this->account = $account;
-    }
-
-    /**
-     * Get Statement Entity
-     *
-     * @return \IFRS\Models\Entity
-     *
-     * @codeCoverageIgnore
-     */
-    public function getEntity()
-    {
-        return $this->entity;
-    }
-
-    /**
-     * Set Statement Entity
-     *
-     * @param \IFRS\Models\Entity $entity
-     *
-     * @codeCoverageIgnore
-     */
-    public function setEntity($entity) : void
-    {
-        $this->entity = $entity;
-    }
-
-    /**
      * Build Statement Query
      *
      * @return Builder
      */
-    public function buildQuery()
+    protected function buildQuery()
     {
         $query = DB::table('transactions')->leftJoin('ledgers', 'transactions.id', '=', 'ledgers.transaction_id')
         ->where('transactions.deleted_at', null)
@@ -183,7 +111,7 @@ class AccountStatement
      */
     public function attributes()
     {
-        return [
+        return (object) [
             "Account" => $this->account->name,
             "Currency" => $this->currency->name,
             "Entity" => $this->entity->name,
@@ -196,27 +124,28 @@ class AccountStatement
     /**
      * Construct Account Statement for the account for the period.
      *
-     * @param Account $account
-     * @param Currency $currency
-     * @param Carbon $startDate
-     * @param Carbon $endDate
+     * @param int $account_id
+     * @param int $currency_id
+     * @param string $startDate
+     * @param string $endDate
      */
     public function __construct(
-        Account $account = null,
-        Currency $currency = null,
-        Carbon $startDate = null,
-        Carbon $endDate = null
+        int $account_id = null,
+        int $currency_id = null,
+        string $startDate = null,
+        string $endDate = null
     ) {
-        if (is_null($account)) {
+        if (is_null($account_id)) {
             throw new MissingAccount("Account Statement");
+        }else{
+            $this->account = Account::find($account_id);
         }
 
         $this->entity = Auth::user()->entity;
-        $this->account = $account;
 
-        $this->period['startDate'] = is_null($startDate)? ReportingPeriod::periodStart(): $startDate;
-        $this->period['endDate'] = is_null($endDate)? Carbon::now(): $endDate;
-        $this->currency = is_null($currency)? $this->entity->currency: $currency;
+        $this->period['startDate'] = is_null($startDate)? ReportingPeriod::periodStart(): Carbon::parse($startDate);
+        $this->period['endDate'] = is_null($endDate)? Carbon::now(): Carbon::parse($endDate);
+        $this->currency = is_null($currency_id)? $this->entity->currency: Currency::find($currency_id);
     }
 
     /**

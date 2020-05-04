@@ -346,7 +346,7 @@ class AccountTest extends TestCase
             'vat_id' => factory(Vat::class)->create(["rate" => 16])->id,
             'account_id' => $account3->id,
             'vat_account_id' => $account4->id,
-            'description' => $this->faker->sentence,
+            'narration' => $this->faker->sentence,
             'quantity' => $this->faker->randomNumber(),
             'amount' => 100,
         ]);

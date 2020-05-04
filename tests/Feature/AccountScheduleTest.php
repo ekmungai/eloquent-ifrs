@@ -26,6 +26,7 @@ use IFRS\Transactions\SupplierPayment;
 use IFRS\Reports\AccountSchedule;
 
 use IFRS\Exceptions\MissingAccount;
+use IFRS\Exceptions\InvalidAccountType;
 
 class AccountScheduleTest extends TestCase
 {
@@ -49,6 +50,23 @@ class AccountScheduleTest extends TestCase
         $this->expectExceptionMessage('Account Schedule Transactions require an Account');
 
         new AccountSchedule();
+    }
+
+    /**
+     * Test Account Schedule Invalid Accoount Type
+     *
+     * @return void
+     */
+    public function testAccountScheduleInvalidAccountType()
+    {
+        $account = factory(Account::class)->create([
+            'account_type' => Account::BANK,
+        ]);
+
+        $this->expectException(InvalidAccountType::class);
+        $this->expectExceptionMessage('Schedule Account Type must be one of: Receivable, Payable');
+
+        new AccountSchedule($account->id);
     }
 
     /**
@@ -195,7 +213,7 @@ class AccountScheduleTest extends TestCase
         ]);
 
 
-        $schedule = new AccountSchedule($account, $currency);
+        $schedule = new AccountSchedule($account->id, $currency->id);
         $schedule->attributes();
         $schedule->getTransactions();
 
@@ -363,7 +381,7 @@ class AccountScheduleTest extends TestCase
         ]);
 
 
-        $schedule = new AccountSchedule($account, $currency);
+        $schedule = new AccountSchedule($account->id, $currency->id);
         $schedule->getTransactions();
 
         $this->assertEquals($schedule->transactions[0]->id, $balance->id);

@@ -9,9 +9,19 @@
 namespace IFRS\Reports;
 
 use IFRS\Models\Account;
+use IFRS\Models\ReportingPeriod;
+
 
 class TrialBalance extends FinancialStatement
 {
+    /**
+     * Trial Balance Reporting Period.
+     *
+     * @var string
+     */
+    public $reportingPeriod = null;
+
+
     /** Construct Trial Balance
      *
      * @param string $year
@@ -20,6 +30,8 @@ class TrialBalance extends FinancialStatement
     public function __construct(string $year = null)
     {
         parent::__construct($year);
+
+        $this->reportingPeriod = is_null($year)? (string)ReportingPeriod::year():$year;
 
         $this->accounts[IncomeStatement::TITLE] = [];
         $this->accounts[BalanceSheet::TITLE] = [];
@@ -51,7 +63,7 @@ class TrialBalance extends FinancialStatement
      * @param Account $account
      * @param float $balance
      */
-    public function getIncomeStatementSections(Account $account, $balance) : void
+    private function getIncomeStatementSections(Account $account, $balance) : void
     {
         $isAccounts = array_merge(
             array_keys(config('ifrs')[IncomeStatement::OPERATING_REVENUES]),
@@ -77,7 +89,7 @@ class TrialBalance extends FinancialStatement
      * @param Account $account
      * @param float $balance
      */
-    public function getBalanceSheetSections(Account $account, $balance) : void
+    private function getBalanceSheetSections(Account $account, $balance) : void
     {
         $bsAccounts = array_merge(
             array_keys(config('ifrs')[BalanceSheet::ASSETS]),

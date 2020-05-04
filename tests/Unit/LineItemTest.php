@@ -31,7 +31,7 @@ class LineItemTest extends TestCase
             'vat_id' => $vat->id,
             'account_id' => $account->id,
             'vat_account_id' => $vatAccount->id,
-            'description' => $this->faker->sentence,
+            'narration' => $this->faker->sentence,
             'quantity' => 1,
             'amount' => 50,
         ]);

@@ -37,10 +37,10 @@ class CreateLineItemsTable extends Migration
             $table->foreign('vat_id')->references('id')->on('vats');
 
             // attributes
-            $table->string('description', 500)->nullable();
+            $table->string('narration', 500)->nullable();
             ;
             $table->decimal('amount', 13, 4);
-            $table->double('quantity', 5, 2)->default(1);
+            $table->decimal('quantity', 13, 4)->default(1);
 
             // *permanent* deletion
             $table->dateTime('destroyed_at')->nullable();

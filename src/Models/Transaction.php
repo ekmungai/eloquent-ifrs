@@ -83,25 +83,6 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     const JN = 'JN';
 
     /**
-     * Transaction Classes
-     *
-     * @var array
-     */
-
-    public static $transactionClasses = [
-        self::CS => 'CashSale',
-        self::IN => 'ClientInvoice',
-        self::CN => 'CreditNote',
-        self::RC => 'ClientReceipt',
-        self::CP => 'CashPurchase',
-        self::BL => 'SupplierBill',
-        self::DN => 'DebitNote',
-        self::PY => 'SupplierPayment',
-        self::CE => 'ContraEntry',
-        self::JN => 'JournalEntry'
-    ];
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array

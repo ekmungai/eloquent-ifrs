@@ -98,54 +98,6 @@ abstract class FinancialStatement
     }
 
     /**
-     * Get Statement Reporting Period
-     *
-     * @return string
-     *
-     * @codeCoverageIgnore
-     */
-    public function getReportingPeriod()
-    {
-        return $this->reportingPeriod;
-    }
-
-    /**
-     * Set Statement Reporting period
-     *
-     * @param string $reportingPeriod
-     *
-     * @codeCoverageIgnore
-     */
-    public function setReportingPeriod(string $reportingPeriod) : void
-    {
-        $this->reportingPeriod = $reportingPeriod;
-    }
-
-    /**
-     * Get Statements Entity.
-     *
-     * @return \IFRS\Models\Entity
-     *
-     * @codeCoverageIgnore
-     */
-    public function getEntity()
-    {
-        return $this->entity;
-    }
-
-    /**
-     * Set Statement Entity.
-     *
-     * @param \IFRS\Models\Entity $entity
-     *
-     * @codeCoverageIgnore
-     */
-    public function setEntity(Entity $entity) : void
-    {
-        $this->entity = $entity;
-    }
-
-    /**
      * Print Financial Statement attributes.
      *
      * @return array

@@ -17,6 +17,7 @@ use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Account;
 
 use IFRS\Exceptions\MissingAccount;
+use IFRS\Exceptions\InvalidAccountType;
 
 class AccountSchedule extends AccountStatement
 {
@@ -69,16 +70,22 @@ class AccountSchedule extends AccountStatement
     /**
      * Account Schedule for the account for the period.
      *
-     * @param Account $account
-     * @param Currency $currency
-     * @param Carbon $endDate
+     * @param int $account_id
+     * @param int $currency_id
+     * @param string $endDate
      */
-    public function __construct(Account $account = null, Currency $currency = null, Carbon $endDate = null)
+    public function __construct(int $account_id = null, int $currency_id = null, string $endDate = null)
     {
-        if (is_null($account)) {
+        if (is_null($account_id)) {
             throw new MissingAccount("Account Schedule");
         }
-        parent::__construct($account, $currency, null, $endDate);
+
+        $accountTypes = [Account::RECEIVABLE, Account::PAYABLE];
+
+        if (!in_array(Account::find($account_id)->account_type, $accountTypes)) {
+            throw new InvalidAccountType($accountTypes);
+        }
+        parent::__construct($account_id, $currency_id, null, $endDate);
     }
 
     /**
