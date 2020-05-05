@@ -14,13 +14,19 @@ use IFRS\Models\ReportingPeriod;
 
 class IncomeStatement extends FinancialStatement
 {
+
+    /**
+     * Income Statement Title
+     *
+     * @var string
+     */
+    const TITLE = 'INCOME_STATEMENT';
+
     /**
      * Income Statement Sections
      *
      * @var string
      */
-
-    const TITLE = 'INCOME_STATEMENT';
     const OPERATING_REVENUES = 'OPERATING_REVENUES';
     const NON_OPERATING_REVENUES = 'NON_OPERATING_REVENUES';
     const OPERATING_EXPENSES = 'OPERATING_EXPENSES';

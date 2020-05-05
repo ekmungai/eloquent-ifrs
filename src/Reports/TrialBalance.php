@@ -15,6 +15,13 @@ use IFRS\Models\ReportingPeriod;
 class TrialBalance extends FinancialStatement
 {
     /**
+     * Trial Balance Title
+     *
+     * @var string
+     */
+    const TITLE = 'TRIAL_BALANCE';
+
+    /**
      * Trial Balance Reporting Period.
      *
      * @var string

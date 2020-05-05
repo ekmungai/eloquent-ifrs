@@ -107,6 +107,9 @@ return [
         BalanceSheet::LIABILITIES => _("Liabilities"),
         BalanceSheet::EQUITY => _("Equity"),
         BalanceSheet::RECONCILIATION => _("Reconciliation"),
+
+        // Trial Balance
+        BalanceSheet::TITLE => _("Trial Balance"),
     ],
 
     'balances' => [

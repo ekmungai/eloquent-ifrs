@@ -15,12 +15,17 @@ use IFRS\Models\ReportingPeriod;
 class BalanceSheet extends FinancialStatement
 {
     /**
+     * Balance Sheet Title
+     *
+     * @var string
+     */
+    const TITLE = 'BALANCE_SHEET';
+
+    /**
      * Balance Sheet Sections
      *
      * @var string
      */
-
-    const TITLE = 'BALANCE_SHEET';
     const ASSETS = 'ASSETS';
     const LIABILITIES = 'LIABILITIES';
     const EQUITY = 'EQUITY';
