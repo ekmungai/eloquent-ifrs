@@ -2,9 +2,9 @@
 /**
  * Eloquent IFRS Accounting
  *
- * @author Edward Mungai
+ * @author    Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
- * @license MIT See LICENSE.md
+ * @license   MIT See LICENSE.md
  */
 namespace IFRS\Exceptions;
 
@@ -14,7 +14,7 @@ class HangingTransactions extends IFRSException
      * Hanging Transactions Exception
      *
      * @param string $message
-     * @param int $code
+     * @param int    $code
      */
     public function __construct(string $message = null, int $code = null)
     {

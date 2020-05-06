@@ -2,9 +2,9 @@
 /**
  * Eloquent IFRS Accounting
  *
- * @author Edward Mungai
+ * @author    Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
- * @license MIT
+ * @license   MIT
  */
 namespace IFRS\Traits;
 
@@ -30,12 +30,14 @@ trait Recycling
             function ($model) {
                 if (Auth::check()) {
                     $user = Auth::user();
-                    RecycledObject::create([
+                    RecycledObject::create(
+                        [
                             'user_id' => $user->id,
                             'entity_id' => $user->entity->id,
                             'recyclable_id' => $model->id,
                             'recyclable_type' => static::class,
-                        ]);
+                        ]
+                    );
 
                     if ($model->forceDeleting) {
                         $model->destroyed_at = $model->deleted_at = Carbon::now()->toDateTimeString();

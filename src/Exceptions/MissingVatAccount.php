@@ -2,9 +2,9 @@
 /**
  * Eloquent IFRS Accounting
  *
- * @author Edward Mungai
+ * @author    Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
- * @license MIT
+ * @license   MIT
  */
 namespace IFRS\Exceptions;
 
@@ -15,7 +15,7 @@ class MissingVatAccount extends IFRSException
      *
      * @param string $vatName
      * @param string $message
-     * @param int $code
+     * @param int    $code
      */
     public function __construct(string $vatName, string $message = null, int $code = null)
     {

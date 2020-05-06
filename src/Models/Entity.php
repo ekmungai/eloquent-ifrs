@@ -2,9 +2,9 @@
 /**
  * Eloquent IFRS Accounting
  *
- * @author Edward Mungai
+ * @author    Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
- * @license MIT
+ * @license   MIT
  */
 namespace IFRS\Models;
 
@@ -93,16 +93,20 @@ class Entity extends Model implements Recyclable
      */
     public function defaultRate() : ExchangeRate
     {
-        $existing = ExchangeRate::where([
+        $existing = ExchangeRate::where(
+            [
             "entity_id" => $this->id,
             "currency_id" => $this->currency_id,
             "valid_from" => Carbon::now(),
-        ])->first();
+            ]
+        )->first();
 
-        $new = new ExchangeRate([
+        $new = new ExchangeRate(
+            [
             'valid_from' => Carbon::now(),
             'currency_id' => $this->currency->id,
-        ]);
+            ]
+        );
 
         $new->save();
 

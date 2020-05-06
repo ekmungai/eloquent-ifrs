@@ -2,15 +2,14 @@
 /**
  * Eloquent IFRS Accounting
  *
- * @author Edward Mungai
+ * @author    Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
- * @license MIT
+ * @license   MIT
  */
 namespace IFRS\Reports;
 
 use IFRS\Models\Account;
 use IFRS\Models\ReportingPeriod;
-
 
 class TrialBalance extends FinancialStatement
 {
@@ -29,10 +28,10 @@ class TrialBalance extends FinancialStatement
     public $reportingPeriod = null;
 
 
-    /** Construct Trial Balance
+    /**
+     * Construct Trial Balance
      *
      * @param string $year
-     *
      */
     public function __construct(string $year = null)
     {
@@ -46,7 +45,6 @@ class TrialBalance extends FinancialStatement
 
     /**
      * Get Trial Balance Sections.
-     *
      */
     public function getSections() : void
     {
@@ -68,7 +66,7 @@ class TrialBalance extends FinancialStatement
      * Get Income Statement Sections.
      *
      * @param Account $account
-     * @param float $balance
+     * @param float   $balance
      */
     private function getIncomeStatementSections(Account $account, $balance) : void
     {
@@ -94,7 +92,7 @@ class TrialBalance extends FinancialStatement
      * Get Balance Sheet Sections.
      *
      * @param Account $account
-     * @param float $balance
+     * @param float   $balance
      */
     private function getBalanceSheetSections(Account $account, $balance) : void
     {

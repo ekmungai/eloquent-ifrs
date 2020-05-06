@@ -34,9 +34,11 @@ class AccountScheduleTest extends TestCase
     {
         parent::setUp();
         $this->be(factory(User::class)->create());
-        factory(ReportingPeriod::class)->create([
+        factory(ReportingPeriod::class)->create(
+            [
             "year" => date("Y"),
-        ]);
+            ]
+        );
     }
 
     /**
@@ -59,9 +61,11 @@ class AccountScheduleTest extends TestCase
      */
     public function testAccountScheduleInvalidAccountType()
     {
-        $account = factory(Account::class)->create([
+        $account = factory(Account::class)->create(
+            [
             'account_type' => Account::BANK,
-        ]);
+            ]
+        );
 
         $this->expectException(InvalidAccountType::class);
         $this->expectExceptionMessage('Schedule Account Type must be one of: Receivable, Payable');
@@ -76,141 +80,187 @@ class AccountScheduleTest extends TestCase
      */
     public function testClientAccountAccountSchedule()
     {
-        $account = factory(Account::class)->create([
+        $account = factory(Account::class)->create(
+            [
             'account_type' => Account::RECEIVABLE,
-        ]);
+            ]
+        );
         $currency = factory(Currency::class)->create();
 
         //opening balances
-        $balance = factory(Balance::class)->create([
+        $balance = factory(Balance::class)->create(
+            [
             "account_id" => $account->id,
             "balance_type" => Balance::DEBIT,
-            "exchange_rate_id" => factory(ExchangeRate::class)->create([
+            "exchange_rate_id" => factory(ExchangeRate::class)->create(
+                [
                 "rate" => 1,
-            ])->id,
+                ]
+            )->id,
             "currency_id" => $currency->id,
             "year" => date("Y"),
             "amount" => 50
-        ]);
+            ]
+        );
 
         //Client Receipt Transaction
-        $clientReceipt = new ClientReceipt([
+        $clientReceipt = new ClientReceipt(
+            [
             "account_id" => $account->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
             'currency_id'=> $currency->id,
-        ]);
+            ]
+        );
 
-        $lineItem = factory(LineItem::class)->create([
+        $lineItem = factory(LineItem::class)->create(
+            [
             "amount" => 100,
-            "account_id" => factory('IFRS\Models\Account')->create([
+            "account_id" => factory('IFRS\Models\Account')->create(
+                [
                 "account_type" => Account::BANK
-            ])->id,
-            "vat_id" => factory('IFRS\Models\Vat')->create([
+                ]
+            )->id,
+            "vat_id" => factory('IFRS\Models\Vat')->create(
+                [
                 "rate" => 0
-            ])->id,
-        ]);
+                ]
+            )->id,
+            ]
+        );
         $clientReceipt->addLineItem($lineItem);
 
         $clientReceipt->post();
 
-        factory(Assignment::class)->create([
+        factory(Assignment::class)->create(
+            [
             'transaction_id'=> $clientReceipt->id,
             'cleared_id'=> $balance->id,
             'cleared_type'=> "IFRS\Models\Balance",
             "amount" => 15,
-        ]);
+            ]
+        );
 
         //Client Invoice Transaction
-        $clientInvoice = new ClientInvoice([
+        $clientInvoice = new ClientInvoice(
+            [
             "account_id" => $account->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
             'currency_id'=> $currency->id,
-        ]);
+            ]
+        );
 
-        $lineItem = factory(LineItem::class)->create([
+        $lineItem = factory(LineItem::class)->create(
+            [
             "amount" => 100,
             "vat_id" => factory('IFRS\Models\Vat')->create(["rate" => 16])->id,
-            "account_id" => factory('IFRS\Models\Account')->create([
+            "account_id" => factory('IFRS\Models\Account')->create(
+                [
                 "account_type" => Account::OPERATING_REVENUE
-            ])->id,
-        ]);
+                ]
+            )->id,
+            ]
+        );
         $clientInvoice->addLineItem($lineItem);
 
         $clientInvoice->post();
 
         //Credit Note Transaction
-        $creditNote = new CreditNote([
+        $creditNote = new CreditNote(
+            [
             "account_id" => $account->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
             'currency_id'=> $currency->id,
-        ]);
+            ]
+        );
 
-        $lineItem = factory(LineItem::class)->create([
+        $lineItem = factory(LineItem::class)->create(
+            [
             "amount" => 50,
-            "account_id" => factory('IFRS\Models\Account')->create([
+            "account_id" => factory('IFRS\Models\Account')->create(
+                [
                 "account_type" => Account::OPERATING_REVENUE
-            ])->id,
-            "vat_id" => factory('IFRS\Models\Vat')->create([
+                ]
+            )->id,
+            "vat_id" => factory('IFRS\Models\Vat')->create(
+                [
                 "rate" => 16
-            ])->id,
-        ]);
+                ]
+            )->id,
+            ]
+        );
         $creditNote->addLineItem($lineItem);
 
         $creditNote->post();
 
-        factory(Assignment::class)->create([
+        factory(Assignment::class)->create(
+            [
             'transaction_id'=> $creditNote->id,
             'cleared_id'=> $clientInvoice->id,
             "amount" => 50,
-        ]);
+            ]
+        );
 
         //Debit Journal Entry Transaction
-        $debitJournalEntry = new JournalEntry([
+        $debitJournalEntry = new JournalEntry(
+            [
             "account_id" => $account->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
             "credited" => false,
             'currency_id'=> $currency->id,
-        ]);
+            ]
+        );
 
-        $lineItem = factory(LineItem::class)->create([
+        $lineItem = factory(LineItem::class)->create(
+            [
             "amount" => 75,
-            "vat_id" => factory('IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create(
+                [
                 "rate" => 0
-            ])->id,
-        ]);
+                ]
+            )->id,
+            ]
+        );
         $debitJournalEntry->addLineItem($lineItem);
 
         $debitJournalEntry->post();
 
         //Credit Journal Entry Transaction
-        $creditJournalEntry = new JournalEntry([
+        $creditJournalEntry = new JournalEntry(
+            [
             "account_id" => $account->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
             'currency_id'=> $currency->id,
-        ]);
+            ]
+        );
 
-        $lineItem = factory(LineItem::class)->create([
+        $lineItem = factory(LineItem::class)->create(
+            [
             "amount" => 30,
             "account_id" => factory('IFRS\Models\Account')->create()->id,
-            "vat_id" => factory('IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create(
+                [
                 "rate" => 0
-            ])->id,
-        ]);
+                ]
+            )->id,
+            ]
+        );
 
         $creditJournalEntry->addLineItem($lineItem);
 
         $creditJournalEntry->post();
 
-        factory(Assignment::class)->create([
+        factory(Assignment::class)->create(
+            [
             'transaction_id'=> $creditJournalEntry->id,
             'cleared_id'=> $debitJournalEntry->id,
             "amount" => 30,
-        ]);
+            ]
+        );
 
 
         $schedule = new AccountSchedule($account->id, $currency->id);
@@ -243,142 +293,188 @@ class AccountScheduleTest extends TestCase
      */
     public function testSupplierAccountAccountSchedule()
     {
-        $account = factory(Account::class)->create([
+        $account = factory(Account::class)->create(
+            [
             'account_type' => Account::PAYABLE,
-        ]);
+            ]
+        );
 
         $currency = factory(Currency::class)->create();
 
         //opening balances
-        $balance = factory(Balance::class)->create([
+        $balance = factory(Balance::class)->create(
+            [
             "account_id" => $account->id,
             "balance_type" => Balance::CREDIT,
-            "exchange_rate_id" => factory(ExchangeRate::class)->create([
+            "exchange_rate_id" => factory(ExchangeRate::class)->create(
+                [
                 "rate" => 1,
-            ])->id,
+                ]
+            )->id,
             "currency_id" => $currency->id,
             "year" => date("Y"),
             "amount" => 60
-        ]);
+            ]
+        );
 
         //Supplier Payment Transaction
-        $supplierPayment = new SupplierPayment([
+        $supplierPayment = new SupplierPayment(
+            [
             "account_id" => $account->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
             'currency_id'=> $currency->id,
-        ]);
+            ]
+        );
 
-        $lineItem = factory(LineItem::class)->create([
+        $lineItem = factory(LineItem::class)->create(
+            [
             "amount" => 100,
-            "account_id" => factory('IFRS\Models\Account')->create([
+            "account_id" => factory('IFRS\Models\Account')->create(
+                [
                 "account_type" => Account::BANK
-            ])->id,
-            "vat_id" => factory('IFRS\Models\Vat')->create([
+                ]
+            )->id,
+            "vat_id" => factory('IFRS\Models\Vat')->create(
+                [
                 "rate" => 0
-            ])->id,
-        ]);
+                ]
+            )->id,
+            ]
+        );
         $supplierPayment->addLineItem($lineItem);
 
         $supplierPayment->post();
 
-        factory(Assignment::class)->create([
+        factory(Assignment::class)->create(
+            [
             'transaction_id'=> $supplierPayment->id,
             'cleared_id'=> $balance->id,
             'cleared_type'=> "IFRS\Models\Balance",
             "amount" => 24,
-        ]);
+            ]
+        );
 
         //Supplier Bill Transaction
-        $supplierBill = new SupplierBill([
+        $supplierBill = new SupplierBill(
+            [
             "account_id" => $account->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
             'currency_id'=> $currency->id,
-        ]);
+            ]
+        );
 
-        $lineItem = factory(LineItem::class)->create([
+        $lineItem = factory(LineItem::class)->create(
+            [
             "amount" => 300,
             "vat_id" => factory('IFRS\Models\Vat')->create(["rate" => 16])->id,
-            "account_id" => factory('IFRS\Models\Account')->create([
+            "account_id" => factory('IFRS\Models\Account')->create(
+                [
                 "account_type" => Account::DIRECT_EXPENSE
-            ])->id,
-        ]);
+                ]
+            )->id,
+            ]
+        );
         $supplierBill->addLineItem($lineItem);
 
         $supplierBill->post();
 
         //Debit Note Transaction
-        $debitNote = new DebitNote([
+        $debitNote = new DebitNote(
+            [
             "account_id" => $account->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
             'currency_id'=> $currency->id,
-        ]);
+            ]
+        );
 
-        $lineItem = factory(LineItem::class)->create([
+        $lineItem = factory(LineItem::class)->create(
+            [
             "amount" => 175,
-            "account_id" => factory('IFRS\Models\Account')->create([
+            "account_id" => factory('IFRS\Models\Account')->create(
+                [
                 "account_type" => Account::OVERHEAD_EXPENSE
-            ])->id,
-            "vat_id" => factory('IFRS\Models\Vat')->create([
+                ]
+            )->id,
+            "vat_id" => factory('IFRS\Models\Vat')->create(
+                [
                 "rate" => 16
-            ])->id,
-        ]);
+                ]
+            )->id,
+            ]
+        );
         $debitNote->addLineItem($lineItem);
 
         $debitNote->post();
 
-        factory(Assignment::class)->create([
+        factory(Assignment::class)->create(
+            [
             'transaction_id'=> $debitNote->id,
             'cleared_id'=> $supplierBill->id,
             "amount" => 85,
-        ]);
+            ]
+        );
 
         //Debit Journal Entry Transaction
-        $debitJournalEntry = new JournalEntry([
+        $debitJournalEntry = new JournalEntry(
+            [
             "account_id" => $account->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
             'currency_id'=> $currency->id,
             'credited' => false,
-        ]);
+            ]
+        );
 
-        $lineItem = factory(LineItem::class)->create([
+        $lineItem = factory(LineItem::class)->create(
+            [
             "amount" => 180,
-            "vat_id" => factory('IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create(
+                [
                 "rate" => 0
-            ])->id,
-        ]);
+                ]
+            )->id,
+            ]
+        );
         $debitJournalEntry->addLineItem($lineItem);
 
         $debitJournalEntry->post();
 
         //Credit Journal Entry Transaction
-        $creditJournalEntry = new JournalEntry([
+        $creditJournalEntry = new JournalEntry(
+            [
             "account_id" => $account->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
             'currency_id'=> $currency->id,
-        ]);
+            ]
+        );
 
-        $lineItem = factory(LineItem::class)->create([
+        $lineItem = factory(LineItem::class)->create(
+            [
             "amount" => 240,
             "account_id" => factory('IFRS\Models\Account')->create()->id,
-            "vat_id" => factory('IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create(
+                [
                 "rate" => 16
-            ])->id,
-        ]);
+                ]
+            )->id,
+            ]
+        );
 
         $creditJournalEntry->addLineItem($lineItem);
 
         $creditJournalEntry->post();
 
-        factory(Assignment::class)->create([
+        factory(Assignment::class)->create(
+            [
             'transaction_id'=> $debitJournalEntry->id,
             'cleared_id'=> $creditJournalEntry->id,
             "amount" => 112.8,
-        ]);
+            ]
+        );
 
 
         $schedule = new AccountSchedule($account->id, $currency->id);

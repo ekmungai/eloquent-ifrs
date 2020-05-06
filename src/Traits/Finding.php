@@ -2,9 +2,9 @@
 /**
  * Eloquent IFRS Accounting
  *
- * @author Edward Mungai
+ * @author    Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
- * @license MIT
+ * @license   MIT
  */
 namespace IFRS\Traits;
 
@@ -13,7 +13,6 @@ use IFRS\Models\Transaction;
 /**
  *
  * @author emung
- *
  */
 trait Finding
 {

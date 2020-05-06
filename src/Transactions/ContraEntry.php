@@ -2,9 +2,9 @@
 /**
  * Eloquent IFRS Accounting
  *
- * @author Edward Mungai
+ * @author    Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
- * @license MIT
+ * @license   MIT
  */
 namespace IFRS\Transactions;
 
@@ -37,10 +37,9 @@ class ContraEntry extends Transaction implements Fetchable
      * Construct new ContraEntry
      *
      * @param array $attributes
-     *
      */
-    public function __construct($attributes = []) {
-
+    public function __construct($attributes = [])
+    {
         $attributes['credited'] = false;
         $attributes['transaction_type'] = self::PREFIX;
 
@@ -48,8 +47,8 @@ class ContraEntry extends Transaction implements Fetchable
     }
 
     /**
-    * Validate ContraEntry Main Account
-    */
+     * Validate ContraEntry Main Account
+     */
     public function save(array $options = []): bool
     {
         if (is_null($this->account) or $this->account->account_type != Account::BANK) {

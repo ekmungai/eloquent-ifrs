@@ -25,10 +25,12 @@ class ReportingPeriodTest extends TestCase
     {
         $entity = Auth::user()->entity;
 
-        $period = new ReportingPeriod([
+        $period = new ReportingPeriod(
+            [
             'period_count' => 1,
             'year' => Carbon::now()->year,
-        ]);
+            ]
+        );
         $period->save();
 
         $period->attributes();
@@ -61,10 +63,12 @@ class ReportingPeriodTest extends TestCase
      */
     public function testReportingPeriodRecycling()
     {
-        $period = new ReportingPeriod([
+        $period = new ReportingPeriod(
+            [
             'period_count' => 1,
             'year' => Carbon::now()->year,
-        ]);
+            ]
+        );
 
         $period->delete();
 

@@ -2,9 +2,9 @@
 /**
  * Eloquent IFRS Accounting
  *
- * @author Edward Mungai
+ * @author    Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
- * @license MIT
+ * @license   MIT
  */
 namespace IFRS\Models;
 
@@ -102,8 +102,8 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     /**
      * Construct new Transaction.
      */
-    public function __construct($attributes = []) {
-
+    public function __construct($attributes = [])
+    {
         $entity = Auth::user()->entity;
 
         if (!isset($attributes['currency_id'])) {
@@ -138,9 +138,11 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      */
     private function lineItemExists(int $id = null)
     {
-        return collect($this->items)->search(function ($item, $key) use ($id) {
-            return $item->id == $id;
-        });
+        return collect($this->items)->search(
+            function ($item, $key) use ($id) {
+                return $item->id == $id;
+            }
+        );
     }
 
     /**
@@ -199,9 +201,9 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
         $period_start = ReportingPeriod::periodStart($date);
 
         $next_id =  Transaction::withTrashed()
-        ->where("transaction_type", $type)
-        ->where("date", ">=", $period_start)
-        ->count() + 1;
+            ->where("transaction_type", $type)
+            ->where("date", ">=", $period_start)
+            ->count() + 1;
 
         return $type.str_pad((string) $period_count, 2, "0", STR_PAD_LEFT)
         ."/".
@@ -306,10 +308,10 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
         $amount = 0;
 
         if ($this->isPosted()) {
-            foreach ($this->ledgers->where("entry_type",Balance::DEBIT) as $ledger) {
+            foreach ($this->ledgers->where("entry_type", Balance::DEBIT) as $ledger) {
                 $amount += $ledger->amount / $this->exchangeRate->rate;
             }
-        }else {
+        } else {
             foreach ($this->getLineItems() as $lineItem) {
                 $amount += $lineItem->amount;
                 $amount += $lineItem->amount * $lineItem->vat->rate / 100;
@@ -429,10 +431,12 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
         }
 
         // Remove clearance records
-        $this->clearances->map(function ($clearance, $key) {
-            $clearance->delete();
-            return $clearance;
-        });
+        $this->clearances->map(
+            function ($clearance, $key) {
+                $clearance->delete();
+                return $clearance;
+            }
+        );
 
         return parent::delete();
     }
@@ -443,8 +447,10 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     public function checkIntegrity(): bool
     {
         // verify transaction ledger hashes
-        return $this->ledgers->every(function ($ledger, $key) {
-            return password_verify($ledger->hashed(), $ledger->hash);
-        });
+        return $this->ledgers->every(
+            function ($ledger, $key) {
+                return password_verify($ledger->hashed(), $ledger->hash);
+            }
+        );
     }
 }

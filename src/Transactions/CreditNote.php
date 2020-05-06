@@ -2,9 +2,9 @@
 /**
  * Eloquent IFRS Accounting
  *
- * @author Edward Mungai
+ * @author    Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
- * @license MIT
+ * @license   MIT
  */
 namespace IFRS\Transactions;
 
@@ -38,10 +38,9 @@ class CreditNote extends Transaction implements Sells, Fetchable, Assignable
      * Construct new ContraEntry
      *
      * @param array $attributes
-     *
      */
-    public function __construct($attributes = []) {
-
+    public function __construct($attributes = [])
+    {
         $attributes['credited'] = true;
         $attributes['transaction_type'] = self::PREFIX;
 

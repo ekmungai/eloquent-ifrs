@@ -2,9 +2,9 @@
 /**
  * Eloquent IFRS Accounting
  *
- * @author Edward Mungai
+ * @author    Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
- * @license MIT
+ * @license   MIT
  */
 namespace IFRS\Exceptions;
 
@@ -16,9 +16,9 @@ class InvalidAccountType extends IFRSException
     /**
      * Invalid Account Type Exception
      *
-     * @param array $accountTypes
+     * @param array  $accountTypes
      * @param string $message
-     * @param int $code
+     * @param int    $code
      */
     public function __construct(array $accountTypes, string $message = null, int $code = null)
     {

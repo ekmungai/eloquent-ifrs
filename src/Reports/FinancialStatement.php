@@ -2,9 +2,9 @@
 /**
  * Eloquent IFRS Accounting
  *
- * @author Edward Mungai
+ * @author    Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
- * @license MIT
+ * @license   MIT
  */
 namespace IFRS\Reports;
 
@@ -17,16 +17,15 @@ use IFRS\Models\ReportingPeriod;
 /**
  *
  * @author emung
- *
  */
 abstract class FinancialStatement
 {
 
     /**
-    * Financial Statement Entity.
-    *
-    * @var Entity
-    */
+     * Financial Statement Entity.
+     *
+     * @var Entity
+     */
     protected $entity;
 
     /**
@@ -58,7 +57,7 @@ abstract class FinancialStatement
      *
      * @param string $section
      * @param string $statement
-     * @param int $multiplier
+     * @param int    $multiplier
      * @param string $indent
      *
      * @return array[string, float]

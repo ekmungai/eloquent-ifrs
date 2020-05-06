@@ -2,9 +2,9 @@
 /**
  * Eloquent IFRS Accounting
  *
- * @author Edward Mungai
+ * @author    Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
- * @license MIT
+ * @license   MIT
  */
 namespace IFRS\Traits;
 
@@ -21,16 +21,15 @@ use IFRS\Models\Currency;
 /**
  *
  * @author emung
- *
  */
 trait Fetching
 {
     /**
      * Fetch Transactions given the filters
      *
-     * @param Carbon $startTime
-     * @param Carbon $endTime
-     * @param Account $account
+     * @param Carbon   $startTime
+     * @param Carbon   $endTime
+     * @param Account  $account
      * @param Currency $currency
      *
      * @return Collection

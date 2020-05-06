@@ -2,9 +2,9 @@
 /**
  * Eloquent IFRS Accounting
  *
- * @author Edward Mungai
+ * @author    Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
- * @license MIT
+ * @license   MIT
  */
 namespace IFRS\Models;
 
@@ -89,8 +89,8 @@ class Account extends Model implements Recyclable, Segragatable
     /**
      * Construct new Account.
      */
-    public function __construct($attributes = []) {
-
+    public function __construct($attributes = [])
+    {
         if (!isset($attributes['currency_id'])) {
             $attributes['currency_id'] = Auth::user()->entity->currency_id;
         }
@@ -262,8 +262,8 @@ class Account extends Model implements Recyclable, Segragatable
             $section = Arr::collapse(array_values(config('ifrs')))[$this->account_type];
 
             $this->code = $section + Account::withTrashed()
-            ->where("account_type", $this->account_type)
-            ->count() + 1;
+                ->where("account_type", $this->account_type)
+                ->count() + 1;
         }
 
         return parent::save($options);

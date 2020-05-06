@@ -2,9 +2,9 @@
 /**
  * Eloquent IFRS Accounting
  *
- * @author Edward Mungai
+ * @author    Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
- * @license MIT
+ * @license   MIT
  */
 namespace IFRS\Reports;
 
@@ -81,25 +81,27 @@ class AccountStatement
     protected function buildQuery()
     {
         $query = DB::table('transactions')->leftJoin('ledgers', 'transactions.id', '=', 'ledgers.transaction_id')
-        ->where('transactions.deleted_at', null)
-        ->where("transactions.entity_id", $this->entity->id)
-        ->where("transactions.date", ">=", $this->period['startDate'])
-        ->where("transactions.date", "<=", $this->period['endDate'])
-        ->where("transactions.currency_id", $this->currency->id)
-        ->select(
-            'transactions.id',
-            'transactions.date',
-            'transactions.transaction_no',
-            'transactions.reference',
-            'transactions.transaction_type',
-            'transactions.narration'
-        )->distinct();
+            ->where('transactions.deleted_at', null)
+            ->where("transactions.entity_id", $this->entity->id)
+            ->where("transactions.date", ">=", $this->period['startDate'])
+            ->where("transactions.date", "<=", $this->period['endDate'])
+            ->where("transactions.currency_id", $this->currency->id)
+            ->select(
+                'transactions.id',
+                'transactions.date',
+                'transactions.transaction_no',
+                'transactions.reference',
+                'transactions.transaction_type',
+                'transactions.narration'
+            )->distinct();
 
         $account = $this->account;
-        $query->where(function ($query) use ($account) {
-            $query->where("ledgers.post_account", $this->account->id)
-            ->orwhere("ledgers.folio_account", $this->account->id);
-        });
+        $query->where(
+            function ($query) use ($account) {
+                $query->where("ledgers.post_account", $this->account->id)
+                    ->orwhere("ledgers.folio_account", $this->account->id);
+            }
+        );
 
         return $query;
     }
@@ -124,8 +126,8 @@ class AccountStatement
     /**
      * Construct Account Statement for the account for the period.
      *
-     * @param int $account_id
-     * @param int $currency_id
+     * @param int    $account_id
+     * @param int    $currency_id
      * @param string $startDate
      * @param string $endDate
      */
@@ -137,7 +139,7 @@ class AccountStatement
     ) {
         if (is_null($account_id)) {
             throw new MissingAccount("Account Statement");
-        }else{
+        } else {
             $this->account = Account::find($account_id);
         }
 

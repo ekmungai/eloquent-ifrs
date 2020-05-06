@@ -2,9 +2,9 @@
 /**
  * Eloquent IFRS Accounting
  *
- * @author Edward Mungai
+ * @author    Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
- * @license MIT
+ * @license   MIT
  */
 namespace IFRS\Models;
 
@@ -51,7 +51,7 @@ class Ledger extends Model implements Segragatable
     /**
      * Create VAT Ledger entries for the Transaction LineItem.
      *
-     * @param LineItem $lineItem
+     * @param LineItem    $lineItem
      * @param Transaction $transaction
      *
      * @return void
@@ -184,7 +184,8 @@ class Ledger extends Model implements Segragatable
      *
      * @return string
      */
-    public function hashed() {
+    public function hashed()
+    {
         $ledger = [];
 
         $ledger[] = $this->entity_id;
@@ -225,7 +226,7 @@ class Ledger extends Model implements Segragatable
      * Get Account's contribution to the Transaction total amount.
      *
      * @param Account $account
-     * @param int $transactionId
+     * @param int     $transactionId
      *
      * @return float
      */
@@ -233,10 +234,12 @@ class Ledger extends Model implements Segragatable
     {
         $contribution = 0;
 
-        $query = Ledger::where([
+        $query = Ledger::where(
+            [
             "post_account" => $account->id,
             "transaction_id" => $transactionId,
-        ]);
+            ]
+        );
 
         foreach ($query->get() as $record) {
             $amount = $record->amount/$record->transaction->exchangeRate->rate;
@@ -249,25 +252,29 @@ class Ledger extends Model implements Segragatable
      * Get Account's balance as at the given date.
      *
      * @param Account $account
-     * @param Carbon $startDate
-     * @param Carbon $endDate
+     * @param Carbon  $startDate
+     * @param Carbon  $endDate
      *
      * @return float
      */
     public static function balance(Account $account, Carbon $startDate, Carbon $endDate) : float
     {
-        $debits = Ledger::where([
+        $debits = Ledger::where(
+            [
             "post_account" => $account->id,
             "entry_type" => Balance::DEBIT,
-        ])
+            ]
+        )
         ->where("date", ">=", $startDate)
         ->where("date", "<=", $endDate)
         ->sum('amount');
 
-        $credits = Ledger::where([
+        $credits = Ledger::where(
+            [
             "post_account" => $account->id,
             "entry_type" => Balance::CREDIT,
-        ])
+            ]
+        )
         ->where("date", ">=", $startDate)
         ->where("date", "<=", $endDate)
         ->sum('amount');

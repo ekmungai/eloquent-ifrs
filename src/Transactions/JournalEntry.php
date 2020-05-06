@@ -2,9 +2,9 @@
 /**
  * Eloquent IFRS Accounting
  *
- * @author Edward Mungai
+ * @author    Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
- * @license MIT
+ * @license   MIT
  */
 namespace IFRS\Transactions;
 
@@ -57,10 +57,9 @@ class JournalEntry extends Transaction implements Assignable, Clearable, Fetchab
      * Construct new JournalEntry
      *
      * @param array $attributes
-     *
      */
-    public function __construct($attributes = []) {
-
+    public function __construct($attributes = [])
+    {
         if (!isset($attributes['credited'])) {
             $attributes['credited'] = true;
         }

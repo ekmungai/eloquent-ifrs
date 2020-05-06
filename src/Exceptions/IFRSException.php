@@ -2,9 +2,9 @@
 /**
  * Eloquent IFRS Accounting
  *
- * @author Edward Mungai
+ * @author    Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
- * @license MIT
+ * @license   MIT
  */
 namespace IFRS\Exceptions;
 
@@ -28,7 +28,7 @@ class IFRSException extends \Exception
      * IFRS Base Exception
      *
      * @param string $message
-     * @param int $code
+     * @param int    $code
      */
 
     public function __construct(string $message = null, int $code = null)

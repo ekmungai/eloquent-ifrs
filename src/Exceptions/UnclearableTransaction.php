@@ -2,9 +2,9 @@
 /**
  * Eloquent IFRS Accounting
  *
- * @author Edward Mungai
+ * @author    Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
- * @license MIT
+ * @license   MIT
  */
 namespace IFRS\Exceptions;
 
@@ -16,9 +16,9 @@ class UnclearableTransaction extends IFRSException
      * Unclearable Transaction Exception
      *
      * @param string $transactionType
-     * @param array $transactionTypes
+     * @param array  $transactionTypes
      * @param string $message
-     * @param int $code
+     * @param int    $code
      */
     public function __construct(string $transactionType, array $transactionTypes, string $message = null, int $code = null)
     {

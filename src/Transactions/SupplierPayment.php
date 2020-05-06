@@ -2,9 +2,9 @@
 /**
  * Eloquent IFRS Accounting
  *
- * @author Edward Mungai
+ * @author    Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
- * @license MIT
+ * @license   MIT
  */
 namespace IFRS\Transactions;
 
@@ -40,10 +40,9 @@ class SupplierPayment extends Transaction implements Fetchable, Assignable
      * Construct new ContraEntry
      *
      * @param array $attributes
-     *
      */
-    public function __construct($attributes = []) {
-
+    public function __construct($attributes = [])
+    {
         $attributes['credited'] = false;
         $attributes['transaction_type'] = self::PREFIX;
 

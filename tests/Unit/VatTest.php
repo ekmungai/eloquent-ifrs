@@ -23,11 +23,13 @@ class VatTest extends TestCase
 
         $this->be($user);
 
-        $vat = new Vat([
+        $vat = new Vat(
+            [
             'name' => $this->faker->name,
             'code' => $this->faker->randomLetter(),
             'rate' => 10,
-        ]);
+            ]
+        );
         $vat->attributes();
         $vat->save();
 
@@ -44,11 +46,13 @@ class VatTest extends TestCase
      */
     public function testVatRecycling()
     {
-        $vat = new Vat([
+        $vat = new Vat(
+            [
             'name' => $this->faker->name,
             'code' => $this->faker->randomLetter(),
             'rate' => 10,
-        ]);
+            ]
+        );
         $vat->delete();
 
         $recycled = RecycledObject::all()->first();

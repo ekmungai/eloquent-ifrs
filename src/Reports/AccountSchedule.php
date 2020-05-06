@@ -2,9 +2,9 @@
 /**
  * Eloquent IFRS Accounting
  *
- * @author Edward Mungai
+ * @author    Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
- * @license MIT
+ * @license   MIT
  */
 namespace IFRS\Reports;
 
@@ -37,8 +37,7 @@ class AccountSchedule extends AccountStatement
      * Get Transaction amounts.
      *
      * @param Transaction|Balance $transaction
-     * @param string $transactionType
-     *
+     * @param string              $transactionType
      */
     private function getAmounts($transaction, $transactionType) : void
     {
@@ -70,8 +69,8 @@ class AccountSchedule extends AccountStatement
     /**
      * Account Schedule for the account for the period.
      *
-     * @param int $account_id
-     * @param int $currency_id
+     * @param int    $account_id
+     * @param int    $currency_id
      * @param string $endDate
      */
     public function __construct(int $account_id = null, int $currency_id = null, string $endDate = null)
@@ -99,20 +98,21 @@ class AccountSchedule extends AccountStatement
         }
 
         // Clearable Transactions
-        $transactions = $this->buildQuery()->whereIn('transaction_type', [
+        $transactions = $this->buildQuery()->whereIn(
+            'transaction_type', [
             Transaction::IN,
             Transaction::BL,
             Transaction::JN
-        ])->select('transactions.id');
+            ]
+        )->select('transactions.id');
 
         foreach ($transactions->get() as $transaction) {
             $transaction = Transaction::find($transaction->id);
 
             if ($transaction->transaction_type == Transaction::JN
                 and (($this->account->account_type == Account::RECEIVABLE and $transaction->credited)
-                    or ($this->account->account_type == Account::PAYABLE and !$transaction->credited)
-                    )
-                ) {
+                or ($this->account->account_type == Account::PAYABLE and !$transaction->credited)                )
+            ) {
                 continue;
             }
             $this->getAmounts($transaction, config('ifrs')['transactions'][$transaction->transaction_type]);

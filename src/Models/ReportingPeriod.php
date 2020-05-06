@@ -2,9 +2,9 @@
 /**
  * Eloquent IFRS Accounting
  *
- * @author Edward Mungai
+ * @author    Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
- * @license MIT
+ * @license   MIT
  */
 namespace IFRS\Models;
 
@@ -64,8 +64,8 @@ class ReportingPeriod extends Model implements Segragatable, Recyclable
     /**
      * Construct new Account.
      */
-    public function __construct($attributes = []) {
-
+    public function __construct($attributes = [])
+    {
         if (!isset($attributes['status'])) {
             $attributes['status'] = ReportingPeriod::OPEN;
         }
@@ -127,8 +127,8 @@ class ReportingPeriod extends Model implements Segragatable, Recyclable
     public static function periodEnd(string $date = null)
     {
         return ReportingPeriod::periodStart($date)
-        ->addYear()
-        ->subDay();
+            ->addYear()
+            ->subDay();
     }
 
     /**

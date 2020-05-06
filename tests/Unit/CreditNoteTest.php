@@ -28,15 +28,19 @@ class CreditNoteTest extends TestCase
      */
     public function testCreateCreditNoteTransaction()
     {
-        $clientAccount = factory(Account::class)->create([
+        $clientAccount = factory(Account::class)->create(
+            [
             'account_type' => Account::RECEIVABLE,
-        ]);
+            ]
+        );
 
-        $creditNote = new CreditNote([
+        $creditNote = new CreditNote(
+            [
             "account_id" => $clientAccount->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
         $creditNote->save();
 
         $this->assertEquals($creditNote->account->name, $clientAccount->name);
@@ -51,23 +55,33 @@ class CreditNoteTest extends TestCase
      */
     public function testPostCreditNoteTransaction()
     {
-        $creditNote = new CreditNote([
-            "account_id" => factory('IFRS\Models\Account')->create([
+        $creditNote = new CreditNote(
+            [
+            "account_id" => factory('IFRS\Models\Account')->create(
+                [
                 'account_type' => Account::RECEIVABLE,
-            ])->id,
+                ]
+            )->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
 
-        $lineItem = factory(LineItem::class)->create([
+        $lineItem = factory(LineItem::class)->create(
+            [
             "amount" => 100,
-            "vat_id" => factory('IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create(
+                [
                 "rate" => 16
-            ])->id,
-            "account_id" => factory('IFRS\Models\Account')->create([
+                ]
+            )->id,
+            "account_id" => factory('IFRS\Models\Account')->create(
+                [
                 "account_type" => Account::OPERATING_REVENUE
-            ])->id,
-        ]);
+                ]
+            )->id,
+            ]
+        );
         $creditNote->addLineItem($lineItem);
 
         $creditNote->post();
@@ -102,25 +116,35 @@ class CreditNoteTest extends TestCase
      */
     public function testCreditNoteLineItemAccount()
     {
-        $creditNote = new CreditNote([
-            "account_id" => factory('IFRS\Models\Account')->create([
+        $creditNote = new CreditNote(
+            [
+            "account_id" => factory('IFRS\Models\Account')->create(
+                [
                 'account_type' => Account::RECEIVABLE,
-            ])->id,
+                ]
+            )->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
         $this->expectException(LineItemAccount::class);
         $this->expectExceptionMessage('Credit Note LineItem Account must be of type Operating Revenue');
 
-        $lineItem = factory(LineItem::class)->create([
+        $lineItem = factory(LineItem::class)->create(
+            [
             "amount" => 100,
-            "vat_id" => factory('IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create(
+                [
                 "rate" => 16
-            ])->id,
-            "account_id" => factory('IFRS\Models\Account')->create([
+                ]
+            )->id,
+            "account_id" => factory('IFRS\Models\Account')->create(
+                [
                 "account_type" => Account::RECONCILIATION
-            ])->id,
-        ]);
+                ]
+            )->id,
+            ]
+        );
         $creditNote->addLineItem($lineItem);
 
         $creditNote->post();
@@ -133,25 +157,35 @@ class CreditNoteTest extends TestCase
      */
     public function testCreditNoteMainAccount()
     {
-        $creditNote = new CreditNote([
-            "account_id" => factory('IFRS\Models\Account')->create([
+        $creditNote = new CreditNote(
+            [
+            "account_id" => factory('IFRS\Models\Account')->create(
+                [
                 'account_type' => Account::RECONCILIATION,
-            ])->id,
+                ]
+            )->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
         $this->expectException(MainAccount::class);
         $this->expectExceptionMessage('Credit Note Main Account must be of type Receivable');
 
-        $lineItem = factory(LineItem::class)->create([
+        $lineItem = factory(LineItem::class)->create(
+            [
             "amount" => 100,
-            "vat_id" => factory('IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create(
+                [
                 "rate" => 16
-            ])->id,
-            "account_id" => factory('IFRS\Models\Account')->create([
+                ]
+            )->id,
+            "account_id" => factory('IFRS\Models\Account')->create(
+                [
                 "account_type" => Account::OPERATING_REVENUE
-            ])->id,
-        ]);
+                ]
+            )->id,
+            ]
+        );
         $creditNote->addLineItem($lineItem);
 
         $creditNote->post();
@@ -164,14 +198,18 @@ class CreditNoteTest extends TestCase
      */
     public function testCreditNoteFind()
     {
-        $account = factory(Account::class)->create([
+        $account = factory(Account::class)->create(
+            [
             'account_type' => Account::RECEIVABLE,
-        ]);
-        $transaction = new CreditNote([
+            ]
+        );
+        $transaction = new CreditNote(
+            [
             "account_id" => $account->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
         $transaction->save();
 
         $found = CreditNote::find($transaction->id);
@@ -185,24 +223,32 @@ class CreditNoteTest extends TestCase
      */
     public function testCreditNoteFetch()
     {
-        $account = factory(Account::class)->create([
+        $account = factory(Account::class)->create(
+            [
             'account_type' => Account::RECEIVABLE,
-        ]);
-        $transaction = new CreditNote([
+            ]
+        );
+        $transaction = new CreditNote(
+            [
             "account_id" => $account->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
         $transaction->save();
 
-        $account2 = factory(Account::class)->create([
+        $account2 = factory(Account::class)->create(
+            [
             'account_type' => Account::RECEIVABLE,
-        ]);
-        $transaction2 = new CreditNote([
+            ]
+        );
+        $transaction2 = new CreditNote(
+            [
             "account_id" => $account2->id,
             "date" => Carbon::now()->addWeeks(2),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
         $transaction2->save();
 
         // startTime Filter
@@ -215,9 +261,11 @@ class CreditNoteTest extends TestCase
         $this->assertEquals(count(CreditNote::fetch(null, Carbon::now()->subDay())), 0);
 
         // Account Filter
-        $account3 = factory(Account::class)->create([
+        $account3 = factory(Account::class)->create(
+            [
             'account_type' => Account::RECEIVABLE,
-        ]);
+            ]
+        );
         $this->assertEquals(count(CreditNote::fetch(null, null, $account)), 1);
         $this->assertEquals(count(CreditNote::fetch(null, null, $account2)), 1);
         $this->assertEquals(count(CreditNote::fetch(null, null, $account3)), 0);

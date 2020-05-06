@@ -17,10 +17,12 @@ class CurrencyTest extends TestCase
      */
     public function testCurrencyRelationships()
     {
-        $currency = new Currency([
+        $currency = new Currency(
+            [
             'name' => $this->faker->word,
             'currency_code' => $this->faker->currencyCode,
-        ]);
+            ]
+        );
         $currency->attributes();
         $currency->save();
 
@@ -43,10 +45,12 @@ class CurrencyTest extends TestCase
      */
     public function testCurrencyRecycling()
     {
-        $currency = new Currency([
+        $currency = new Currency(
+            [
             'name' => $this->faker->word,
             'currency_code' => $this->faker->currencyCode,
-        ]);
+            ]
+        );
         $currency->delete();
 
         $recycled = RecycledObject::all()->first();

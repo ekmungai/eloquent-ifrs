@@ -39,29 +39,39 @@ class TrialBalanceTest extends TestCase
          | ------------------------------
          */
 
-        $nonCurrentAsset = factory(Account::class)->create([
+        $nonCurrentAsset = factory(Account::class)->create(
+            [
             'account_type' => Account::NON_CURRENT_ASSET,
-        ]);
+            ]
+        );
 
         //balance
-        factory(Balance::class)->create([
+        factory(Balance::class)->create(
+            [
             "year" => date("Y"),
             "account_id" => $nonCurrentAsset,
             "balance_type" => Balance::DEBIT,
-            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
+                [
                 "rate" => 1
-            ])->id,
+                ]
+            )->id,
             "amount" => 100
-        ]);
+            ]
+        );
 
         //transaction
-        $bill = new SupplierBill([
-            "account_id" => factory('IFRS\Models\Account')->create([
+        $bill = new SupplierBill(
+            [
+            "account_id" => factory('IFRS\Models\Account')->create(
+                [
                 'account_type' => Account::PAYABLE,
-            ])->id,
+                ]
+            )->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
 
         $bill->addLineItem(
             factory(LineItem::class)->create(["account_id" => $nonCurrentAsset])
@@ -69,146 +79,202 @@ class TrialBalanceTest extends TestCase
         $bill->post();
 
 
-        $contraAsset = factory(Account::class)->create([
+        $contraAsset = factory(Account::class)->create(
+            [
             'account_type' => Account::CONTRA_ASSET,
-        ]);
+            ]
+        );
 
         //balance
-        factory(Balance::class)->create([
+        factory(Balance::class)->create(
+            [
             "year" => date("Y"),
             "account_id" => $contraAsset,
             "balance_type" => Balance::DEBIT,
-            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
+                [
                 "rate" => 1
-            ])->id,
+                ]
+            )->id,
             "amount" => 100
-        ]);
+            ]
+        );
 
         //transaction
-        $journal = new JournalEntry([
+        $journal = new JournalEntry(
+            [
             "account_id" => $contraAsset->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
 
         $journal->addLineItem(factory(LineItem::class)->create());
         $journal->post();
 
 
-        $inventory = factory(Account::class)->create([
+        $inventory = factory(Account::class)->create(
+            [
             'account_type' => Account::INVENTORY,
-        ]);
+            ]
+        );
 
         //balance
-        factory(Balance::class)->create([
+        factory(Balance::class)->create(
+            [
             "year" => date("Y"),
             "account_id" => $inventory,
             "balance_type" => Balance::DEBIT,
-            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
+                [
                 "rate" => 1
-            ])->id,
+                ]
+            )->id,
             "amount" => 100
-        ]);
+            ]
+        );
 
         //transaction
-        $cashPurchase = new CashPurchase([
-            "account_id" => factory('IFRS\Models\Account')->create([
+        $cashPurchase = new CashPurchase(
+            [
+            "account_id" => factory('IFRS\Models\Account')->create(
+                [
                 'account_type' => Account::BANK,
-            ])->id,
+                ]
+            )->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
 
         $cashPurchase->addLineItem(factory(LineItem::class)->create(["account_id" => $inventory]));
         $cashPurchase->post();
 
 
-        $bank = factory(Account::class)->create([
+        $bank = factory(Account::class)->create(
+            [
             'account_type' => Account::BANK,
-        ]);
+            ]
+        );
 
         //balance
-        factory(Balance::class)->create([
+        factory(Balance::class)->create(
+            [
             "year" => date("Y"),
             "account_id" => $bank,
             "balance_type" => Balance::DEBIT,
-            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
+                [
                 "rate" => 1
-            ])->id,
+                ]
+            )->id,
             "amount" => 100
-        ]);
+            ]
+        );
 
         //transaction
-        $contraEntry = new ContraEntry([
-            "account_id" => factory('IFRS\Models\Account')->create([
+        $contraEntry = new ContraEntry(
+            [
+            "account_id" => factory('IFRS\Models\Account')->create(
+                [
                 'account_type' => Account::BANK,
-            ])->id,
+                ]
+            )->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
 
-        $contraEntry->addLineItem(factory(LineItem::class)->create([
-            "account_id" => $bank,
-            "vat_id" => factory('IFRS\Models\Vat')->create([
-                "rate" => 0
-            ])->id,
-        ]));
+        $contraEntry->addLineItem(
+            factory(LineItem::class)->create(
+                [
+                "account_id" => $bank,
+                "vat_id" => factory('IFRS\Models\Vat')->create(
+                    [
+                    "rate" => 0
+                    ]
+                )->id,
+                ]
+            )
+        );
         $contraEntry->post();
 
 
-        $currentAsset = factory(Account::class)->create([
+        $currentAsset = factory(Account::class)->create(
+            [
             'account_type' => Account::CURRENT_ASSET,
-        ]);
+            ]
+        );
 
         //balance
-        factory(Balance::class)->create([
+        factory(Balance::class)->create(
+            [
             "year" => date("Y"),
             "account_id" => $currentAsset,
             "balance_type" => Balance::DEBIT,
-            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
+                [
                 "rate" => 1
-            ])->id,
+                ]
+            )->id,
             "amount" => 100
-        ]);
+            ]
+        );
 
         //transaction
-        $journalEntry = new JournalEntry([
+        $journalEntry = new JournalEntry(
+            [
             "account_id" => $currentAsset->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
 
         $journalEntry->addLineItem(factory(LineItem::class)->create());
         $journalEntry->post();
 
 
-        $receivable = factory(Account::class)->create([
+        $receivable = factory(Account::class)->create(
+            [
             'account_type' => Account::RECEIVABLE,
-        ]);
+            ]
+        );
 
         //balance
-        factory(Balance::class)->create([
+        factory(Balance::class)->create(
+            [
             "year" => date("Y"),
             "account_id" => $receivable,
             "balance_type" => Balance::DEBIT,
-            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
+                [
                 "rate" => 1
-            ])->id,
+                ]
+            )->id,
             "amount" => 100
-        ]);
+            ]
+        );
 
         //transaction
-        $clientInvoice = new ClientInvoice([
+        $clientInvoice = new ClientInvoice(
+            [
             "account_id" => $receivable->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
 
-        $clientInvoice->addLineItem(factory(LineItem::class)->create([
-            "account_id" => factory('IFRS\Models\Account')->create([
-                'account_type' => Account::OPERATING_REVENUE,
-            ])->id,
-        ]));
+        $clientInvoice->addLineItem(
+            factory(LineItem::class)->create(
+                [
+                "account_id" => factory('IFRS\Models\Account')->create(
+                    [
+                    'account_type' => Account::OPERATING_REVENUE,
+                    ]
+                )->id,
+                ]
+            )
+        );
         $clientInvoice->post();
 
         /*
@@ -217,131 +283,171 @@ class TrialBalanceTest extends TestCase
          | ------------------------------
          */
 
-        $nonCurrentLiability = factory(Account::class)->create([
+        $nonCurrentLiability = factory(Account::class)->create(
+            [
             'account_type' => Account::NON_CURRENT_LIABILITY,
-        ]);
+            ]
+        );
 
         //balance
-        factory(Balance::class)->create([
+        factory(Balance::class)->create(
+            [
             "year" => date("Y"),
             "account_id" => $nonCurrentLiability,
             "balance_type" => Balance::CREDIT,
-            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
+                [
                 "rate" => 1
-            ])->id,
+                ]
+            )->id,
             "amount" => 100
-        ]);
+            ]
+        );
 
         //transaction
-        $journalEntry = new JournalEntry([
+        $journalEntry = new JournalEntry(
+            [
             "account_id" => $nonCurrentLiability->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
 
         $journalEntry->addLineItem(factory(LineItem::class)->create());
         $journalEntry->post();
 
 
-        $controlAccount = factory(Account::class)->create([
+        $controlAccount = factory(Account::class)->create(
+            [
             'account_type' => Account::CONTROL_ACCOUNT,
-        ]);
+            ]
+        );
 
         //balance
-        factory(Balance::class)->create([
+        factory(Balance::class)->create(
+            [
             "year" => date("Y"),
             "account_id" => $controlAccount,
             "balance_type" => Balance::CREDIT,
-            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
+                [
                 "rate" => 1
-            ])->id,
+                ]
+            )->id,
             "amount" => 100
-        ]);
+            ]
+        );
 
         //transaction
-        $journalEntry = new JournalEntry([
+        $journalEntry = new JournalEntry(
+            [
             "account_id" => $controlAccount->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
 
         $journalEntry->addLineItem(factory(LineItem::class)->create());
         $journalEntry->post();
 
 
-        $currentLiability = factory(Account::class)->create([
+        $currentLiability = factory(Account::class)->create(
+            [
             'account_type' => Account::CURRENT_LIABILITY,
-        ]);
+            ]
+        );
 
         //balance
-        factory(Balance::class)->create([
+        factory(Balance::class)->create(
+            [
             "year" => date("Y"),
             "account_id" => $currentLiability,
             "balance_type" => Balance::CREDIT,
-            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
+                [
                 "rate" => 1
-            ])->id,
+                ]
+            )->id,
             "amount" => 100
-        ]);
+            ]
+        );
 
         //transaction
-        $journalEntry = new JournalEntry([
+        $journalEntry = new JournalEntry(
+            [
             "account_id" => $currentLiability->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
 
         $journalEntry->addLineItem(factory(LineItem::class)->create());
         $journalEntry->post();
 
 
-        $payable = factory(Account::class)->create([
+        $payable = factory(Account::class)->create(
+            [
             'account_type' => Account::PAYABLE,
-        ]);
+            ]
+        );
 
         //balance
-        factory(Balance::class)->create([
+        factory(Balance::class)->create(
+            [
             "year" => date("Y"),
             "account_id" => $payable,
             "balance_type" => Balance::CREDIT,
-            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
+                [
                 "rate" => 1
-            ])->id,
+                ]
+            )->id,
             "amount" => 100
-        ]);
+            ]
+        );
 
         //transaction
-        $bill = new SupplierBill([
+        $bill = new SupplierBill(
+            [
             "account_id" => $payable->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
 
         $bill->addLineItem(factory(LineItem::class)->create(["account_id" => $nonCurrentAsset]));
         $bill->post();
 
 
-        $reconciliation = factory(Account::class)->create([
+        $reconciliation = factory(Account::class)->create(
+            [
             'account_type' => Account::RECONCILIATION,
-        ]);
+            ]
+        );
 
         //balance
-        factory(Balance::class)->create([
+        factory(Balance::class)->create(
+            [
             "year" => date("Y"),
             "account_id" => $reconciliation,
             "balance_type" => Balance::CREDIT,
-            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
+                [
                 "rate" => 1
-            ])->id,
+                ]
+            )->id,
             "amount" => 100
-        ]);
+            ]
+        );
 
         //transaction
-        $journalEntry = new JournalEntry([
+        $journalEntry = new JournalEntry(
+            [
             "account_id" => $reconciliation->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
 
         $journalEntry->addLineItem(factory(LineItem::class)->create());
         $journalEntry->post();
@@ -352,27 +458,35 @@ class TrialBalanceTest extends TestCase
          | ------------------------------
          */
 
-        $equity = factory(Account::class)->create([
+        $equity = factory(Account::class)->create(
+            [
             'account_type' => Account::EQUITY,
-        ]);
+            ]
+        );
 
         //balance
-        factory(Balance::class)->create([
+        factory(Balance::class)->create(
+            [
             "year" => date("Y"),
             "account_id" => $equity,
             "balance_type" => Balance::CREDIT,
-            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create([
+            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
+                [
                 "rate" => 1
-            ])->id,
+                ]
+            )->id,
             "amount" => 100
-        ]);
+            ]
+        );
 
         //transaction
-        $journalEntry = new JournalEntry([
+        $journalEntry = new JournalEntry(
+            [
             "account_id" => $equity->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
 
         $journalEntry->addLineItem(factory(LineItem::class)->create());
         $journalEntry->post();
@@ -383,34 +497,48 @@ class TrialBalanceTest extends TestCase
          | ------------------------------
          */
 
-        $operatingIncome = factory(Account::class)->create([
+        $operatingIncome = factory(Account::class)->create(
+            [
             'account_type' => Account::OPERATING_REVENUE,
-         ]);
+            ]
+        );
 
         //transaction
-        $clientInvoice = new ClientInvoice([
+        $clientInvoice = new ClientInvoice(
+            [
             "account_id" => $receivable->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
 
-        $clientInvoice->addLineItem(factory(LineItem::class)->create([
-            "account_id" => $operatingIncome->id,
-        ]));
+        $clientInvoice->addLineItem(
+            factory(LineItem::class)->create(
+                [
+                "account_id" => $operatingIncome->id,
+                ]
+            )
+        );
         $clientInvoice->post();
 
-        $operatingExpenses = factory(Account::class)->create([
+        $operatingExpenses = factory(Account::class)->create(
+            [
             'account_type' => Account::OPERATING_EXPENSE,
-         ]);
+            ]
+        );
 
         //transaction
-        $cashPurchase = new CashPurchase([
-            "account_id" => factory('IFRS\Models\Account')->create([
+        $cashPurchase = new CashPurchase(
+            [
+            "account_id" => factory('IFRS\Models\Account')->create(
+                [
                 'account_type' => Account::BANK,
-            ])->id,
+                ]
+            )->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
 
         $cashPurchase->addLineItem(factory(LineItem::class)->create(["account_id" => $operatingExpenses]));
         $cashPurchase->post();
@@ -421,60 +549,78 @@ class TrialBalanceTest extends TestCase
          | ------------------------------
          */
 
-        $nonOperatingRevenue = factory(Account::class)->create([
-           'account_type' => Account::NON_OPERATING_REVENUE,
-        ]);
+        $nonOperatingRevenue = factory(Account::class)->create(
+            [
+            'account_type' => Account::NON_OPERATING_REVENUE,
+            ]
+        );
 
         //transaction
-        $journalEntry = new JournalEntry([
+        $journalEntry = new JournalEntry(
+            [
             "account_id" => $nonOperatingRevenue->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
 
         $journalEntry->addLineItem(factory(LineItem::class)->create());
         $journalEntry->post();
 
-        $directExpense = factory(Account::class)->create([
+        $directExpense = factory(Account::class)->create(
+            [
             'account_type' => Account::DIRECT_EXPENSE,
-        ]);
+            ]
+        );
 
         //transaction
-        $bill = new SupplierBill([
+        $bill = new SupplierBill(
+            [
             "account_id" => $payable->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
 
         $bill->addLineItem(factory(LineItem::class)->create(["account_id" => $directExpense]));
         $bill->post();
 
-        $overheadExpense = factory(Account::class)->create([
+        $overheadExpense = factory(Account::class)->create(
+            [
             'account_type' => Account::OVERHEAD_EXPENSE,
-        ]);
+            ]
+        );
 
         //transaction
-        $cashPurchase = new CashPurchase([
-            "account_id" => factory('IFRS\Models\Account')->create([
+        $cashPurchase = new CashPurchase(
+            [
+            "account_id" => factory('IFRS\Models\Account')->create(
+                [
                 'account_type' => Account::BANK,
-            ])->id,
+                ]
+            )->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
 
         $cashPurchase->addLineItem(factory(LineItem::class)->create(["account_id" => $overheadExpense]));
         $cashPurchase->post();
 
-        $otherExpense = factory(Account::class)->create([
+        $otherExpense = factory(Account::class)->create(
+            [
             'account_type' => Account::OTHER_EXPENSE,
-        ]);
+            ]
+        );
 
         //transaction
-        $bill = new SupplierBill([
+        $bill = new SupplierBill(
+            [
             "account_id" => $payable->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
 
         $bill->addLineItem(factory(LineItem::class)->create(["account_id" => $otherExpense]));
         $bill->post();

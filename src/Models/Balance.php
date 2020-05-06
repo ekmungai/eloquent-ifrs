@@ -2,9 +2,9 @@
 /**
  * Eloquent IFRS Accounting
  *
- * @author Edward Mungai
+ * @author    Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
- * @license MIT
+ * @license   MIT
  */
 namespace IFRS\Models;
 
@@ -89,8 +89,8 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
     /**
      * Construct new Balance.
      */
-    public function __construct($attributes = []) {
-
+    public function __construct($attributes = [])
+    {
         $entity = Auth::user()->entity;
 
         if (!isset($attributes['currency_id'])) {
@@ -221,7 +221,6 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
 
     /**
      * Balance Validation.
-     *
      */
     public function save(array $options = []) : bool
     {

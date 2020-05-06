@@ -14,7 +14,6 @@ abstract class TestCase extends Orchestra
 {
     public function setUp(): void
     {
-
         parent::setUp();
 
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
@@ -22,15 +21,17 @@ abstract class TestCase extends Orchestra
         $this->faker = Faker::create();
 
         $this->be(factory(User::class)->create());
-        $this->period = factory(ReportingPeriod::class)->create([
+        $this->period = factory(ReportingPeriod::class)->create(
+            [
             "year" => date("Y"),
-        ]);
+            ]
+        );
     }
 
     /**
      * Add the package provider
      *
-     * @param $app
+     * @param  $app
      * @return array
      */
     protected function getPackageProviders($app)

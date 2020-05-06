@@ -30,13 +30,16 @@ class AccountBalanceTest extends TestCase
     {
         $currency = factory(Currency::class)->create();
 
-        $account = factory(Account::class)->create([
+        $account = factory(Account::class)->create(
+            [
             'account_type' => Account::INVENTORY,
-        ]);
+            ]
+        );
 
         $exchangeRate = factory(ExchangeRate::class)->create();
 
-        $balance = new Balance([
+        $balance = new Balance(
+            [
             'exchange_rate_id' => $exchangeRate->id,
             'currency_id' => $currency->id,
             'account_id' => $account->id,
@@ -46,7 +49,8 @@ class AccountBalanceTest extends TestCase
             'reference' => $this->faker->word,
             'balance_type' =>  Balance::DEBIT,
             'amount' => $this->faker->randomFloat(2),
-        ]);
+            ]
+        );
         $balance->save();
 
         $this->assertEquals($balance->currency->name, $currency->name);
@@ -103,11 +107,15 @@ class AccountBalanceTest extends TestCase
         $this->expectException(InvalidAccountClassBalance::class);
         $this->expectExceptionMessage('Income Statement Accounts cannot have Opening Balances');
 
-        factory(Balance::class)->create([
-            "account_id" => factory('IFRS\Models\Account')->create([
+        factory(Balance::class)->create(
+            [
+            "account_id" => factory('IFRS\Models\Account')->create(
+                [
                 "account_type" => Account::OPERATING_REVENUE
-            ])->id,
-        ]);
+                ]
+            )->id,
+            ]
+        );
     }
 
     /**
@@ -122,9 +130,11 @@ class AccountBalanceTest extends TestCase
             'Opening Balance Transaction must be one of: Client Invoice, Supplier Bill, Journal Entry'
         );
 
-        factory(Balance::class)->create([
+        factory(Balance::class)->create(
+            [
             'transaction_type' => Transaction::CN,
-        ]);
+            ]
+        );
     }
 
     /**
@@ -137,9 +147,11 @@ class AccountBalanceTest extends TestCase
         $this->expectException(InvalidBalance::class);
         $this->expectExceptionMessage('Opening Balance Type must be one of: Debit, Credit');
 
-        factory(Balance::class)->create([
+        factory(Balance::class)->create(
+            [
             "balance_type" => "X"
-        ]);
+            ]
+        );
     }
 
     /**
@@ -152,8 +164,10 @@ class AccountBalanceTest extends TestCase
         $this->expectException(NegativeAmount::class);
         $this->expectExceptionMessage('Balance Amount cannot be negative');
 
-        factory(Balance::class)->create([
+        factory(Balance::class)->create(
+            [
             "amount" => -100
-        ]);
+            ]
+        );
     }
 }

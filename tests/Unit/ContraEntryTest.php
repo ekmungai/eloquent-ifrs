@@ -28,15 +28,19 @@ class ContraEntryTest extends TestCase
      */
     public function testCreateContraEntryTransaction()
     {
-        $bankAccount = factory(Account::class)->create([
+        $bankAccount = factory(Account::class)->create(
+            [
             'account_type' => Account::BANK,
-        ]);
+            ]
+        );
 
-        $contraEntry = new ContraEntry([
+        $contraEntry = new ContraEntry(
+            [
             "account_id" => $bankAccount->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
         $contraEntry->save();
 
         $this->assertEquals($contraEntry->account->name, $bankAccount->name);
@@ -51,23 +55,33 @@ class ContraEntryTest extends TestCase
      */
     public function testPostContraEntryTransaction()
     {
-        $contraEntry = new ContraEntry([
-            "account_id" => factory('IFRS\Models\Account')->create([
+        $contraEntry = new ContraEntry(
+            [
+            "account_id" => factory('IFRS\Models\Account')->create(
+                [
                 'account_type' => Account::BANK,
-            ])->id,
+                ]
+            )->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
 
-        $lineItem = factory(LineItem::class)->create([
+        $lineItem = factory(LineItem::class)->create(
+            [
             "amount" => 100,
-            "vat_id" => factory('IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create(
+                [
                 "rate" => 0
-            ])->id,
-            "account_id" => factory('IFRS\Models\Account')->create([
+                ]
+            )->id,
+            "account_id" => factory('IFRS\Models\Account')->create(
+                [
                 "account_type" => Account::BANK
-            ])->id,
-        ]);
+                ]
+            )->id,
+            ]
+        );
         $contraEntry->addLineItem($lineItem);
 
         $contraEntry->post();
@@ -92,25 +106,35 @@ class ContraEntryTest extends TestCase
      */
     public function testContraEntryLineItemAccount()
     {
-        $contraEntry = new ContraEntry([
-            "account_id" => factory('IFRS\Models\Account')->create([
+        $contraEntry = new ContraEntry(
+            [
+            "account_id" => factory('IFRS\Models\Account')->create(
+                [
                 'account_type' => Account::BANK,
-            ])->id,
+                ]
+            )->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
         $this->expectException(LineItemAccount::class);
         $this->expectExceptionMessage('Contra Entry LineItem Account must be of type Bank');
 
-        $lineItem = factory(LineItem::class)->create([
+        $lineItem = factory(LineItem::class)->create(
+            [
             "amount" => 100,
-            "vat_id" => factory('IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create(
+                [
                 "rate" => 16
-            ])->id,
-            "account_id" => factory('IFRS\Models\Account')->create([
+                ]
+            )->id,
+            "account_id" => factory('IFRS\Models\Account')->create(
+                [
                 "account_type" => Account::RECONCILIATION
-            ])->id,
-        ]);
+                ]
+            )->id,
+            ]
+        );
         $contraEntry->addLineItem($lineItem);
 
         $contraEntry->post();
@@ -123,25 +147,35 @@ class ContraEntryTest extends TestCase
      */
     public function testContraEntryMainAccount()
     {
-        $contraEntry = new ContraEntry([
-            "account_id" => factory('IFRS\Models\Account')->create([
+        $contraEntry = new ContraEntry(
+            [
+            "account_id" => factory('IFRS\Models\Account')->create(
+                [
                 'account_type' => Account::RECONCILIATION,
-            ])->id,
+                ]
+            )->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
         $this->expectException(MainAccount::class);
         $this->expectExceptionMessage('Contra Entry Main Account must be of type Bank');
 
-        $lineItem = factory(LineItem::class)->create([
+        $lineItem = factory(LineItem::class)->create(
+            [
             "amount" => 100,
-            "vat_id" => factory('IFRS\Models\Vat')->create([
+            "vat_id" => factory('IFRS\Models\Vat')->create(
+                [
                 "rate" => 0
-            ])->id,
-            "account_id" => factory('IFRS\Models\Account')->create([
+                ]
+            )->id,
+            "account_id" => factory('IFRS\Models\Account')->create(
+                [
                 "account_type" => Account::BANK
-            ])->id,
-        ]);
+                ]
+            )->id,
+            ]
+        );
         $contraEntry->addLineItem($lineItem);
 
         $contraEntry->save();
@@ -154,14 +188,18 @@ class ContraEntryTest extends TestCase
      */
     public function testContraEntryFind()
     {
-        $account = factory(Account::class)->create([
+        $account = factory(Account::class)->create(
+            [
             'account_type' => Account::BANK,
-        ]);
-        $transaction = new ContraEntry([
+            ]
+        );
+        $transaction = new ContraEntry(
+            [
             "account_id" => $account->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
         $transaction->save();
 
         $found = ContraEntry::find($transaction->id);
@@ -175,24 +213,32 @@ class ContraEntryTest extends TestCase
      */
     public function testContraEntryFetch()
     {
-        $account = factory(Account::class)->create([
+        $account = factory(Account::class)->create(
+            [
             'account_type' => Account::BANK,
-        ]);
-        $transaction = new ContraEntry([
+            ]
+        );
+        $transaction = new ContraEntry(
+            [
             "account_id" => $account->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
         $transaction->save();
 
-        $account2 = factory(Account::class)->create([
+        $account2 = factory(Account::class)->create(
+            [
             'account_type' => Account::BANK,
-        ]);
-        $transaction2 = new ContraEntry([
+            ]
+        );
+        $transaction2 = new ContraEntry(
+            [
             "account_id" => $account2->id,
             "date" => Carbon::now()->addWeeks(2),
             "narration" => $this->faker->word,
-        ]);
+            ]
+        );
         $transaction2->save();
 
         // startTime Filter
@@ -205,9 +251,11 @@ class ContraEntryTest extends TestCase
         $this->assertEquals(count(ContraEntry::fetch(null, Carbon::now()->subDay())), 0);
 
         // Account Filter
-        $account3 = factory(Account::class)->create([
+        $account3 = factory(Account::class)->create(
+            [
             'account_type' => Account::BANK,
-        ]);
+            ]
+        );
         $this->assertEquals(count(ContraEntry::fetch(null, null, $account)), 1);
         $this->assertEquals(count(ContraEntry::fetch(null, null, $account2)), 1);
         $this->assertEquals(count(ContraEntry::fetch(null, null, $account3)), 0);

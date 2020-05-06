@@ -22,12 +22,14 @@ class ExchangeRateTest extends TestCase
         $currency  = factory(Currency::class)->create();
         $currency->save();
 
-        $exchangeRate = new ExchangeRate([
+        $exchangeRate = new ExchangeRate(
+            [
             'valid_from' => Carbon::now(),
             'valid_to' => Carbon::now()->addMonth(),
             'currency_id' => $currency->id,
             'rate' => 10
-        ]);
+            ]
+        );
         $exchangeRate->attributes();
         $exchangeRate->save();
 
@@ -47,12 +49,14 @@ class ExchangeRateTest extends TestCase
 
         $this->be($user);
 
-        $exchangeRate = new ExchangeRate([
+        $exchangeRate = new ExchangeRate(
+            [
             'valid_from' => Carbon::now(),
             'valid_to' => Carbon::now()->addMonth(),
             'currency_id' => factory(Currency::class)->create()->id,
             'rate' => 10
-        ]);
+            ]
+        );
         $exchangeRate->save();
 
         $this->assertEquals(count(ExchangeRate::all()), 1);
@@ -68,12 +72,14 @@ class ExchangeRateTest extends TestCase
      */
     public function testExchangeRateRecycling()
     {
-        $exchangeRate = new ExchangeRate([
+        $exchangeRate = new ExchangeRate(
+            [
             'valid_from' => Carbon::now(),
             'valid_to' => Carbon::now()->addMonth(),
             'currency_id' => factory(Currency::class)->create()->id,
             'rate' => 10
-        ]);
+            ]
+        );
         $exchangeRate->save();
 
         $recycled = RecycledObject::all()->first();

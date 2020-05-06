@@ -9,10 +9,10 @@ $iterator = Finder::create()
     ->in(__DIR__.'/../src')
 ;
 
-return new Sami($iterator, array(
+return new Sami($iterator, [
     'theme'                => 'default',
     'title'                => 'Laravel IFRS API Documentation',
     'build_dir'            => __DIR__.'/../docs',
     'cache_dir'            => __DIR__.'/../cache',
     'default_opened_level' => 2,
-));
+]);

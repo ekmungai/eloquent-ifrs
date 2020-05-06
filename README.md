@@ -27,14 +27,14 @@ Use composer to Install the package into your laravel or lumen application. Lara
 
 #### For production
 
-```
+```php
 composer require "ekmungai/eloquent-ifrs"
 composer install --no-dev
 ```
 
 Then run migrations to create the database tables.
 
-```
+```php
 php artisan migrate
 ```
 
@@ -42,7 +42,7 @@ php artisan migrate
 
 Clone this repo, and then run Composer in local repo root to pull in dependencies.
 
-```
+```php
 git clone git@github.com/ekmungai/eloquent-ifrs eloquent-ifrs
 cd eloquent-ifrs
 composer update
@@ -50,7 +50,7 @@ composer update
 
 To run the tests:
 
-```
+```php
 cd eloquent-ifrs
 vendor/bin/phpunit
 ```
@@ -59,7 +59,7 @@ vendor/bin/phpunit
 
 The package installs with the default settings as regards the names of Accounts/Transactions Types, Report Titles and Section names as well as Accounts Codes. To adjust these settings use the Laravel artisan publish command to install the ifrs configuration to your application's config folder where you can edit it.
 
-```
+```php
 php artisan vendor:publish
 ```
 
@@ -70,7 +70,7 @@ This simple example covers the four scenarios to demonstrate the use of the pack
 
 First we'll setup the Company (Reporting Entity) and required Accounts to record the Transactions. (Assuming that a registered User already exists):
 
-```
+```php
 use IFRS\Models\Entity;
 use IFRS\Models\Currency;
 
@@ -88,7 +88,7 @@ $entity = new Entity([
 ```
 We also need the VAT Rates that apply to the Entity:
 
-```
+```php
 use IFRS\Models\Vat;
 
 $outputVat = new Vat([
@@ -112,7 +112,7 @@ $outputVat = new Vat([
 
 Now we'll set up some Accounts:
 
-```
+```php
 use IFRS\Models\Account;
 
 $bankAccount = new Account([
@@ -158,7 +158,7 @@ $purchasesVatAccount = new Account([
 
 Now that all Accounts are prepared, we can create the first Transaction, a Cash Sale:
 
-```
+```php
 use IFRS\Transactions\CashSale;
 
 $cashSale = new CashSale([
@@ -169,7 +169,7 @@ $cashSale = new CashSale([
 ```
 So far the Transaction has only one side of the double entry, so we create a Line Item for the other side:
 
-```
+```php
 use IFRS\models\LineItem;
 
 $cashSaleLineItem = new LineItem([
@@ -187,7 +187,7 @@ $cashSale->post(); // This posts the Transaction to the Ledger
 ```
 The rest of the transactions:
 
-```
+```php
 use IFRS\Transactions\ClientInvoice;
 
 $clientInvoice = new ClientInvoice([
@@ -269,7 +269,7 @@ $clientReceipt->addLineItem($clientReceiptLineItem)->post();
 ```
 We can assign the receipt to partially clear the Invoice above:
 
-```
+```php
 use IFRS\Models\Assignment;
 
 echo $clientInvoice->clearedAmount(); //0: Currently the Invoice has not been cleared at all
@@ -288,7 +288,7 @@ echo $clientReceipt->balance(); //0: The Receipt has been assigned fully to the 
 ```
 We have now some Transactions in the Ledger, so lets generate some reports. First though, Reports require a reporting period:
 
-```
+```php
 use IFRS\Models\ReportingPeriod;
 
 $period = new ReportingPeriod([
@@ -299,7 +299,7 @@ $period = new ReportingPeriod([
 ```
 The Income Statement (Profit and Loss):
 
-```
+```php
 use IFRS\Reports\IncomeStatement;
 
 $incomeStatement = new IncomeStatement(
@@ -343,7 +343,7 @@ Net Profit                   100
 ```
 The Balance Sheet:
 
-```
+```php
 use IFRS\Reports\BalanceSheet;
 
 $balanceSheet = new BalanceSheet(
@@ -388,7 +388,7 @@ While the Income Statement and Balance Sheet are the ultimate goal for end year 
 
 In the above example:
 
-```
+```php
 use IFRS\Reports\AccountStatement;
 use IFRS\Reports\AccountSchedule;
 

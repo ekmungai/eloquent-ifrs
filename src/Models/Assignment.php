@@ -2,9 +2,9 @@
 /**
  * Eloquent IFRS Accounting
  *
- * @author Edward Mungai
+ * @author    Edward Mungai
  * @copyright Edward Mungai, 2020, Germany
- * @license MIT
+ * @license   MIT
  */
 namespace IFRS\Models;
 
@@ -60,7 +60,6 @@ class Assignment extends Model implements Segragatable
      */
     private function validate() : void
     {
-
         $transactionType = $this->transaction->transaction_type;
 
         $cleared_type = $this->cleared->transaction_type;
