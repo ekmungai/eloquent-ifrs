@@ -17,6 +17,7 @@ class InsufficientBalance extends IFRSException
      * Insufficient Balance Exception
      *
      * @param string $transactionType
+     * @param float  $amount
      * @param string $assignedType
      * @param string $message
      * @param int    $code

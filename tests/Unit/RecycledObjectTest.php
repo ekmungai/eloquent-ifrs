@@ -83,5 +83,11 @@ class RecycledObjectTest extends TestCase
         $this->assertEquals(count(User::withoutGlobalScopes()->get()), 2);
         $this->assertNotEquals($user->deleted_at, null);
         $this->assertNotEquals($user->destroyed_at, null);
+
+        //destroyed objects cannot be restored
+        $user->restore();
+
+        $this->assertNotEquals($user->deleted_at, null);
+        $this->assertNotEquals($user->destroyed_at, null);
     }
 }

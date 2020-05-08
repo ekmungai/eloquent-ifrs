@@ -49,6 +49,10 @@ trait Recycling
         );
         static::restoring(
             function ($model) {
+                if (!is_null($model->destroyed_at)) {
+                    return false;
+                }
+
                 if (Auth::check()) {
                     $recycled = $model->recycled->last();
                     $recycled->delete();

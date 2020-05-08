@@ -29,6 +29,8 @@ use IFRS\Exceptions\MissingLineItem;
 use IFRS\Exceptions\RedundantTransaction;
 use IFRS\Exceptions\PostedTransaction;
 use IFRS\Exceptions\HangingClearances;
+use IFRS\Exceptions\ClosedReportingPeriod;
+use IFRS\Exceptions\AdjustingReportingPeriod;
 
 /**
  * Class Transaction
@@ -114,9 +116,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
             $attributes['exchange_rate_id'] = $entity->defaultRate()->id;
         }
 
-        if (!isset($attributes['date'])) {
-            $attributes['date'] = Carbon::now();
-        }
+        $attributes['date'] = !isset($attributes['date'])? Carbon::now(): Carbon::parse($attributes['date']);
 
         return parent::__construct($attributes);
     }
@@ -392,6 +392,18 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      */
     public function save(array $options = []): bool
     {
+        $year = ReportingPeriod::year($this->date);
+
+        $period = ReportingPeriod::where("year",$year)->first();
+
+        if ($period->status == ReportingPeriod::CLOSED) {
+            throw new ClosedReportingPeriod($year);
+        }
+
+        if ($period->status == ReportingPeriod::ADJUSTING AND $this->transaction_type != Transaction::JN) {
+            throw new AdjustingReportingPeriod();
+        }
+
         $this->transaction_no = Transaction::transactionNo(
             $this->transaction_type,
             Carbon::parse($this->date)

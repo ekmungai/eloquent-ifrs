@@ -46,9 +46,9 @@ class ReportingPeriod extends Model implements Segragatable, Recyclable
      * @var string
      */
 
-    const OPEN = "Open";
-    const CLOSED = "Closed";
-    const ADJUSTING = "Adjusting";
+    const OPEN = "OPEN";
+    const CLOSED = "CLOSED";
+    const ADJUSTING = "ADJUSTING";
 
     /**
      * The attributes that are mass assignable.

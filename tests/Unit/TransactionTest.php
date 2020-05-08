@@ -26,6 +26,8 @@ use IFRS\Exceptions\RedundantTransaction;
 use IFRS\Exceptions\HangingClearances;
 use IFRS\Exceptions\MissingLineItem;
 use IFRS\Exceptions\PostedTransaction;
+use IFRS\Exceptions\ClosedReportingPeriod;
+use IFRS\Exceptions\AdjustingReportingPeriod;
 
 class TransactionTest extends TestCase
 {
@@ -260,6 +262,55 @@ class TransactionTest extends TestCase
         $this->expectExceptionMessage('A Transaction must have at least one LineItem to be posted');
 
         $transaction->post();
+    }
+
+    /**
+     * Test Closed Reporting Period.
+     *
+     * @return void
+     */
+    public function testClosedReportingPeriod()
+    {
+        $date = Carbon::now()->subYears(5);
+        factory(ReportingPeriod::class)->create(
+            [
+                "year" => $date->year,
+                "status" => ReportingPeriod::CLOSED,
+            ]
+        );
+
+        $this->expectException(ClosedReportingPeriod::class);
+        $this->expectExceptionMessage("Transaction cannot be saved because the Reporting Period for ".$date->year." is closed");
+
+        factory(Transaction::class)->create(
+            [
+                "date" => $date
+            ]
+        );
+    }
+
+    /**
+     * Test Adjusting Reporting Period.
+     *
+     * @return void
+     */
+    public function testAdjustingReportingPeriod()
+    {
+        factory(ReportingPeriod::class)->create(
+            [
+                "year" => Carbon::now()->subYears(3)->year,
+                "status" => ReportingPeriod::ADJUSTING,
+            ]
+            );
+
+        $this->expectException(AdjustingReportingPeriod::class);
+        $this->expectExceptionMessage('Only Journal Entry Transactions can be posted to a reporting period whose status is ADJUSTING');
+
+
+        factory(Transaction::class)->create([
+            "transaction_type" => Transaction::IN,
+            "date" => Carbon::now()->subYears(3)
+        ]);
     }
 
     /**
