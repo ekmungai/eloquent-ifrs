@@ -8,7 +8,7 @@
  */
 namespace IFRS\Exceptions;
 
-class IFRSException extends \Exception
+abstract class IFRSException extends \Exception
 {
     /**
      * Exception code
