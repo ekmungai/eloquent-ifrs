@@ -160,6 +160,7 @@ class Assignment extends Model implements Segragatable
         if (!in_array($cleared_type, $clearable)) {
             throw new UnclearableTransaction($cleared_type, $clearable);
         }
+
         return parent::save();
     }
 }

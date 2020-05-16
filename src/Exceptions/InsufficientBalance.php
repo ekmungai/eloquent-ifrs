@@ -8,6 +8,11 @@
  */
 namespace IFRS\Exceptions;
 
+use Carbon\Carbon;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 use IFRS\Models\Transaction;
 
 class InsufficientBalance extends IFRSException
@@ -34,6 +39,14 @@ class InsufficientBalance extends IFRSException
 
         $error = $transactionType._(" Transaction does not have sufficient balance to clear ");
         $error .= $amount.' of the '.$assignedType;
+
+        Log::notice(
+            $error.' '.$message,
+            [
+                'user_id' => Auth::user()->id,
+                'time' => Carbon::now(),
+            ]
+        );
         parent::__construct($error.' '.$message, $code);
     }
 }

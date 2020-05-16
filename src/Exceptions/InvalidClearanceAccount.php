@@ -8,6 +8,11 @@
  */
 namespace IFRS\Exceptions;
 
+use Carbon\Carbon;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 class InvalidClearanceAccount extends IFRSException
 {
     /**
@@ -18,6 +23,16 @@ class InvalidClearanceAccount extends IFRSException
      */
     public function __construct(string $message = null, int $code = null)
     {
-        parent::__construct(_("Assignment and Clearance Main Account must be the same ").$message, $code);
+        $error = _("Assignment and Clearance Main Account must be the same ");
+
+        Log::notice(
+            $error.$message,
+            [
+                'user_id' => Auth::user()->id,
+                'time' => Carbon::now(),
+            ]
+        );
+
+        parent::__construct($error.$message, $code);
     }
 }

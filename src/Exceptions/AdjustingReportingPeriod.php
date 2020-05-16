@@ -8,6 +8,11 @@
  */
 namespace IFRS\Exceptions;
 
+use Carbon\Carbon;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 use IFRS\Models\Transaction;
 use IFRS\Models\ReportingPeriod;
 
@@ -24,6 +29,13 @@ class AdjustingReportingPeriod extends IFRSException
         $type = Transaction::getType(Transaction::JN);
         $error = _("Only ".$type." Transactions can be posted to a reporting period whose status is ".ReportingPeriod::ADJUSTING);
 
+        Log::notice(
+            $error.$message,
+            [
+                'user_id' => Auth::user()->id,
+                'time' => Carbon::now(),
+            ]
+        );
         parent::__construct($error.$message, $code);
     }
 }

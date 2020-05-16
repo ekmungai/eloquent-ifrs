@@ -8,6 +8,11 @@
  */
 namespace IFRS\Exceptions;
 
+use Carbon\Carbon;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 class MissingLineItem extends IFRSException
 {
     /**
@@ -18,6 +23,16 @@ class MissingLineItem extends IFRSException
      */
     public function __construct(string $message = null, int $code = null)
     {
-        parent::__construct(_("A Transaction must have at least one LineItem to be posted ").$message, $code=null);
+        $error = _("A Transaction must have at least one LineItem to be posted ");
+
+        Log::notice(
+            $error.$message,
+            [
+                'user_id' => Auth::user()->id,
+                'time' => Carbon::now(),
+            ]
+        );
+
+        parent::__construct($error.$message, $code=null);
     }
 }

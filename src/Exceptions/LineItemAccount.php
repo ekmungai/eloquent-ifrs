@@ -8,6 +8,11 @@
  */
 namespace IFRS\Exceptions;
 
+use Carbon\Carbon;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 use IFRS\Models\Transaction;
 use IFRS\Models\Account;
 
@@ -27,6 +32,14 @@ class LineItemAccount extends IFRSException
         $accountTypes = Account::getTypes($accountTypes);
 
         $error = $transactionType._(" LineItem Account must be of type ").implode(", ", $accountTypes);
+
+        Log::notice(
+            $error.' '.$message,
+            [
+                'user_id' => Auth::user()->id,
+                'time' => Carbon::now(),
+            ]
+        );
 
         parent::__construct($error.' '.$message, $code);
     }

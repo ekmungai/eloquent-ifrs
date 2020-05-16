@@ -8,6 +8,11 @@
  */
 namespace IFRS\Exceptions;
 
+use Carbon\Carbon;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 class RedundantTransaction extends IFRSException
 {
     /**
@@ -19,6 +24,14 @@ class RedundantTransaction extends IFRSException
     public function __construct(string $message = null, int $code = null)
     {
         $error = _("A Transaction Main Account cannot be one of the Line Item Accounts ");
+
+        Log::notice(
+            $error.$message,
+            [
+                'user_id' => Auth::user()->id,
+                'time' => Carbon::now(),
+            ]
+        );
 
         parent::__construct($error.$message, $code=null);
     }

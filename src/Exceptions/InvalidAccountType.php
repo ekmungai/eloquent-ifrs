@@ -8,6 +8,11 @@
  */
 namespace IFRS\Exceptions;
 
+use Carbon\Carbon;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 use IFRS\Models\Account;
 
 class InvalidAccountType extends IFRSException
@@ -26,6 +31,13 @@ class InvalidAccountType extends IFRSException
 
         $error = _("Schedule Account Type must be one of: ").implode(", ", $accountTypes);
 
+        Log::notice(
+            $error.' '.$message,
+            [
+                'user_id' => Auth::user()->id,
+                'time' => Carbon::now(),
+            ]
+        );
         parent::__construct($error.' '.$message, $code);
     }
 }

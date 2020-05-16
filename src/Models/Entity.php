@@ -95,21 +95,21 @@ class Entity extends Model implements Recyclable
     {
         $existing = ExchangeRate::where(
             [
-            "entity_id" => $this->id,
-            "currency_id" => $this->currency_id,
-            "valid_from" => Carbon::now(),
+                "entity_id" => $this->id,
+                "currency_id" => $this->currency_id,
+                "valid_from" => Carbon::now(),
             ]
-        )->first();
+            )->first();
 
-        $new = new ExchangeRate(
-            [
-            'valid_from' => Carbon::now(),
-            'currency_id' => $this->currency->id,
-            ]
-        );
+            $new = new ExchangeRate(
+                [
+                    'valid_from' => Carbon::now(),
+                    'currency_id' => $this->currency->id,
+                ]
+                );
 
-        $new->save();
+            $new->save();
 
-        return !is_null($existing)? $existing : $new;
+            return !is_null($existing)? $existing : $new;
     }
 }

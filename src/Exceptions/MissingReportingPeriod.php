@@ -8,6 +8,11 @@
  */
 namespace IFRS\Exceptions;
 
+use Carbon\Carbon;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 class MissingReportingPeriod extends IFRSException
 {
     /**
@@ -21,6 +26,14 @@ class MissingReportingPeriod extends IFRSException
     public function __construct(string $entity, int $year, string $message = null, int $code = null)
     {
         $error = _("Entity '". $entity."' has no reporting period defined for the year ").$year." ";
+
+        Log::notice(
+            $error.$message,
+            [
+                'user_id' => Auth::user()->id,
+                'time' => Carbon::now(),
+            ]
+        );
 
         parent::__construct($error.$message, $code);
     }

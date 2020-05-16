@@ -8,6 +8,11 @@
  */
 namespace IFRS\Exceptions;
 
+use Carbon\Carbon;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 class MissingVatAccount extends IFRSException
 {
     /**
@@ -19,6 +24,16 @@ class MissingVatAccount extends IFRSException
      */
     public function __construct(string $vatName, string $message = null, int $code = null)
     {
-        parent::__construct($vatName._(" LineItem requires a Vat Account").$message, $code);
+        $error = $vatName._(" LineItem requires a Vat Account");
+
+        Log::notice(
+            $error.$message,
+            [
+                'user_id' => Auth::user()->id,
+                'time' => Carbon::now(),
+            ]
+        );
+
+        parent::__construct($error.$message, $code);
     }
 }
