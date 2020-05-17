@@ -428,6 +428,7 @@ I am acutely aware that as a professionally trained Accountant I may have used s
 
 ## Roadmap
 
+* Convert Transaction amounts to integers
 * Add Multicurrency support
 * Add Receivables(Debtors)/Payables(Creditors) Aging Balances analysis Report
 * Add Cashflow Statement

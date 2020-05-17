@@ -17,7 +17,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": "^7.2.5",
-		"laravel/framework": "~5.6.0|~5.7.0|~5.8.0|^6.0.0|^7.0.0",
+		"laravel/framework": "^5.6",
         "calebporzio/parental": "^0.10.0"
     },
     "require-dev": {
@@ -26,11 +26,10 @@
         "fzaninotto/faker": "^1.4",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^3.0",
-        "nunomaduro/larastan": "^0.5.0",
         "phpmd/phpmd": "^2.8",
         "phpunit/phpunit": "^8.0",
         "squizlabs/php_codesniffer": "*",
-		"orchestra/testbench": "~3.6.0|~3.7.0|~3.8.0|^4.0|^5.0"
+		"orchestra/testbench": "^3.6.0"
     },
 	"autoload": {
 		"psr-4": {
