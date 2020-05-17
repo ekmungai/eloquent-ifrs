@@ -25,7 +25,7 @@ The motivation for this package can be found in detail on my blog post [here](ht
 
 ## Installation
 
-Use composer to Install the package into your laravel or lumen application. Laravel IFRS requires PHP version 7.2 and Laravel or Lumen version 5.6 and above.
+Use composer to Install the package into your laravel or lumen application. Laravel IFRS requires PHP version 7.2 and Laravel or Lumen version 6 and above.
 
 #### For production
 
