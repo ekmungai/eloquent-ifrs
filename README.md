@@ -25,7 +25,7 @@ The motivation for this package can be found in detail on my blog post [here](ht
 
 ## Installation
 
-Use composer to Install the package into your laravel or lumen application. Laravel IFRS requires PHP version 7.2 and Laravel or Lumen version 5.0 and above.
+Use composer to Install the package into your laravel or lumen application. Laravel IFRS requires PHP version 7.2 and Laravel or Lumen version 5.6 and above.
 
 #### For production
 
@@ -419,7 +419,7 @@ I am acutely aware that as a professionally trained Accountant I may have used s
 
 ## Contributing
 
-1. Fork it (<https://github.com/ekmungai/eloquent-ifrs/fork>)
+1. Fork it
 2. Create your feature branch (`git checkout -b feature/fooBar`)
 3. Write tests for the feature
 3. Commit your changes (`git commit -am 'Add some fooBar'`)
@@ -428,7 +428,6 @@ I am acutely aware that as a professionally trained Accountant I may have used s
 
 ## Roadmap
 
-* Complete Documentation
 * Add Multicurrency support
 * Add Receivables(Debtors)/Payables(Creditors) Aging Balances analysis Report
 * Add Cashflow Statement

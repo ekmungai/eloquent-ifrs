@@ -11,15 +11,14 @@
     "authors": [
         {
             "name": "Edward Mungai",
-            "email": "emungai@pinecrest.co.ke"
+            "email": "emungai@karanjamungai.com"
         }
     ],
     "minimum-stability": "dev",
     "require": {
-        "php": "^7.2",
-		"illuminate/database": "~5.6.0|~5.7.0|~5.8.0|^6.0.0|^7.0.0",
-		"illuminate/auth": "~5.6.0|~5.7.0|~5.8.0|^6.0.0|^7.0.0",
-        "calebporzio/parental": "0.9"
+        "php": "^7.2.5",
+		"laravel/framework": "~5.6.0|~5.7.0|~5.8.0|^6.0.0|^7.0.0",
+        "calebporzio/parental": "^0.10.0"
     },
     "require-dev": {
         "facade/ignition": "^1.4",
