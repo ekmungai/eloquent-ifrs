@@ -17,8 +17,8 @@
     "minimum-stability": "dev",
     "require": {
         "php": "^7.2.5",
-		"illuminate/database": ^6.0|^7.0,
-		"illuminate/auth": ^6.0|^7.0,
+		"illuminate/database": "^6.0|^7.0",
+		"illuminate/auth": "^6.0|^7.0",
         "calebporzio/parental": "^0.10.0"
     },
     "require-dev": {
