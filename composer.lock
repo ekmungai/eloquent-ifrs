@@ -4471,30 +4471,28 @@
         },
         {
             "name": "phpmd/phpmd",
-            "version": "2.8.x-dev",
+            "version": "3.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpmd/phpmd.git",
-                "reference": "685550627f3727f96eabb98e0aaaf1cbf9b0b224"
+                "reference": "da5d29837328f0ce94d5a722115ead913d9655a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpmd/phpmd/zipball/685550627f3727f96eabb98e0aaaf1cbf9b0b224",
-                "reference": "685550627f3727f96eabb98e0aaaf1cbf9b0b224",
+                "url": "https://api.github.com/repos/phpmd/phpmd/zipball/da5d29837328f0ce94d5a722115ead913d9655a8",
+                "reference": "da5d29837328f0ce94d5a722115ead913d9655a8",
                 "shasum": ""
             },
             "require": {
-                "composer/xdebug-handler": "^1.0",
                 "ext-xml": "*",
-                "pdepend/pdepend": "^2.7.1",
-                "php": ">=5.3.9"
+                "pdepend/pdepend": "^2.5.2",
+                "php": "^7.2"
             },
             "require-dev": {
-                "easy-doc/easy-doc": "0.0.0 || ^1.3.2",
                 "gregwar/rst": "^1.0",
                 "mikey179/vfsstream": "^1.6.4",
-                "phpunit/phpunit": "^4.8.36 || ^5.7.27",
-                "squizlabs/php_codesniffer": "^2.0"
+                "phpunit/phpunit": "^8.2",
+                "squizlabs/php_codesniffer": "^3.4"
             },
             "bin": [
                 "src/bin/phpmd"
@@ -4537,7 +4535,7 @@
                 "phpmd",
                 "pmd"
             ],
-            "time": "2020-04-29T00:08:01+00:00"
+            "time": "2019-07-23T05:30:21+00:00"
         },
         {
             "name": "phpspec/prophecy",
@@ -6300,7 +6298,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "phpmd/phpmd": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
