@@ -49,7 +49,7 @@
 	"extra": {
 		"laravel": {
 			"providers": [
-				"Ekmungai\\IFRS\\IFRSServiceProvider"
+				"IFRS\\IFRSServiceProvider"
 			]
 		}
 	}
