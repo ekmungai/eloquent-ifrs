@@ -1001,4 +1001,83 @@ class AssignmentTest extends TestCase
         );
         $assignment->save();
     }
+    /**
+     * Test Transaction bulk Clearance.
+     *
+     * @return void
+     */
+    public function testTransactionBulkClearance()
+    {
+        $account = factory(Account::class)->create(
+            [
+                'account_type' => Account::RECEIVABLE,
+            ]
+        );
+
+        $transaction = new JournalEntry(
+            [
+                "account_id" => $account->id,
+                "date" => Carbon::now(),
+                "narration" => $this->faker->word,
+            ]
+        );
+
+        $line = new LineItem(
+            [
+                'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+                'account_id' => factory(Account::class)->create()->id,
+                'amount' => 125,
+            ]
+        );
+        $transaction->addLineItem($line);
+        $transaction->post();
+
+        $cleared = new JournalEntry(
+            [
+                "account_id" => $account->id,
+                "date" => Carbon::now(),
+                "narration" => $this->faker->word,
+                "credited" => false
+            ]
+        );
+
+        $line = new LineItem(
+            [
+                'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+                'account_id' => factory(Account::class)->create()->id,
+                'amount' => 75,
+            ]
+        );
+        $cleared->addLineItem($line);
+        $cleared->post();
+
+        $cleared2 = new JournalEntry(
+            [
+                "account_id" => $account->id,
+                "date" => Carbon::now(),
+                "narration" => $this->faker->word,
+                "credited" => false
+            ]
+        );
+
+        $line = new LineItem(
+            [
+                'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+                'account_id' => factory(Account::class)->create()->id,
+                'amount' => 25,
+            ]
+        );
+        $cleared2->addLineItem($line);
+        $cleared2->post();
+
+        Assignment::bulkAssign($transaction);
+
+        $transaction = Transaction::find($transaction->id);
+        $cleared = Transaction::find($cleared->id);
+        $cleared2 = Transaction::find($cleared2->id);
+
+        $this->assertEquals($transaction->balance(), 25);
+        $this->assertEquals($cleared->clearedAmount(), 75);
+        $this->assertEquals($cleared2->clearedAmount(), 25);
+    }
 }

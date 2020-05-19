@@ -11,6 +11,9 @@ namespace IFRS\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+
+use IFRS\Reports\AccountSchedule;
+
 use IFRS\Interfaces\Segragatable;
 
 use IFRS\Traits\Segragating;
@@ -25,6 +28,7 @@ use IFRS\Exceptions\InvalidClearanceAccount;
 use IFRS\Exceptions\InvalidClearanceCurrency;
 use IFRS\Exceptions\InvalidClearanceEntry;
 use IFRS\Exceptions\NegativeAmount;
+use IFRS\Interfaces\Assignable;
 
 /**
  * Class Assignment
@@ -54,6 +58,49 @@ class Assignment extends Model implements Segragatable
         'cleared_type',
         'amount',
     ];
+
+    /**
+     * Bulk assign a transaction to outstanding Transactions, under FIFO (First in first out) methodology
+     *
+     * @param Assignable $transaction
+     */
+
+    public static function bulkAssign(Assignable $transaction): void {
+
+        $balance = $transaction->balance();
+
+        $schedule = new AccountSchedule($transaction->account->id, $transaction->currency->id);
+        $schedule->getTransactions();
+
+        foreach ($schedule->transactions as $outstanding){
+            $unclearedAmount = $outstanding->originalAmount - $outstanding->clearedAmount;
+            $cleared = Transaction::find($outstanding->id);
+
+            if ($unclearedAmount > $balance) {
+                $assignment = new Assignment(
+                    [
+                        'transaction_id' => $transaction->id,
+                        'cleared_id' => $cleared->id,
+                        'cleared_type' => $cleared->getClearedType(),
+                        'amount' => $balance,
+                    ]
+                );
+                $assignment->save();
+                break;
+            }else{
+                $assignment = new Assignment(
+                    [
+                        'transaction_id' => $transaction->id,
+                        'cleared_id' => $cleared->id,
+                        'cleared_type' => $cleared->getClearedType(),
+                        'amount' => $unclearedAmount,
+                    ]
+                );
+                $assignment->save();
+                $balance -= $unclearedAmount;
+            }
+        }
+    }
 
     /**
      * Assignment Validation.

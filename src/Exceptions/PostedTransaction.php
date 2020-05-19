@@ -18,12 +18,13 @@ class PostedTransaction extends IFRSException
     /**
      * Posted Transaction Exception
      *
+     * @param string $action
      * @param string $message
      * @param int    $code
      */
-    public function __construct(string $message = null, int $code = null)
+    public function __construct(string $action, string $message = null, int $code = null)
     {
-        $error = _("Cannot remove LineItem from a posted Transaction ");
+        $error = _("Cannot ".$action." a posted Transaction ");
 
         Log::notice(
             $error.$message,

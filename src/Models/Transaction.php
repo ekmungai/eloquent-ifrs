@@ -351,7 +351,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     public function addLineItem(LineItem $lineItem) : void
     {
         if (count($lineItem->ledgers) > 0) {
-            throw new PostedTransaction();
+            throw new PostedTransaction(_("add LineItem to"));
         }
 
         if ($lineItem->account->id == $this->account->id) {
@@ -371,7 +371,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     public function removeLineItem(LineItem $lineItem) : void
     {
         if (count($lineItem->ledgers) > 0) {
-            throw new PostedTransaction();
+            PostedTransaction(_("remove LineItem from"));
         }
 
         $key = $this->lineItemExists($lineItem->id);

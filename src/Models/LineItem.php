@@ -129,6 +129,10 @@ class LineItem extends Model implements Recyclable, Segragatable
             throw new NegativeAmount("LineItem");
         }
 
+        if (count($this->transaction->ledgers) > 0) {
+            PostedTransaction(_("change a LineItem of"));
+        }
+
         return parent::save();
     }
 }

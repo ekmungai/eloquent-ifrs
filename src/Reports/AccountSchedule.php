@@ -8,11 +8,8 @@
  */
 namespace IFRS\Reports;
 
-use Carbon\Carbon;
-
 use IFRS\Models\Balance;
 use IFRS\Models\Transaction;
-use IFRS\Models\Currency;
 use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Account;
 
