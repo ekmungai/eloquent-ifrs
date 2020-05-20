@@ -43,6 +43,8 @@ class LineItemTest extends TestCase
         $transaction->addLineItem($lineItem);
         $transaction->post();
 
+        $lineItem = LineItem::find($lineItem->id);
+
         $this->assertEquals($lineItem->transaction->transaction_no, $transaction->transaction_no);
         $this->assertEquals($lineItem->account->name, $account->name);
         $this->assertEquals($lineItem->vatAccount->name, $vatAccount->name);

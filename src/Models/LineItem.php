@@ -19,6 +19,7 @@ use IFRS\Traits\Recycling;
 
 use IFRS\Exceptions\MissingVatAccount;
 use IFRS\Exceptions\NegativeAmount;
+use IFRS\Exceptions\PostedTransaction;
 
 /**
  * Class LineItem
@@ -129,8 +130,8 @@ class LineItem extends Model implements Recyclable, Segragatable
             throw new NegativeAmount("LineItem");
         }
 
-        if (count($this->transaction->ledgers) > 0) {
-            PostedTransaction(_("change a LineItem of"));
+        if (!is_null($this->transaction) and count($this->transaction->ledgers) > 0 and $this->isDirty()) {
+            throw new PostedTransaction(_("change a LineItem of"));
         }
 
         return parent::save();

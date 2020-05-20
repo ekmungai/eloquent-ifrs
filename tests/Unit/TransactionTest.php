@@ -314,11 +314,11 @@ class TransactionTest extends TestCase
     }
 
     /**
-     * Test Posted Transaction Remove Line Item.
+     * Test Posted Transaction Remove/Add Line Item.
      *
      * @return void
      */
-    public function testPostedTransactionRemoveLineItem()
+    public function testPostedTransactionRemoveOrAddLineItem()
     {
         $transaction = new JournalEntry(
             [
@@ -357,6 +357,26 @@ class TransactionTest extends TestCase
         $this->expectExceptionMessage('Cannot remove LineItem from a posted Transaction');
 
         $transaction->removeLineItem($lineItem);
+
+        $this->expectException(PostedTransaction::class);
+        $this->expectExceptionMessage('Cannot add LineItem to a posted Transaction');
+
+        $lineItem = factory(LineItem::class)->create(
+            [
+                "amount" => 100,
+                "vat_id" => factory('IFRS\Models\Vat')->create(
+                    [
+                        "rate" => 16
+                    ]
+                    )->id,
+                "account_id" => factory('IFRS\Models\Account')->create(
+                    [
+                        "account_type" => Account::RECONCILIATION
+                    ]
+                    )->id,
+            ]
+        );
+        $transaction->addLineItem($lineItem);
     }
 
     /**
