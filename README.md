@@ -5,8 +5,8 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/7afac1253d0f662d1cfd/maintainability)](https://codeclimate.com/github/ekmungai/eloquent-ifrs/maintainability)
 [![PHP 7.2](https://img.shields.io/badge/PHP-7.2-blue.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Total Downloads](https://poser.pugx.org/ekmungai/eloquent-ifrs/downloads)](//packagist.org/packages/ekmungai/eloquent-ifrs)
-[![Latest Stable Version](https://poser.pugx.org/ekmungai/eloquent-ifrs/v)](//packagist.org/packages/ekmungai/eloquent-ifrs)
+[![Total Downloads](https://poser.pugx.org/ekmungai/eloquent-ifrs/downloads)](https://packagist.org/packages/ekmungai/eloquent-ifrs)
+[![Latest Stable Version](https://poser.pugx.org/ekmungai/eloquent-ifrs/v)](https://packagist.org/packages/ekmungai/eloquent-ifrs)
 
 This Package enables any Laravel application to generate [International Financial Reporting Standards](https://www.ifrs.org/issued-standards/list-of-standards/conceptual-framework/) compatible Financial Statements by providing a fully featured and configurable Double Entry accounting subsystem.
 
