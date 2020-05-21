@@ -8,6 +8,7 @@
  */
 namespace IFRS\Reports;
 
+use Carbon\Carbon;
 use IFRS\Models\Balance;
 use IFRS\Models\Transaction;
 use IFRS\Models\ReportingPeriod;
@@ -48,6 +49,8 @@ class AccountSchedule extends AccountStatement
             $outstanding = new \stdClass();
 
             $outstanding->id = $transaction->id;
+            $date = Carbon::parse($transaction->transaction_date);
+            $outstanding->age  = $date->diffInDays($this->period['endDate']);
             $outstanding->transactionType = $transactionType;
 
             $this->balances["originalAmount"] += $originalAmount;
@@ -66,22 +69,22 @@ class AccountSchedule extends AccountStatement
     /**
      * Account Schedule for the account for the period.
      *
-     * @param int    $account_id
-     * @param int    $currency_id
+     * @param int    $accountId
+     * @param int    $currencyId
      * @param string $endDate
      */
-    public function __construct(int $account_id = null, int $currency_id = null, string $endDate = null)
+    public function __construct(int $accountId = null, int $currencyId = null, string $endDate = null)
     {
-        if (is_null($account_id)) {
+        if (is_null($accountId)) {
             throw new MissingAccount("Account Schedule");
         }
 
         $accountTypes = [Account::RECEIVABLE, Account::PAYABLE];
 
-        if (!in_array(Account::find($account_id)->account_type, $accountTypes)) {
+        if (!in_array(Account::find($accountId)->account_type, $accountTypes)) {
             throw new InvalidAccountType($accountTypes);
         }
-        parent::__construct($account_id, $currency_id, null, $endDate);
+        parent::__construct($accountId, $currencyId, null, $endDate);
     }
 
     /**

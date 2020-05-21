@@ -30,7 +30,7 @@ class JournalEntryTest extends TestCase
         $journalEntry = new JournalEntry(
             [
             "account_id" => $mainAccount->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -51,7 +51,7 @@ class JournalEntryTest extends TestCase
         $journalEntry = new JournalEntry(
             [
             "account_id" => factory('IFRS\Models\Account')->create()->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -86,7 +86,7 @@ class JournalEntryTest extends TestCase
         $journalEntry2 = new JournalEntry(
             [
             "account_id" => factory('IFRS\Models\Account')->create()->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             "credited" => false,
             ]
@@ -167,7 +167,7 @@ class JournalEntryTest extends TestCase
         $transaction = new JournalEntry(
             [
             "account_id" => $account,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -192,7 +192,7 @@ class JournalEntryTest extends TestCase
         $transaction = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -207,7 +207,7 @@ class JournalEntryTest extends TestCase
         $transaction2 = new JournalEntry(
             [
             "account_id" => $account2->id,
-            "date" => Carbon::now()->addWeeks(2),
+            "transaction_date" => Carbon::now()->addWeeks(2),
             "narration" => $this->faker->word,
             ]
         );

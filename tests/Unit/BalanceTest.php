@@ -46,6 +46,7 @@ class AccountBalanceTest extends TestCase
             'year' => Carbon::now()->year,
             'transaction_no' => $this->faker->word,
             'transaction_type' => Transaction::JN,
+            'transaction_date' => Carbon::now()->subYears(1.5),
             'reference' => $this->faker->word,
             'balance_type' =>  Balance::DEBIT,
             'amount' => $this->faker->randomFloat(2),

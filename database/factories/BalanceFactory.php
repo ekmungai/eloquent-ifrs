@@ -2,6 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
+use Carbon\Carbon;
 use IFRS\Models\Account;
 use IFRS\Models\Transaction;
 use IFRS\Models\Balance;
@@ -16,6 +17,7 @@ $factory->define(Balance::class, function (Faker $faker) {
             'account_type' => Account::INVENTORY,
         ])->id,
         'year' => $faker->year(),
+        'transaction_date' => Carbon::now()->subYears(1.5),
         'transaction_no' => $faker->word,
         'transaction_type' => $faker->randomElement([
                 Transaction::IN,

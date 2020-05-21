@@ -25,10 +25,12 @@ class CreateAssignmentsTable extends Migration
             // relationships
             $table->unsignedBigInteger('entity_id');
             $table->unsignedBigInteger('transaction_id');
+            $table->unsignedBigInteger('forex_account_id')->nullable();
 
             // constraints
             $table->foreign('entity_id')->references('id')->on('entities');
             $table->foreign('transaction_id')->references('id')->on('transactions');
+            $table->foreign('forex_account_id')->references('id')->on('accounts');
 
             // attributes
             $table->unsignedBigInteger('cleared_id');

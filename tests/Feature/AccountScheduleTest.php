@@ -12,8 +12,6 @@ use IFRS\Models\Balance;
 use IFRS\Models\Currency;
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\LineItem;
-use IFRS\Models\ReportingPeriod;
-use IFRS\Models\User;
 
 use IFRS\Transactions\ClientInvoice;
 use IFRS\Transactions\CreditNote;
@@ -30,16 +28,6 @@ use IFRS\Exceptions\InvalidAccountType;
 
 class AccountScheduleTest extends TestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->be(factory(User::class)->create());
-        factory(ReportingPeriod::class)->create(
-            [
-            "year" => date("Y"),
-            ]
-        );
-    }
 
     /**
      * Test Account Schedule Missing Accoount

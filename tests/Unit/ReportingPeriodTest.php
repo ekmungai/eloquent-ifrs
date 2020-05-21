@@ -106,6 +106,6 @@ class ReportingPeriodTest extends TestCase
         $this->expectException(MissingReportingPeriod::class);
         $this->expectExceptionMessage('has no reporting period defined for the year');
 
-        ReportingPeriod::periodCount("1970");
+        ReportingPeriod::getPeriod("1970");
     }
 }

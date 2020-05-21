@@ -49,14 +49,14 @@ trait Fetching
 
         // startTime Filter
         if (!is_null($startTime)) {
-            $query->where("date", ">=", $startTime);
+            $query->where("transaction_date", ">=", $startTime);
         } else {
-            $query->where("date", ">=", ReportingPeriod::periodStart());
+            $query->where("transaction_date", ">=", ReportingPeriod::periodStart());
         }
 
         // endTime Filter
         if (!is_null($endTime)) {
-            $query->where("date", "<=", $endTime);
+            $query->where("transaction_date", "<=", $endTime);
         }
 
         // Currency Filter

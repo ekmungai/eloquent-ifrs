@@ -36,7 +36,7 @@ class CreateTransactionsTable extends Migration
             $table->foreign('account_id')->references('id')->on('accounts');
 
             // attributes
-            $table->dateTime('date', 0);
+            $table->dateTime('transaction_date', 0);
             $table->string('reference', 255)->nullable();
             $table->string('transaction_no', 255);
             $table->enum('transaction_type', [

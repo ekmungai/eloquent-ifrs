@@ -73,11 +73,11 @@ class ReportingPeriod extends Model implements Segragatable, Recyclable
     }
 
     /**
-     * ReportingPeriod Period Count
+     * Fetch reporting period for the date
      *
      * @return int
      */
-    public static function periodCount(string $date = null)
+    public static function getPeriod(string $date = null)
     {
         $year = ReportingPeriod::year($date);
 
@@ -85,7 +85,7 @@ class ReportingPeriod extends Model implements Segragatable, Recyclable
         if (is_null($period)) {
             throw new MissingReportingPeriod(Auth::user()->entity->name, $year);
         }
-        return $period->period_count;
+        return $period;
     }
 
     /**

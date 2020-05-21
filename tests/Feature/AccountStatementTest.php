@@ -10,8 +10,6 @@ use IFRS\Models\Account;
 use IFRS\Models\Balance;
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\LineItem;
-use IFRS\Models\ReportingPeriod;
-use IFRS\Models\User;
 
 use IFRS\Reports\AccountStatement;
 
@@ -30,17 +28,6 @@ use IFRS\Exceptions\MissingAccount;
 
 class AccountStatementTest extends TestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->be(factory(User::class)->create());
-        factory(ReportingPeriod::class)->create(
-            [
-            "year" => date("Y"),
-            ]
-        );
-    }
-
     /**
      * Test Account Statement Missing Accoount
      *

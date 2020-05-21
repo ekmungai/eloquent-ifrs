@@ -30,6 +30,8 @@ use IFRS\Exceptions\InvalidClearanceCurrency;
 use IFRS\Exceptions\InvalidClearanceEntry;
 use IFRS\Exceptions\NegativeAmount;
 use IFRS\Models\Transaction;
+use IFRS\Exceptions\MissingForexAccount;
+use IFRS\Models\ExchangeRate;
 
 class AssignmentTest extends TestCase
 {
@@ -312,6 +314,7 @@ class AssignmentTest extends TestCase
             'account_id' => $account->id,
             'year' => date("Y"),
             'transaction_no' => "JN01/0001",
+            'transaction_date' => Carbon::now()->subYears(1.5),
             'amount' => 80,
             ]
         );
@@ -768,7 +771,7 @@ class AssignmentTest extends TestCase
             ]
         );
 
-        $cleared = new ClientReceipt(
+        $cleared = new JournalEntry(
             [
             "account_id" => $account2->id,
             "date" => Carbon::now(),
@@ -838,7 +841,7 @@ class AssignmentTest extends TestCase
 
         $currency2 = factory(Currency::class)->create();
 
-        $cleared = new ClientReceipt(
+        $cleared = new JournalEntry(
             [
             "account_id" => $account->id,
             "date" => Carbon::now(),
@@ -950,7 +953,7 @@ class AssignmentTest extends TestCase
     {
         $account = factory(Account::class)->create();
 
-        $transaction = $transaction = new JournalEntry(
+        $transaction = new JournalEntry(
             [
             "account_id" => $account->id,
             "date" => Carbon::now(),
@@ -1001,6 +1004,7 @@ class AssignmentTest extends TestCase
         );
         $assignment->save();
     }
+
     /**
      * Test Transaction bulk Clearance.
      *
@@ -1079,5 +1083,71 @@ class AssignmentTest extends TestCase
         $this->assertEquals($transaction->balance(), 25);
         $this->assertEquals($cleared->clearedAmount(), 75);
         $this->assertEquals($cleared2->clearedAmount(), 25);
+    }
+
+    /**
+     * Test Missing Forex Account.
+     *
+     * @return void
+     */
+    public function testMissingForexAccount()
+    {
+        $account = factory(Account::class)->create();
+        $currency  = factory(Currency::class)->create();
+
+        $transaction  = new JournalEntry(
+            [
+                "account_id" => $account->id,
+                "date" => Carbon::now(),
+                "narration" => $this->faker->word,
+                "credited" => false
+            ]
+        );
+
+        $line = new LineItem(
+            [
+                'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+                'account_id' => factory(Account::class)->create()->id,
+                'amount' => 125,
+            ]
+        );
+        $transaction->addLineItem($line);
+        $transaction->post();
+
+        $cleared = new JournalEntry(
+            [
+                "account_id" => $account->id,
+                "date" => Carbon::now(),
+                "narration" => $this->faker->word,
+                "exchange_rate_id" => factory(ExchangeRate::class)->create([
+                    'currency_id' => $currency->id,
+                    'rate' => 10
+                ])->id,
+            ]
+        );
+
+        $line = new LineItem(
+            [
+                'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+                'account_id' => factory(Account::class)->create()->id,
+                'amount' => 50,
+            ]
+        );
+
+        $cleared->addLineItem($line);
+        $cleared->post();
+
+        $this->expectException(MissingForexAccount::class);
+        $this->expectExceptionMessage('A Forex Differences Account is required for Assignment Transactions with different exchange rates');
+
+        $assignment =  new Assignment(
+            [
+                'transaction_id' => $transaction->id,
+                'cleared_id' => $cleared->id,
+                'cleared_type' => $cleared->getClearedType(),
+                'amount' => 10,
+            ]
+            );
+        $assignment->save();
     }
 }

@@ -73,10 +73,10 @@ class Ledger extends Model implements Segragatable
 
         // identical double entry data
         $post->transaction_id = $folio->transaction_id = $transaction->id;
-        $post->date = $folio->date = $transaction->date;
+        $post->date = $folio->date = $transaction->transaction_date;
         $post->line_item_id = $folio->line_item_id = $lineItem->id;
         $post->vat_id = $folio->vat_id = $lineItem->vat_id;
-        $post->amount = $folio->amount = $amount;
+        $post->amount = $folio->amount = $amount * $transaction->exchangeRate->rate;
 
         // different double entry data
         $post->post_account = $folio->folio_account = $transaction->account_id;
@@ -93,7 +93,7 @@ class Ledger extends Model implements Segragatable
      */
     public static function post(Transaction $transaction) : void
     {
-        //Remove current ledgers if any prior to creating new ones
+        //Remove current ledgers if any prior to creating new ones (prevents bypassing Posted Transaction Exception)
         $transaction->ledgers()->delete();
 
         foreach ($transaction->getLineItems() as $lineItem) {
@@ -110,10 +110,10 @@ class Ledger extends Model implements Segragatable
 
             // identical double entry data
             $post->transaction_id = $folio->transaction_id = $transaction->id;
-            $post->date = $folio->date = $transaction->date;
+            $post->date = $folio->date = $transaction->transaction_date;
             $post->line_item_id = $folio->line_item_id = $lineItem->id;
             $post->vat_id = $folio->vat_id = $lineItem->vat_id;
-            $post->amount = $folio->amount = $lineItem->amount;
+            $post->amount = $folio->amount = $lineItem->amount * $transaction->exchangeRate->rate;
 
             // different double entry data
             $post->post_account = $folio->folio_account = $transaction->account_id;

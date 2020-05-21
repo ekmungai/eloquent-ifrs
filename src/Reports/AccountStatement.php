@@ -83,21 +83,20 @@ class AccountStatement
         $query = DB::table('transactions')->leftJoin('ledgers', 'transactions.id', '=', 'ledgers.transaction_id')
             ->where('transactions.deleted_at', null)
             ->where("transactions.entity_id", $this->entity->id)
-            ->where("transactions.date", ">=", $this->period['startDate'])
-            ->where("transactions.date", "<=", $this->period['endDate'])
+            ->where("transactions.transaction_date", ">=", $this->period['startDate'])
+            ->where("transactions.transaction_date", "<=", $this->period['endDate'])
             ->where("transactions.currency_id", $this->currency->id)
             ->select(
                 'transactions.id',
-                'transactions.date',
+                'transactions.transaction_date',
                 'transactions.transaction_no',
                 'transactions.reference',
                 'transactions.transaction_type',
                 'transactions.narration'
             )->distinct();
 
-        $account = $this->account;
         $query->where(
-            function ($query) use ($account) {
+            function ($query){
                 $query->where("ledgers.post_account", $this->account->id)
                     ->orwhere("ledgers.folio_account", $this->account->id);
             }
@@ -109,7 +108,7 @@ class AccountStatement
     /**
      * Print Account Statement attributes.
      *
-     * @return array
+     * @return object
      */
     public function attributes()
     {
@@ -126,28 +125,28 @@ class AccountStatement
     /**
      * Construct Account Statement for the account for the period.
      *
-     * @param int    $account_id
-     * @param int    $currency_id
+     * @param int    $accountId
+     * @param int    $currencyId
      * @param string $startDate
      * @param string $endDate
      */
     public function __construct(
-        int $account_id = null,
-        int $currency_id = null,
+        int $accountId = null,
+        int $currencyId = null,
         string $startDate = null,
         string $endDate = null
     ) {
-        if (is_null($account_id)) {
+        if (is_null($accountId)) {
             throw new MissingAccount("Account Statement");
         } else {
-            $this->account = Account::find($account_id);
+            $this->account = Account::find($accountId);
         }
 
         $this->entity = Auth::user()->entity;
 
         $this->period['startDate'] = is_null($startDate)? ReportingPeriod::periodStart(): Carbon::parse($startDate);
         $this->period['endDate'] = is_null($endDate)? Carbon::now(): Carbon::parse($endDate);
-        $this->currency = is_null($currency_id)? $this->entity->currency: Currency::find($currency_id);
+        $this->currency = is_null($currencyId)? $this->entity->currency: Currency::find($currencyId);
     }
 
     /**

@@ -37,7 +37,7 @@ class DebitNoteTest extends TestCase
         $debitNote = new DebitNote(
             [
             "account_id" => $supplierAccount->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -62,7 +62,7 @@ class DebitNoteTest extends TestCase
                 'account_type' => Account::PAYABLE,
                 ]
             )->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -123,7 +123,7 @@ class DebitNoteTest extends TestCase
                 'account_type' => Account::PAYABLE,
                 ]
             )->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -168,7 +168,7 @@ class DebitNoteTest extends TestCase
                 'account_type' => Account::RECONCILIATION,
                 ]
             )->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -210,7 +210,7 @@ class DebitNoteTest extends TestCase
         $transaction = new DebitNote(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -235,7 +235,7 @@ class DebitNoteTest extends TestCase
         $transaction = new DebitNote(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -249,7 +249,7 @@ class DebitNoteTest extends TestCase
         $transaction2 = new DebitNote(
             [
             "account_id" => $account2->id,
-            "date" => Carbon::now()->addWeeks(2),
+            "transaction_date" => Carbon::now()->addWeeks(2),
             "narration" => $this->faker->word,
             ]
         );

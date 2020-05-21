@@ -11,7 +11,7 @@ $factory->define(Transaction::class, function (Faker $faker) {
         'exchange_rate_id' => factory('IFRS\Models\ExchangeRate')->create()->id,
         'currency_id' => factory('IFRS\Models\Currency')->create()->id,
         'account_id' => factory('IFRS\Models\Account')->create()->id,
-        'date' => $faker->dateTimeThisMonth(),
+        'transaction_date' => $faker->dateTimeThisMonth(),
         'transaction_no' => $faker->word,
         'transaction_type' => $faker->randomElement(array_keys(config('ifrs')['transactions'])),
         'reference' => $faker->word,

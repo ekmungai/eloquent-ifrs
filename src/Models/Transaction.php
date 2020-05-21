@@ -41,7 +41,7 @@ use IFRS\Exceptions\AdjustingReportingPeriod;
  * @property ExchangeRate $exchangeRate
  * @property Account $account
  * @property Currency $currency
- * @property Carbon $date
+ * @property Carbon $transaction_date
  * @property string $reference
  * @property string $transaction_no
  * @property string $transaction_type
@@ -93,7 +93,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
         'currency_id',
         'exchange_rate_id',
         'account_id',
-        'date',
+        'transaction_date',
         'narration',
         'reference',
         'credited',
@@ -116,7 +116,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
             $attributes['exchange_rate_id'] = $entity->defaultRate()->id;
         }
 
-        $attributes['date'] = !isset($attributes['date'])? Carbon::now(): Carbon::parse($attributes['date']);
+        $attributes['transaction_date'] = !isset($attributes['transaction_date'])? Carbon::now(): Carbon::parse($attributes['transaction_date']);
 
         return parent::__construct($attributes);
     }
@@ -188,21 +188,21 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     }
 
     /**
-     * The next Transaction number for the transaction type and date.
+     * The next Transaction number for the transaction type and transaction_date.
      *
      * @param string $type
-     * @param Carbon $date
+     * @param Carbon $transaction_date
      *
      * @return string
      */
-    public static function transactionNo(string $type, Carbon $date = null)
+    public static function transactionNo(string $type, Carbon $transaction_date = null)
     {
-        $period_count = ReportingPeriod::periodCount($date);
-        $period_start = ReportingPeriod::periodStart($date);
+        $period_count = ReportingPeriod::getPeriod($transaction_date)->period_count;
+        $period_start = ReportingPeriod::periodStart($transaction_date);
 
         $next_id =  Transaction::withTrashed()
             ->where("transaction_type", $type)
-            ->where("date", ">=", $period_start)
+            ->where("transaction_date", ">=", $period_start)
             ->count() + 1;
 
         return $type.str_pad((string) $period_count, 2, "0", STR_PAD_LEFT)
@@ -392,21 +392,19 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      */
     public function save(array $options = []): bool
     {
-        $year = ReportingPeriod::year($this->date);
-
-        $period = ReportingPeriod::where("year",$year)->first();
+        $period = ReportingPeriod::getPeriod($this->transaction_date);
 
         if ($period->status == ReportingPeriod::CLOSED) {
-            throw new ClosedReportingPeriod($year);
+            throw new ClosedReportingPeriod($period->year);
         }
 
-        if ($period->status == ReportingPeriod::ADJUSTING AND $this->transaction_type != Transaction::JN) {
+        if ($period->status == ReportingPeriod::ADJUSTING && $this->transaction_type != Transaction::JN) {
             throw new AdjustingReportingPeriod();
         }
 
         $this->transaction_no = Transaction::transactionNo(
             $this->transaction_type,
-            Carbon::parse($this->date)
+            Carbon::parse($this->transaction_date)
         );
 
         $save = parent::save();

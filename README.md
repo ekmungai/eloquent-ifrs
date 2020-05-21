@@ -10,18 +10,19 @@
 
 This Package enables any Laravel application to generate [International Financial Reporting Standards](https://www.ifrs.org/issued-standards/list-of-standards/conceptual-framework/) compatible Financial Statements by providing a fully featured and configurable Double Entry accounting subsystem.
 
-The package supports multiple Entities (Companies), Account Categorization, Transaction assignment, Start of Year Opening Balances and accounting for VAT Transactions. Transactions are also protected against tampering via direct database changes ensuring the integrity of the Ledger.
+The package supports multiple Entities (Companies), Account Categorization, Transaction assignment, Start of Year Opening Balances and accounting for VAT Transactions. Transactions are also protected against tampering via direct database changes ensuring the integrity of the Ledger. Outstanding amounts for clients and suppliers can also be displayed according to how long they have been outstanding using configurable time periods (Current, 31 - 60 days, 61 - 90 days etc).
 
 The motivation for this package can be found in detail on my blog post [here](https://karanjamungai.com/posts/accounting_software/)
 ## Table of contents
 1. [Installation](#installation)
 2. [Configuration](#configuration)
 3. [Usage](#usage)
-4. [Getting involved](#getting-involved)
-5. [Contributing](#contributing)
-6. [Roadmap](#roadmap)
-7. [License](#license)
-8. [References](#references)
+4. [Changelog](#changelog)
+5. [Getting involved](#getting-involved)
+6. [Contributing](#contributing)
+7. [Roadmap](#roadmap)
+8. [License](#license)
+9. [References](#references)
 
 ## Installation
 
@@ -412,6 +413,10 @@ array:1[
 ]
 
 ```
+## Changelog
+
+Please see [CHANGELOG](CHANGELOG.md) for more information about recent changes.
+
 ## Getting Involved
 
 I am acutely aware that as a professionally trained Accountant I may have used some conventions, definitions and styles that while seemingly obvious to me, might not be so clear to another developer. I would therefore welcome and greatly appreciate any feedback on the ease of use of the package so I can make it more useful to as many people as possible.
@@ -428,11 +433,9 @@ I am acutely aware that as a professionally trained Accountant I may have used s
 
 ## Roadmap
 
-* Add Multicurrency support
-* Add Receivables(Debtors)/Payables(Creditors) Aging Balances analysis Report
 * Add Cashflow Statement
 * Add Changes in Equity Statement
-
+* Add Multicurrency support
 
 ## License
 This software is distributed for free under the MIT License

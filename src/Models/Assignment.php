@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use IFRS\Reports\AccountSchedule;
 
 use IFRS\Interfaces\Segragatable;
+use IFRS\Interfaces\Assignable;
 
 use IFRS\Traits\Segragating;
 
@@ -28,7 +29,7 @@ use IFRS\Exceptions\InvalidClearanceAccount;
 use IFRS\Exceptions\InvalidClearanceCurrency;
 use IFRS\Exceptions\InvalidClearanceEntry;
 use IFRS\Exceptions\NegativeAmount;
-use IFRS\Interfaces\Assignable;
+use IFRS\Exceptions\MissingForexAccount;
 
 /**
  * Class Assignment
@@ -56,6 +57,7 @@ class Assignment extends Model implements Segragatable
         'transaction_id',
         'cleared_id',
         'cleared_type',
+        'forex_account_id',
         'amount',
     ];
 
@@ -108,8 +110,34 @@ class Assignment extends Model implements Segragatable
     private function validate() : void
     {
         $transactionType = $this->transaction->transaction_type;
+        $clearedType = $this->cleared->transaction_type;
 
-        $cleared_type = $this->cleared->transaction_type;
+        $transactionRate = $this->transaction->exchangeRate->rate;
+        $clearedRate = $this->cleared->exchangeRate->rate;
+
+        // Assignable Transactions
+        $assignable = [
+            Transaction::RC,
+            Transaction::CN,
+            Transaction::PY,
+            Transaction::DN,
+            Transaction::JN
+        ];
+
+        if (!in_array($transactionType, $assignable)) {
+            throw new UnassignableTransaction($transactionType, $assignable);
+        }
+
+        // Clearable Transactions
+        $clearable = [
+            Transaction::IN,
+            Transaction::BL,
+            Transaction::JN
+        ];
+
+        if (!in_array($clearedType, $clearable)) {
+            throw new UnclearableTransaction($clearedType, $clearable);
+        }
 
         if ($this->amount < 0) {
             throw new NegativeAmount("Assignment");
@@ -136,11 +164,15 @@ class Assignment extends Model implements Segragatable
         }
 
         if ($this->transaction->balance() < $this->amount) {
-            throw new InsufficientBalance($transactionType, $this->amount, $cleared_type);
+            throw new InsufficientBalance($transactionType, $this->amount, $clearedType);
         }
 
         if ($this->cleared->getAmount() - $this->cleared->clearedAmount() < $this->amount) {
-            throw new OverClearance($cleared_type, $this->amount);
+            throw new OverClearance($clearedType, $this->amount);
+        }
+
+        if ($transactionRate !== $clearedRate && is_null($this->forexAccount)) {
+            throw new MissingForexAccount();
         }
     }
 
@@ -165,6 +197,16 @@ class Assignment extends Model implements Segragatable
     }
 
     /**
+     * Account for posting Exchange Rate Differences.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function forexAccount()
+    {
+        return $this->hasOne(Account::class);
+    }
+
+    /**
      * Assignment attributes.
      *
      * @return object
@@ -180,33 +222,6 @@ class Assignment extends Model implements Segragatable
     public function save(array $options = []) : bool
     {
         $this->validate();
-
-        $transactionType = $this->transaction->transaction_type;
-        $cleared_type = $this->cleared->transaction_type;
-
-        // Assignable Transactions
-        $assignable = [
-            Transaction::RC,
-            Transaction::CN,
-            Transaction::PY,
-            Transaction::DN,
-            Transaction::JN
-        ];
-
-        if (!in_array($transactionType, $assignable)) {
-            throw new UnassignableTransaction($transactionType, $assignable);
-        }
-
-        // Clearable Transactions
-        $clearable = [
-            Transaction::IN,
-            Transaction::BL,
-            Transaction::JN
-        ];
-
-        if (!in_array($cleared_type, $clearable)) {
-            throw new UnclearableTransaction($cleared_type, $clearable);
-        }
 
         return parent::save();
     }

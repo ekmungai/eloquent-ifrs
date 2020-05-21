@@ -37,7 +37,7 @@ class SupplierPaymentTest extends TestCase
         $supplierPayment = new SupplierPayment(
             [
             "account_id" => $supplierAccount->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -62,7 +62,7 @@ class SupplierPaymentTest extends TestCase
                 'account_type' => Account::PAYABLE,
                 ]
             )->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -113,7 +113,7 @@ class SupplierPaymentTest extends TestCase
                 'account_type' => Account::PAYABLE,
                 ]
             )->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -154,7 +154,7 @@ class SupplierPaymentTest extends TestCase
                 'account_type' => Account::RECONCILIATION,
                 ]
             )->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -196,7 +196,7 @@ class SupplierPaymentTest extends TestCase
         $transaction = new SupplierPayment(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -221,7 +221,7 @@ class SupplierPaymentTest extends TestCase
         $transaction = new SupplierPayment(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -235,7 +235,7 @@ class SupplierPaymentTest extends TestCase
         $transaction2 = new SupplierPayment(
             [
             "account_id" => $account2->id,
-            "date" => Carbon::now()->addWeeks(2),
+            "transaction_date" => Carbon::now()->addWeeks(2),
             "narration" => $this->faker->word,
             ]
         );

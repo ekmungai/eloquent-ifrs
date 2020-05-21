@@ -20,7 +20,6 @@ class ExchangeRateTest extends TestCase
     public function testExchangeRateRelationships()
     {
         $currency  = factory(Currency::class)->create();
-        $currency->save();
 
         $exchangeRate = new ExchangeRate(
             [

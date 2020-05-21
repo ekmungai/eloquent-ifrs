@@ -37,7 +37,7 @@ class ClientInvoiceTest extends TestCase
         $clientInvoice = new ClientInvoice(
             [
             "account_id" => $clientAccount->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -62,7 +62,7 @@ class ClientInvoiceTest extends TestCase
                 'account_type' => Account::RECEIVABLE,
                 ]
             )->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -123,7 +123,7 @@ class ClientInvoiceTest extends TestCase
                 'account_type' => Account::RECEIVABLE,
                 ]
             )->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -164,7 +164,7 @@ class ClientInvoiceTest extends TestCase
                 'account_type' => Account::RECONCILIATION,
                 ]
             )->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -206,7 +206,7 @@ class ClientInvoiceTest extends TestCase
         $transaction = new ClientInvoice(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -231,7 +231,7 @@ class ClientInvoiceTest extends TestCase
         $transaction = new ClientInvoice(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -246,7 +246,7 @@ class ClientInvoiceTest extends TestCase
         $transaction2 = new ClientInvoice(
             [
             "account_id" => $account2->id,
-            "date" => Carbon::now()->addWeeks(2),
+            "transaction_date" => Carbon::now()->addWeeks(2),
             "narration" => $this->faker->word,
             ]
         );

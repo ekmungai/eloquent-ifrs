@@ -83,6 +83,7 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
         'reference',
         'balance_type',
         'transaction_type',
+        'transaction_date',
         'amount'
     ];
 

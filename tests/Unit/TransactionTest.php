@@ -49,7 +49,7 @@ class TransactionTest extends TestCase
         $transaction = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             "currency_id" => $currency->id
             ]
@@ -67,7 +67,7 @@ class TransactionTest extends TestCase
         $cleared = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             "currency_id" => $currency->id,
             "credited" => false
@@ -157,7 +157,7 @@ class TransactionTest extends TestCase
                 'account_type' => Account::RECEIVABLE,
                 ]
             )->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -172,7 +172,7 @@ class TransactionTest extends TestCase
                 'account_type' => Account::RECEIVABLE,
                 ]
             )->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -194,7 +194,7 @@ class TransactionTest extends TestCase
                 'account_type' => Account::RECEIVABLE,
                 ]
             )->id,
-            "date" => Carbon::now()->addYear(),
+            "transaction_date" => Carbon::now()->addYear(),
             "narration" => $this->faker->word,
             ]
         );
@@ -214,7 +214,7 @@ class TransactionTest extends TestCase
         $transaction->account_id = factory('IFRS\Models\Account')->create()->id;
         $transaction->exchange_rate_id = factory('IFRS\Models\ExchangeRate')->create()->id;
         $transaction->currency_id = factory('IFRS\Models\Currency')->create()->id;
-        $transaction->date = Carbon::now();
+        $transaction->transaction_date = Carbon::now();
         $transaction->narration = $this->faker->word;
         $transaction->transaction_no = $this->faker->word;
         $transaction->transaction_type = Transaction::JN;
@@ -284,7 +284,7 @@ class TransactionTest extends TestCase
 
         factory(Transaction::class)->create(
             [
-                "date" => $date
+                "transaction_date" => $date
             ]
         );
     }
@@ -309,7 +309,7 @@ class TransactionTest extends TestCase
 
         factory(Transaction::class)->create([
             "transaction_type" => Transaction::IN,
-            "date" => Carbon::now()->subYears(3)
+            "transaction_date" => Carbon::now()->subYears(3)
         ]);
     }
 
@@ -327,7 +327,7 @@ class TransactionTest extends TestCase
                 'account_type' => Account::RECONCILIATION,
                 ]
             )->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -394,7 +394,7 @@ class TransactionTest extends TestCase
         $transaction = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -429,7 +429,7 @@ class TransactionTest extends TestCase
         $transaction = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -448,7 +448,7 @@ class TransactionTest extends TestCase
         $cleared = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             "credited" => false
             ]
@@ -498,7 +498,7 @@ class TransactionTest extends TestCase
         $transaction = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -517,7 +517,7 @@ class TransactionTest extends TestCase
         $cleared = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             "credited" => false
             ]
@@ -571,7 +571,7 @@ class TransactionTest extends TestCase
         $transaction = new ClientInvoice(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
