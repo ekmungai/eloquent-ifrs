@@ -24,7 +24,6 @@ use Illuminate\Database\Query\Builder;
 
 class AccountStatement
 {
-
     /**
      * Account Statement Currency.
      *

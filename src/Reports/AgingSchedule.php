@@ -8,10 +8,26 @@
  */
 namespace IFRS\Reports;
 
+use Carbon\Carbon;
 use IFRS\Models\Account;
+use IFRS\Models\Currency;
+use IFRS\Models\Entity;
 
 class AgingSchedule
 {
+    /**
+     * Aging Schedule Currency.
+     *
+     * @var Currency
+     */
+    protected $currency;
+
+    /**
+     * Aging Schedule Entity.
+     *
+     * @var Entity
+     */
+    protected $entity;
 
     /**
      * Aging Schedule accounts.
@@ -36,7 +52,7 @@ class AgingSchedule
     public $brackets = [];
 
     /**
-     * Get Aginng Schedule bracket the Transaction belongs to.
+     * Get Aging Schedule bracket the Transaction belongs to.
      *
      * @param int   $age
      * @param array $brackets
@@ -61,17 +77,20 @@ class AgingSchedule
     /**
      * Agine Schedule for the account type as at the endDate.
      *
-     * @param string $type
+     * @param string $accountType
      * @param int    $currencyId
      * @param string $endDate
      */
-    public function __construct(string $type = Account::RECEIVABLE, int $currencyId = null, string $endDate = null)
+    public function __construct(string $accountType = Account::RECEIVABLE, int $currencyId = null, string $endDate = null)
     {
+        $this->period['endDate'] = is_null($endDate)? Carbon::now(): Carbon::parse($endDate);
+        $this->currency = is_null($currencyId)? $this->entity->currency: Currency::find($currencyId);
+
         $this->brackets = config('ifrs')['aging_schedule_brackets'];
 
         $balances = array_fill_keys(array_keys($this->brackets), 0);
 
-        foreach (Account::where("account_type",$type)->get() as $account){
+        foreach (Account::where("account_type",$accountType)->get() as $account){
 
             $account_balances = array_fill_keys(array_keys($this->brackets), 0);
 
@@ -104,6 +123,8 @@ class AgingSchedule
     public function attributes()
     {
         return (object) [
+            "Currency" => $this->currency->name,
+            "Entity" => $this->entity->name,
             "Accounts" => $this->accounts,
             "Balances" => $this->balances,
             "Brackets" => $this->brackets
