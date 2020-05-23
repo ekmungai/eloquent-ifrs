@@ -39,7 +39,7 @@ class CreateIfrsBalancesTable extends Migration
             // attributes
             $table->year('year');
             $table->string('reference', 255)->nullable();
-            $table->dateTime('transaction_date', 255);
+            $table->dateTime('transaction_date');
             $table->string('transaction_no', 255);
             $table->enum('transaction_type', [
                 Transaction::IN,
