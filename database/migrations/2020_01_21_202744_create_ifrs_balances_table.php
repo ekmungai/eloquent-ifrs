@@ -9,9 +9,10 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use IFRS\Models\Balance;
 use IFRS\Models\Transaction;
 
-class CreateTransactionsTable extends Migration
+class CreateIfrsBalancesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -20,7 +21,7 @@ class CreateTransactionsTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('ifrs.table_prefix').'transactions', function (Blueprint $table) {
+        Schema::create(config('ifrs.table_prefix').'balances', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             // relationships
@@ -36,23 +37,17 @@ class CreateTransactionsTable extends Migration
             $table->foreign('account_id')->references('id')->on(config('ifrs.table_prefix').'accounts');
 
             // attributes
-            $table->dateTime('transaction_date', 0);
+            $table->year('year');
             $table->string('reference', 255)->nullable();
+            $table->dateTime('transaction_date', 255);
             $table->string('transaction_no', 255);
             $table->enum('transaction_type', [
-                Transaction::CS,
                 Transaction::IN,
-                Transaction::CN,
-                Transaction::RC,
-                Transaction::CP,
                 Transaction::BL,
-                Transaction::DN,
-                Transaction::PY,
-                Transaction::CE,
-                Transaction::JN,
-            ]);
-            $table->string('narration', 1000);
-            $table->boolean('credited')->default(true);
+                Transaction::JN
+            ])->default(Transaction::JN);
+            $table->enum('balance_type', [Balance::DEBIT, Balance::CREDIT])->default(Balance::DEBIT);
+            $table->decimal('amount', 13, 4);
 
             // *permanent* deletion
             $table->dateTime('destroyed_at')->nullable();
@@ -71,6 +66,6 @@ class CreateTransactionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('transactions');
+        Schema::dropIfExists('balances');
     }
 }

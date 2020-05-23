@@ -10,7 +10,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEntitiesTable extends Migration
+class CreateIfrsCategoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -20,17 +20,22 @@ class CreateEntitiesTable extends Migration
     public function up()
     {
         Schema::create(
-            config('ifrs.table_prefix').'entities',
+            config('ifrs.table_prefix').'categories',
             function (Blueprint $table) {
                 $table->bigIncrements('id');
 
                 // relationships
-                $table->unsignedBigInteger('currency_id');
+                $table->unsignedBigInteger('entity_id');
+
+                // constraints
+                $table->foreign('entity_id')->references('id')->on(config('ifrs.table_prefix').'entities');
 
                 // attributes
+                $table->enum(
+                    'category_type',
+                    array_keys(config('ifrs')['accounts'])
+                );
                 $table->string('name', 300);
-                $table->boolean('multi_currency')->default(false);
-                $table->integer('year_start')->default(1);
 
                 // *permanent* deletion
                 $table->dateTime('destroyed_at')->nullable();
@@ -50,6 +55,6 @@ class CreateEntitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('entities');
+        Schema::dropIfExists('categories');
     }
 }

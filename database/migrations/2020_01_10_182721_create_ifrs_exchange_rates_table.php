@@ -10,7 +10,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAccountsTable extends Migration
+class CreateIfrsExchangeRatesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -20,28 +20,22 @@ class CreateAccountsTable extends Migration
     public function up()
     {
         Schema::create(
-            config('ifrs.table_prefix').'accounts',
+            config('ifrs.table_prefix').'exchange_rates',
             function (Blueprint $table) {
                 $table->bigIncrements('id');
 
                 // relationships
                 $table->unsignedBigInteger('entity_id');
-                $table->unsignedBigInteger('category_id')->nullable();
                 $table->unsignedBigInteger('currency_id');
 
                 // constraints
                 $table->foreign('entity_id')->references('id')->on(config('ifrs.table_prefix').'entities');
-                $table->foreign('category_id')->references('id')->on(config('ifrs.table_prefix').'categories');
                 $table->foreign('currency_id')->references('id')->on(config('ifrs.table_prefix').'currencies');
 
                 // attributes
-                $table->integer('code');
-                $table->string('name', 255);
-                $table->string('description', 1000)->nullable();
-                $table->enum(
-                    'account_type',
-                    array_keys(config('ifrs')['accounts'])
-                );
+                $table->dateTime('valid_from', 0);
+                $table->dateTime('valid_to', 0)->nullable();
+                $table->decimal('rate', 13, 4)->default(1);
 
                 // *permanent* deletion
                 $table->dateTime('destroyed_at')->nullable();
@@ -61,6 +55,6 @@ class CreateAccountsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('accounts');
+        Schema::dropIfExists('exchange_rates');
     }
 }

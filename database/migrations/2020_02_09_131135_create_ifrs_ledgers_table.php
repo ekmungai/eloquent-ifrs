@@ -9,8 +9,9 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use IFRS\Models\Balance;
 
-class CreateLineItemsTable extends Migration
+class CreateIfrsLedgersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -19,28 +20,30 @@ class CreateLineItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('ifrs.table_prefix').'line_items', function (Blueprint $table) {
+        Schema::create(config('ifrs.table_prefix').'ledgers', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             // relationships
             $table->unsignedBigInteger('entity_id');
-            $table->unsignedBigInteger('account_id');
-            $table->unsignedBigInteger('vat_account_id')->nullable();
-            $table->unsignedBigInteger('transaction_id')->nullable();
+            $table->unsignedBigInteger('transaction_id');
             $table->unsignedBigInteger('vat_id');
+            $table->unsignedBigInteger('post_account');
+            $table->unsignedBigInteger('folio_account');
+            $table->unsignedBigInteger('line_item_id');
 
             // constraints
             $table->foreign('entity_id')->references('id')->on(config('ifrs.table_prefix').'entities');
-            $table->foreign('account_id')->references('id')->on(config('ifrs.table_prefix').'accounts');
-            $table->foreign('vat_account_id')->references('id')->on(config('ifrs.table_prefix').'accounts');
-            $table->foreign('transaction_id')->references('id')->on(config('ifrs.table_prefix').'transactions');
             $table->foreign('vat_id')->references('id')->on(config('ifrs.table_prefix').'vats');
+            $table->foreign('transaction_id')->references('id')->on(config('ifrs.table_prefix').'transactions');
+            $table->foreign('post_account')->references('id')->on(config('ifrs.table_prefix').'accounts');
+            $table->foreign('folio_account')->references('id')->on(config('ifrs.table_prefix').'accounts');
+            $table->foreign('line_item_id')->references('id')->on(config('ifrs.table_prefix').'line_items');
 
             // attributes
-            $table->string('narration', 500)->nullable();
-            ;
+            $table->dateTime('date', 0);
+            $table->enum('entry_type', [Balance::DEBIT,Balance::CREDIT]);
             $table->decimal('amount', 13, 4);
-            $table->decimal('quantity', 13, 4)->default(1);
+            $table->string('hash', 500)->nullable();
 
             // *permanent* deletion
             $table->dateTime('destroyed_at')->nullable();
@@ -59,6 +62,6 @@ class CreateLineItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('line_items');
+        Schema::dropIfExists('ledgers');
     }
 }

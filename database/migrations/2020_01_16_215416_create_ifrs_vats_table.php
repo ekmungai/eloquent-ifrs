@@ -10,7 +10,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCurrenciesTable extends Migration
+class CreateIfrsVatsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -20,13 +20,20 @@ class CreateCurrenciesTable extends Migration
     public function up()
     {
         Schema::create(
-            config('ifrs.table_prefix').'currencies',
+            config('ifrs.table_prefix').'vats',
             function (Blueprint $table) {
                 $table->bigIncrements('id');
 
+                // relationships
+                $table->unsignedBigInteger('entity_id');
+
+                // constraints
+                $table->foreign('entity_id')->references('id')->on(config('ifrs.table_prefix').'entities');
+
                 // attributes
+                $table->string('code', 1);
                 $table->string('name', 300);
-                $table->string('currency_code', 3);
+                $table->decimal('rate', 13, 4);
 
                 // *permanent* deletion
                 $table->dateTime('destroyed_at')->nullable();
@@ -46,6 +53,6 @@ class CreateCurrenciesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('currencies');
+        Schema::dropIfExists('vats');
     }
 }

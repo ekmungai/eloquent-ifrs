@@ -9,8 +9,9 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use IFRS\Models\ReportingPeriod;
 
-class CreateRecycledObjectsTable extends Migration
+class CreateIfrsReportingPeriodsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -20,22 +21,24 @@ class CreateRecycledObjectsTable extends Migration
     public function up()
     {
         Schema::create(
-            config('ifrs.table_prefix').'recycled_objects',
+            config('ifrs.table_prefix').'reporting_periods',
             function (Blueprint $table) {
                 $table->bigIncrements('id');
 
                 // relationships
                 $table->unsignedBigInteger('entity_id');
-                $table->unsignedBigInteger('user_id');
 
                 // constraints
-                $userModel = config('ifrs.user_model');
                 $table->foreign('entity_id')->references('id')->on(config('ifrs.table_prefix').'entities');
-                $table->foreign('user_id')->references('id')->on((new $userModel())->getTable());
 
                 // attributes
-                $table->bigInteger('recyclable_id');
-                $table->string('recyclable_type', 300);
+                $table->integer('period_count');
+                $table->enum('status', [
+                    ReportingPeriod::OPEN,
+                    ReportingPeriod::CLOSED,
+                    ReportingPeriod::ADJUSTING
+                ])->default(ReportingPeriod::OPEN);
+                $table->year('year');
 
                 // *permanent* deletion
                 $table->dateTime('destroyed_at')->nullable();
@@ -55,6 +58,6 @@ class CreateRecycledObjectsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('recycled_objects');
+        Schema::dropIfExists('reporting_periods');
     }
 }
