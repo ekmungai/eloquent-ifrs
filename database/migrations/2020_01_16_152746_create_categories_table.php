@@ -20,7 +20,7 @@ class CreateCategoriesTable extends Migration
     public function up()
     {
         Schema::create(
-            'categories',
+            'ifrs_categories',
             function (Blueprint $table) {
                 $table->bigIncrements('id');
 
@@ -55,6 +55,6 @@ class CreateCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('ifrs_categories');
     }
 }

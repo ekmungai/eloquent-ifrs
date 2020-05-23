@@ -20,7 +20,7 @@ class CreateEntitiesTable extends Migration
     public function up()
     {
         Schema::create(
-            'entities',
+            'ifrs_entities',
             function (Blueprint $table) {
                 $table->bigIncrements('id');
 
@@ -50,6 +50,6 @@ class CreateEntitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('entities');
+        Schema::dropIfExists('ifrs_entities');
     }
 }

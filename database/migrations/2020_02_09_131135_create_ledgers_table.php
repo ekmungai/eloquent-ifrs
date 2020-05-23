@@ -20,7 +20,7 @@ class CreateLedgersTable extends Migration
      */
     public function up()
     {
-        Schema::create('ledgers', function (Blueprint $table) {
+        Schema::create('ifrs_ledgers', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             // relationships
@@ -62,6 +62,6 @@ class CreateLedgersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ledgers');
+        Schema::dropIfExists('ifrs_ledgers');
     }
 }

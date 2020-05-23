@@ -19,7 +19,7 @@ class CreateLineItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('line_items', function (Blueprint $table) {
+        Schema::create('ifrs_line_items', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             // relationships
@@ -59,6 +59,6 @@ class CreateLineItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('line_items');
+        Schema::dropIfExists('ifrs_line_items');
     }
 }

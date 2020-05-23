@@ -48,6 +48,13 @@ class Account extends Model implements Recyclable, Segragatable
     use Recycling;
 
     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'ifrs_accounts';
+
+    /**
      * Account Type.
      *
      * @var string

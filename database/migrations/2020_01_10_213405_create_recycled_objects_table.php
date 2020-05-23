@@ -20,7 +20,7 @@ class CreateRecycledObjectsTable extends Migration
     public function up()
     {
         Schema::create(
-            'recycled_objects',
+            'ifrs_recycled_objects',
             function (Blueprint $table) {
                 $table->bigIncrements('id');
 
@@ -54,6 +54,6 @@ class CreateRecycledObjectsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('recycled_objects');
+        Schema::dropIfExists('ifrs_recycled_objects');
     }
 }

@@ -104,7 +104,7 @@ class AccountSchedule extends AccountStatement
             Transaction::BL,
             Transaction::JN
             ]
-        )->select('transactions.id');
+        )->select('ifrs_transactions.id');
 
         foreach ($transactions->get() as $transaction) {
             $transaction = Transaction::find($transaction->id);

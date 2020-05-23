@@ -20,7 +20,7 @@ class CreateCurrenciesTable extends Migration
     public function up()
     {
         Schema::create(
-            'currencies',
+            'ifrs_currencies',
             function (Blueprint $table) {
                 $table->bigIncrements('id');
 
@@ -46,6 +46,6 @@ class CreateCurrenciesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('currencies');
+        Schema::dropIfExists('ifrs_currencies');
     }
 }

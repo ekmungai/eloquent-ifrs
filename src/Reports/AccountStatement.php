@@ -79,25 +79,26 @@ class AccountStatement
      */
     protected function buildQuery()
     {
-        $query = DB::table('transactions')->leftJoin('ledgers', 'transactions.id', '=', 'ledgers.transaction_id')
-            ->where('transactions.deleted_at', null)
-            ->where("transactions.entity_id", $this->entity->id)
-            ->where("transactions.transaction_date", ">=", $this->period['startDate'])
-            ->where("transactions.transaction_date", "<=", $this->period['endDate'])
-            ->where("transactions.currency_id", $this->currency->id)
+        $query = DB::table('ifrs_transactions')
+        ->leftJoin('ifrs_ledgers', 'ifrs_transactions.id', '=', 'ifrs_ledgers.transaction_id')
+            ->where('ifrs_transactions.deleted_at', null)
+            ->where("ifrs_transactions.entity_id", $this->entity->id)
+            ->where("ifrs_transactions.transaction_date", ">=", $this->period['startDate'])
+            ->where("ifrs_transactions.transaction_date", "<=", $this->period['endDate'])
+            ->where("ifrs_transactions.currency_id", $this->currency->id)
             ->select(
-                'transactions.id',
-                'transactions.transaction_date',
-                'transactions.transaction_no',
-                'transactions.reference',
-                'transactions.transaction_type',
-                'transactions.narration'
+                'ifrs_transactions.id',
+                'ifrs_transactions.transaction_date',
+                'ifrs_transactions.transaction_no',
+                'ifrs_transactions.reference',
+                'ifrs_transactions.transaction_type',
+                'ifrs_transactions.narration'
             )->distinct();
 
         $query->where(
             function ($query){
-                $query->where("ledgers.post_account", $this->account->id)
-                    ->orwhere("ledgers.folio_account", $this->account->id);
+                $query->where("ifrs_ledgers.post_account", $this->account->id)
+                    ->orwhere("ifrs_ledgers.folio_account", $this->account->id);
             }
         );
 

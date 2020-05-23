@@ -49,6 +49,13 @@ class Assignment extends Model implements Segragatable
     use SoftDeletes;
 
     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'ifrs_assignments';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array

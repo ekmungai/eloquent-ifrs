@@ -20,7 +20,7 @@ class CreateExchangeRatesTable extends Migration
     public function up()
     {
         Schema::create(
-            'exchange_rates',
+            'ifrs_exchange_rates',
             function (Blueprint $table) {
                 $table->bigIncrements('id');
 
@@ -55,6 +55,6 @@ class CreateExchangeRatesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('exchange_rates');
+        Schema::dropIfExists('ifrs_exchange_rates');
     }
 }

@@ -44,6 +44,13 @@ class LineItem extends Model implements Recyclable, Segragatable
     use Recycling;
 
     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'ifrs_line_items';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
