@@ -594,7 +594,7 @@ class TransactionTest extends TestCase
         $this->assertTrue($transaction->checkIntegrity());
 
         //Change Transaction Ledger amounts
-        DB::statement('update ledgers set amount = 100 where id IN (1,2)');
+        DB::statement('update '.config('ifrs.table_prefix').'ledgers set amount = 100 where id IN (1,2)');
 
         $transaction = Transaction::find($transaction->id);
         // Transaction amount has changed
