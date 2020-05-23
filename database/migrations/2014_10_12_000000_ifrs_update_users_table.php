@@ -48,7 +48,7 @@ class IfrsUpdateUsersTable extends Migration
 
     private function getTableName()
     {
-        $userModel = new config('ifrs.user_model');
-        return $userModel->getTable();
+        $userModel = config('ifrs.user_model');
+        return (new $userModel())->getTable();
     }
 }
