@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use IFRS\Models\Account;
 use IFRS\Models\Currency;
 use IFRS\Models\Entity;
+use Illuminate\Support\Facades\Auth;
 
 class AgingSchedule
 {
@@ -84,6 +85,7 @@ class AgingSchedule
     public function __construct(string $accountType = Account::RECEIVABLE, int $currencyId = null, string $endDate = null)
     {
         $this->period['endDate'] = is_null($endDate)? Carbon::now(): Carbon::parse($endDate);
+        $this->entity = Auth::user()->entity;
         $this->currency = is_null($currencyId)? $this->entity->currency: Currency::find($currencyId);
 
         $this->brackets = config('ifrs')['aging_schedule_brackets'];
