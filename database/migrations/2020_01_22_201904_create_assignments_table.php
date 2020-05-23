@@ -28,9 +28,9 @@ class CreateAssignmentsTable extends Migration
             $table->unsignedBigInteger('forex_account_id')->nullable();
 
             // constraints
-            $table->foreign('entity_id')->references('id')->on('entities');
-            $table->foreign('transaction_id')->references('id')->on('transactions');
-            $table->foreign('forex_account_id')->references('id')->on('accounts');
+            $table->foreign('entity_id')->references('id')->on(config('ifrs.table_prefix').'entities');
+            $table->foreign('transaction_id')->references('id')->on(config('ifrs.table_prefix').'transactions');
+            $table->foreign('forex_account_id')->references('id')->on(config('ifrs.table_prefix').'accounts');
 
             // attributes
             $table->unsignedBigInteger('cleared_id');

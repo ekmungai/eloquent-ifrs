@@ -30,10 +30,10 @@ class CreateTransactionsTable extends Migration
             $table->unsignedBigInteger('exchange_rate_id');
 
             // constraints
-            $table->foreign('entity_id')->references('id')->on('entities');
-            $table->foreign('currency_id')->references('id')->on('currencies');
-            $table->foreign('exchange_rate_id')->references('id')->on('exchange_rates');
-            $table->foreign('account_id')->references('id')->on('accounts');
+            $table->foreign('entity_id')->references('id')->on(config('ifrs.table_prefix').'entities');
+            $table->foreign('currency_id')->references('id')->on(config('ifrs.table_prefix').'currencies');
+            $table->foreign('exchange_rate_id')->references('id')->on(config('ifrs.table_prefix').'exchange_rates');
+            $table->foreign('account_id')->references('id')->on(config('ifrs.table_prefix').'accounts');
 
             // attributes
             $table->dateTime('transaction_date', 0);

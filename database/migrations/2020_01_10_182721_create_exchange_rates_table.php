@@ -29,8 +29,8 @@ class CreateExchangeRatesTable extends Migration
                 $table->unsignedBigInteger('currency_id');
 
                 // constraints
-                $table->foreign('entity_id')->references('id')->on('entities');
-                $table->foreign('currency_id')->references('id')->on('currencies');
+                $table->foreign('entity_id')->references('id')->on(config('ifrs.table_prefix').'entities');
+                $table->foreign('currency_id')->references('id')->on(config('ifrs.table_prefix').'currencies');
 
                 // attributes
                 $table->dateTime('valid_from', 0);

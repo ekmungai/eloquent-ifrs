@@ -32,12 +32,12 @@ class CreateLedgersTable extends Migration
             $table->unsignedBigInteger('line_item_id');
 
             // constraints
-            $table->foreign('entity_id')->references('id')->on('entities');
-            $table->foreign('vat_id')->references('id')->on('vats');
-            $table->foreign('transaction_id')->references('id')->on('transactions');
-            $table->foreign('post_account')->references('id')->on('accounts');
-            $table->foreign('folio_account')->references('id')->on('accounts');
-            $table->foreign('line_item_id')->references('id')->on('line_items');
+            $table->foreign('entity_id')->references('id')->on(config('ifrs.table_prefix').'entities');
+            $table->foreign('vat_id')->references('id')->on(config('ifrs.table_prefix').'vats');
+            $table->foreign('transaction_id')->references('id')->on(config('ifrs.table_prefix').'transactions');
+            $table->foreign('post_account')->references('id')->on(config('ifrs.table_prefix').'accounts');
+            $table->foreign('folio_account')->references('id')->on(config('ifrs.table_prefix').'accounts');
+            $table->foreign('line_item_id')->references('id')->on(config('ifrs.table_prefix').'line_items');
 
             // attributes
             $table->dateTime('date', 0);

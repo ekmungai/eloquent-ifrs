@@ -28,7 +28,7 @@ class CreateVatsTable extends Migration
                 $table->unsignedBigInteger('entity_id');
 
                 // constraints
-                $table->foreign('entity_id')->references('id')->on('entities');
+                $table->foreign('entity_id')->references('id')->on(config('ifrs.table_prefix').'entities');
 
                 // attributes
                 $table->string('code', 1);

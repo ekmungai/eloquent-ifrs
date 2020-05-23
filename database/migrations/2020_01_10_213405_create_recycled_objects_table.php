@@ -29,8 +29,9 @@ class CreateRecycledObjectsTable extends Migration
                 $table->unsignedBigInteger('user_id');
 
                 // constraints
-                $table->foreign('entity_id')->references('id')->on('entities');
-                $table->foreign('user_id')->references('id')->on('users');
+                $userModel = config('ifrs.user_model');
+                $table->foreign('entity_id')->references('id')->on(config('ifrs.table_prefix').'entities');
+                $table->foreign('user_id')->references('id')->on(config('ifrs.table_prefix').(new $userModel())->getTable());
 
                 // attributes
                 $table->bigInteger('recyclable_id');

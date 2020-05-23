@@ -30,11 +30,11 @@ class CreateLineItemsTable extends Migration
             $table->unsignedBigInteger('vat_id');
 
             // constraints
-            $table->foreign('entity_id')->references('id')->on('entities');
-            $table->foreign('account_id')->references('id')->on('accounts');
-            $table->foreign('vat_account_id')->references('id')->on('accounts');
-            $table->foreign('transaction_id')->references('id')->on('transactions');
-            $table->foreign('vat_id')->references('id')->on('vats');
+            $table->foreign('entity_id')->references('id')->on(config('ifrs.table_prefix').'entities');
+            $table->foreign('account_id')->references('id')->on(config('ifrs.table_prefix').'accounts');
+            $table->foreign('vat_account_id')->references('id')->on(config('ifrs.table_prefix').'accounts');
+            $table->foreign('transaction_id')->references('id')->on(config('ifrs.table_prefix').'transactions');
+            $table->foreign('vat_id')->references('id')->on(config('ifrs.table_prefix').'vats');
 
             // attributes
             $table->string('narration', 500)->nullable();

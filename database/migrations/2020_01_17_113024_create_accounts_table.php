@@ -30,9 +30,9 @@ class CreateAccountsTable extends Migration
                 $table->unsignedBigInteger('currency_id');
 
                 // constraints
-                $table->foreign('entity_id')->references('id')->on('entities');
-                $table->foreign('category_id')->references('id')->on('categories');
-                $table->foreign('currency_id')->references('id')->on('currencies');
+                $table->foreign('entity_id')->references('id')->on(config('ifrs.table_prefix').'entities');
+                $table->foreign('category_id')->references('id')->on(config('ifrs.table_prefix').'categories');
+                $table->foreign('currency_id')->references('id')->on(config('ifrs.table_prefix').'currencies');
 
                 // attributes
                 $table->integer('code');
