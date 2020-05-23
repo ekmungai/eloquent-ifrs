@@ -31,7 +31,7 @@ class CreateRecycledObjectsTable extends Migration
                 // constraints
                 $userModel = config('ifrs.user_model');
                 $table->foreign('entity_id')->references('id')->on(config('ifrs.table_prefix').'entities');
-                $table->foreign('user_id')->references('id')->on(config('ifrs.table_prefix').(new $userModel())->getTable());
+                $table->foreign('user_id')->references('id')->on((new $userModel())->getTable());
 
                 // attributes
                 $table->bigInteger('recyclable_id');
