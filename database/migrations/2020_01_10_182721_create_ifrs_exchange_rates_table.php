@@ -55,6 +55,6 @@ class CreateIfrsExchangeRatesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('exchange_rates');
+        Schema::dropIfExists(config('ifrs.table_prefix').'exchange_rates');
     }
 }

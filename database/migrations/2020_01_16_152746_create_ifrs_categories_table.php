@@ -55,6 +55,6 @@ class CreateIfrsCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists(config('ifrs.table_prefix').'categories');
     }
 }

@@ -62,6 +62,6 @@ class CreateIfrsLedgersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ledgers');
+        Schema::dropIfExists(config('ifrs.table_prefix').'ledgers');
     }
 }

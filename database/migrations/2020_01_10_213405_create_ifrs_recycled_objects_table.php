@@ -55,6 +55,6 @@ class CreateIfrsRecycledObjectsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('recycled_objects');
+        Schema::dropIfExists(config('ifrs.table_prefix').'recycled_objects');
     }
 }

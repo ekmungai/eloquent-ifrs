@@ -71,6 +71,6 @@ class CreateIfrsTransactionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('transactions');
+        Schema::dropIfExists(config('ifrs.table_prefix').'transactions');
     }
 }

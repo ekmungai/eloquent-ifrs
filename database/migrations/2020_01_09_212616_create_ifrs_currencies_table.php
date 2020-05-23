@@ -46,6 +46,6 @@ class CreateIfrsCurrenciesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('currencies');
+        Schema::dropIfExists(config('ifrs.table_prefix').'currencies');
     }
 }

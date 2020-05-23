@@ -59,6 +59,6 @@ class CreateIfrsLineItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('line_items');
+        Schema::dropIfExists(config('ifrs.table_prefix').'line_items');
     }
 }

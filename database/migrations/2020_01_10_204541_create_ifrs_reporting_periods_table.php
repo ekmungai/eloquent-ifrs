@@ -58,6 +58,6 @@ class CreateIfrsReportingPeriodsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reporting_periods');
+        Schema::dropIfExists(config('ifrs.table_prefix').'reporting_periods');
     }
 }

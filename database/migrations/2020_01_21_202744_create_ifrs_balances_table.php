@@ -66,6 +66,6 @@ class CreateIfrsBalancesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('balances');
+        Schema::dropIfExists(config('ifrs.table_prefix').'balances');
     }
 }

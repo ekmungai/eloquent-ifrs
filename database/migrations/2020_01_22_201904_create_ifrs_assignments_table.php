@@ -51,6 +51,6 @@ class CreateIfrsAssignmentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('assignments');
+        Schema::dropIfExists(config('ifrs.table_prefix').'assignments');
     }
 }

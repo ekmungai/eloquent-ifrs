@@ -61,6 +61,6 @@ class CreateIfrsAccountsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('accounts');
+        Schema::dropIfExists(config('ifrs.table_prefix').'accounts');
     }
 }

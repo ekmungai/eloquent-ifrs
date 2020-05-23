@@ -50,6 +50,6 @@ class CreateIfrsEntitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('entities');
+        Schema::dropIfExists(config('ifrs.table_prefix').'entities');
     }
 }

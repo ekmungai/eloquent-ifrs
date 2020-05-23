@@ -53,6 +53,6 @@ class CreateIfrsVatsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vats');
+        Schema::dropIfExists(config('ifrs.table_prefix').'vats');
     }
 }
