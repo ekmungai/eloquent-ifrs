@@ -89,6 +89,7 @@ class User ... implements Recyclable, Segregatable {
 }
 ...
 ?>
+```
 
 This simple example covers the four scenarios to demonstrate the use of the package. First, a description of a Cash Sale to a customer, then a Credit Sale (Invoice) to a client, then a Cash Purchase for an operations expense and finally a Credit Purchase (Bill) from a Supplier for a non operations purpose (Asset Purchase).
 
