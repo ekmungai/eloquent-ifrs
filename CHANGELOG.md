@@ -1,4 +1,8 @@
 
+## 1.1.1 - 2020-05-23
+- changed user migration to only modify existing users table
+- added scope to database table names to prevent conflict with existing tables in parent application
+
 ## 1.1.0 - 2020-05-21
 - add aging balances report
 - add Assignable Transaction bulk assignment
