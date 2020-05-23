@@ -19,30 +19,38 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create(
-            'users',
-            function (Blueprint $table) {
-                $table->bigIncrements('id');
-
+        if (Schema::hasTable('users')) {
+            Schema::table('users', function (Blueprint $table) {
                 //entity
                 $table->unsignedBigInteger('entity_id')->nullable();
 
-                // attributes
-                $table->string('name');
-                $table->string('email')->unique();
-                $table->timestamp('email_verified_at')->nullable();
-                $table->string('password');
-                $table->rememberToken();
+            });
+        }else{
+            Schema::create(
+                'users',
+                function (Blueprint $table) {
+                    $table->bigIncrements('id');
 
-                // *permanent* deletion
-                $table->dateTime('destroyed_at')->nullable();
+                    //entity
+                    $table->unsignedBigInteger('entity_id')->nullable();
 
-                //soft deletion
-                $table->softDeletes();
+                    // attributes
+                    $table->string('name');
+                    $table->string('email')->unique();
+                    $table->timestamp('email_verified_at')->nullable();
+                    $table->string('password');
+                    $table->rememberToken();
 
-                $table->timestamps();
-            }
-        );
+                    // *permanent* deletion
+                    $table->dateTime('destroyed_at')->nullable();
+
+                    //soft deletion
+                    $table->softDeletes();
+
+                    $table->timestamps();
+                }
+            );
+        }
     }
 
     /**

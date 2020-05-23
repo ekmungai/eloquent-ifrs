@@ -19,7 +19,7 @@ class CreateAssignmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('assignments', function (Blueprint $table) {
+        Schema::create('ifrs_assignments', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             // relationships
@@ -51,6 +51,6 @@ class CreateAssignmentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('assignments');
+        Schema::dropIfExists('ifrs_assignments');
     }
 }

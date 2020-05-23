@@ -21,7 +21,7 @@ class CreateBalancesTable extends Migration
      */
     public function up()
     {
-        Schema::create('balances', function (Blueprint $table) {
+        Schema::create('ifrs_balances', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             // relationships
@@ -66,6 +66,6 @@ class CreateBalancesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('balances');
+        Schema::dropIfExists('ifrs_balances');
     }
 }

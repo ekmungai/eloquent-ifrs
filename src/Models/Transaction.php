@@ -60,6 +60,13 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     use Assigning;
 
     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'ifrs_transactions';
+
+    /**
      * Transaction Model Name
      *
      * @var array

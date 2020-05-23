@@ -41,6 +41,13 @@ class ReportingPeriod extends Model implements Segragatable, Recyclable
     use Recycling;
 
     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'ifrs_reporting_periods';
+
+    /**
      * Reporting Period Status
      *
      * @var string

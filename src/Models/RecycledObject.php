@@ -32,6 +32,13 @@ class RecycledObject extends Model implements Segragatable
     use SoftDeletes;
 
     /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'ifrs_recycled_objects';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array

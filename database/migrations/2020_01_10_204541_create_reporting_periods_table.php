@@ -21,7 +21,7 @@ class CreateReportingPeriodsTable extends Migration
     public function up()
     {
         Schema::create(
-            'reporting_periods',
+            'ifrs_reporting_periods',
             function (Blueprint $table) {
                 $table->bigIncrements('id');
 
@@ -58,6 +58,6 @@ class CreateReportingPeriodsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reporting_periods');
+        Schema::dropIfExists('ifrs_reporting_periods');
     }
 }

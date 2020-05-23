@@ -20,7 +20,7 @@ class CreateAccountsTable extends Migration
     public function up()
     {
         Schema::create(
-            'accounts',
+            'ifrs_accounts',
             function (Blueprint $table) {
                 $table->bigIncrements('id');
 
@@ -61,6 +61,6 @@ class CreateAccountsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('accounts');
+        Schema::dropIfExists('ifrs_accounts');
     }
 }

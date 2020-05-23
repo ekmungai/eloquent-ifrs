@@ -20,7 +20,7 @@ class CreateVatsTable extends Migration
     public function up()
     {
         Schema::create(
-            'vats',
+            'ifrs_vats',
             function (Blueprint $table) {
                 $table->bigIncrements('id');
 
@@ -53,6 +53,6 @@ class CreateVatsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vats');
+        Schema::dropIfExists('ifrs_vats');
     }
 }
