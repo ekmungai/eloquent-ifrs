@@ -34,7 +34,7 @@ trait Segragating
             function ($model) {
 
                 // only users can be created without requiring to be logged on
-                if (!Auth::check() && !is_a($model, "IFRS\Models\User")) {
+                if (!Auth::check() && !is_a($model, config('ifrs.user_model'))) {
                     throw new UnauthorizedUser();
                 }
 

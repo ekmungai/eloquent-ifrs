@@ -16,6 +16,7 @@ use IFRS\Interfaces\Segragatable;
 
 use IFRS\Traits\Segragating;
 use IFRS\Traits\Recycling;
+use IFRS\Traits\ModelTablePrefix;
 
 use IFRS\Exceptions\MissingVatAccount;
 use IFRS\Exceptions\NegativeAmount;
@@ -42,6 +43,7 @@ class LineItem extends Model implements Recyclable, Segragatable
     use Segragating;
     use SoftDeletes;
     use Recycling;
+    use ModelTablePrefix;
 
     /**
      * The attributes that are mass assignable.

@@ -21,7 +21,7 @@ class CreateBalancesTable extends Migration
      */
     public function up()
     {
-        Schema::create('balances', function (Blueprint $table) {
+        Schema::create(config('ifrs.table_prefix').'balances', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             // relationships

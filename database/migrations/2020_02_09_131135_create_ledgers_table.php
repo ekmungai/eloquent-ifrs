@@ -20,7 +20,7 @@ class CreateLedgersTable extends Migration
      */
     public function up()
     {
-        Schema::create('ledgers', function (Blueprint $table) {
+        Schema::create(config('ifrs.table_prefix').'ledgers', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             // relationships

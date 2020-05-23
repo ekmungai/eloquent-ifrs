@@ -18,6 +18,7 @@ use IFRS\Models\Currency;
 use IFRS\Models\Entity;
 use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Ledger;
+use IFRS\Models\Transaction;
 
 use IFRS\Exceptions\MissingAccount;
 use Illuminate\Database\Query\Builder;
@@ -79,7 +80,8 @@ class AccountStatement
      */
     protected function buildQuery()
     {
-        $query = DB::table('transactions')->leftJoin('ledgers', 'transactions.id', '=', 'ledgers.transaction_id')
+        $transactionModel = new Transaction;
+        $query = DB::table(config('ifrs.table_prefix').$transactionModel->getTable())->leftJoin('ledgers', 'transactions.id', '=', 'ledgers.transaction_id')
             ->where('transactions.deleted_at', null)
             ->where("transactions.entity_id", $this->entity->id)
             ->where("transactions.transaction_date", ">=", $this->period['startDate'])

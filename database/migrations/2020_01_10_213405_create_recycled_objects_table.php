@@ -20,7 +20,7 @@ class CreateRecycledObjectsTable extends Migration
     public function up()
     {
         Schema::create(
-            'recycled_objects',
+            config('ifrs.table_prefix').'recycled_objects',
             function (Blueprint $table) {
                 $table->bigIncrements('id');
 

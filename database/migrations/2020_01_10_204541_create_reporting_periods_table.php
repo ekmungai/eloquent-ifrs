@@ -21,7 +21,7 @@ class CreateReportingPeriodsTable extends Migration
     public function up()
     {
         Schema::create(
-            'reporting_periods',
+            config('ifrs.table_prefix').'reporting_periods',
             function (Blueprint $table) {
                 $table->bigIncrements('id');
 

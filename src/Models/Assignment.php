@@ -18,6 +18,7 @@ use IFRS\Interfaces\Segragatable;
 use IFRS\Interfaces\Assignable;
 
 use IFRS\Traits\Segragating;
+use IFRS\Traits\ModelTablePrefix;
 
 use IFRS\Exceptions\InsufficientBalance;
 use IFRS\Exceptions\OverClearance;
@@ -47,6 +48,7 @@ class Assignment extends Model implements Segragatable
 {
     use Segragating;
     use SoftDeletes;
+    use ModelTablePrefix;
 
     /**
      * The attributes that are mass assignable.

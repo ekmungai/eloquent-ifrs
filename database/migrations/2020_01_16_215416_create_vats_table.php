@@ -20,7 +20,7 @@ class CreateVatsTable extends Migration
     public function up()
     {
         Schema::create(
-            'vats',
+            config('ifrs.table_prefix').'vats',
             function (Blueprint $table) {
                 $table->bigIncrements('id');
 

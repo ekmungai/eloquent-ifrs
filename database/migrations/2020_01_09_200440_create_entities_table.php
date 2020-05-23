@@ -20,7 +20,7 @@ class CreateEntitiesTable extends Migration
     public function up()
     {
         Schema::create(
-            'entities',
+            config('ifrs.table_prefix').'entities',
             function (Blueprint $table) {
                 $table->bigIncrements('id');
 

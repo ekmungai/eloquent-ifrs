@@ -20,7 +20,7 @@ class CreateAccountsTable extends Migration
     public function up()
     {
         Schema::create(
-            'accounts',
+            config('ifrs.table_prefix').'accounts',
             function (Blueprint $table) {
                 $table->bigIncrements('id');
 

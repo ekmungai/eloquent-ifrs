@@ -25,11 +25,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use IFRS\Interfaces\Segragatable;
 
 use IFRS\Traits\Segragating;
+use IFRS\Traits\ModelTablePrefix;
 
 class RecycledObject extends Model implements Segragatable
 {
     use Segragating;
     use SoftDeletes;
+    use ModelTablePrefix;
 
     /**
      * The attributes that are mass assignable.
@@ -57,7 +59,7 @@ class RecycledObject extends Model implements Segragatable
      */
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(config('ifrs.user_model'));
     }
 
     /**

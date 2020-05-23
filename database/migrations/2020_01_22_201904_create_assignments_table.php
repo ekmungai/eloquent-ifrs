@@ -19,7 +19,7 @@ class CreateAssignmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('assignments', function (Blueprint $table) {
+        Schema::create(config('ifrs.table_prefix').'assignments', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             // relationships

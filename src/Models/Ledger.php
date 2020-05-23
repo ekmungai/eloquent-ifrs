@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use IFRS\Interfaces\Segragatable;
 
 use IFRS\Traits\Segragating;
+use IFRS\Traits\ModelTablePrefix;
 
 /**
  * Class Ledger
@@ -38,6 +39,7 @@ class Ledger extends Model implements Segragatable
 {
     use Segragating;
     use SoftDeletes;
+    use ModelTablePrefix;
 
     /**
      * The attributes that are mass assignable.

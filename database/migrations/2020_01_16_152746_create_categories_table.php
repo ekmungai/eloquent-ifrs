@@ -20,7 +20,7 @@ class CreateCategoriesTable extends Migration
     public function up()
     {
         Schema::create(
-            'categories',
+            config('ifrs.table_prefix').'categories',
             function (Blueprint $table) {
                 $table->bigIncrements('id');
 

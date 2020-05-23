@@ -20,7 +20,7 @@ class CreateTransactionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('transactions', function (Blueprint $table) {
+        Schema::create(config('ifrs.table_prefix').'transactions', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             // relationships

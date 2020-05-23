@@ -20,7 +20,7 @@ class CreateCurrenciesTable extends Migration
     public function up()
     {
         Schema::create(
-            'currencies',
+            config('ifrs.table_prefix').'currencies',
             function (Blueprint $table) {
                 $table->bigIncrements('id');
 

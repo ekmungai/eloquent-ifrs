@@ -20,7 +20,7 @@ class CreateExchangeRatesTable extends Migration
     public function up()
     {
         Schema::create(
-            'exchange_rates',
+            config('ifrs.table_prefix').'exchange_rates',
             function (Blueprint $table) {
                 $table->bigIncrements('id');
 
