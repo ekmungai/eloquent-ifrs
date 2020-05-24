@@ -19,6 +19,7 @@ use IFRS\Interfaces\Recyclable;
 
 use IFRS\Traits\Segragating;
 use IFRS\Traits\Recycling;
+use IFRS\Traits\ModelTablePrefix;
 
 use IFRS\Exceptions\MissingReportingPeriod;
 
@@ -39,6 +40,7 @@ class ReportingPeriod extends Model implements Segragatable, Recyclable
     use Segragating;
     use SoftDeletes;
     use Recycling;
+    use ModelTablePrefix;
 
     /**
      * The table associated with the model.

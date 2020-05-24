@@ -69,6 +69,28 @@ php artisan vendor:publish
 ## Usage
 Full documentation for this package can be found [here](https://ekmungai.github.io/ifrs-docs/).
 
+### DB Collision
+Publish configuration file with `vendor:publish` if your `User` model is different from `App\User` and update the namespace of your `User` model.
+
+Open your `User` model and implement the below interfaces and also include the trait as well.
+
+```php
+<?php
+
+use IFRS\Traits\IFRSUser;
+use IFRS\Interfaces\Recyclable;
+use IFRS\Interfaces\Segragatable;
+...
+
+class User ... implements Recyclable, Segregatable {
+  ...
+  use IFRSUser;
+  ...
+}
+...
+?>
+```
+
 This simple example covers the four scenarios to demonstrate the use of the package. First, a description of a Cash Sale to a customer, then a Credit Sale (Invoice) to a client, then a Cash Purchase for an operations expense and finally a Credit Purchase (Bill) from a Supplier for a non operations purpose (Asset Purchase).
 
 First we'll setup the Company (Reporting Entity) and required Accounts to record the Transactions. (Assuming that a registered User already exists):

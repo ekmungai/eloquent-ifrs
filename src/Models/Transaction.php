@@ -24,6 +24,7 @@ use IFRS\Traits\Assigning;
 use IFRS\Traits\Clearing;
 use IFRS\Traits\Recycling;
 use IFRS\Traits\Segragating;
+use IFRS\Traits\ModelTablePrefix;
 
 use IFRS\Exceptions\MissingLineItem;
 use IFRS\Exceptions\RedundantTransaction;
@@ -58,6 +59,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     use Recycling;
     use Clearing;
     use Assigning;
+    use ModelTablePrefix;
 
     /**
      * The table associated with the model.

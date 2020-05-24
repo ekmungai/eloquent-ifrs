@@ -16,6 +16,7 @@ use IFRS\Interfaces\Recyclable;
 
 use IFRS\Traits\Segragating;
 use IFRS\Traits\Recycling;
+use IFRS\Traits\ModelTablePrefix;
 
 /**
  * Class ExchangeRate
@@ -35,6 +36,7 @@ class ExchangeRate extends Model implements Segragatable, Recyclable
     use Segragating;
     use SoftDeletes;
     use Recycling;
+    use ModelTablePrefix;
 
     /**
      * The table associated with the model.

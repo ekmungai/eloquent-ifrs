@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use IFRS\Interfaces\Recyclable;
 
 use IFRS\Traits\Recycling;
+use IFRS\Traits\ModelTablePrefix;
 
 /**
  * Class Currency
@@ -29,6 +30,7 @@ class Currency extends Model implements Recyclable
 {
     use SoftDeletes;
     use Recycling;
+    use ModelTablePrefix;
 
     /**
      * The table associated with the model.

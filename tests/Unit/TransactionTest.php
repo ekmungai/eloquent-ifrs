@@ -16,7 +16,7 @@ use IFRS\Models\LineItem;
 use IFRS\Models\RecycledObject;
 use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Transaction;
-use IFRS\Models\User;
+use IFRS\User;
 use IFRS\Models\Vat;
 
 use IFRS\Transactions\JournalEntry;
@@ -594,7 +594,7 @@ class TransactionTest extends TestCase
         $this->assertTrue($transaction->checkIntegrity());
 
         //Change Transaction Ledger amounts
-        DB::statement('update ifrs_ledgers set amount = 100 where id IN (1,2)');
+        DB::statement('update '.config('ifrs.table_prefix').'ledgers set amount = 100 where id IN (1,2)');
 
         $transaction = Transaction::find($transaction->id);
         // Transaction amount has changed
