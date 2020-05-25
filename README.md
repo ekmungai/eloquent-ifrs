@@ -464,4 +464,5 @@ This software is distributed for free under the MIT License
 
 
 ## References
-This package is heavily influenced by [chippyash/simple-accounts-3](https://github.com/chippyash/simple-accounts-3) and [scottlaurent/accounting](https://github.com/scottlaurent/accounting).
+* This package is heavily influenced by [chippyash/simple-accounts-3](https://github.com/chippyash/simple-accounts-3) and [scottlaurent/accounting](https://github.com/scottlaurent/accounting).
+* Special thanks to [paschaldev](https://github.com/paschaldev) for his brilliant work in preventing collisions  with already existing db tables.
