@@ -11,7 +11,7 @@ use IFRS\Models\Balance;
 use IFRS\Models\Currency;
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\RecycledObject;
-use IFRS\Models\User;
+use IFRS\User;
 use IFRS\Models\Transaction;
 
 use IFRS\Exceptions\InvalidBalanceTransaction;

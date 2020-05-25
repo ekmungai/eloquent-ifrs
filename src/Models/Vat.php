@@ -38,13 +38,6 @@ class Vat extends Model implements Segragatable, Recyclable
     use ModelTablePrefix;
 
     /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'ifrs_vats';
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array

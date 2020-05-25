@@ -6,11 +6,12 @@ use Carbon\Carbon;
 
 use IFRS\Tests\TestCase;
 
+use IFRS\User;
+
 use IFRS\Models\Account;
 use IFRS\Models\Category;
 use IFRS\Models\Currency;
 use IFRS\Models\RecycledObject;
-use IFRS\Models\User;
 use IFRS\Models\Balance;
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\Ledger;

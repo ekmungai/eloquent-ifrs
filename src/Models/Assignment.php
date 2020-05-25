@@ -8,29 +8,28 @@
  */
 namespace IFRS\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
-
-use IFRS\Reports\AccountSchedule;
-
-use IFRS\Interfaces\Segragatable;
-use IFRS\Interfaces\Assignable;
-
-use IFRS\Traits\Segragating;
-use IFRS\Traits\ModelTablePrefix;
-
 use IFRS\Exceptions\InsufficientBalance;
+use IFRS\Exceptions\InvalidClearanceAccount;
+use IFRS\Exceptions\InvalidClearanceCurrency;
+use IFRS\Exceptions\InvalidClearanceEntry;
+use IFRS\Exceptions\MissingForexAccount;
+use IFRS\Exceptions\NegativeAmount;
 use IFRS\Exceptions\OverClearance;
 use IFRS\Exceptions\SelfClearance;
 use IFRS\Exceptions\UnassignableTransaction;
 use IFRS\Exceptions\UnclearableTransaction;
 use IFRS\Exceptions\UnpostedAssignment;
-use IFRS\Exceptions\InvalidClearanceAccount;
-use IFRS\Exceptions\InvalidClearanceCurrency;
-use IFRS\Exceptions\InvalidClearanceEntry;
-use IFRS\Exceptions\NegativeAmount;
-use IFRS\Exceptions\MissingForexAccount;
+
+use IFRS\Interfaces\Assignable;
+use IFRS\Interfaces\Segragatable;
+
+use IFRS\Reports\AccountSchedule;
+
+use IFRS\Traits\ModelTablePrefix;
+use IFRS\Traits\Segragating;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Assignment
@@ -49,13 +48,6 @@ class Assignment extends Model implements Segragatable
     use Segragating;
     use SoftDeletes;
     use ModelTablePrefix;
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'ifrs_assignments';
 
     /**
      * The attributes that are mass assignable.

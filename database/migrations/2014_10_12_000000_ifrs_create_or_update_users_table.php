@@ -10,7 +10,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class IfrsUpdateUsersTable extends Migration
+class IfrsCreateOrUpdateUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -19,16 +19,18 @@ class IfrsUpdateUsersTable extends Migration
      */
     public function up()
     {
-<<<<<<< HEAD:database/migrations/2014_10_12_000000_create_users_table.php
-        if (Schema::hasTable('users')) {
-            Schema::table('users', function (Blueprint $table) {
-                //entity
-                $table->unsignedBigInteger('entity_id')->nullable();
-
+        if (Schema::hasTable($this->getTableName())) {
+            Schema::table(
+                $this->getTableName(),
+                function (Blueprint $table) {
+                    //entity
+                    $table->unsignedBigInteger('entity_id')->nullable();
+                    // *permanent* deletion
+                    $table->dateTime('destroyed_at')->nullable();
             });
         }else{
             Schema::create(
-                'users',
+                $this->getTableName(),
                 function (Blueprint $table) {
                     $table->bigIncrements('id');
 
@@ -49,20 +51,11 @@ class IfrsUpdateUsersTable extends Migration
                     $table->softDeletes();
 
                     $table->timestamps();
-                }
-            );
+
+                    // flag for created table
+                    $table->boolean('created')->nullable();
+            });
         }
-=======
-        Schema::table(
-            $this->getTableName(),
-            function (Blueprint $table) {
-                //entity
-                $table->unsignedBigInteger('entity_id')->nullable();
-                // *permanent* deletion
-                $table->dateTime('destroyed_at')->nullable();
-            }
-        );
->>>>>>> bae3f1a12eba46975d6341beb455b2e29ba34cc9:database/migrations/2014_10_12_000000_ifrs_update_users_table.php
     }
 
     /**
@@ -72,13 +65,18 @@ class IfrsUpdateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table(
-            $this->getTableName(),
-            function (Blueprint $table) {
-                $table->dropColumn('entity_id');
-                $table->dropColumn('destroyed_at');
-            }
-        );
+        if (Schema::hasColumn($this->getTableName(), 'created'))
+        {
+            Schema::dropIfExists($this->getTableName());
+        }else{
+            Schema::table(
+                $this->getTableName(),
+                function (Blueprint $table) {
+                    $table->dropColumn('entity_id');
+                    $table->dropColumn('destroyed_at');
+                }
+            );
+        }
     }
 
     private function getTableName()

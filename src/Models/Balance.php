@@ -55,13 +55,6 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
     use ModelTablePrefix;
 
     /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'ifrs_balances';
-
-    /**
      * Balance Model Name
      *
      * @var string

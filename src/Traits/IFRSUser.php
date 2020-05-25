@@ -8,15 +8,10 @@
  */
 namespace IFRS\Traits;
 
-use IFRS\Traits\Recycling;
-use IFRS\Traits\Segragating;
 use IFRS\Models\Entity;
 
 trait IFRSUser
 {
-    use Recycling;
-    use Segragating;
-
     /**
      * User's Parent Entity.
      *

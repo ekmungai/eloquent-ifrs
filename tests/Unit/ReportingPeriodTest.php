@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 use IFRS\Models\RecycledObject;
 use IFRS\Models\ReportingPeriod;
-use IFRS\Models\User;
+use IFRS\User;
 
 use IFRS\Exceptions\MissingReportingPeriod;
 

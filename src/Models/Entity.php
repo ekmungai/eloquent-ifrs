@@ -37,13 +37,6 @@ class Entity extends Model implements Recyclable
     use ModelTablePrefix;
 
     /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'ifrs_entities';
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array

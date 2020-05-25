@@ -10,7 +10,7 @@ use IFRS\Models\Account;
 use IFRS\Models\Assignment;
 use IFRS\Models\Currency;
 use IFRS\Models\ReportingPeriod;
-use IFRS\Models\User;
+use IFRS\User;
 use IFRS\Models\Vat;
 use IFRS\Models\LineItem;
 use IFRS\Models\Balance;

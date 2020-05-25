@@ -42,13 +42,6 @@ class Ledger extends Model implements Segragatable
     use ModelTablePrefix;
 
     /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'ifrs_ledgers';
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array

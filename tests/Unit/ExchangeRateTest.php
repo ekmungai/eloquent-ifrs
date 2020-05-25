@@ -6,7 +6,7 @@ use IFRS\Tests\TestCase;
 
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\RecycledObject;
-use IFRS\Models\User;
+use IFRS\User;
 use Carbon\Carbon;
 use IFRS\Models\Currency;
 

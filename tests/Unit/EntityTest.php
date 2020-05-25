@@ -10,7 +10,7 @@ use IFRS\Models\Currency;
 use IFRS\Models\Entity;
 use IFRS\Models\RecycledObject;
 use IFRS\Models\ReportingPeriod;
-use IFRS\Models\User;
+use IFRS\User;
 use IFRS\Models\Account;
 
 use IFRS\Exceptions\UnauthorizedUser;

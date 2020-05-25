@@ -81,25 +81,28 @@ class AccountStatement
     protected function buildQuery()
     {
         $transactionModel = new Transaction;
-        $query = DB::table(config('ifrs.table_prefix').$transactionModel->getTable())->leftJoin(config('ifrs.table_prefix').'ledgers', config('ifrs.table_prefix').'transactions.id', '=', config('ifrs.table_prefix').'ledgers.transaction_id')
-            ->where(config('ifrs.table_prefix').'transactions.deleted_at', null)
-            ->where(config('ifrs.table_prefix')."transactions.entity_id", $this->entity->id)
-            ->where(config('ifrs.table_prefix')."transactions.transaction_date", ">=", $this->period['startDate'])
-            ->where(config('ifrs.table_prefix')."transactions.transaction_date", "<=", $this->period['endDate'])
-            ->where(config('ifrs.table_prefix')."transactions.currency_id", $this->currency->id)
+        $ledgerModel = new Ledger();
+        $query = DB::table(
+            $transactionModel->getTable())
+            ->leftJoin($ledgerModel->getTable(), $transactionModel->getTable().'.id', '=', $ledgerModel->getTable().'.transaction_id')
+            ->where($transactionModel->getTable().'.deleted_at', null)
+            ->where($transactionModel->getTable().'.entity_id', $this->entity->id)
+            ->where($transactionModel->getTable().'.transaction_date', ">=", $this->period['startDate'])
+            ->where($transactionModel->getTable().'.transaction_date', "<=", $this->period['endDate'])
+            ->where($transactionModel->getTable().'.currency_id', $this->currency->id)
             ->select(
-                config('ifrs.table_prefix').'transactions.id',
-                config('ifrs.table_prefix').'transactions.transaction_date',
-                config('ifrs.table_prefix').'transactions.transaction_no',
-                config('ifrs.table_prefix').'transactions.reference',
-                config('ifrs.table_prefix').'transactions.transaction_type',
-                config('ifrs.table_prefix').'transactions.narration'
+                $transactionModel->getTable().'.id',
+                $transactionModel->getTable().'.transaction_date',
+                $transactionModel->getTable().'.transaction_no',
+                $transactionModel->getTable().'.reference',
+                $transactionModel->getTable().'.transaction_type',
+                $transactionModel->getTable().'.narration'
             )->distinct();
 
         $query->where(
-            function ($query){
-                $query->where(config('ifrs.table_prefix')."ledgers.post_account", $this->account->id)
-                    ->orwhere(config('ifrs.table_prefix')."ledgers.folio_account", $this->account->id);
+            function ($query) use ($ledgerModel) {
+                $query->where($ledgerModel->getTable().'.post_account', $this->account->id)
+                ->orwhere($ledgerModel->getTable().'.folio_account', $this->account->id);
             }
         );
 

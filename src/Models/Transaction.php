@@ -62,13 +62,6 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     use ModelTablePrefix;
 
     /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'ifrs_transactions';
-
-    /**
      * Transaction Model Name
      *
      * @var array
@@ -116,6 +109,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     public function __construct($attributes = [])
     {
         $entity = Auth::user()->entity;
+        $this->table = config('ifrs.table_prefix').'transactions';
 
         if (!isset($attributes['currency_id'])) {
             $attributes['currency_id'] = $entity->currency_id;
@@ -151,7 +145,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
             function ($item, $key) use ($id) {
                 return $item->id == $id;
             }
-        );
+            );
     }
 
     /**
@@ -210,9 +204,9 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
         $period_start = ReportingPeriod::periodStart($transaction_date);
 
         $next_id =  Transaction::withTrashed()
-            ->where("transaction_type", $type)
-            ->where("transaction_date", ">=", $period_start)
-            ->count() + 1;
+        ->where("transaction_type", $type)
+        ->where("transaction_date", ">=", $period_start)
+        ->count() + 1;
 
         return $type.str_pad((string) $period_count, 2, "0", STR_PAD_LEFT)
         ."/".
@@ -414,7 +408,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
         $this->transaction_no = Transaction::transactionNo(
             $this->transaction_type,
             Carbon::parse($this->transaction_date)
-        );
+            );
 
         $save = parent::save();
         $this->saveLineItems();
@@ -455,7 +449,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
                 $clearance->delete();
                 return $clearance;
             }
-        );
+            );
 
         return parent::delete();
     }
@@ -470,6 +464,6 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
             function ($ledger, $key) {
                 return password_verify($ledger->hashed(), $ledger->hash);
             }
-        );
+            );
     }
 }

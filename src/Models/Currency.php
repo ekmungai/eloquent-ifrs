@@ -33,13 +33,6 @@ class Currency extends Model implements Recyclable
     use ModelTablePrefix;
 
     /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'ifrs_currencies';
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array

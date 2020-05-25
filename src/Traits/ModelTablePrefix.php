@@ -18,6 +18,10 @@ trait ModelTablePrefix
      * Determine the model table name
      */
     public function getTable() {
-        return config('ifrs.table_prefix').parent::getTable();
+
+        $table = parent::getTable();
+        $prefix = config('ifrs.table_prefix');
+
+        return strpos($table, $prefix) !== false? $table: $prefix.$table;
     }
 }
