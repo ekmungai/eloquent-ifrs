@@ -1,3 +1,7 @@
+## 2.0.0 - 2020-05-25
+
+- DB table prefixes defined in configuration file
+- Auth model defined in configuration file
 
 ## 1.1.1 - 2020-05-23
 - changed user migration to only modify existing users table
