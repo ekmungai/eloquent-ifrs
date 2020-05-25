@@ -24,7 +24,7 @@ class PostedTransaction extends IFRSException
      */
     public function __construct(string $action, string $message = null, int $code = null)
     {
-        $error = _("Cannot ".$action." a posted Transaction ");
+        $error = "Cannot ".$action." a posted Transaction ";
 
         Log::notice(
             $error.$message,

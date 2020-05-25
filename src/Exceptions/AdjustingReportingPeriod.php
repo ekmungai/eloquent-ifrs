@@ -27,7 +27,7 @@ class AdjustingReportingPeriod extends IFRSException
     public function __construct(string $message = null, int $code = null)
     {
         $type = Transaction::getType(Transaction::JN);
-        $error = _("Only ".$type." Transactions can be posted to a reporting period whose status is ".ReportingPeriod::ADJUSTING);
+        $error = "Only ".$type." Transactions can be posted to a reporting period whose status is ".ReportingPeriod::ADJUSTING;
 
         Log::notice(
             $error.$message,

@@ -31,7 +31,7 @@ class MainAccount extends IFRSException
         $transactionType = Transaction::getType($transactionType);
         $accountType = Account::getType($accountType);
 
-        $error = $transactionType._(" Main Account must be of type ").$accountType;
+        $error = $transactionType." Main Account must be of type ".$accountType;
 
         Log::notice(
             $error.$message,

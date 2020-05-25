@@ -22,7 +22,7 @@ class UnauthorizedUser extends IFRSException
      */
     public function __construct(string $message = null, int $code = null)
     {
-        $error = _('You are not Authorized to perform that action ');
+        $error = 'You are not Authorized to perform that action ';
 
         Log::notice(
             $error.$message,

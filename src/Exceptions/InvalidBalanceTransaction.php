@@ -29,7 +29,7 @@ class InvalidBalanceTransaction extends IFRSException
     {
         $transactionTypes = Transaction::getTypes($transactionTypes);
 
-        $error = _("Opening Balance Transaction must be one of: ").implode(", ", $transactionTypes);
+        $error = "Opening Balance Transaction must be one of: ".implode(", ", $transactionTypes);
 
         Log::notice(
             $error.$message,

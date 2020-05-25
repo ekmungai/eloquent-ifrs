@@ -23,7 +23,7 @@ class RedundantTransaction extends IFRSException
      */
     public function __construct(string $message = null, int $code = null)
     {
-        $error = _("A Transaction Main Account cannot be one of the Line Item Accounts ");
+        $error = "A Transaction Main Account cannot be one of the Line Item Accounts ";
 
         Log::notice(
             $error.$message,

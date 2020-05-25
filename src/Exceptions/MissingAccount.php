@@ -24,7 +24,7 @@ class MissingAccount extends IFRSException
      */
     public function __construct(string $statementType, string $message = null, int $code = null)
     {
-        $error = $statementType._(" Transactions require an Account ");
+        $error = $statementType." Transactions require an Account ";
 
         Log::notice(
             $error.$message,

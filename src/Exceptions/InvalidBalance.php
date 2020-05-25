@@ -29,7 +29,7 @@ class InvalidBalance extends IFRSException
     {
         $balanceTypes = Balance::getTypes($balanceTypes);
 
-        $error = _("Opening Balance Type must be one of: ").implode(", ", $balanceTypes);
+        $error = "Opening Balance Type must be one of: ".implode(", ", $balanceTypes);
 
         Log::notice(
             $error.$message,

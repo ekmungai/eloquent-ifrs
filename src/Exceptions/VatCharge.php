@@ -28,7 +28,7 @@ class VatCharge extends IFRSException
     {
         $transactionType = Transaction::getType($transactionType);
 
-        $error = $transactionType._(" LineItems cannot be Charged VAT ");
+        $error = $transactionType." LineItems cannot be Charged VAT ";
 
         Log::notice(
             $error.$message,

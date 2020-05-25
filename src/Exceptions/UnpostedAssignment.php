@@ -23,7 +23,7 @@ class UnpostedAssignment extends IFRSException
      */
     public function __construct(string $message = null, int $code = null)
     {
-        $error = _("An Unposted Transaction cannot be Assigned or Cleared");
+        $error = "An Unposted Transaction cannot be Assigned or Cleared";
 
         Log::notice(
             $error.$message,

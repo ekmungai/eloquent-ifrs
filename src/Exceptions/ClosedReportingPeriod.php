@@ -24,7 +24,7 @@ class ClosedReportingPeriod extends IFRSException
      */
     public function __construct(int $year, string $message = null, int $code = null)
     {
-        $error = _("Transaction cannot be saved because the Reporting Period for ".$year." is closed ");
+        $error = "Transaction cannot be saved because the Reporting Period for ".$year." is closed ";
 
         Log::notice(
             $error.$message,

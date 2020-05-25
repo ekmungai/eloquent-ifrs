@@ -30,7 +30,7 @@ class UnclearableTransaction extends IFRSException
         $transactionTypes = Transaction::getTypes($transactionTypes);
         $transactionType = Transaction::getType($transactionType);
 
-        $error = $transactionType._(" Transaction cannot be cleared. Transaction to be cleared must be one of: ");
+        $error = $transactionType." Transaction cannot be cleared. Transaction to be cleared must be one of: ";
         $error .= implode(", ", $transactionTypes).' ';
 
         Log::notice(

@@ -31,7 +31,7 @@ class LineItemAccount extends IFRSException
         $transactionType = Transaction::getType($transactionType);
         $accountTypes = Account::getTypes($accountTypes);
 
-        $error = $transactionType._(" LineItem Account must be of type ").implode(", ", $accountTypes);
+        $error = $transactionType." LineItem Account must be of type ".implode(", ", $accountTypes);
 
         Log::notice(
             $error.' '.$message,

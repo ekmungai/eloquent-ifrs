@@ -25,7 +25,7 @@ class MissingReportingPeriod extends IFRSException
      */
     public function __construct(string $entity, int $year, string $message = null, int $code = null)
     {
-        $error = _("Entity '". $entity."' has no reporting period defined for the year ").$year." ";
+        $error = "Entity '". $entity."' has no reporting period defined for the year ".$year." ";
 
         Log::notice(
             $error.$message,

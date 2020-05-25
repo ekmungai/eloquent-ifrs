@@ -93,9 +93,9 @@ class IncomeStatement extends FinancialStatement
         // Title
         $statement .= $this->entity->name.PHP_EOL;
         $statement .= config('ifrs')['statements'][self::TITLE].PHP_EOL;
-        $statement .= _("For the Period: ");
+        $statement .= "For the Period: ";
         $statement .= $this->period['startDate']->format('M d Y');
-        $statement .= _(" to ").$this->period['endDate']->format('M d Y').PHP_EOL;
+        $statement .= " to ".$this->period['endDate']->format('M d Y').PHP_EOL;
 
         // Operating Revenues
         $opRevenue = $this->printSection(self::OPERATING_REVENUES, $statement, -1, $indent);
@@ -106,7 +106,7 @@ class IncomeStatement extends FinancialStatement
         $statement = $opExpenses[0];
 
         $statement .= $separator.PHP_EOL;
-        $statement .= _("Operations Gross Profit ");
+        $statement .= "Operations Gross Profit ";
         $statement .= ($opRevenue[1] - $opExpenses[1]).PHP_EOL;
 
         // Non Operating Revenue
@@ -114,7 +114,7 @@ class IncomeStatement extends FinancialStatement
         $statement = $nOpRevenue[0];
 
         $statement .= $separator.PHP_EOL;
-        $statement .= _("Total Revenue       ");
+        $statement .= "Total Revenue       ";
         $statement .= $indent.($opRevenue[1] - $opExpenses[1] + $nOpRevenue[1]).PHP_EOL;
 
         // Non Operating Expenses
@@ -123,12 +123,12 @@ class IncomeStatement extends FinancialStatement
         $statement .=PHP_EOL;
 
         $statement .= $separator.PHP_EOL;
-        $statement .= _("Total Expenses       ");
+        $statement .= "Total Expenses       ";
         $statement .= $indent.($nOpExpense[1]).PHP_EOL;
         $statement .=PHP_EOL;
 
         $statement .= $separator.PHP_EOL;
-        $statement .= _("Net Profit          ");
+        $statement .= "Net Profit          ";
         $statement .= $indent.($opRevenue[1] - $opExpenses[1] + $nOpExpense[1]).PHP_EOL;
         $statement .= str_replace("-", "=", $separator.PHP_EOL);
 

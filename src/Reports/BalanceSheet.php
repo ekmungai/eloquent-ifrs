@@ -109,7 +109,7 @@ class BalanceSheet extends FinancialStatement
         // Title
         $statement = $this->entity->name.PHP_EOL;
         $statement .= config('ifrs')['statements'][self::TITLE].PHP_EOL;
-        $statement .= _("As at: ");
+        $statement .= "As at: ";
         $statement .= $this->period['endDate']->format('M d Y').PHP_EOL;
 
         // Asset Accounts
@@ -117,7 +117,7 @@ class BalanceSheet extends FinancialStatement
         $statement = $assets[0];
 
         $statement .= $separator.PHP_EOL;
-        $statement .= _("Total Assets         ");
+        $statement .= "Total Assets         ";
         $statement .= $indent.($assets[1]).PHP_EOL;
 
         // Liability Accounts
@@ -125,7 +125,7 @@ class BalanceSheet extends FinancialStatement
         $statement = $liabilities[0];
 
         $statement .= $separator.PHP_EOL;
-        $statement .= _("Total Liabilities    ");
+        $statement .= "Total Liabilities    ";
         $statement .= $indent.($liabilities[1]).PHP_EOL;
 
         // Reconciliation Accounts
@@ -133,12 +133,12 @@ class BalanceSheet extends FinancialStatement
         $statement = $reconciliation[0];
 
         $statement .= $separator.PHP_EOL;
-        $statement .= _("Total Reconciliation  ");
+        $statement .= "Total Reconciliation  ";
         $statement .= $indent.($reconciliation[1]).PHP_EOL;
         $statement .=PHP_EOL;
 
         $statement .= $separator.PHP_EOL;
-        $statement .= _("Net Assets           ");
+        $statement .= "Net Assets           ";
         $statement .= $indent.($assets[1] - $liabilities[1] - $reconciliation[1]).PHP_EOL;
         $statement .= str_replace("-", "=", $separator.PHP_EOL);
 
@@ -147,7 +147,7 @@ class BalanceSheet extends FinancialStatement
         $statement = $equity[0];
 
         $statement .= $separator.PHP_EOL;
-        $statement .= _("Total Equity         ");
+        $statement .= "Total Equity         ";
         $statement .= $indent.($equity[1]).PHP_EOL;
         $statement .= str_replace("-", "=", $separator.PHP_EOL);
 

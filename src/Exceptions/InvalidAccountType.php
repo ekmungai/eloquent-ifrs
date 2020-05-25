@@ -29,7 +29,7 @@ class InvalidAccountType extends IFRSException
     {
         $accountTypes = Account::getTypes($accountTypes);
 
-        $error = _("Schedule Account Type must be one of: ").implode(", ", $accountTypes);
+        $error = "Schedule Account Type must be one of: ".implode(", ", $accountTypes);
 
         Log::notice(
             $error.' '.$message,

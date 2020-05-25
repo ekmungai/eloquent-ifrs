@@ -29,7 +29,7 @@ class OverClearance extends IFRSException
     {
         $assignedType = Transaction::getType($assignedType);
 
-        $error = $assignedType._(" Transaction amount remaining to be cleared is less than ").$amount;
+        $error = $assignedType." Transaction amount remaining to be cleared is less than ".$amount;
 
         Log::notice(
             $error.' '.$message,

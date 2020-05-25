@@ -30,7 +30,7 @@ class UnassignableTransaction extends IFRSException
         $transactionTypes = Transaction::getTypes($transactionTypes);
         $transactionType = Transaction::getType($transactionType);
 
-        $error = $transactionType._(" Transaction cannot have assignments. Assignment Transaction must be one of: ");
+        $error = $transactionType." Transaction cannot have assignments. Assignment Transaction must be one of: ";
         $error .= implode(", ", $transactionTypes).' ';
 
         Log::notice(

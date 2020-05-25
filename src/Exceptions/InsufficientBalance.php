@@ -37,7 +37,7 @@ class InsufficientBalance extends IFRSException
         $transactionType = Transaction::getType($transactionType);
         $assignedType = Transaction::getType($assignedType);
 
-        $error = $transactionType._(" Transaction does not have sufficient balance to clear ");
+        $error = $transactionType." Transaction does not have sufficient balance to clear ";
         $error .= $amount.' of the '.$assignedType;
 
         Log::notice(

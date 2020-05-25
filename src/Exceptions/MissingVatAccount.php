@@ -24,7 +24,7 @@ class MissingVatAccount extends IFRSException
      */
     public function __construct(string $vatName, string $message = null, int $code = null)
     {
-        $error = $vatName._(" LineItem requires a Vat Account");
+        $error = $vatName." LineItem requires a Vat Account";
 
         Log::notice(
             $error.$message,

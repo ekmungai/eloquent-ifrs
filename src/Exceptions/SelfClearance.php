@@ -23,7 +23,7 @@ class SelfClearance extends IFRSException
      */
     public function __construct(string $message = null, int $code = null)
     {
-        $error = _("Transaction cannot be used to clear itself ");
+        $error = "Transaction cannot be used to clear itself ";
 
         Log::notice(
             $error.$message,

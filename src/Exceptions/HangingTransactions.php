@@ -23,7 +23,7 @@ class HangingTransactions extends IFRSException
      */
     public function __construct(string $message = null, int $code = null)
     {
-        $error = _("Account cannot be deleted because it has existing transactions in the current Reporting Period ");
+        $error = "Account cannot be deleted because it has existing transactions in the current Reporting Period ";
 
         Log::notice(
             $error.$message,

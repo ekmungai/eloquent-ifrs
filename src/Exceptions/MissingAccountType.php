@@ -23,7 +23,7 @@ class MissingAccountType extends IFRSException
      */
     public function __construct(string $message = null, int $code = null)
     {
-        $error = _("Account type is Required ");
+        $error = "Account type is Required ";
 
         Log::notice(
             $error.$message,

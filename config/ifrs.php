@@ -87,80 +87,80 @@ return [
      */
     'accounts' => [
         //Balance Sheet: Assets Accounts
-        Account::NON_CURRENT_ASSET => _("Non Current Asset"),
-        Account::CONTRA_ASSET => _("Contra Asset"),
-        Account::INVENTORY => _("Inventory"),
-        Account::BANK => _("Bank"),
-        Account::CURRENT_ASSET => _("Current Asset"),
-        Account::RECEIVABLE => _("Receivable"),
+        Account::NON_CURRENT_ASSET => 'Non Current Asset',
+        Account::CONTRA_ASSET => 'Contra Asset',
+        Account::INVENTORY => 'Inventory',
+        Account::BANK => 'Bank',
+        Account::CURRENT_ASSET => 'Current Asset',
+        Account::RECEIVABLE => 'Receivable',
 
         //Balance Sheet: Liabilities Accounts
-        Account::NON_CURRENT_LIABILITY => _("Non Current Liability"),
-        Account::CONTROL_ACCOUNT => _("Control Account"),
-        Account::CURRENT_LIABILITY => _("Current Liability"),
-        Account::PAYABLE => _("Payable"),
-        Account::RECONCILIATION => _("Reconciliation"),
+        Account::NON_CURRENT_LIABILITY => 'Non Current Liability',
+        Account::CONTROL_ACCOUNT => 'Control Account',
+        Account::CURRENT_LIABILITY => 'Current Liability',
+        Account::PAYABLE => 'Payable',
+        Account::RECONCILIATION => 'Reconciliation',
 
         //Balance Sheet: Equity Accounts
-        Account::EQUITY => _("Equity"),
+        Account::EQUITY => 'Equity',
 
         //Income Statement: Operations Accounts
-        Account::OPERATING_REVENUE => _("Operating Revenue"),
-        Account::OPERATING_EXPENSE => _("Operating Expense"),
+        Account::OPERATING_REVENUE => 'Operating Revenue',
+        Account::OPERATING_EXPENSE => 'Operating Expense',
 
         //Income Statement: Non Operations Accounts
-        Account::NON_OPERATING_REVENUE => _("Non Operating Revenue"),
-        Account::DIRECT_EXPENSE => _("Direct Expense"),
-        Account::OVERHEAD_EXPENSE => _("Overhead Expense"),
-        Account::OTHER_EXPENSE => _("Other Expense"),
+        Account::NON_OPERATING_REVENUE => 'Non Operating Revenue',
+        Account::DIRECT_EXPENSE => 'Direct Expense',
+        Account::OVERHEAD_EXPENSE => 'Overhead Expense',
+        Account::OTHER_EXPENSE => 'Other Expense',
     ],
 
     'transactions' => [
         //client transactions
-        Transaction::CS => _("Cash Sale"),
-        Transaction::IN => _("Client Invoice"),
-        Transaction::CN => _("Credit Note"),
-        Transaction::RC => _("Client Receipt"),
+        Transaction::CS => 'Cash Sale',
+        Transaction::IN => 'Client Invoice',
+        Transaction::CN => 'Credit Note',
+        Transaction::RC => 'Client Receipt',
 
         //supplier transactions
-        Transaction::CP => _("Cash Purchase"),
-        Transaction::BL => _("Supplier Bill"),
-        Transaction::DN => _("Debit Note"),
-        Transaction::PY => _("Supplier Payment"),
+        Transaction::CP => 'Cash Purchase',
+        Transaction::BL => 'Supplier Bill',
+        Transaction::DN => 'Debit Note',
+        Transaction::PY => 'Supplier Payment',
 
         //internal transactions
-        Transaction::CE => _("Contra Entry"),
-        Transaction::JN => _("Journal Entry"),
+        Transaction::CE => 'Contra Entry',
+        Transaction::JN => 'Journal Entry',
     ],
 
     'statements' => [
         // Income statement
-        IncomeStatement::TITLE => _("Income Statement"),
-        IncomeStatement::OPERATING_REVENUES => _("Operating Revenues"),
-        IncomeStatement::NON_OPERATING_REVENUES => _("Non Operating Revenues"),
-        IncomeStatement::OPERATING_EXPENSES => _("Operating Expenses"),
-        IncomeStatement::NON_OPERATING_EXPENSES => _("Non Operating Expenses"),
+        IncomeStatement::TITLE => 'Income Statement',
+        IncomeStatement::OPERATING_REVENUES => 'Operating Revenues',
+        IncomeStatement::NON_OPERATING_REVENUES => 'Non Operating Revenues',
+        IncomeStatement::OPERATING_EXPENSES => 'Operating Expenses',
+        IncomeStatement::NON_OPERATING_EXPENSES => 'Non Operating Expenses',
 
         // Balance Sheet
-        BalanceSheet::TITLE => _("Balance Sheet"),
-        BalanceSheet::ASSETS => _("Assets"),
-        BalanceSheet::LIABILITIES => _("Liabilities"),
-        BalanceSheet::EQUITY => _("Equity"),
-        BalanceSheet::RECONCILIATION => _("Reconciliation"),
+        BalanceSheet::TITLE => 'Balance Sheet',
+        BalanceSheet::ASSETS => 'Assets',
+        BalanceSheet::LIABILITIES => 'Liabilities',
+        BalanceSheet::EQUITY => 'Equity',
+        BalanceSheet::RECONCILIATION => 'Reconciliation',
 
         // Trial Balance
-        BalanceSheet::TITLE => _("Trial Balance"),
+        BalanceSheet::TITLE => 'Trial Balance',
     ],
 
     'balances' => [
-        Balance::DEBIT => _('Debit'),
-        Balance::CREDIT => _('Credit'),
+        Balance::DEBIT => 'Debit',
+        Balance::CREDIT => 'Credit',
     ],
 
     'reporting_period_status' => [
-        ReportingPeriod::OPEN => _('Open'),
-        ReportingPeriod::CLOSED => _('Closed'),
-        ReportingPeriod::ADJUSTING => _('Adjusting'),
+        ReportingPeriod::OPEN => 'Open',
+        ReportingPeriod::CLOSED => 'Closed',
+        ReportingPeriod::ADJUSTING => 'Adjusting',
     ],
 
     /*

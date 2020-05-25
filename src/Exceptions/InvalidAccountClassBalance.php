@@ -23,7 +23,7 @@ class InvalidAccountClassBalance extends IFRSException
      */
     public function __construct(string $message = null, int $code = null)
     {
-        $error = _("Income Statement Accounts cannot have Opening Balances ");
+        $error = "Income Statement Accounts cannot have Opening Balances ";
 
         Log::notice(
             $error.$message,

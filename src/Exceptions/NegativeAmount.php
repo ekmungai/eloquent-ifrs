@@ -24,7 +24,7 @@ class NegativeAmount extends IFRSException
      */
     public function __construct(string $modelType, string $message = null, int $code = null)
     {
-        $error = $modelType._(" Amount cannot be negative ");
+        $error = $modelType." Amount cannot be negative ";
 
         Log::notice(
             $error.$message,

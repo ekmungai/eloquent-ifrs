@@ -24,7 +24,7 @@ class InvalidClearanceEntry extends IFRSException
      */
     public function __construct(string $message = null, int $code = null)
     {
-        $error = _("Transaction Entry increases the Main Account outstanding balance instead of reducing it ");
+        $error = "Transaction Entry increases the Main Account outstanding balance instead of reducing it ";
 
         Log::notice(
             $error.$message,

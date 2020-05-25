@@ -23,7 +23,7 @@ class InvalidClearanceAccount extends IFRSException
      */
     public function __construct(string $message = null, int $code = null)
     {
-        $error = _("Assignment and Clearance Main Account must be the same ");
+        $error = "Assignment and Clearance Main Account must be the same ";
 
         Log::notice(
             $error.$message,
