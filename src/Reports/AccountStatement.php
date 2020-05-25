@@ -18,6 +18,7 @@ use IFRS\Models\Currency;
 use IFRS\Models\Entity;
 use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Ledger;
+use IFRS\Models\Transaction;
 
 use IFRS\Exceptions\MissingAccount;
 use Illuminate\Database\Query\Builder;
@@ -79,26 +80,29 @@ class AccountStatement
      */
     protected function buildQuery()
     {
-        $query = DB::table('ifrs_transactions')
-        ->leftJoin('ifrs_ledgers', 'ifrs_transactions.id', '=', 'ifrs_ledgers.transaction_id')
-            ->where('ifrs_transactions.deleted_at', null)
-            ->where("ifrs_transactions.entity_id", $this->entity->id)
-            ->where("ifrs_transactions.transaction_date", ">=", $this->period['startDate'])
-            ->where("ifrs_transactions.transaction_date", "<=", $this->period['endDate'])
-            ->where("ifrs_transactions.currency_id", $this->currency->id)
+        $transactionModel = new Transaction;
+        $ledgerModel = new Ledger();
+        $query = DB::table(
+            $transactionModel->getTable())
+            ->leftJoin($ledgerModel->getTable(), $transactionModel->getTable().'.id', '=', $ledgerModel->getTable().'.transaction_id')
+            ->where($transactionModel->getTable().'.deleted_at', null)
+            ->where($transactionModel->getTable().'.entity_id', $this->entity->id)
+            ->where($transactionModel->getTable().'.transaction_date', ">=", $this->period['startDate'])
+            ->where($transactionModel->getTable().'.transaction_date', "<=", $this->period['endDate'])
+            ->where($transactionModel->getTable().'.currency_id', $this->currency->id)
             ->select(
-                'ifrs_transactions.id',
-                'ifrs_transactions.transaction_date',
-                'ifrs_transactions.transaction_no',
-                'ifrs_transactions.reference',
-                'ifrs_transactions.transaction_type',
-                'ifrs_transactions.narration'
+                $transactionModel->getTable().'.id',
+                $transactionModel->getTable().'.transaction_date',
+                $transactionModel->getTable().'.transaction_no',
+                $transactionModel->getTable().'.reference',
+                $transactionModel->getTable().'.transaction_type',
+                $transactionModel->getTable().'.narration'
             )->distinct();
 
         $query->where(
-            function ($query){
-                $query->where("ifrs_ledgers.post_account", $this->account->id)
-                    ->orwhere("ifrs_ledgers.folio_account", $this->account->id);
+            function ($query) use ($ledgerModel) {
+                $query->where($ledgerModel->getTable().'.post_account', $this->account->id)
+                ->orwhere($ledgerModel->getTable().'.folio_account', $this->account->id);
             }
         );
 

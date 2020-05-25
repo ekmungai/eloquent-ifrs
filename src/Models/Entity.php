@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use IFRS\Interfaces\Recyclable;
 
 use IFRS\Traits\Recycling;
+use IFRS\Traits\ModelTablePrefix;
 
 /**
  * Class Entity
@@ -33,13 +34,7 @@ class Entity extends Model implements Recyclable
 {
     use SoftDeletes;
     use Recycling;
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'ifrs_entities';
+    use ModelTablePrefix;
 
     /**
      * The attributes that are mass assignable.
@@ -60,7 +55,7 @@ class Entity extends Model implements Recyclable
      */
     public function users()
     {
-        return $this->hasMany(User::class);
+        return $this->hasMany(config('ifrs.user_model'));
     }
 
     /**

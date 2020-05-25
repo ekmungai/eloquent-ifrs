@@ -3,10 +3,13 @@
 namespace Tests\Unit;
 
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
-
-use IFRS\Tests\TestCase;
-
+use IFRS\User;
+use IFRS\Exceptions\AdjustingReportingPeriod;
+use IFRS\Exceptions\ClosedReportingPeriod;
+use IFRS\Exceptions\HangingClearances;
+use IFRS\Exceptions\MissingLineItem;
+use IFRS\Exceptions\PostedTransaction;
+use IFRS\Exceptions\RedundantTransaction;
 use IFRS\Models\Account;
 use IFRS\Models\Assignment;
 use IFRS\Models\Currency;
@@ -16,18 +19,11 @@ use IFRS\Models\LineItem;
 use IFRS\Models\RecycledObject;
 use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Transaction;
-use IFRS\Models\User;
 use IFRS\Models\Vat;
-
-use IFRS\Transactions\JournalEntry;
+use IFRS\Tests\TestCase;
 use IFRS\Transactions\ClientInvoice;
-
-use IFRS\Exceptions\RedundantTransaction;
-use IFRS\Exceptions\HangingClearances;
-use IFRS\Exceptions\MissingLineItem;
-use IFRS\Exceptions\PostedTransaction;
-use IFRS\Exceptions\ClosedReportingPeriod;
-use IFRS\Exceptions\AdjustingReportingPeriod;
+use IFRS\Transactions\JournalEntry;
+use Illuminate\Support\Facades\DB;
 
 class TransactionTest extends TestCase
 {
@@ -594,7 +590,7 @@ class TransactionTest extends TestCase
         $this->assertTrue($transaction->checkIntegrity());
 
         //Change Transaction Ledger amounts
-        DB::statement('update ifrs_ledgers set amount = 100 where id IN (1,2)');
+        DB::statement('update '.config('ifrs.table_prefix').'ledgers set amount = 100 where id IN (1,2)');
 
         $transaction = Transaction::find($transaction->id);
         // Transaction amount has changed

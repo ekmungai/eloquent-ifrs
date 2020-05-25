@@ -2,10 +2,13 @@
 
 namespace Tests\Unit;
 
+use IFRS\User;
 use IFRS\Tests\TestCase;
 
+use IFRS\Models\Account;
+use IFRS\Models\Currency;
 use IFRS\Models\RecycledObject;
-use IFRS\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class RecycledObjectTest extends TestCase
 {
@@ -16,18 +19,13 @@ class RecycledObjectTest extends TestCase
      */
     public function testRecycledObjectRelationships()
     {
-        $user = factory(User::class)->create();
-        $user->entity_id = 2;
-        $user->save();
-
-        $this->be($user);
-
-        factory(User::class)->create()->delete();
+        factory(Currency::class)->create()->delete();
 
         $recycled = RecycledObject::all()->first();
         $recycled->attributes();
         $recycled->recyclable();
-        $this->assertEquals($recycled->user->id, $user->id);
+
+        $this->assertEquals($recycled->user->id, Auth::user()->id);
     }
 
     /**
@@ -63,31 +61,31 @@ class RecycledObjectTest extends TestCase
      */
     public function testObjectRecycling()
     {
-        $user = factory(User::class)->create();
+        $account = factory(Account::class)->create();
 
         //soft delete
-        $user->delete();
+        $account->delete();
 
         $recycled = RecycledObject::all()->first();
-        $this->assertEquals($user->recycled->first(), $recycled);
+        $this->assertEquals($account->recycled->first(), $recycled);
 
-        $user->restore();
+        $account->restore();
 
-        $this->assertEquals(count($user->recycled()->get()), 0);
-        $this->assertEquals($user->deleted_at, null);
+        $this->assertEquals(count($account->recycled()->get()), 0);
+        $this->assertEquals($account->deleted_at, null);
 
         //'hard' delete
-        $user->forceDelete();
+        $account->forceDelete();
 
-        $this->assertEquals(count(User::all()), 1);
-        $this->assertEquals(count(User::withoutGlobalScopes()->get()), 2);
-        $this->assertNotEquals($user->deleted_at, null);
-        $this->assertNotEquals($user->destroyed_at, null);
+        $this->assertEquals(count(Account::all()), 0);
+        $this->assertEquals(count(Account::withoutGlobalScopes()->get()), 1);
+        $this->assertNotEquals($account->deleted_at, null);
+        $this->assertNotEquals($account->destroyed_at, null);
 
         //destroyed objects cannot be restored
-        $user->restore();
+        $account->restore();
 
-        $this->assertNotEquals($user->deleted_at, null);
-        $this->assertNotEquals($user->destroyed_at, null);
+        $this->assertNotEquals($account->deleted_at, null);
+        $this->assertNotEquals($account->destroyed_at, null);
     }
 }

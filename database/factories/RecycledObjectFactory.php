@@ -11,10 +11,10 @@ $factory->define(
     RecycledObject::class,
     function (Faker $faker) {
         return [
-        'user_id' => factory('IFRS\Models\User')->create()->id,
+        'user_id' => factory('IFRS\User')->create()->id,
         'entity_id' => factory('IFRS\Models\Entity')->create()->id,
-        'recyclable_id' => factory('IFRS\Models\User')->create()->id,
-        'recyclable_type' => 'IFRS\Models\User',
+        'recyclable_id' => factory('IFRS\User')->create()->id,
+        'recyclable_type' => 'IFRS\User',
         ];
     }
 );

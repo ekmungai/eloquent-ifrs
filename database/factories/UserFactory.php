@@ -3,7 +3,7 @@
 /**
  * @var \Illuminate\Database\Eloquent\Factory $factory
  */
-use IFRS\Models\User;
+use IFRS\User;
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
 

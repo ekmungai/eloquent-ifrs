@@ -21,6 +21,7 @@ use IFRS\Interfaces\Segragatable;
 use IFRS\Traits\Recycling;
 use IFRS\Traits\Segragating;
 use IFRS\Traits\Clearing;
+use IFRS\Traits\ModelTablePrefix;
 
 use IFRS\Exceptions\InvalidAccountClassBalance;
 use IFRS\Exceptions\InvalidBalanceTransaction;
@@ -51,13 +52,7 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
     use SoftDeletes;
     use Recycling;
     use Clearing;
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'ifrs_balances';
+    use ModelTablePrefix;
 
     /**
      * Balance Model Name

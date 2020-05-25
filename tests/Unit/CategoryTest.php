@@ -7,7 +7,7 @@ use IFRS\Tests\TestCase;
 use IFRS\Models\Account;
 use IFRS\Models\Category;
 use IFRS\Models\RecycledObject;
-use IFRS\Models\User;
+use IFRS\User;
 
 class CategoryTest extends TestCase
 {

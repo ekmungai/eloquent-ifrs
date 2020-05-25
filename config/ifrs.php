@@ -29,6 +29,29 @@ return [
 
     /*
      |--------------------------------------------------------------------------
+     | DB table prefix
+     |--------------------------------------------------------------------------
+     |
+     | Database table prefix to prevent collision during migration
+     |
+     */
+    'table_prefix' => 'ifrs_',
+
+    /*
+     |--------------------------------------------------------------------------
+     | User model
+     |--------------------------------------------------------------------------
+     |
+     | Eloquent model for the users. This assumes you already have a working
+     | user model. If not, create one and reference it here. During initial
+     | migration, columns are added to the table name. Your users model should
+     | also use the IFRSUser trait to provide access to the entity scope
+     |
+     */
+    'user_model' => App\User::class,
+
+    /*
+     |--------------------------------------------------------------------------
      | Hashing Algorithm
      |--------------------------------------------------------------------------
      |

@@ -5,7 +5,7 @@ namespace Tests\Unit;
 use IFRS\Tests\TestCase;
 
 use IFRS\Models\RecycledObject;
-use IFRS\Models\User;
+use IFRS\User;
 use IFRS\Models\Vat;
 
 class VatTest extends TestCase

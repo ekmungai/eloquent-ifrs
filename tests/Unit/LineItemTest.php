@@ -6,7 +6,7 @@ use IFRS\Tests\TestCase;
 
 use IFRS\Models\Account;
 use IFRS\Models\LineItem;
-use IFRS\Models\User;
+use IFRS\User;
 use IFRS\Models\Vat;
 use IFRS\Models\Transaction;
 

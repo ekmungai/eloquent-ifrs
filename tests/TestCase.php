@@ -8,13 +8,17 @@ use Orchestra\Testbench\TestCase as Orchestra;
 
 use IFRS\IFRSServiceProvider;
 use IFRS\Models\ReportingPeriod;
-use IFRS\Models\User;
+use IFRS\User;
+use Illuminate\Support\Facades\Config;
 
 abstract class TestCase extends Orchestra
 {
     public function setUp(): void
     {
+
         parent::setUp();
+
+        Config::set('ifrs.user_model', User::class);
 
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
