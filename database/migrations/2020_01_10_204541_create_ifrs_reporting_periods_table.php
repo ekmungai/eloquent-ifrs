@@ -38,7 +38,7 @@ class CreateIfrsReportingPeriodsTable extends Migration
                     ReportingPeriod::CLOSED,
                     ReportingPeriod::ADJUSTING
                 ])->default(ReportingPeriod::OPEN);
-                $table->year('year');
+                $table->year('calendar_year');
 
                 // *permanent* deletion
                 $table->dateTime('destroyed_at')->nullable();

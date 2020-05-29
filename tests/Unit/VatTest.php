@@ -7,6 +7,8 @@ use IFRS\Tests\TestCase;
 use IFRS\Models\RecycledObject;
 use IFRS\User;
 use IFRS\Models\Vat;
+use Carbon\Carbon;
+use IFRS\Exceptions\VatPeriodOverlap;
 
 class VatTest extends TestCase
 {
@@ -58,4 +60,58 @@ class VatTest extends TestCase
         $recycled = RecycledObject::all()->first();
         $this->assertEquals($vat->recycled->first(), $recycled);
     }
+
+//     /**
+//      * Test Vat Open Period Overlap
+//      *
+//      * @return void
+//      */
+//     public function testOpenVatPeriodOverlap()
+//     {
+//         factory(Vat::class)->create([
+//             'valid_from' => Carbon::now()->subMonth(),
+//             'valid_to' => null
+//         ]);
+
+//         $vat = new Vat(
+//             [
+//                 'name' => $this->faker->name,
+//                 'code' => $this->faker->randomLetter(),
+//                 'rate' => 10,
+//                 'valid_from' => Carbon::now()
+//             ]
+//             );
+
+//         $this->expectException(VatPeriodOverlap::class);
+//         $this->expectExceptionMessage('A VAT record already exists for that period');
+
+//         $vat->save();
+//     }
+
+//     /**
+//      * Test Vat Closed Period Overlap
+//      *
+//      * @return void
+//      */
+//     public function testClosedVatPeriodOverlap()
+//     {
+//         factory(Vat::class)->create([
+//             'valid_from' => Carbon::now()->subMonths(2),
+//             'valid_to' => Carbon::now()
+//         ]);
+
+//         $vat = new Vat(
+//             [
+//                 'name' => $this->faker->name,
+//                 'code' => $this->faker->randomLetter(),
+//                 'rate' => 10,
+//                 'valid_from' => Carbon::now()->subMonth()
+//             ]
+//             );
+
+//         $this->expectException(VatPeriodOverlap::class);
+//         $this->expectExceptionMessage('A VAT record already exists for that period');
+
+//         $vat->save();
+//     }
 }

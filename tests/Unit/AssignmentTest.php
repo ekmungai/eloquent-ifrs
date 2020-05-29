@@ -111,7 +111,7 @@ class AssignmentTest extends TestCase
         $this->be($user);
         $this->period = factory(ReportingPeriod::class)->create(
             [
-            "year" => date("Y"),
+            "calendar_year" => date("Y"),
             ]
         );
 

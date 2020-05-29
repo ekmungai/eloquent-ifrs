@@ -113,7 +113,7 @@ class TransactionTest extends TestCase
 
         factory(ReportingPeriod::class)->create(
             [
-            "year" => date("Y"),
+            "calendar_year" => date("Y"),
             ]
         );
 
@@ -179,7 +179,7 @@ class TransactionTest extends TestCase
         $period= factory(ReportingPeriod::class)->create(
             [
             'period_count' => 2,
-            'year' => Carbon::now()->addYear()->year,
+            'calendar_year' => Carbon::now()->addYear()->year,
             ]
         );
 
@@ -270,7 +270,7 @@ class TransactionTest extends TestCase
         $date = Carbon::now()->subYears(5);
         factory(ReportingPeriod::class)->create(
             [
-                "year" => $date->year,
+                "calendar_year" => $date->year,
                 "status" => ReportingPeriod::CLOSED,
             ]
         );
@@ -294,7 +294,7 @@ class TransactionTest extends TestCase
     {
         factory(ReportingPeriod::class)->create(
             [
-                "year" => Carbon::now()->subYears(3)->year,
+                "calendar_year" => Carbon::now()->subYears(3)->year,
                 "status" => ReportingPeriod::ADJUSTING,
             ]
             );

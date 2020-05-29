@@ -398,7 +398,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
         $period = ReportingPeriod::getPeriod($this->transaction_date);
 
         if ($period->status == ReportingPeriod::CLOSED) {
-            throw new ClosedReportingPeriod($period->year);
+            throw new ClosedReportingPeriod($period->calendar_year);
         }
 
         if ($period->status == ReportingPeriod::ADJUSTING && $this->transaction_type != Transaction::JN) {

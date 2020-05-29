@@ -28,13 +28,13 @@ class ReportingPeriodTest extends TestCase
         $period = new ReportingPeriod(
             [
             'period_count' => 1,
-            'year' => Carbon::now()->year,
+            'calendar_year' => Carbon::now()->year,
             ]
         );
         $period->save();
 
         $period->attributes();
-        $this->assertEquals($entity->reportingPeriods->last()->year, $period->year);
+        $this->assertEquals($entity->reportingPeriods->last()->calendar_year, $period->calendar_year);
     }
 
     /**
@@ -66,7 +66,7 @@ class ReportingPeriodTest extends TestCase
         $period = new ReportingPeriod(
             [
             'period_count' => 1,
-            'year' => Carbon::now()->year,
+            'calendar_year' => Carbon::now()->year,
             ]
         );
 

@@ -27,7 +27,7 @@ abstract class TestCase extends Orchestra
         $this->be(factory(User::class)->create());
         $this->period = factory(ReportingPeriod::class)->create(
             [
-            "year" => date("Y"),
+            "calendar_year" => date("Y"),
             ]
         );
     }

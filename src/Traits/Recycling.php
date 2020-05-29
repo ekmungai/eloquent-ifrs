@@ -30,19 +30,21 @@ trait Recycling
             function ($model) {
                 if (Auth::check()) {
                     $user = Auth::user();
-                    RecycledObject::create(
-                        [
-                            'user_id' => $user->id,
-                            'entity_id' => $user->entity->id,
-                            'recyclable_id' => $model->id,
-                            'recyclable_type' => static::class,
-                        ]
-                    );
+                    if ($user->entity) {
+                        RecycledObject::create(
+                            [
+                                'user_id' => $user->id,
+                                'entity_id' => $user->entity->id,
+                                'recyclable_id' => $model->id,
+                                'recyclable_type' => static::class,
+                            ]
+                            );
 
-                    if ($model->forceDeleting) {
-                        $model->destroyed_at = $model->deleted_at = Carbon::now()->toDateTimeString();
-                        $model->save();
-                        $model->forceDeleting = false;
+                        if ($model->forceDeleting) {
+                            $model->destroyed_at = $model->deleted_at = Carbon::now()->toDateTimeString();
+                            $model->save();
+                            $model->forceDeleting = false;
+                        }
                     }
                 }
             }

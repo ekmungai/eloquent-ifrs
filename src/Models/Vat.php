@@ -17,6 +17,7 @@ use IFRS\Interfaces\Recyclable;
 use IFRS\Traits\Recycling;
 use IFRS\Traits\Segragating;
 use IFRS\Traits\ModelTablePrefix;
+use IFRS\Exceptions\VatPeriodOverlap;
 
 /**
  * Class Vat
@@ -46,6 +47,8 @@ class Vat extends Model implements Segragatable, Recyclable
         'name',
         'code',
         'rate',
+        'valid_from',
+        'valid_to',
     ];
 
     /**
@@ -56,5 +59,20 @@ class Vat extends Model implements Segragatable, Recyclable
     public function attributes()
     {
         return (object) $this->attributes;
+    }
+
+    /**
+     * Vat Validation.
+     */
+    public function save(array $options = []) : bool
+    {
+//         $open = Vat::where('valid_from','<=', $this->valid_from)->whereNull('valid_to');
+
+//         $closed = Vat::where('valid_from','<=', $this->valid_from)->where('valid_to','>', $this->valid_from);
+
+//         if (count($open->get()) || count($closed->get())) {
+//             throw new VatPeriodOverlap();
+//         }
+        return parent::save();
     }
 }

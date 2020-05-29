@@ -59,7 +59,7 @@ class ReportingPeriod extends Model implements Segragatable, Recyclable
      */
     protected $fillable = [
         'period_count',
-        'year',
+        'calendar_year',
         'status',
     ];
 
@@ -83,7 +83,7 @@ class ReportingPeriod extends Model implements Segragatable, Recyclable
     {
         $year = ReportingPeriod::year($date);
 
-        $period = ReportingPeriod::where("year", $year)->first();
+        $period = ReportingPeriod::where("calendar_year", $year)->first();
         if (is_null($period)) {
             throw new MissingReportingPeriod(Auth::user()->entity->name, $year);
         }
