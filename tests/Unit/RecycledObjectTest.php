@@ -68,6 +68,7 @@ class RecycledObjectTest extends TestCase
 
         $recycled = RecycledObject::all()->first();
         $this->assertEquals($account->recycled->first(), $recycled);
+        $this->assertEquals($recycled->recyclable->id, $account->id);
 
         $account->restore();
 

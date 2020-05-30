@@ -56,7 +56,7 @@ class RecycledObject extends Model implements Segragatable
      */
     public function recyclable()
     {
-        return $this->morphTo();
+        return $this->morphTo()->withTrashed();
     }
 
     /**
