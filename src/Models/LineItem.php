@@ -60,6 +60,16 @@ class LineItem extends Model implements Recyclable, Segragatable
     ];
 
     /**
+     * Instance Identifier.
+     *
+     * @return string
+     */
+    public function identifier()
+    {
+        return 'Line Item with '.$this->account->identifier().' for '.$this->amount * $this->quantity;
+    }
+
+    /**
      * LineItem Ledgers.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

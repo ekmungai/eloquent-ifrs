@@ -47,7 +47,7 @@ class AssignmentTest extends TestCase
         $transaction = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -66,7 +66,7 @@ class AssignmentTest extends TestCase
         $cleared = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date"=> Carbon::now(),
             "narration" => $this->faker->word,
             "credited" => false
             ]
@@ -85,6 +85,7 @@ class AssignmentTest extends TestCase
 
         $assignment = new Assignment(
             [
+            'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
             'cleared_type' => $cleared->getClearedType(),
@@ -95,6 +96,11 @@ class AssignmentTest extends TestCase
 
         $this->assertEquals($assignment->transaction->transaction_no, $transaction->transaction_no);
         $this->assertEquals($assignment->cleared->transaction_no, $cleared->transaction_no);
+        $this->assertEquals($assignment->cleared->transaction_no, $cleared->transaction_no);
+        $this->assertEquals(
+            $assignment->identifier(),
+            'Assignment for '.$assignment->transaction->identifier().' on '.$assignment->assignment_date
+        );
     }
 
     /**
@@ -121,7 +127,7 @@ class AssignmentTest extends TestCase
         $transaction = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date"=> Carbon::now(),
             "narration" => $this->faker->word,
             "currency_id" => $currency->id
             ]
@@ -140,7 +146,7 @@ class AssignmentTest extends TestCase
         $cleared = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date"=> Carbon::now(),
             "narration" => $this->faker->word,
             "currency_id" => $currency->id,
             "credited" => false
@@ -159,6 +165,7 @@ class AssignmentTest extends TestCase
 
         $assignment = new Assignment(
             [
+            'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
             'cleared_type' => $cleared->getClearedType(),
@@ -189,7 +196,7 @@ class AssignmentTest extends TestCase
         $transaction = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date"=> Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -207,7 +214,7 @@ class AssignmentTest extends TestCase
         $cleared = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date"=> Carbon::now(),
             "narration" => $this->faker->word,
             "credited" => false
             ]
@@ -225,6 +232,7 @@ class AssignmentTest extends TestCase
 
         $assignment = new Assignment(
             [
+            'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
             'cleared_type' => $cleared->getClearedType(),
@@ -242,7 +250,7 @@ class AssignmentTest extends TestCase
         $cleared2 = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date"=> Carbon::now(),
             "narration" => $this->faker->word,
             "credited" => false
             ]
@@ -260,6 +268,7 @@ class AssignmentTest extends TestCase
 
         $assignment =  new Assignment(
             [
+            'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared2->id,
             'cleared_type' => $cleared2->getClearedType(),
@@ -278,7 +287,7 @@ class AssignmentTest extends TestCase
         $transaction2 = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date"=> Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -295,6 +304,7 @@ class AssignmentTest extends TestCase
 
         $assignment =  new Assignment(
             [
+            'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction2->id,
             'cleared_id' => $cleared->id,
             'cleared_type' => $cleared->getClearedType(),
@@ -322,6 +332,7 @@ class AssignmentTest extends TestCase
 
         $assignment = new Assignment(
             [
+            'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $balance->id,
             'cleared_type' => $balance->getClearedType(),
@@ -354,7 +365,7 @@ class AssignmentTest extends TestCase
         $transaction = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date"=> Carbon::now(),
             "narration" => $this->faker->word,
             "currency_id" => $currency->id
             ]
@@ -373,7 +384,7 @@ class AssignmentTest extends TestCase
         $cleared = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date"=> Carbon::now(),
             "narration" => $this->faker->word,
             "currency_id" => $currency->id,
             "credited" => false
@@ -396,6 +407,7 @@ class AssignmentTest extends TestCase
 
         $assignment = new Assignment(
             [
+            'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
             'cleared_type' => $cleared->getClearedType(),
@@ -422,7 +434,7 @@ class AssignmentTest extends TestCase
         $transaction = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date"=> Carbon::now(),
             "narration" => $this->faker->word,
             "currency_id" => $currency->id
             ]
@@ -441,7 +453,7 @@ class AssignmentTest extends TestCase
         $cleared = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date"=> Carbon::now(),
             "narration" => $this->faker->word,
             "currency_id" => $currency->id,
             "credited" => false
@@ -464,6 +476,7 @@ class AssignmentTest extends TestCase
 
         $assignment = new Assignment(
             [
+            'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
             'cleared_type' => $cleared->getClearedType(),
@@ -490,7 +503,7 @@ class AssignmentTest extends TestCase
         $transaction = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date"=> Carbon::now(),
             "narration" => $this->faker->word,
             "currency_id" => $currency->id
             ]
@@ -511,6 +524,7 @@ class AssignmentTest extends TestCase
 
         $assignment = new Assignment(
             [
+            'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $transaction->id,
             'cleared_type' => $transaction->getClearedType(),
@@ -537,7 +551,7 @@ class AssignmentTest extends TestCase
         $transaction = new ClientInvoice(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date"=> Carbon::now(),
             "narration" => $this->faker->word,
             "currency_id" => $currency->id
             ]
@@ -556,7 +570,7 @@ class AssignmentTest extends TestCase
         $cleared = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date"=> Carbon::now(),
             "narration" => $this->faker->word,
             "currency_id" => $currency->id,
             ]
@@ -582,6 +596,7 @@ class AssignmentTest extends TestCase
 
         $assignment = new Assignment(
             [
+            'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
             'cleared_type' => $cleared->getClearedType(),
@@ -608,7 +623,7 @@ class AssignmentTest extends TestCase
         $transaction = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date"=> Carbon::now(),
             "narration" => $this->faker->word,
             "currency_id" => $currency->id,
             "credited" => false
@@ -628,7 +643,7 @@ class AssignmentTest extends TestCase
         $cleared = new ClientReceipt(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date"=> Carbon::now(),
             "narration" => $this->faker->word,
             "currency_id" => $currency->id,
             ]
@@ -654,6 +669,7 @@ class AssignmentTest extends TestCase
 
         $assignment = new Assignment(
             [
+            'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
             'cleared_type' => $cleared->getClearedType(),
@@ -680,7 +696,7 @@ class AssignmentTest extends TestCase
         $transaction = $transaction = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date"=> Carbon::now(),
             "narration" => $this->faker->word,
             "currency_id" => $currency->id,
             "credited" => false
@@ -700,7 +716,7 @@ class AssignmentTest extends TestCase
         $cleared = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date"=> Carbon::now(),
             "narration" => $this->faker->word,
             "currency_id" => $currency->id,
             ]
@@ -722,6 +738,7 @@ class AssignmentTest extends TestCase
 
         $assignment = new Assignment(
             [
+            'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
             'cleared_type' => $cleared->getClearedType(),
@@ -748,7 +765,7 @@ class AssignmentTest extends TestCase
         $transaction = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date"=> Carbon::now(),
             "narration" => $this->faker->word,
             "currency_id" => $currency->id,
             "credited" => false
@@ -774,7 +791,7 @@ class AssignmentTest extends TestCase
         $cleared = new JournalEntry(
             [
             "account_id" => $account2->id,
-            "date" => Carbon::now(),
+            "transaction_date"=> Carbon::now(),
             "narration" => $this->faker->word,
             "currency_id" => $currency->id,
             ]
@@ -796,6 +813,7 @@ class AssignmentTest extends TestCase
 
         $assignment = new Assignment(
             [
+            'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
             'cleared_type' => $cleared->getClearedType(),
@@ -822,7 +840,7 @@ class AssignmentTest extends TestCase
         $transaction = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date"=> Carbon::now(),
             "narration" => $this->faker->word,
             "currency_id" => $currency->id,
             "credited" => false
@@ -844,7 +862,7 @@ class AssignmentTest extends TestCase
         $cleared = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date"=> Carbon::now(),
             "narration" => $this->faker->word,
             "currency_id" => $currency2->id,
             ]
@@ -866,6 +884,7 @@ class AssignmentTest extends TestCase
 
         $assignment = new Assignment(
             [
+            'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
             'cleared_type' => $cleared->getClearedType(),
@@ -892,7 +911,7 @@ class AssignmentTest extends TestCase
         $transaction = $transaction = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date"=> Carbon::now(),
             "narration" => $this->faker->word,
             "currency_id" => $currency->id,
             ]
@@ -911,7 +930,7 @@ class AssignmentTest extends TestCase
         $cleared = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date"=> Carbon::now(),
             "narration" => $this->faker->word,
             "currency_id" => $currency->id,
             ]
@@ -935,6 +954,7 @@ class AssignmentTest extends TestCase
 
         $assignment =  new Assignment(
             [
+            'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
             'cleared_type' => $cleared->getClearedType(),
@@ -956,7 +976,7 @@ class AssignmentTest extends TestCase
         $transaction = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date"=> Carbon::now(),
             "narration" => $this->faker->word,
             "credited" => false
             ]
@@ -975,7 +995,7 @@ class AssignmentTest extends TestCase
         $cleared = new JournalEntry(
             [
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "transaction_date"=> Carbon::now(),
             "narration" => $this->faker->word,
             ]
         );
@@ -996,6 +1016,7 @@ class AssignmentTest extends TestCase
 
         $assignment =  new Assignment(
             [
+            'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
             'cleared_type' => $cleared->getClearedType(),
@@ -1021,7 +1042,7 @@ class AssignmentTest extends TestCase
         $transaction = new JournalEntry(
             [
                 "account_id" => $account->id,
-                "date" => Carbon::now(),
+                "transaction_date"=> Carbon::now(),
                 "narration" => $this->faker->word,
             ]
         );
@@ -1039,7 +1060,7 @@ class AssignmentTest extends TestCase
         $cleared = new JournalEntry(
             [
                 "account_id" => $account->id,
-                "date" => Carbon::now(),
+                "transaction_date"=> Carbon::now(),
                 "narration" => $this->faker->word,
                 "credited" => false
             ]
@@ -1058,7 +1079,7 @@ class AssignmentTest extends TestCase
         $cleared2 = new JournalEntry(
             [
                 "account_id" => $account->id,
-                "date" => Carbon::now(),
+                "transaction_date"=> Carbon::now(),
                 "narration" => $this->faker->word,
                 "credited" => false
             ]
@@ -1098,7 +1119,7 @@ class AssignmentTest extends TestCase
         $transaction  = new JournalEntry(
             [
                 "account_id" => $account->id,
-                "date" => Carbon::now(),
+                "transaction_date"=> Carbon::now(),
                 "narration" => $this->faker->word,
                 "credited" => false
             ]
@@ -1117,7 +1138,7 @@ class AssignmentTest extends TestCase
         $cleared = new JournalEntry(
             [
                 "account_id" => $account->id,
-                "date" => Carbon::now(),
+                "transaction_date"=> Carbon::now(),
                 "narration" => $this->faker->word,
                 "exchange_rate_id" => factory(ExchangeRate::class)->create([
                     'currency_id' => $currency->id,
@@ -1142,6 +1163,7 @@ class AssignmentTest extends TestCase
 
         $assignment =  new Assignment(
             [
+                'assignment_date' => Carbon::now(),
                 'transaction_id' => $transaction->id,
                 'cleared_id' => $cleared->id,
                 'cleared_type' => $cleared->getClearedType(),

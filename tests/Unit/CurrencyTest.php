@@ -36,6 +36,10 @@ class CurrencyTest extends TestCase
             $currency->exchangeRates->first()->rate,
             $exchangeRate->rate
         );
+        $this->assertEquals(
+            $currency->identifier(),
+            'Currency: '.$currency->name.' ('.$currency->currency_code.')'
+        );
     }
 
     /**

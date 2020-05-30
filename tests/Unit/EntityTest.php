@@ -48,6 +48,7 @@ class EntityTest extends TestCase
         $this->assertEquals($user->entity->name, $entity->name);
         $this->assertEquals($entity->currency->name, $currency->name);
         $this->assertEquals($entity->reportingPeriods[0]->calendar_year, $period->calendar_year);
+        $this->assertEquals($entity->identifier(), 'Entity: '.$entity->name);
     }
 
     /**

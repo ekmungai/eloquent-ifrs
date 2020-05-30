@@ -51,6 +51,16 @@ class ExchangeRate extends Model implements Segragatable, Recyclable
     ];
 
     /**
+     * Instance Identifier.
+     *
+     * @return string
+     */
+    public function identifier()
+    {
+        return 'Exchange Rate: '.number_format($this->name, 2).' for '.$this->currency->identifier(). ' from '.$this->valid_from->toDateString();
+    }
+
+    /**
      * Exchange Rate Currency.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -49,6 +49,16 @@ class Entity extends Model implements Recyclable
     ];
 
     /**
+     * Instance Identifier.
+     *
+     * @return string
+     */
+    public function identifier()
+    {
+        return 'Entity: '.$this->name;
+    }
+
+    /**
      * Users associated with the reporting Entity.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

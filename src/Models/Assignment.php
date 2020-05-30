@@ -8,6 +8,7 @@
  */
 namespace IFRS\Models;
 
+use Carbon\Carbon;
 use IFRS\Exceptions\InsufficientBalance;
 use IFRS\Exceptions\InvalidClearanceAccount;
 use IFRS\Exceptions\InvalidClearanceCurrency;
@@ -55,6 +56,7 @@ class Assignment extends Model implements Segragatable
      * @var array
      */
     protected $fillable = [
+        'assignment_date',
         'transaction_id',
         'cleared_id',
         'cleared_type',
@@ -82,6 +84,7 @@ class Assignment extends Model implements Segragatable
             if ($unclearedAmount > $balance) {
                 $assignment = new Assignment(
                     [
+                        'assignment_date' => Carbon::now(),
                         'transaction_id' => $transaction->id,
                         'cleared_id' => $cleared->id,
                         'cleared_type' => $cleared->getClearedType(),
@@ -93,6 +96,7 @@ class Assignment extends Model implements Segragatable
             }else{
                 $assignment = new Assignment(
                     [
+                        'assignment_date' => Carbon::now(),
                         'transaction_id' => $transaction->id,
                         'cleared_id' => $cleared->id,
                         'cleared_type' => $cleared->getClearedType(),
@@ -175,6 +179,16 @@ class Assignment extends Model implements Segragatable
         if ($transactionRate !== $clearedRate && is_null($this->forexAccount)) {
             throw new MissingForexAccount();
         }
+    }
+
+    /**
+     * Instance Identifier.
+     *
+     * @return string
+     */
+    public function identifier()
+    {
+        return 'Assignment for '.$this->transaction->identifier().' on '.$this->assignment_date;
     }
 
     /**

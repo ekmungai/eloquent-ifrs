@@ -214,6 +214,16 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     }
 
     /**
+     * Instance Identifier.
+     *
+     * @return string
+     */
+    public function identifier()
+    {
+        return Transaction::getType($this->transaction_type).': '.$this->transaction_no;
+    }
+
+    /**
      * Transaction Saved Line Items.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

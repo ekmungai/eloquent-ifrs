@@ -7,8 +7,8 @@ use IFRS\Tests\TestCase;
 use IFRS\Models\RecycledObject;
 use IFRS\User;
 use IFRS\Models\Vat;
-use Carbon\Carbon;
-use IFRS\Exceptions\VatPeriodOverlap;
+// use Carbon\Carbon;
+// use IFRS\Exceptions\VatPeriodOverlap;
 
 class VatTest extends TestCase
 {
@@ -35,10 +35,15 @@ class VatTest extends TestCase
         $vat->attributes();
         $vat->save();
 
+        $this->assertEquals(
+            $vat->identifier(),
+            'VAT: '.$vat->name.'('.$vat->code.') at '.number_format($vat->rate, 2).'%'
+        );
         $this->assertEquals(count(Vat::all()), 1);
 
         $this->be(User::withoutGlobalScopes()->find(1));
         $this->assertEquals(count(Vat::all()), 0);
+
     }
 
     /**

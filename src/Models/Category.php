@@ -47,6 +47,16 @@ class Category extends Model implements Segragatable, Recyclable
     ];
 
     /**
+     * Instance Identifier.
+     *
+     * @return string
+     */
+    public function identifier()
+    {
+        return Account::getType($this->category_type).' Category: '.$this->name;
+    }
+
+    /**
      * Category Accounts.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

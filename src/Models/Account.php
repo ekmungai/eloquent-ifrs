@@ -172,6 +172,16 @@ class Account extends Model implements Recyclable, Segragatable
     }
 
     /**
+     * Instance Identifier.
+     *
+     * @return string
+     */
+    public function identifier()
+    {
+        return Account::getType($this->account_type).' Account: '.$this->name;
+    }
+
+    /**
      * Account Currency.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

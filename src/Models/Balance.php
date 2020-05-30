@@ -145,6 +145,16 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
     }
 
     /**
+     * Instance Identifier.
+     *
+     * @return string
+     */
+    public function identifier()
+    {
+        return Balance::getType($this->balance_type).' Balance for '.$this->account->identifier().' for year '.$this->year;
+    }
+
+    /**
      * isPosted analog for Assignment model.
      */
     public function isPosted() : bool

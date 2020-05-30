@@ -92,6 +92,10 @@ class TransactionTest extends TestCase
         $this->assertEquals($transaction->exchangeRate->rate, $exchangeRate->rate);
         $this->assertEquals($transaction->ledgers()->get()[0]->post_account, $account->id);
         $this->assertEquals(count($transaction->assignments), 5);
+        $this->assertEquals(
+            $transaction->identifier(),
+            Transaction::getType($transaction->transaction_type).': '.$transaction->transaction_no
+        );
     }
 
     /**
@@ -462,6 +466,7 @@ class TransactionTest extends TestCase
 
         $assignment = new Assignment(
             [
+            'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
             'cleared_type' => $cleared->getClearedType(),
@@ -531,6 +536,7 @@ class TransactionTest extends TestCase
 
         $assignment = new Assignment(
             [
+            'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
             'cleared_type' => $cleared->getClearedType(),

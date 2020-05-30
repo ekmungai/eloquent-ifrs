@@ -17,7 +17,7 @@ use IFRS\Interfaces\Recyclable;
 use IFRS\Traits\Recycling;
 use IFRS\Traits\Segragating;
 use IFRS\Traits\ModelTablePrefix;
-use IFRS\Exceptions\VatPeriodOverlap;
+// use IFRS\Exceptions\VatPeriodOverlap;
 
 /**
  * Class Vat
@@ -50,6 +50,16 @@ class Vat extends Model implements Segragatable, Recyclable
         'valid_from',
         'valid_to',
     ];
+
+    /**
+     * Instance Identifier.
+     *
+     * @return string
+     */
+    public function identifier()
+    {
+        return 'VAT: '.$this->name.'('.$this->code.') at '.number_format($this->rate, 2).'%';
+    }
 
     /**
      * Vat attributes.

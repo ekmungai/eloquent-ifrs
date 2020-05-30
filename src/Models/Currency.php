@@ -43,6 +43,16 @@ class Currency extends Model implements Recyclable
     ];
 
     /**
+     * Instance Identifier.
+     *
+     * @return string
+     */
+    public function identifier()
+    {
+        return 'Currency: '.$this->name.' ('.$this->currency_code.')';
+    }
+
+    /**
      * Currency Exchange Rates.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

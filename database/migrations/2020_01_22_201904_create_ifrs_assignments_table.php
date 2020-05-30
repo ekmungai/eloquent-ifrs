@@ -33,6 +33,7 @@ class CreateIfrsAssignmentsTable extends Migration
             $table->foreign('forex_account_id')->references('id')->on(config('ifrs.table_prefix').'accounts');
 
             // attributes
+            $table->dateTime('assignment_date', 0);
             $table->unsignedBigInteger('cleared_id');
             $table->string('cleared_type', 300);
             $table->decimal('amount', 13, 4);

@@ -75,6 +75,16 @@ class ReportingPeriod extends Model implements Segragatable, Recyclable
     }
 
     /**
+     * Instance Identifier.
+     *
+     * @return string
+     */
+    public function identifier()
+    {
+        return 'Reportiting Period: No. '.$this->period_count.' in '.$this->calendar_year;
+    }
+
+    /**
      * Fetch reporting period for the date
      *
      * @return int

@@ -57,6 +57,10 @@ class AccountBalanceTest extends TestCase
         $this->assertEquals($balance->currency->name, $currency->name);
         $this->assertEquals($balance->account->name, $account->name);
         $this->assertEquals($balance->exchangeRate->rate, $exchangeRate->rate);
+        $this->assertEquals(
+            $balance->identifier(),
+            'Debit Balance for '.$balance->account->identifier().' for year '.Carbon::now()->year
+        );
     }
 
     /**
