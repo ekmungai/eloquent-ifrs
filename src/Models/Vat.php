@@ -58,7 +58,7 @@ class Vat extends Model implements Segragatable, Recyclable
      */
     public function identifier()
     {
-        return 'VAT: '.$this->name.'('.$this->code.') at '.number_format($this->rate, 2).'%';
+        return 'VAT: '.$this->name.' ('.$this->code.') at '.number_format($this->rate, 2).'%';
     }
 
     /**

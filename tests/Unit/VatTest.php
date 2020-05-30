@@ -37,7 +37,7 @@ class VatTest extends TestCase
 
         $this->assertEquals(
             $vat->identifier(),
-            'VAT: '.$vat->name.'('.$vat->code.') at '.number_format($vat->rate, 2).'%'
+            'VAT: '.$vat->name.' ('.$vat->code.') at '.number_format($vat->rate, 2).'%'
         );
         $this->assertEquals(count(Vat::all()), 1);
 

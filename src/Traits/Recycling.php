@@ -29,26 +29,26 @@ trait Recycling
         static::deleting(
             function ($model) {
                 if (Auth::check()) {
-                    $user = Auth::user();
-                    if ($user->entity) {
-                        RecycledObject::create(
-                            [
-                                'user_id' => $user->id,
-                                'entity_id' => $user->entity->id,
-                                'recyclable_id' => $model->id,
-                                'recyclable_type' => static::class,
-                            ]
-                            );
-
-                        if ($model->forceDeleting) {
-                            $model->destroyed_at = $model->deleted_at = Carbon::now()->toDateTimeString();
-                            $model->save();
-                            $model->forceDeleting = false;
+                    if ($model->forceDeleting) {
+                        $model->destroyed_at = Carbon::now()->toDateTimeString();
+                        $model->save();
+                        $model->forceDeleting = false;
+                    }else{
+                        $user = Auth::user();
+                        if ($user->entity) {
+                            RecycledObject::create(
+                                [
+                                    'user_id' => $user->id,
+                                    'entity_id' => $user->entity->id,
+                                    'recyclable_id' => $model->id,
+                                    'recyclable_type' => static::class,
+                                ]
+                                );
                         }
                     }
                 }
             }
-        );
+            );
         static::restoring(
             function ($model) {
                 if (!is_null($model->destroyed_at)) {
@@ -60,7 +60,7 @@ trait Recycling
                     $recycled->delete();
                 }
             }
-        );
+            );
     }
 
     /**
