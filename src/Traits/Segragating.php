@@ -38,11 +38,11 @@ trait Segragating
                     throw new UnauthorizedUser();
                 }
 
-                if (Auth::check()) {
+                if (Auth::check() && is_null($model->entity_id)) {
                     $model->entity_id = Auth::user()->entity->id;
                 }
             }
-        );
+            );
         return null;
     }
 
