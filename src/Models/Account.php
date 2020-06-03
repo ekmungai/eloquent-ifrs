@@ -93,9 +93,10 @@ class Account extends Model implements Recyclable, Segragatable
      */
     public function __construct($attributes = [])
     {
-        if (!isset($attributes['currency_id'])) {
+        if (!isset($attributes['currency_id']) && Auth::user()->entity) {
             $attributes['currency_id'] = Auth::user()->entity->currency_id;
         }
+
         return parent::__construct($attributes);
     }
 
@@ -172,13 +173,23 @@ class Account extends Model implements Recyclable, Segragatable
     }
 
     /**
+     * Instance Type.
+     *
+     * @return string
+     */
+    public function type()
+    {
+        return Account::getType($this->account_type);
+    }
+
+    /**
      * Instance Identifier.
      *
      * @return string
      */
     public function identifier()
     {
-        return Account::getType($this->account_type).' Account: '.$this->name;
+        return $this->type().' Account: '.$this->name;
     }
 
     /**
@@ -272,12 +283,12 @@ class Account extends Model implements Recyclable, Segragatable
             }
 
             $section = Arr::collapse(array_values(config('ifrs')))[$this->account_type];
-
             $this->code = $section + Account::withTrashed()
             ->where("account_type", $this->account_type)
             ->count() + 1;
         }
 
+        $this->name = ucfirst($this->name);
         return parent::save($options);
     }
 

@@ -53,7 +53,17 @@ class Category extends Model implements Segragatable, Recyclable
      */
     public function identifier()
     {
-        return Account::getType($this->category_type).' Category: '.$this->name;
+        return $this->type().' Category: '.$this->name;
+    }
+
+    /**
+     * Instance Type.
+     *
+     * @return string
+     */
+    public function type()
+    {
+        return Account::getType($this->category_type);
     }
 
     /**
