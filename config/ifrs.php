@@ -13,6 +13,7 @@ use IFRS\Models\ReportingPeriod;
 
 use IFRS\Reports\IncomeStatement;
 use IFRS\Reports\BalanceSheet;
+use IFRS\Reports\TrialBalance;
 
 return [
 
@@ -149,7 +150,7 @@ return [
         BalanceSheet::RECONCILIATION => 'Reconciliation',
 
         // Trial Balance
-        BalanceSheet::TITLE => 'Trial Balance',
+        TrialBalance::TITLE => 'Trial Balance',
     ],
 
     'balances' => [
