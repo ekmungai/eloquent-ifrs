@@ -51,9 +51,9 @@ class Category extends Model implements Segragatable, Recyclable
      *
      * @return string
      */
-    public function identifier()
+    public function toString($type = false)
     {
-        return $this->type().' Category: '.$this->name;
+        return $type? $this->type().' Category: '.$this->name: $this->name;
     }
 
     /**

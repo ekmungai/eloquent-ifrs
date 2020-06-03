@@ -186,9 +186,10 @@ class Assignment extends Model implements Segragatable
      *
      * @return string
      */
-    public function identifier()
+    public function toString($type = false)
     {
-        return 'Assignment for '.$this->transaction->identifier().' on '.$this->assignment_date;
+        $description = $this->transaction->toString().' on '.$this->assignment_date;
+        return $type? 'Assignment: '.$description : $description;
     }
 
     /**

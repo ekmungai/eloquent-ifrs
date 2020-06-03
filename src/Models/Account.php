@@ -187,9 +187,9 @@ class Account extends Model implements Recyclable, Segragatable
      *
      * @return string
      */
-    public function identifier()
+    public function toString($type = false)
     {
-        return $this->type().' Account: '.$this->name;
+        return $type? $this->type().' Account: '.$this->name : $this->name;
     }
 
     /**

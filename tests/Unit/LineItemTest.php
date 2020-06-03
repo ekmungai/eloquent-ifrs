@@ -50,8 +50,12 @@ class LineItemTest extends TestCase
         $this->assertEquals($lineItem->vatAccount->name, $vatAccount->name);
         $this->assertEquals($lineItem->vat->rate, $vat->rate);
         $this->assertEquals(
-            $lineItem->identifier(),
-            'Line Item with '.$lineItem->account->identifier().' for 50'
+            $lineItem->toString(true),
+            'Line Item: '.$lineItem->account->toString().' for 50'
+        );
+        $this->assertEquals(
+            $lineItem->toString(),
+            $lineItem->account->toString().' for 50'
         );
     }
 

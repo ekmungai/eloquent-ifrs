@@ -53,9 +53,9 @@ class Entity extends Model implements Recyclable
      *
      * @return string
      */
-    public function identifier()
+    public function toString($type = false)
     {
-        return 'Entity: '.$this->name;
+        return $type? 'Entity: '.$this->name: $this->name;
     }
 
     /**

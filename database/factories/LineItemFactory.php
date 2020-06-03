@@ -7,7 +7,6 @@ use Faker\Generator as Faker;
 
 $factory->define(LineItem::class, function (Faker $faker) {
     return [
-        'entity_id' => factory('IFRS\Models\Entity')->create()->id,
         'vat_id' => factory('IFRS\Models\Vat')->create()->id,
         'transaction_id' => factory('IFRS\Models\Transaction')->create()->id,
         'account_id' => factory('IFRS\Models\Account')->create()->id,

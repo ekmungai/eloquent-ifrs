@@ -7,7 +7,6 @@ use Faker\Generator as Faker;
 
 $factory->define(Transaction::class, function (Faker $faker) {
     return [
-        'entity_id' => factory('IFRS\Models\Entity')->create()->id,
         'exchange_rate_id' => factory('IFRS\Models\ExchangeRate')->create()->id,
         'currency_id' => factory('IFRS\Models\Currency')->create()->id,
         'account_id' => factory('IFRS\Models\Account')->create()->id,

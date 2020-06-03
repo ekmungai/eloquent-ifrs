@@ -12,7 +12,6 @@ $factory->define(
     function (Faker $faker) {
         return [
         'user_id' => factory('IFRS\User')->create()->id,
-        'entity_id' => factory('IFRS\Models\Entity')->create()->id,
         'recyclable_id' => factory('IFRS\User')->create()->id,
         'recyclable_type' => 'IFRS\User',
         ];

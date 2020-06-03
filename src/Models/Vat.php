@@ -56,9 +56,10 @@ class Vat extends Model implements Segragatable, Recyclable
      *
      * @return string
      */
-    public function identifier()
+    public function toString($type = false)
     {
-        return 'VAT: '.$this->name.' ('.$this->code.') at '.number_format($this->rate, 2).'%';
+        $description = $this->name.' ('.$this->code.') at '.number_format($this->rate, 2).'%';
+        return $type? 'VAT: '.$description : $description;
     }
 
     /**

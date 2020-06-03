@@ -38,8 +38,12 @@ class CategoryTest extends TestCase
 
         $this->assertEquals($category->accounts->first()->name, $account->name);
         $this->assertEquals(
-            $category->identifier(),
+            $category->toString(true),
             Account::getType($category->category_type).' Category: '.$category->name
+        );
+        $this->assertEquals(
+            $category->toString(),
+            $category->name
         );
     }
 

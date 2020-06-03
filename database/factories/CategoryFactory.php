@@ -15,7 +15,6 @@ $factory->define(
         'category_type' => $faker->randomElement(
             array_keys(config('ifrs')['accounts'])
         ),
-        'entity_id' => factory('IFRS\Models\Entity')->create()->id,
         ];
     }
 );

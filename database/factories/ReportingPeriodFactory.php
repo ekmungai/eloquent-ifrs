@@ -13,7 +13,6 @@ $factory->define(
         return [
         'period_count' => $faker->randomDigit,
         'calendar_year' => $faker->year,
-        'entity_id' => factory('IFRS\Models\Entity')->create()->id,
             'status' => ReportingPeriod::OPEN,
         ];
     }

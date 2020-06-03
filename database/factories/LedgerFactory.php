@@ -8,7 +8,6 @@ use Faker\Generator as Faker;
 
 $factory->define(Ledger::class, function (Faker $faker) {
     return [
-        'entity_id' => factory('IFRS\Models\Entity')->create()->id,
         'transaction_id' => factory('IFRS\Models\Transaction')->create()->id,
         'vat_id' => factory('IFRS\Models\Vat')->create()->id,
         'post_account' => factory('IFRS\Models\Account')->create()->id,

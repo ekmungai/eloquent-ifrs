@@ -55,9 +55,10 @@ class ExchangeRate extends Model implements Segragatable, Recyclable
      *
      * @return string
      */
-    public function identifier()
+    public function toString($type = false)
     {
-        return 'Exchange Rate: '.number_format($this->name, 2).' for '.$this->currency->identifier(). ' from '.$this->valid_from->toDateString();
+        $description = number_format($this->rate, 2).' for '.$this->currency->toString(). ' from '.$this->valid_from->toDateString();
+        return $type? 'Exchange Rate: '.$description : $description;
     }
 
     /**

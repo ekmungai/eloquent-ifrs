@@ -64,9 +64,10 @@ class LineItem extends Model implements Recyclable, Segragatable
      *
      * @return string
      */
-    public function identifier()
+    public function toString($type = false)
     {
-        return 'Line Item with '.$this->account->identifier().' for '.$this->amount * $this->quantity;
+        $description = $this->account->toString().' for '.$this->amount * $this->quantity;
+        return $type? 'Line Item: '.$description : $description;
     }
 
     /**

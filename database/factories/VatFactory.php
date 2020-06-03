@@ -14,7 +14,6 @@ $factory->define(
         'name' => $faker->name,
         'code' => $faker->randomLetter(),
         'rate' => $faker->randomDigit(),
-        'entity_id' => factory('IFRS\Models\Entity')->create()->id,
         ];
     }
 );

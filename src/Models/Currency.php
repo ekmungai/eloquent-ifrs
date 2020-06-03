@@ -47,9 +47,9 @@ class Currency extends Model implements Recyclable
      *
      * @return string
      */
-    public function identifier()
+    public function toString($type = false)
     {
-        return 'Currency: '.$this->name.' ('.$this->currency_code.')';
+        return $type? 'Currency: '.$this->name.' ('.$this->currency_code.')': $this->name.' ('.$this->currency_code.')';
     }
 
     /**

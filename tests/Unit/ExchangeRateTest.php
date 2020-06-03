@@ -34,8 +34,12 @@ class ExchangeRateTest extends TestCase
 
         $this->assertEquals($exchangeRate->currency->name, $currency->name);
         $this->assertEquals(
-            $exchangeRate->identifier(),
-            'Exchange Rate: '.number_format($exchangeRate->name, 2).' for '.$exchangeRate->currency->identifier(). ' from '.$exchangeRate->valid_from->toDateString()
+            $exchangeRate->toString(true),
+            'Exchange Rate: '.number_format($exchangeRate->rate, 2).' for '.$exchangeRate->currency->toString(). ' from '.$exchangeRate->valid_from->toDateString()
+        );
+        $this->assertEquals(
+            $exchangeRate->toString(),
+            number_format($exchangeRate->rate, 2).' for '.$exchangeRate->currency->toString(). ' from '.$exchangeRate->valid_from->toDateString()
         );
     }
 

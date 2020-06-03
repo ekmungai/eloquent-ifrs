@@ -15,7 +15,6 @@ $factory->define(
         'valid_from' => $faker->dateTimeThisMonth(),
         'valid_to' => Carbon::now(),
         'currency_id' => factory('IFRS\Models\Currency')->create()->id,
-        'entity_id' => factory('IFRS\Models\Entity')->create()->id,
         'rate' => $faker->randomFloat(2),
         ];
     }

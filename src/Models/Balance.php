@@ -149,9 +149,10 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
      *
      * @return string
      */
-    public function identifier()
+    public function toString($type = false)
     {
-        return Balance::getType($this->balance_type).' Balance for '.$this->account->identifier().' for year '.$this->year;
+        $description = $this->account->toString().' for year '.$this->year;
+        return $type? Balance::getType($this->balance_type).' Balance: '.$description : $description;
     }
 
     /**

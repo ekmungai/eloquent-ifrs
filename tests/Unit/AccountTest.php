@@ -50,9 +50,10 @@ class AccountTest extends TestCase
         $this->assertEquals($account->currency->name, $currency->name);
         $this->assertEquals($account->category->name, $category->name);
         $this->assertEquals(
-            $account->identifier(),
+            $account->toString(true),
             Account::getType($account->account_type).' Account: '.$account->name
         );
+        $this->assertEquals($account->toString(), $account->name);
     }
 
     /**

@@ -218,9 +218,9 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      *
      * @return string
      */
-    public function identifier()
+    public function toString($type = false)
     {
-        return Transaction::getType($this->transaction_type).': '.$this->transaction_no;
+        return $type? Transaction::getType($this->transaction_type).': '.$this->transaction_no : $this->transaction_no;
     }
 
     /**

@@ -93,8 +93,12 @@ class TransactionTest extends TestCase
         $this->assertEquals($transaction->ledgers()->get()[0]->post_account, $account->id);
         $this->assertEquals(count($transaction->assignments), 5);
         $this->assertEquals(
-            $transaction->identifier(),
+            $transaction->toString(true),
             Transaction::getType($transaction->transaction_type).': '.$transaction->transaction_no
+        );
+        $this->assertEquals(
+            $transaction->toString(),
+            $transaction->transaction_no
         );
     }
 

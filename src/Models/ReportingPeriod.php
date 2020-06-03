@@ -79,9 +79,10 @@ class ReportingPeriod extends Model implements Segragatable, Recyclable
      *
      * @return string
      */
-    public function identifier()
+    public function toString($type = false)
     {
-        return 'Reportiting Period: No. '.$this->period_count.' in '.$this->calendar_year;
+        $description = $this->period_count.' in '.$this->calendar_year;
+        return $type? 'Reportiting Period: No. '.$description : $description;
     }
 
     /**
