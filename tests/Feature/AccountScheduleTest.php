@@ -66,7 +66,7 @@ class AccountScheduleTest extends TestCase
      *
      * @return void
      */
-    public function testClientAccountAccountSchedule()
+    public function AccountScheduleTest()
     {
         $account = factory(Account::class)->create(
             [
@@ -86,7 +86,7 @@ class AccountScheduleTest extends TestCase
                 ]
             )->id,
             "currency_id" => $currency->id,
-            "year" => date("Y"),
+            'reporting_period_id' => $this->period->id,
             "amount" => 50
             ]
         );
@@ -300,7 +300,7 @@ class AccountScheduleTest extends TestCase
                 ]
             )->id,
             "currency_id" => $currency->id,
-            "year" => date("Y"),
+            'reporting_period_id' => $this->period->id,
             "amount" => 60
             ]
         );

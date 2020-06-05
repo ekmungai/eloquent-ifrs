@@ -31,7 +31,7 @@ class BalanceSheetTest extends TestCase
 
         factory(Balance::class)->create(
             [
-            "year" => date("Y"),
+
             "account_id" => factory('IFRS\Models\Account')->create(
                 [
                 "account_type" => Account::INVENTORY
@@ -43,13 +43,14 @@ class BalanceSheetTest extends TestCase
                 "rate" => 1
                 ]
             )->id,
+            'reporting_period_id' => $this->period->id,
             "amount" => 100
             ]
         );
 
         factory(Balance::class)->create(
             [
-            "year" => date("Y"),
+
             "account_id" => factory('IFRS\Models\Account')->create(
                 [
                 "account_type" => Account::CURRENT_LIABILITY
@@ -61,6 +62,7 @@ class BalanceSheetTest extends TestCase
                 "rate" => 1
                 ]
             )->id,
+            'reporting_period_id' => $this->period->id,
             "amount" => 100
             ]
         );

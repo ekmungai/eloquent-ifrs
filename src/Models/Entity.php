@@ -124,4 +124,26 @@ class Entity extends Model implements Recyclable
 
             return !is_null($existing)? $existing : $new;
     }
+
+
+    /**
+     * Current Reporting Period for the Entity.
+     *
+     * @return ReportingPeriod
+     */
+    public function currentReportingPeriod() : ReportingPeriod
+    {
+        $existing = $this->reportingPeriods->where('calendar_year', date("Y"))->first();
+
+        $new = new ReportingPeriod(
+            [
+                'calendar_year' => date('Y'),
+                'period_count' => count(ReportingPeriod::withTrashed()->get()),
+            ]
+            );
+
+        $new->save();
+
+        return !is_null($existing)? $existing : $new;
+    }
 }

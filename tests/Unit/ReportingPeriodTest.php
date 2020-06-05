@@ -37,11 +37,11 @@ class ReportingPeriodTest extends TestCase
         $this->assertEquals($entity->reportingPeriods->last()->calendar_year, $period->calendar_year);
         $this->assertEquals(
             $period->toString(true),
-            'Reportiting Period: No. '.$period->period_count.' in '.$period->calendar_year
+            'Reportiting Period: '.$period->calendar_year
         );
         $this->assertEquals(
             $period->toString(),
-            $period->period_count.' in '.$period->calendar_year
+            $period->calendar_year
         );
     }
 

@@ -48,7 +48,7 @@ class TrialBalanceTest extends TestCase
         //balance
         factory(Balance::class)->create(
             [
-            "year" => date("Y"),
+            
             "account_id" => $nonCurrentAsset,
             "balance_type" => Balance::DEBIT,
             "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
@@ -88,7 +88,7 @@ class TrialBalanceTest extends TestCase
         //balance
         factory(Balance::class)->create(
             [
-            "year" => date("Y"),
+            
             "account_id" => $contraAsset,
             "balance_type" => Balance::DEBIT,
             "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
@@ -122,7 +122,7 @@ class TrialBalanceTest extends TestCase
         //balance
         factory(Balance::class)->create(
             [
-            "year" => date("Y"),
+            
             "account_id" => $inventory,
             "balance_type" => Balance::DEBIT,
             "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
@@ -160,7 +160,7 @@ class TrialBalanceTest extends TestCase
         //balance
         factory(Balance::class)->create(
             [
-            "year" => date("Y"),
+            
             "account_id" => $bank,
             "balance_type" => Balance::DEBIT,
             "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
@@ -209,7 +209,7 @@ class TrialBalanceTest extends TestCase
         //balance
         factory(Balance::class)->create(
             [
-            "year" => date("Y"),
+            
             "account_id" => $currentAsset,
             "balance_type" => Balance::DEBIT,
             "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
@@ -243,7 +243,7 @@ class TrialBalanceTest extends TestCase
         //balance
         factory(Balance::class)->create(
             [
-            "year" => date("Y"),
+            
             "account_id" => $receivable,
             "balance_type" => Balance::DEBIT,
             "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
@@ -292,7 +292,7 @@ class TrialBalanceTest extends TestCase
         //balance
         factory(Balance::class)->create(
             [
-            "year" => date("Y"),
+            
             "account_id" => $nonCurrentLiability,
             "balance_type" => Balance::CREDIT,
             "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
@@ -326,7 +326,7 @@ class TrialBalanceTest extends TestCase
         //balance
         factory(Balance::class)->create(
             [
-            "year" => date("Y"),
+            
             "account_id" => $controlAccount,
             "balance_type" => Balance::CREDIT,
             "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
@@ -360,7 +360,7 @@ class TrialBalanceTest extends TestCase
         //balance
         factory(Balance::class)->create(
             [
-            "year" => date("Y"),
+            
             "account_id" => $currentLiability,
             "balance_type" => Balance::CREDIT,
             "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
@@ -394,7 +394,7 @@ class TrialBalanceTest extends TestCase
         //balance
         factory(Balance::class)->create(
             [
-            "year" => date("Y"),
+            
             "account_id" => $payable,
             "balance_type" => Balance::CREDIT,
             "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
@@ -428,7 +428,7 @@ class TrialBalanceTest extends TestCase
         //balance
         factory(Balance::class)->create(
             [
-            "year" => date("Y"),
+            
             "account_id" => $reconciliation,
             "balance_type" => Balance::CREDIT,
             "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
@@ -467,7 +467,7 @@ class TrialBalanceTest extends TestCase
         //balance
         factory(Balance::class)->create(
             [
-            "year" => date("Y"),
+            
             "account_id" => $equity,
             "balance_type" => Balance::CREDIT,
             "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(

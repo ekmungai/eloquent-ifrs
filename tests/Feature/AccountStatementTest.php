@@ -66,7 +66,7 @@ class AccountStatementTest extends TestCase
                 "rate" => 1,
                 ]
             )->id,
-            "year" => date("Y"),
+            'reporting_period_id' => $this->period->id,
             "amount" => 50
             ]
         );
@@ -80,7 +80,7 @@ class AccountStatementTest extends TestCase
                 "rate" => 1,
                 ]
             )->id,
-            "year" => date("Y"),
+            'reporting_period_id' => $this->period->id,
             "amount" => 40
             ]
         );
@@ -360,7 +360,7 @@ class AccountStatementTest extends TestCase
                 "rate" => 1,
                 ]
             )->id,
-            "year" => date("Y"),
+            'reporting_period_id' => $this->period->id,
             "amount" => 50
             ]
         );
@@ -374,7 +374,7 @@ class AccountStatementTest extends TestCase
                 "rate" => 1,
                 ]
             )->id,
-            "year" => date("Y"),
+            'reporting_period_id' => $this->period->id,
             "amount" => 40
             ]
         );
@@ -558,7 +558,7 @@ class AccountStatementTest extends TestCase
                 "rate" => 1,
                 ]
             )->id,
-            "year" => date("Y"),
+            'reporting_period_id' => $this->period->id,
             "amount" => 50
             ]
         );
@@ -572,7 +572,7 @@ class AccountStatementTest extends TestCase
                 "rate" => 1,
                 ]
             )->id,
-            "year" => date("Y"),
+            'reporting_period_id' => $this->period->id,
             "amount" => 40
             ]
         );

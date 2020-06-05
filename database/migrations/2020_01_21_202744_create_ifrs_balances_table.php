@@ -29,15 +29,16 @@ class CreateIfrsBalancesTable extends Migration
             $table->unsignedBigInteger('account_id');
             $table->unsignedBigInteger('currency_id');
             $table->unsignedBigInteger('exchange_rate_id');
+            $table->unsignedBigInteger('reporting_period_id');
 
             // constraints
             $table->foreign('entity_id')->references('id')->on(config('ifrs.table_prefix').'entities');
             $table->foreign('currency_id')->references('id')->on(config('ifrs.table_prefix').'currencies');
             $table->foreign('exchange_rate_id')->references('id')->on(config('ifrs.table_prefix').'exchange_rates');
             $table->foreign('account_id')->references('id')->on(config('ifrs.table_prefix').'accounts');
+            $table->foreign('reporting_period_id')->references('id')->on(config('ifrs.table_prefix').'reporting_periods');
 
             // attributes
-            $table->year('year');
             $table->string('reference', 255)->nullable();
             $table->dateTime('transaction_date');
             $table->string('transaction_no', 255);

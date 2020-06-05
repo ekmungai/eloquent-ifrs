@@ -80,7 +80,7 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
         'currency_id',
         'exchange_rate_id',
         'account_id',
-        'year',
+        'reporting_period_id',
         'transaction_no',
         'reference',
         'balance_type',
@@ -98,6 +98,10 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
 
         if (!isset($attributes['currency_id'])) {
             $attributes['currency_id'] = $entity->currency_id;
+        }
+
+        if (!isset($attributes['reporting_period_id'])) {
+            $attributes['reporting_period_id'] = $entity->currentReportingPeriod()->id;
         }
 
         if (!isset($attributes['exchange_rate_id'])) {
@@ -151,7 +155,7 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
      */
     public function toString($type = false)
     {
-        $description = $this->account->toString().' for year '.$this->year;
+        $description = $this->account->toString().' for year '.$this->reportingPeriod->calendar_year;
         return $type? Balance::getType($this->balance_type).' Balance: '.$description : $description;
     }
 
@@ -224,6 +228,16 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
     }
 
     /**
+     * Balance Reporting Period.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function reportingPeriod()
+    {
+        return $this->belongsTo(ReportingPeriod::class);
+    }
+
+    /**
      * Balance attributes.
      *
      * @return object
@@ -238,11 +252,6 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
      */
     public function save(array $options = []) : bool
     {
-        $transactionTypes = [
-            Transaction::IN,
-            Transaction::BL,
-            Transaction::JN
-        ];
 
         $accountTypes = array_merge(
             array_keys(config('ifrs')[IncomeStatement::OPERATING_REVENUES]),
@@ -255,8 +264,8 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
             throw new NegativeAmount("Balance");
         }
 
-        if (!in_array($this->transaction_type, $transactionTypes)) {
-            throw new InvalidBalanceTransaction($transactionTypes);
+        if (!in_array($this->transaction_type, Assignment::CLEARABLES)) {
+            throw new InvalidBalanceTransaction(Assignment::CLEARABLES);
         }
 
         if (!in_array($this->balance_type, [Balance::DEBIT, Balance::CREDIT])) {

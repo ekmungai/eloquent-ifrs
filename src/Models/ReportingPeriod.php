@@ -81,8 +81,7 @@ class ReportingPeriod extends Model implements Segragatable, Recyclable
      */
     public function toString($type = false)
     {
-        $description = $this->period_count.' in '.$this->calendar_year;
-        return $type? 'Reportiting Period: No. '.$description : $description;
+        return $type? 'Reportiting Period: '.$this->calendar_year : $this->calendar_year;
     }
 
     /**
@@ -140,8 +139,8 @@ class ReportingPeriod extends Model implements Segragatable, Recyclable
     public static function periodEnd(string $date = null)
     {
         return ReportingPeriod::periodStart($date)
-            ->addYear()
-            ->subDay();
+        ->addYear()
+        ->subDay();
     }
 
     /**

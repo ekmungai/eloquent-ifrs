@@ -43,7 +43,6 @@ class AccountBalanceTest extends TestCase
             'exchange_rate_id' => $exchangeRate->id,
             'currency_id' => $currency->id,
             'account_id' => $account->id,
-            'year' => Carbon::now()->year,
             'transaction_no' => $this->faker->word,
             'transaction_type' => Transaction::JN,
             'transaction_date' => Carbon::now()->subYears(1.5),
@@ -57,6 +56,7 @@ class AccountBalanceTest extends TestCase
         $this->assertEquals($balance->currency->name, $currency->name);
         $this->assertEquals($balance->account->name, $account->name);
         $this->assertEquals($balance->exchangeRate->rate, $exchangeRate->rate);
+        $this->assertEquals($balance->reportingPeriod->calendar_year, date("Y"));
         $this->assertEquals(
             $balance->toString(true),
             'Debit Balance: '.$balance->account->toString().' for year '.Carbon::now()->year

@@ -51,6 +51,18 @@ class Assignment extends Model implements Segragatable
     use ModelTablePrefix;
 
     /**
+     * Clearable Account Types
+     *
+     * @var array
+     */
+
+    const CLEARABLES = [
+        Transaction::IN,
+        Transaction::BL,
+        Transaction::JN
+    ];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -134,14 +146,9 @@ class Assignment extends Model implements Segragatable
         }
 
         // Clearable Transactions
-        $clearable = [
-            Transaction::IN,
-            Transaction::BL,
-            Transaction::JN
-        ];
 
-        if (!in_array($clearedType, $clearable)) {
-            throw new UnclearableTransaction($clearedType, $clearable);
+        if (!in_array($clearedType, Assignment::CLEARABLES)) {
+            throw new UnclearableTransaction($clearedType, Assignment::CLEARABLES);
         }
 
         if ($this->amount < 0) {

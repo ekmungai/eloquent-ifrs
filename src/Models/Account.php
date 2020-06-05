@@ -242,12 +242,15 @@ class Account extends Model implements Recyclable, Segragatable
      */
     public function openingBalance(string $year = null) : float
     {
-        if (is_null($year)) {
-            $year = ReportingPeriod::year();
+        if (!is_null($year)) {
+            $period = ReportingPeriod::where('calendar_year', $year)->first();
+        }else{
+            $period = Auth::user()->entity->currentReportingPeriod();
         }
 
         $balance = 0;
-        foreach ($this->balances->where("year", $year) as $record) {
+
+        foreach ($this->balances->where("reporting_period_id", $period->id) as $record) {
             $amount = $record->amount/$record->exchangeRate->rate;
             $record->balance_type == Balance::DEBIT ? $balance += $amount : $balance -= $amount;
         }

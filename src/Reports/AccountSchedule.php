@@ -16,6 +16,7 @@ use IFRS\Models\Account;
 
 use IFRS\Exceptions\MissingAccount;
 use IFRS\Exceptions\InvalidAccountType;
+use IFRS\Models\Assignment;
 
 class AccountSchedule extends AccountStatement
 {
@@ -93,17 +94,16 @@ class AccountSchedule extends AccountStatement
     public function getTransactions() : void
     {
         // Opening Balances
-        foreach ($this->account->balances->where("year", ReportingPeriod::year($this->period['endDate'])) as $balance) {
+        foreach ($this->account->balances->where(
+            "reporting_period_id", ReportingPeriod::getPeriod($this->period['endDate'])->id
+            ) as $balance) {
             $this->getAmounts($balance, _("Opening Balance"));
         }
 
         // Clearable Transactions
         $transactions = $this->buildQuery()->whereIn(
-            'transaction_type', [
-            Transaction::IN,
-            Transaction::BL,
-            Transaction::JN
-            ]
+            'transaction_type',
+            Assignment::CLEARABLES
         )->select(config('ifrs.table_prefix').'transactions.id');
 
         foreach ($transactions->get() as $transaction) {
@@ -111,7 +111,7 @@ class AccountSchedule extends AccountStatement
 
             if ($transaction->transaction_type == Transaction::JN
                 and (($this->account->account_type == Account::RECEIVABLE and $transaction->credited)
-                or ($this->account->account_type == Account::PAYABLE and !$transaction->credited)                )
+                or ($this->account->account_type == Account::PAYABLE and !$transaction->credited))
             ) {
                 continue;
             }

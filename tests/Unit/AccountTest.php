@@ -15,6 +15,7 @@ use IFRS\Models\RecycledObject;
 use IFRS\Models\Balance;
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\Ledger;
+use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Vat;
 use IFRS\Models\LineItem;
 
@@ -207,7 +208,7 @@ class AccountTest extends TestCase
                 "rate" => 1,
                 ]
             )->id,
-            "year" => date("Y"),
+            'reporting_period_id' => $this->period->id,
             "amount" => 50
             ]
         );
@@ -220,13 +221,13 @@ class AccountTest extends TestCase
                 [
                 "rate" => 1,
                 ]
-            )->id,
-            "year" => date("Y"),
+                )->id,
+                'reporting_period_id' => $this->period->id,
             "amount" => 40
             ]
         );
 
-        $this->assertEquals($account->openingBalance(date("Y")), 70);
+        $this->assertEquals($account->openingBalance(), 70);
 
         $account = new Account(
             [
@@ -243,12 +244,15 @@ class AccountTest extends TestCase
             ]
         );
 
+        $reportingPeriod = factory(ReportingPeriod::class)->create([
+            "calendar_year" => Carbon::now()->addYear()->year,
+        ]);
         factory(Balance::class, 3)->create(
             [
             "account_id" => $account->id,
             "balance_type" => Balance::DEBIT,
             "exchange_rate_id" => $rate->id,
-            "year" => Carbon::now()->addYear()->year,
+            'reporting_period_id' => $reportingPeriod->id,
             "amount" => 100
             ]
         );
@@ -258,12 +262,11 @@ class AccountTest extends TestCase
             "account_id" => $account->id,
             "balance_type" => Balance::CREDIT,
             "exchange_rate_id" => $rate->id,
-            "year" => Carbon::now()->addYear()->year,
+            'reporting_period_id' => $reportingPeriod->id,
             "amount" => 80
             ]
         );
 
-        $account->openingBalance(Carbon::now()->addYear()->year);
         $this->assertEquals(5.60, $account->openingBalance(Carbon::now()->addYear()->year));
     }
 
@@ -312,7 +315,7 @@ class AccountTest extends TestCase
                 "rate" => 1,
                 ]
             )->id,
-            "year" => Carbon::now()->year,
+            'reporting_period_id' => $this->period->id,
             "amount" => 100
             ]
         );
@@ -375,7 +378,6 @@ class AccountTest extends TestCase
 
         factory(Balance::class, 3)->create(
             [
-            "year" => date("Y"),
             "account_id" => $account1->id,
             "balance_type" => Balance::DEBIT,
             "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
@@ -383,13 +385,14 @@ class AccountTest extends TestCase
                 "rate" => 1
                 ]
             )->id,
+            'reporting_period_id' => $this->period->id,
             "amount" => 50
             ]
         );
 
         factory(Balance::class, 2)->create(
             [
-            "year" => date("Y"),
+
             "account_id" => $account1->id,
             "balance_type" => Balance::CREDIT,
             "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
@@ -397,6 +400,7 @@ class AccountTest extends TestCase
                 "rate" => 1
                 ]
             )->id,
+            'reporting_period_id' => $this->period->id,
             "amount" => 40
             ]
         );
@@ -505,7 +509,7 @@ class AccountTest extends TestCase
                 "rate" => 1,
                 ]
             )->id,
-            "year" => Carbon::now()->year,
+            'reporting_period_id' => $this->period->id,
             "amount" => 100
             ]
         );

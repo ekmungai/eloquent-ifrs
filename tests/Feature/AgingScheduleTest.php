@@ -45,8 +45,8 @@ class AgingScheduleTest extends TestCase
                         "rate" => 1,
                     ]
             )->id,
-                "year" => date("Y"),
-                "amount" => 25
+            "amount" => 25,
+            'reporting_period_id' => $this->period->id,
             ]
         );
 

@@ -41,13 +41,14 @@ class EntityTest extends TestCase
 
         $this->be($user);
 
-        $period = factory(ReportingPeriod::class)->create();
-        $period->entity_id = $entity->id;
-        $period->save();
+        $period = factory(ReportingPeriod::class)->create([
+            'entity_id' => $entity->id,
+            'calendar_year' => date("Y")
+        ]);
 
         $this->assertEquals($user->entity->name, $entity->name);
         $this->assertEquals($entity->currency->name, $currency->name);
-        $this->assertEquals($entity->reportingPeriods[0]->calendar_year, $period->calendar_year);
+        $this->assertEquals($entity->currentReportingPeriod()->calendar_year, $period->calendar_year);
         $this->assertEquals($entity->toString(true), 'Entity: '.$entity->name);
         $this->assertEquals($entity->toString(), $entity->name);
     }

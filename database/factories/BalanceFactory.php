@@ -15,7 +15,7 @@ $factory->define(Balance::class, function (Faker $faker) {
         'account_id' => factory('IFRS\Models\Account')->create([
             'account_type' => Account::INVENTORY,
         ])->id,
-        'year' => $faker->year(),
+        'reporting_period_id' => factory('IFRS\Models\ReportingPeriod')->create()->id,
         'transaction_date' => Carbon::now()->subYears(1.5),
         'transaction_no' => $faker->word,
         'transaction_type' => $faker->randomElement([
