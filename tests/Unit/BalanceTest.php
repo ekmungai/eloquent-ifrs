@@ -29,7 +29,9 @@ class AccountBalanceTest extends TestCase
      */
     public function testBalanceRelationships()
     {
-        $currency = factory(Currency::class)->create();
+        $currency = factory(Currency::class)->create([
+            'currency_code' => 'KES'
+        ]);
 
         $account = factory(Account::class)->create(
             [
@@ -44,7 +46,6 @@ class AccountBalanceTest extends TestCase
             'exchange_rate_id' => $exchangeRate->id,
             'currency_id' => $currency->id,
             'account_id' => $account->id,
-            'transaction_no' => $this->faker->word,
             'transaction_type' => Transaction::JN,
             'transaction_date' => Carbon::now()->subYears(1.5),
             'reference' => $this->faker->word,
@@ -58,6 +59,7 @@ class AccountBalanceTest extends TestCase
         $this->assertEquals($balance->account->name, $account->name);
         $this->assertEquals($balance->exchangeRate->rate, $exchangeRate->rate);
         $this->assertEquals($balance->reportingPeriod->calendar_year, date("Y"));
+        $this->assertEquals($balance->transaction_no, $account->id.'KES'.date("Y"));
         $this->assertEquals(
             $balance->toString(true),
             'Debit Balance: '.$balance->account->toString().' for year '.Carbon::now()->year

@@ -98,12 +98,15 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
         $entity = Auth::user()->entity;
 
         if (!is_null($entity)) {
+
+            $reportingPeriod = $entity->currentReportingPeriod();
+
             if (!isset($attributes['currency_id'])) {
                 $attributes['currency_id'] = $entity->currency_id;
             }
 
             if (!isset($attributes['reporting_period_id'])) {
-                $attributes['reporting_period_id'] = $entity->currentReportingPeriod()->id;
+                $attributes['reporting_period_id'] = $reportingPeriod->id;
             }
 
             if (!isset($attributes['exchange_rate_id'])) {
@@ -116,6 +119,11 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
 
             if (!isset($attributes['balance_type'])) {
                 $attributes['balance_type'] = Balance::DEBIT;
+            }
+
+            if (!isset($attributes['transaction_no'])) {
+                $currency = Currency::find($attributes['currency_id'])->currency_code;
+                $attributes['transaction_no'] = $attributes['account_id'].$currency.$reportingPeriod->calendar_year;
             }
         }
 
