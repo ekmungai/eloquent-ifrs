@@ -43,6 +43,21 @@ class IncomeStatement extends FinancialStatement
     ];
 
     /**
+     * Get Income Statement Account Types.
+     *
+     * @return array
+     */
+    public static function getAccountTypes()
+    {
+        return array_merge(
+            array_keys(config('ifrs')[IncomeStatement::OPERATING_REVENUES]),
+            array_keys(config('ifrs')[IncomeStatement::NON_OPERATING_REVENUES]),
+            array_keys(config('ifrs')[IncomeStatement::OPERATING_EXPENSES]),
+            array_keys(config('ifrs')[IncomeStatement::NON_OPERATING_EXPENSES])
+            );
+    }
+
+    /**
      * Construct Income Statement for the given period.
      *
      * @param string $startDate

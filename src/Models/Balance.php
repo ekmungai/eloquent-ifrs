@@ -97,34 +97,31 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
     {
         $entity = Auth::user()->entity;
 
-        if (!is_null($entity)) {
+        $reportingPeriod = $entity->currentReportingPeriod();
 
-            $reportingPeriod = $entity->currentReportingPeriod();
+        if (!isset($attributes['currency_id'])) {
+            $attributes['currency_id'] = $entity->currency_id;
+        }
 
-            if (!isset($attributes['currency_id'])) {
-                $attributes['currency_id'] = $entity->currency_id;
-            }
+        if (!isset($attributes['reporting_period_id'])) {
+            $attributes['reporting_period_id'] = $reportingPeriod->id;
+        }
 
-            if (!isset($attributes['reporting_period_id'])) {
-                $attributes['reporting_period_id'] = $reportingPeriod->id;
-            }
+        if (!isset($attributes['exchange_rate_id'])) {
+            $attributes['exchange_rate_id'] = $entity->defaultRate()->id;
+        }
 
-            if (!isset($attributes['exchange_rate_id'])) {
-                $attributes['exchange_rate_id'] = $entity->defaultRate()->id;
-            }
+        if (!isset($attributes['transaction_type'])) {
+            $attributes['transaction_type'] = Transaction::JN;
+        }
 
-            if (!isset($attributes['transaction_type'])) {
-                $attributes['transaction_type'] = Transaction::JN;
-            }
+        if (!isset($attributes['balance_type'])) {
+            $attributes['balance_type'] = Balance::DEBIT;
+        }
 
-            if (!isset($attributes['balance_type'])) {
-                $attributes['balance_type'] = Balance::DEBIT;
-            }
-
-            if (!isset($attributes['transaction_no'])) {
-                $currency = Currency::find($attributes['currency_id'])->currency_code;
-                $attributes['transaction_no'] = $attributes['account_id'].$currency.$reportingPeriod->calendar_year;
-            }
+        if (!isset($attributes['transaction_no']) && isset($attributes['currency_id']) && isset($attributes['account_id'])) {
+            $currency = Currency::find($attributes['currency_id'])->currency_code;
+            $attributes['transaction_no'] = $attributes['account_id'].$currency.$reportingPeriod->calendar_year;
         }
 
         return parent::__construct($attributes);
@@ -264,13 +261,6 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
     public function save(array $options = []) : bool
     {
 
-        $accountTypes = array_merge(
-            array_keys(config('ifrs')[IncomeStatement::OPERATING_REVENUES]),
-            array_keys(config('ifrs')[IncomeStatement::NON_OPERATING_REVENUES]),
-            array_keys(config('ifrs')[IncomeStatement::OPERATING_EXPENSES]),
-            array_keys(config('ifrs')[IncomeStatement::NON_OPERATING_EXPENSES])
-        );
-
         if ($this->amount < 0) {
             throw new NegativeAmount("Balance");
         }
@@ -283,7 +273,7 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
             throw new InvalidBalanceType([Balance::DEBIT, Balance::CREDIT]);
         }
 
-        if (in_array($this->account->account_type, $accountTypes)) {
+        if (in_array($this->account->account_type, IncomeStatement::getAccountTypes())) {
             throw new InvalidAccountClassBalance();
         }
 

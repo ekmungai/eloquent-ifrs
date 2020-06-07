@@ -23,7 +23,7 @@ class InvalidBalanceDate extends IFRSException
     */
     public function __construct(string $message = null, int $code = null)
     {
-        $error = "Opening Balance Transaction date must be earlier than the first day of the Balance Reporting Period ";
+        $error = "Transaction date must be earlier than the first day of the Balance's Reporting Period ";
 
         Log::notice(
             $error.$message,

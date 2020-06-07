@@ -70,14 +70,7 @@ class TrialBalance extends FinancialStatement
      */
     private function getIncomeStatementSections(Account $account, $balance) : void
     {
-        $isAccounts = array_merge(
-            array_keys(config('ifrs')[IncomeStatement::OPERATING_REVENUES]),
-            array_keys(config('ifrs')[IncomeStatement::NON_OPERATING_REVENUES]),
-            array_keys(config('ifrs')[IncomeStatement::OPERATING_EXPENSES]),
-            array_keys(config('ifrs')[IncomeStatement::NON_OPERATING_EXPENSES])
-        );
-
-        if (in_array($account->account_type, $isAccounts)) {
+        if (in_array($account->account_type, IncomeStatement::getAccountTypes())) {
             if (array_key_exists($account->account_type, $this->accounts[IncomeStatement::TITLE])) {
                 $this->accounts[IncomeStatement::TITLE][$account->account_type]['accounts']->push($account->attributes());
                 $this->accounts[IncomeStatement::TITLE][$account->account_type]['balance'] += abs($balance);
@@ -96,14 +89,8 @@ class TrialBalance extends FinancialStatement
      */
     private function getBalanceSheetSections(Account $account, $balance) : void
     {
-        $bsAccounts = array_merge(
-            array_keys(config('ifrs')[BalanceSheet::ASSETS]),
-            array_keys(config('ifrs')[BalanceSheet::LIABILITIES]),
-            array_keys(config('ifrs')[BalanceSheet::EQUITY]),
-            array_keys(config('ifrs')[BalanceSheet::RECONCILIATION])
-        );
 
-        if (in_array($account->account_type, $bsAccounts)) {
+        if (in_array($account->account_type, BalanceSheet::getAccountTypes())) {
             if (array_key_exists($account->account_type, $this->accounts[BalanceSheet::TITLE])) {
                 $this->accounts[BalanceSheet::TITLE][$account->account_type]['accounts']->push($account->attributes());
                 $this->accounts[BalanceSheet::TITLE][$account->account_type]['balance'] += abs($balance);

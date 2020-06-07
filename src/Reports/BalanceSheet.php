@@ -40,6 +40,20 @@ class BalanceSheet extends FinancialStatement
         "endDate" => null
     ];
 
+    /**
+     * Get Balance Sheet Account Types.
+     *
+     * @return array
+     */
+    public static function getAccountTypes()
+    {
+        return array_merge(
+            array_keys(config('ifrs')[BalanceSheet::ASSETS]),
+            array_keys(config('ifrs')[BalanceSheet::LIABILITIES]),
+            array_keys(config('ifrs')[BalanceSheet::EQUITY]),
+            array_keys(config('ifrs')[BalanceSheet::RECONCILIATION])
+            );
+    }
 
     /**
      * Construct Balance Sheet as at the given end date
