@@ -25,8 +25,9 @@ use IFRS\Traits\ModelTablePrefix;
 
 use IFRS\Exceptions\InvalidAccountClassBalance;
 use IFRS\Exceptions\InvalidBalanceTransaction;
-use IFRS\Exceptions\InvalidBalance;
 use IFRS\Exceptions\NegativeAmount;
+use IFRS\Exceptions\InvalidBalanceType;
+use IFRS\Exceptions\InvalidBalanceDate;
 
 /**
  * Class Balance
@@ -96,24 +97,26 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
     {
         $entity = Auth::user()->entity;
 
-        if (!isset($attributes['currency_id'])) {
-            $attributes['currency_id'] = $entity->currency_id;
-        }
+        if (!is_null($entity)) {
+            if (!isset($attributes['currency_id'])) {
+                $attributes['currency_id'] = $entity->currency_id;
+            }
 
-        if (!isset($attributes['reporting_period_id'])) {
-            $attributes['reporting_period_id'] = $entity->currentReportingPeriod()->id;
-        }
+            if (!isset($attributes['reporting_period_id'])) {
+                $attributes['reporting_period_id'] = $entity->currentReportingPeriod()->id;
+            }
 
-        if (!isset($attributes['exchange_rate_id'])) {
-            $attributes['exchange_rate_id'] = $entity->defaultRate()->id;
-        }
+            if (!isset($attributes['exchange_rate_id'])) {
+                $attributes['exchange_rate_id'] = $entity->defaultRate()->id;
+            }
 
-        if (!isset($attributes['transaction_type'])) {
-            $attributes['transaction_type'] = Transaction::JN;
-        }
+            if (!isset($attributes['transaction_type'])) {
+                $attributes['transaction_type'] = Transaction::JN;
+            }
 
-        if (!isset($attributes['balance_type'])) {
-            $attributes['balance_type'] = Balance::DEBIT;
+            if (!isset($attributes['balance_type'])) {
+                $attributes['balance_type'] = Balance::DEBIT;
+            }
         }
 
         return parent::__construct($attributes);
@@ -269,11 +272,15 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
         }
 
         if (!in_array($this->balance_type, [Balance::DEBIT, Balance::CREDIT])) {
-            throw new InvalidBalance([Balance::DEBIT, Balance::CREDIT]);
+            throw new InvalidBalanceType([Balance::DEBIT, Balance::CREDIT]);
         }
 
         if (in_array($this->account->account_type, $accountTypes)) {
             throw new InvalidAccountClassBalance();
+        }
+
+        if (ReportingPeriod::periodStart()->lt($this->transaction_date)) {
+            throw new InvalidBalanceDate();
         }
 
         return parent::save();

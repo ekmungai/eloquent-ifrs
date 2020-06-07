@@ -13,23 +13,23 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
-use IFRS\Models\Transaction;
+use IFRS\Models\Balance;
 
-class InvalidBalanceTransaction extends IFRSException
+class InvalidBalanceType extends IFRSException
 {
 
     /**
-     * Invalid Balance Transaction Exception
+     * Invalid Balance Type Exception
      *
-     * @param array  $transactionTypes
+     * @param array  $balanceTypes
      * @param string $message
      * @param int    $code
      */
-    public function __construct(array $transactionTypes, string $message = null, int $code = null)
+    public function __construct(array $balanceTypes, string $message = null, int $code = null)
     {
-        $transactionTypes = Transaction::getTypes($transactionTypes);
+        $balanceTypes = Balance::getTypes($balanceTypes);
 
-        $error = "Opening Balance Transaction must be one of: ".implode(", ", $transactionTypes);
+        $error = "Opening Balance Type must be one of: ".implode(", ", $balanceTypes);
 
         Log::notice(
             $error.$message,
@@ -38,7 +38,6 @@ class InvalidBalanceTransaction extends IFRSException
                 'time' => Carbon::now(),
             ]
         );
-
         parent::__construct($error.' '.$message, $code);
     }
 }

@@ -9,27 +9,21 @@
 namespace IFRS\Exceptions;
 
 use Carbon\Carbon;
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
-use IFRS\Models\Balance;
-
-class InvalidBalance extends IFRSException
+class InvalidBalanceDate extends IFRSException
 {
 
     /**
-     * Invalid Balance Exception
-     *
-     * @param array  $balanceTypes
-     * @param string $message
-     * @param int    $code
-     */
-    public function __construct(array $balanceTypes, string $message = null, int $code = null)
+    * Invalid Balance Date Exception
+    *
+    * @param string $message
+    * @param int    $code
+    */
+    public function __construct(string $message = null, int $code = null)
     {
-        $balanceTypes = Balance::getTypes($balanceTypes);
-
-        $error = "Opening Balance Type must be one of: ".implode(", ", $balanceTypes);
+        $error = "Opening Balance Transaction date must be earlier than the first day of the Balance Reporting Period ";
 
         Log::notice(
             $error.$message,
@@ -37,7 +31,9 @@ class InvalidBalance extends IFRSException
                 'user_id' => Auth::user()->id,
                 'time' => Carbon::now(),
             ]
-        );
+            );
+
         parent::__construct($error.' '.$message, $code);
     }
 }
+

@@ -113,6 +113,10 @@ class Entity extends Model implements Recyclable
             ]
             )->first();
 
+            if (!is_null($existing)) {
+                return $existing;
+            }
+
             $new = new ExchangeRate(
                 [
                     'valid_from' => Carbon::now(),
@@ -122,7 +126,7 @@ class Entity extends Model implements Recyclable
 
             $new->save();
 
-            return !is_null($existing)? $existing : $new;
+            return $new;
     }
 
 
@@ -135,15 +139,19 @@ class Entity extends Model implements Recyclable
     {
         $existing = $this->reportingPeriods->where('calendar_year', date("Y"))->first();
 
+        if (!is_null($existing)) {
+            return $existing;
+        }
+
         $new = new ReportingPeriod(
             [
                 'calendar_year' => date('Y'),
-                'period_count' => count(ReportingPeriod::withTrashed()->get()),
+                'period_count' => count(ReportingPeriod::withTrashed()->get()) +1,
             ]
             );
 
         $new->save();
 
-        return !is_null($existing)? $existing : $new;
+        return $new;
     }
 }

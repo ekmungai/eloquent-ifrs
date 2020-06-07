@@ -16,8 +16,9 @@ use IFRS\Models\Transaction;
 
 use IFRS\Exceptions\InvalidBalanceTransaction;
 use IFRS\Exceptions\InvalidAccountClassBalance;
-use IFRS\Exceptions\InvalidBalance;
 use IFRS\Exceptions\NegativeAmount;
+use IFRS\Exceptions\InvalidBalanceType;
+use IFRS\Exceptions\InvalidBalanceDate;
 
 class AccountBalanceTest extends TestCase
 {
@@ -151,9 +152,9 @@ class AccountBalanceTest extends TestCase
      *
      * @return void
      */
-    public function testInvalidBalance()
+    public function testInvalidBalanceType()
     {
-        $this->expectException(InvalidBalance::class);
+        $this->expectException(InvalidBalanceType::class);
         $this->expectExceptionMessage('Opening Balance Type must be one of: Debit, Credit');
 
         factory(Balance::class)->create(
@@ -178,5 +179,22 @@ class AccountBalanceTest extends TestCase
             "amount" => -100
             ]
         );
+    }
+
+    /**
+     * Test Invalid Balance Date.
+     *
+     * @return void
+     */
+    public function testInvalidBalanceDate()
+    {
+        $this->expectException(InvalidBalanceDate::class);
+        $this->expectExceptionMessage('Opening Balance Transaction date must be earlier than the first day of the Balance Reporting Period');
+
+        factory(Balance::class)->create(
+            [
+                "transaction_date" => Carbon::now()
+            ]
+            );
     }
 }

@@ -11,8 +11,8 @@ $factory->define(
     ReportingPeriod::class,
     function (Faker $faker) {
         return [
-        'period_count' => $faker->randomDigit,
-        'calendar_year' => $faker->year,
+            'period_count' => $faker->randomDigit,
+            'calendar_year' => $faker->unique()->year,
             'status' => ReportingPeriod::OPEN,
         ];
     }
