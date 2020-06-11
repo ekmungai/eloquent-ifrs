@@ -191,12 +191,12 @@ class AccountBalanceTest extends TestCase
     public function testInvalidBalanceDate()
     {
         $this->expectException(InvalidBalanceDate::class);
-        $this->expectExceptionMessage('Opening Balance Transaction date must be earlier than the first day of the Balance Reporting Period');
+        $this->expectExceptionMessage('Transaction date must be earlier than the first day of the Balance\'s Reporting Period ');
 
         factory(Balance::class)->create(
             [
                 "transaction_date" => Carbon::now()
             ]
-            );
+        );
     }
 }
