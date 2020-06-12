@@ -516,7 +516,7 @@ class AccountTest extends TestCase
 
         $this->expectException(HangingTransactions::class);
         $this->expectExceptionMessage(
-            'Account cannot be deleted because it has existing transactions in the current Reporting Period'
+            'Account cannot be deleted because it has existing Transactions/Balances in the current Reporting Period'
         );
 
         $account->delete();
