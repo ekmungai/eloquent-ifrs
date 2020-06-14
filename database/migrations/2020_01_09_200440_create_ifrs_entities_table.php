@@ -30,6 +30,7 @@ class CreateIfrsEntitiesTable extends Migration
                 // attributes
                 $table->string('name', 300);
                 $table->boolean('multi_currency')->default(false);
+                $table->boolean('mid_year_balances')->default(false);
                 $table->integer('year_start')->default(1);
 
                 // *permanent* deletion

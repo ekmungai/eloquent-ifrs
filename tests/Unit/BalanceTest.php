@@ -19,6 +19,7 @@ use IFRS\Exceptions\InvalidAccountClassBalance;
 use IFRS\Exceptions\NegativeAmount;
 use IFRS\Exceptions\InvalidBalanceType;
 use IFRS\Exceptions\InvalidBalanceDate;
+use IFRS\Models\Entity;
 
 class AccountBalanceTest extends TestCase
 {
@@ -189,14 +190,26 @@ class AccountBalanceTest extends TestCase
      * @return void
      */
     public function testInvalidBalanceDate()
-    {
+    {   
+        $entity = factory(Entity::class)->create(
+            [
+                "mid_year_balances" => true
+            ]
+        );
+
+        //no exception
+        $balance = factory(Balance::class)->create(
+            [
+                "transaction_date" => Carbon::now(),
+                "entity_id" => $entity->id
+            ]
+        );
+
+        $entity->mid_year_balances = false;
+        $entity->save();
         $this->expectException(InvalidBalanceDate::class);
         $this->expectExceptionMessage('Transaction date must be earlier than the first day of the Balance\'s Reporting Period ');
 
-        factory(Balance::class)->create(
-            [
-                "transaction_date" => Carbon::now()
-            ]
-        );
+        $balance->save();
     }
 }

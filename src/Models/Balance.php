@@ -208,9 +208,9 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
     /**
      * getAmount analog for Assignment model.
      *
-     * @return string
+     * @return float
      */
-    public function getAmount() : string
+    public function getAmount() : float
     {
         return $this->amount;
     }
@@ -286,8 +286,7 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
         if (in_array($this->account->account_type, IncomeStatement::getAccountTypes())) {
             throw new InvalidAccountClassBalance();
         }
-
-        if (ReportingPeriod::periodStart()->lt($this->transaction_date)) {
+        if (ReportingPeriod::periodStart()->lt($this->transaction_date) && !Entity::find($this->entity_id)->mid_year_balances) {
             throw new InvalidBalanceDate();
         }
 
