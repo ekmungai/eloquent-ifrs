@@ -145,7 +145,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
             function ($item, $key) use ($id) {
                 return $item->id == $id;
             }
-            );
+        );
     }
 
     /**
@@ -159,6 +159,30 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
 
             $this->saveLineItems();
         }
+    }
+
+    /**
+     * Get Transaction Class
+     *
+     * @param string $type
+     *
+     * @return string
+     */
+    public static function getClass($type) : string
+    {
+        $classmap = [
+            'CS' => 'CashSale',
+            'IN' => 'ClientInvoice',
+            'CN' => 'CreditNote',
+            'RC' => 'ClientReceipt',
+            'CP' => 'CashPurchase',
+            'BL' => 'SupplierBill',
+            'DN' => 'DebitNote',
+            'PY' => 'SupplierPayment',
+            'CE' => 'ContraEntry',
+            'JN' => 'JournalEntry',
+        ];
+        return $classmap[$type];
     }
 
     /**

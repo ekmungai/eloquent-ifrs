@@ -148,6 +148,17 @@ class TransactionTest extends TestCase
     }
 
     /**
+     * Test Transaction Classmap
+     *
+     * @return void
+     */
+    public function testTransactionClassmap()
+    {
+        $this->assertEquals(Transaction::getClass('CS'), 'CashSale');
+        $this->assertEquals(Transaction::getClass('IN'), 'ClientInvoice');
+    }
+
+    /**
      * Test Transaction Numbers
      *
      * @return void
