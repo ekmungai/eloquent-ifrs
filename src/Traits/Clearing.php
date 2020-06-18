@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,7 +7,10 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Traits;
+
+use IFRS\Models\Assignment;
 
 /**
  *
@@ -34,6 +38,6 @@ trait Clearing
      */
     public function clearances()
     {
-        return $this->morphMany('IFRS\Models\Assignment', 'cleared');
+        return $this->morphMany(Assignment::class, 'cleared');
     }
 }

@@ -12,8 +12,8 @@ $factory->define(
     Currency::class,
     function (Faker $faker) {
         return [
-        'name' => $faker->name,
-        'currency_code' => $faker->currencyCode,
+            'name' => $faker->name,
+            'currency_code' => $faker->currencyCode,
         ];
     }
 );

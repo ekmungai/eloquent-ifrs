@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Reports;
 
 use Carbon\Carbon;
@@ -83,26 +85,27 @@ class AccountStatement
         $transactionModel = new Transaction;
         $ledgerModel = new Ledger();
         $query = DB::table(
-            $transactionModel->getTable())
-            ->leftJoin($ledgerModel->getTable(), $transactionModel->getTable().'.id', '=', $ledgerModel->getTable().'.transaction_id')
-            ->where($transactionModel->getTable().'.deleted_at', null)
-            ->where($transactionModel->getTable().'.entity_id', $this->entity->id)
-            ->where($transactionModel->getTable().'.transaction_date', ">=", $this->period['startDate'])
-            ->where($transactionModel->getTable().'.transaction_date', "<=", $this->period['endDate'])
-            ->where($transactionModel->getTable().'.currency_id', $this->currency->id)
+            $transactionModel->getTable()
+        )
+            ->leftJoin($ledgerModel->getTable(), $transactionModel->getTable() . '.id', '=', $ledgerModel->getTable() . '.transaction_id')
+            ->where($transactionModel->getTable() . '.deleted_at', null)
+            ->where($transactionModel->getTable() . '.entity_id', $this->entity->id)
+            ->where($transactionModel->getTable() . '.transaction_date', ">=", $this->period['startDate'])
+            ->where($transactionModel->getTable() . '.transaction_date', "<=", $this->period['endDate'])
+            ->where($transactionModel->getTable() . '.currency_id', $this->currency->id)
             ->select(
-                $transactionModel->getTable().'.id',
-                $transactionModel->getTable().'.transaction_date',
-                $transactionModel->getTable().'.transaction_no',
-                $transactionModel->getTable().'.reference',
-                $transactionModel->getTable().'.transaction_type',
-                $transactionModel->getTable().'.narration'
+                $transactionModel->getTable() . '.id',
+                $transactionModel->getTable() . '.transaction_date',
+                $transactionModel->getTable() . '.transaction_no',
+                $transactionModel->getTable() . '.reference',
+                $transactionModel->getTable() . '.transaction_type',
+                $transactionModel->getTable() . '.narration'
             )->distinct();
 
         $query->where(
             function ($query) use ($ledgerModel) {
-                $query->where($ledgerModel->getTable().'.post_account', $this->account->id)
-                ->orwhere($ledgerModel->getTable().'.folio_account', $this->account->id);
+                $query->where($ledgerModel->getTable() . '.post_account', $this->account->id)
+                    ->orwhere($ledgerModel->getTable() . '.folio_account', $this->account->id);
             }
         );
 
@@ -148,18 +151,18 @@ class AccountStatement
 
         $this->entity = Auth::user()->entity;
 
-        $this->period['startDate'] = is_null($startDate)? ReportingPeriod::periodStart(): Carbon::parse($startDate);
-        $this->period['endDate'] = is_null($endDate)? Carbon::now(): Carbon::parse($endDate);
-        $this->currency = is_null($currencyId)? $this->entity->currency: Currency::find($currencyId);
+        $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart() : Carbon::parse($startDate);
+        $this->period['endDate'] = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
+        $this->currency = is_null($currencyId) ? $this->entity->currency : Currency::find($currencyId);
     }
 
     /**
      * Get Account Statement Transactions.
      */
-    public function getTransactions() : void
+    public function getTransactions(): void
     {
         $query = $this->buildQuery();
-        $this->balances['opening'] = $this->account->openingBalance((string)ReportingPeriod::year($this->period['startDate']));
+        $this->balances['opening'] = $this->account->openingBalance(ReportingPeriod::year($this->period['startDate']));
         $this->balances['closing'] += $this->balances['opening'];
 
         $balance = $this->balances['opening'];

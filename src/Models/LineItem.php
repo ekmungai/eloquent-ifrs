@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -18,7 +20,6 @@ use IFRS\Traits\Segragating;
 use IFRS\Traits\Recycling;
 use IFRS\Traits\ModelTablePrefix;
 
-use IFRS\Exceptions\MissingVatAccount;
 use IFRS\Exceptions\NegativeAmount;
 use IFRS\Exceptions\PostedTransaction;
 
@@ -31,7 +32,6 @@ use IFRS\Exceptions\PostedTransaction;
  * @property Transaction $transaction
  * @property Vat $vat
  * @property Account $account
- * @property Account $vatAccount
  * @property Carbon $date
  * @property int $quantity
  * @property float $amount
@@ -56,7 +56,7 @@ class LineItem extends Model implements Recyclable, Segragatable
         'amount',
         'quantity',
         'description',
-        'vat_account_id',
+        'transaction_id',
     ];
 
     /**
@@ -66,8 +66,9 @@ class LineItem extends Model implements Recyclable, Segragatable
      */
     public function toString($type = false)
     {
-        $description = $this->account->toString().' for '.$this->amount * $this->quantity;
-        return $type? 'Line Item: '.$description : $description;
+        $classname = explode('\\', self::class);
+        $description = $this->account->toString() . ' for ' . $this->amount * $this->quantity;
+        return $type ? array_pop($classname) . ': ' . $description : $description;
     }
 
     /**
@@ -77,7 +78,7 @@ class LineItem extends Model implements Recyclable, Segragatable
      */
     public function ledgers()
     {
-        return $this->HasMany('IFRS\Models\Ledger', 'line_item_id', 'id');
+        return $this->HasMany(Ledger::class, 'line_item_id', 'id');
     }
 
     /**
@@ -111,16 +112,6 @@ class LineItem extends Model implements Recyclable, Segragatable
     }
 
     /**
-     * LineItem Vat Account.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function vatAccount()
-    {
-        return $this->HasOne('IFRS\Models\Account', 'id', 'vat_account_id');
-    }
-
-    /**
      * LineItem attributes.
      *
      * @return object
@@ -135,15 +126,12 @@ class LineItem extends Model implements Recyclable, Segragatable
      */
     public function save(array $options = []): bool
     {
-        if ($this->vat->rate > 0 and is_null($this->vat_account_id)) {
-            throw new MissingVatAccount($this->vat->name);
-        }
 
         if ($this->amount < 0) {
             throw new NegativeAmount("LineItem");
         }
 
-        if (!is_null($this->transaction) and count($this->transaction->ledgers) > 0 and $this->isDirty()) {
+        if (!is_null($this->transaction) && count($this->transaction->ledgers) > 0 and $this->isDirty()) {
             throw new PostedTransaction("change a LineItem of");
         }
 

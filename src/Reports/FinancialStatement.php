@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Reports;
 
 use Illuminate\Support\Facades\Auth;
@@ -69,16 +71,16 @@ abstract class FinancialStatement
         $statements = config('ifrs')['statements'];
 
         // Add Income Statement as Account Type for Balance Sheet
-        $incomeStatement = [IncomeStatement::TITLE =>config('ifrs')['statements'][IncomeStatement::TITLE]];
-        $accounts = array_merge(config('ifrs')['accounts'], $incomeStatement);
+        $incomeStatement = [IncomeStatement::TITLE => config('ifrs')['statements'][IncomeStatement::TITLE]];
+        $account_names = array_merge(config('ifrs')['accounts'], $incomeStatement);
 
-        $statement .=PHP_EOL;
-        $statement .= $statements[$section].PHP_EOL;
+        $statement .= PHP_EOL;
+        $statement .= $statements[$section] . PHP_EOL;
 
         $total = 0;
         foreach (array_keys($this->balances[$section]) as $name) {
-            $statement .= $indent.$accounts[$name].$indent;
-            $statement .= $indent.($this->balances[$section][$name] * $multiplier).PHP_EOL;
+            $statement .= $indent . $account_names[$name] . $indent;
+            $statement .= $indent . ($this->balances[$section][$name] * $multiplier) . PHP_EOL;
             $total += $this->balances[$section][$name] * $multiplier;
         }
 
@@ -93,7 +95,7 @@ abstract class FinancialStatement
     public function __construct(string $year = null)
     {
         $this->entity = Auth::user()->entity;
-        $this->reportingPeriod = is_null($year)? (string)ReportingPeriod::year():$year;
+        $this->reportingPeriod = is_null($year) ? (string) ReportingPeriod::year() : $year;
     }
 
     /**
@@ -113,20 +115,20 @@ abstract class FinancialStatement
     /**
      * Get Statement Sections.
      */
-    public function getSections() : void
+    public function getSections(): void
     {
         foreach (array_keys($this->accounts) as $section) {
             foreach (array_keys(config('ifrs')[$section]) as $accountType) {
-                $accounts = Account::sectionBalances($accountType);
+                $account_names = Account::sectionBalances($accountType);
 
-                if ($accounts["sectionTotal"] <> 0) {
-                    $this->accounts[$section][$accountType] = $accounts["sectionCategories"];
-                    $this->balances[$section][$accountType] = $accounts["sectionTotal"];
+                if ($account_names["sectionTotal"] <> 0) {
+                    $this->accounts[$section][$accountType] = $account_names["sectionCategories"];
+                    $this->balances[$section][$accountType] = $account_names["sectionTotal"];
 
-                    if ($accounts["sectionTotal"] < 0) {
-                        $this->balances["credit"] += abs($accounts["sectionTotal"]);
+                    if ($account_names["sectionTotal"] < 0) {
+                        $this->balances["credit"] += abs($account_names["sectionTotal"]);
                     } else {
-                        $this->balances["debit"] += abs($accounts["sectionTotal"]);
+                        $this->balances["debit"] += abs($account_names["sectionTotal"]);
                     }
                 }
             }

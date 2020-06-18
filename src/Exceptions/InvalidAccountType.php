@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Exceptions;
 
 use Carbon\Carbon;
@@ -21,23 +23,27 @@ class InvalidAccountType extends IFRSException
     /**
      * Invalid Account Type Exception
      *
-     * @param array  $accountTypes
+     * @param array|string  $accountTypes
      * @param string $message
      * @param int    $code
      */
-    public function __construct(array $accountTypes, string $message = null, int $code = null)
+    public function __construct($accountTypes, string $message = null, int $code = null)
     {
-        $accountTypes = Account::getTypes($accountTypes);
-
-        $error = "Schedule Account Type must be one of: ".implode(", ", $accountTypes);
+        if (is_array($accountTypes)) {
+            $accountTypes = Account::getTypes($accountTypes);
+            $error = "Schedule Account Type must be one of: " . implode(", ", $accountTypes);
+        } else {
+            $accountTypes = Account::getType($accountTypes);
+            $error = "Vat Account must be of Type " . $accountTypes;
+        }
 
         Log::notice(
-            $error.' '.$message,
+            $error . ' ' . $message,
             [
                 'user_id' => Auth::user()->id,
                 'time' => Carbon::now(),
             ]
         );
-        parent::__construct($error.' '.$message, $code);
+        parent::__construct($error . ' ' . $message, $code);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Exceptions;
 
 use Carbon\Carbon;
@@ -31,16 +33,16 @@ class MainAccount extends IFRSException
         $transactionType = Transaction::getType($transactionType);
         $accountType = Account::getType($accountType);
 
-        $error = $transactionType." Main Account must be of type ".$accountType;
+        $error = $transactionType . " Main Account must be of type " . $accountType;
 
         Log::notice(
-            $error.$message,
+            $error . $message,
             [
                 'user_id' => Auth::user()->id,
                 'time' => Carbon::now(),
             ]
         );
 
-        parent::__construct($error.' '.$message, $code);
+        parent::__construct($error . ' ' . $message, $code);
     }
 }

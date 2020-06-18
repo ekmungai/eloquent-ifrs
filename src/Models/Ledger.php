@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Models;
 
 use Carbon\Carbon;
@@ -46,9 +48,7 @@ class Ledger extends Model implements Segragatable
      *
      * @var array
      */
-    protected $fillable = [
-        'entry_type',
-    ];
+    protected $fillable = [];
 
     /**
      * Create VAT Ledger entries for the Transaction LineItem.
@@ -58,9 +58,9 @@ class Ledger extends Model implements Segragatable
      *
      * @return void
      */
-    private static function postVat(LineItem $lineItem, Transaction $transaction) : void
+    private static function postVat(LineItem $lineItem, Transaction $transaction): void
     {
-        $amount = $lineItem->amount * $lineItem->vat->rate/100;
+        $amount = $lineItem->amount * $lineItem->vat->rate / 100;
 
         $post = new Ledger();
         $folio = new Ledger();
@@ -82,7 +82,7 @@ class Ledger extends Model implements Segragatable
 
         // different double entry data
         $post->post_account = $folio->folio_account = $transaction->account_id;
-        $post->folio_account = $folio->post_account = $lineItem->vat_account_id;
+        $post->folio_account = $folio->post_account = $lineItem->vat->account_id;
 
         $post->save();
         $folio->save();
@@ -93,7 +93,7 @@ class Ledger extends Model implements Segragatable
      *
      * @param Transaction $transaction
      */
-    public static function post(Transaction $transaction) : void
+    public static function post(Transaction $transaction): void
     {
         //Remove current ledgers if any prior to creating new ones (prevents bypassing Posted Transaction Exception)
         $transaction->ledgers()->delete();
@@ -158,7 +158,7 @@ class Ledger extends Model implements Segragatable
      */
     public function postAccount()
     {
-        return $this->HasOne('IFRS\Models\Account', 'id', 'post_account');
+        return $this->HasOne(Account::class, 'id', 'post_account');
     }
 
     /**
@@ -168,7 +168,7 @@ class Ledger extends Model implements Segragatable
      */
     public function folioAccount()
     {
-        return $this->HasOne('IFRS\Models\Account', 'id', 'folio_account');
+        return $this->HasOne(Account::class, 'id', 'folio_account');
     }
 
     /**
@@ -178,7 +178,7 @@ class Ledger extends Model implements Segragatable
      */
     public function lineItem()
     {
-        return $this->BelongsTo('IFRS\Models\LineItem', 'line_item_id', 'id');
+        return $this->BelongsTo(LineItem::class, 'line_item_id', 'id');
     }
 
     /**
@@ -196,14 +196,14 @@ class Ledger extends Model implements Segragatable
         $ledger[] = $this->post_account;
         $ledger[] = $this->folio_account;
         $ledger[] = $this->line_item_id;
-        $ledger[] = is_string($this->date)? $this->date : $this->date->format('Y-m-d H:i:s');
+        $ledger[] = is_string($this->date) ? $this->date : $this->date->format('Y-m-d H:i:s');
         $ledger[] = $this->entry_type;
         $ledger[] = $this->amount;
         $ledger[] = $this->created_at;
 
         $previousLedgerId = $this->id - 1;
         $previousLedger = Ledger::find($previousLedgerId);
-        $previousHash = is_null($previousLedger)? env('APP_KEY', 'test application key') : $previousLedger->hash;
+        $previousHash = is_null($previousLedger) ? env('APP_KEY', 'test application key') : $previousLedger->hash;
         $ledger[] = $previousHash;
 
         return utf8_encode(implode($ledger));
@@ -232,19 +232,17 @@ class Ledger extends Model implements Segragatable
      *
      * @return float
      */
-    public static function contribution(Account $account, int $transactionId) : float
+    public static function contribution(Account $account, int $transactionId): float
     {
         $contribution = 0;
 
-        $query = Ledger::where(
-            [
+        $query = Ledger::where([
             "post_account" => $account->id,
             "transaction_id" => $transactionId,
-            ]
-        );
+        ]);
 
         foreach ($query->get() as $record) {
-            $amount = $record->amount/$record->transaction->exchangeRate->rate;
+            $amount = $record->amount / $record->transaction->exchangeRate->rate;
             $record->entry_type == Balance::DEBIT ? $contribution += $amount : $contribution -= $amount;
         }
         return $contribution;
@@ -259,27 +257,21 @@ class Ledger extends Model implements Segragatable
      *
      * @return float
      */
-    public static function balance(Account $account, Carbon $startDate, Carbon $endDate) : float
+    public static function balance(Account $account, Carbon $startDate, Carbon $endDate): float
     {
-        $debits = Ledger::where(
-            [
+        $debits = Ledger::where([
             "post_account" => $account->id,
             "entry_type" => Balance::DEBIT,
-            ]
-        )
-        ->where("date", ">=", $startDate)
-        ->where("date", "<=", $endDate)
-        ->sum('amount');
+        ])->where("date", ">=", $startDate)
+            ->where("date", "<=", $endDate)
+            ->sum('amount');
 
-        $credits = Ledger::where(
-            [
+        $credits = Ledger::where([
             "post_account" => $account->id,
             "entry_type" => Balance::CREDIT,
-            ]
-        )
-        ->where("date", ">=", $startDate)
-        ->where("date", "<=", $endDate)
-        ->sum('amount');
+        ])->where("date", ">=", $startDate)
+            ->where("date", "<=", $endDate)
+            ->sum('amount');
 
         return $debits - $credits;
     }

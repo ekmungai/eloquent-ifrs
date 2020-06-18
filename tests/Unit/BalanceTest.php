@@ -36,7 +36,7 @@ class AccountBalanceTest extends TestCase
 
         $account = factory(Account::class)->create(
             [
-            'account_type' => Account::INVENTORY,
+                'account_type' => Account::INVENTORY,
             ]
         );
 
@@ -44,14 +44,14 @@ class AccountBalanceTest extends TestCase
 
         $balance = new Balance(
             [
-            'exchange_rate_id' => $exchangeRate->id,
-            'currency_id' => $currency->id,
-            'account_id' => $account->id,
-            'transaction_type' => Transaction::JN,
-            'transaction_date' => Carbon::now()->subYears(1.5),
-            'reference' => $this->faker->word,
-            'balance_type' =>  Balance::DEBIT,
-            'amount' => $this->faker->randomFloat(2),
+                'exchange_rate_id' => $exchangeRate->id,
+                'currency_id' => $currency->id,
+                'account_id' => $account->id,
+                'transaction_type' => Transaction::JN,
+                'transaction_date' => Carbon::now()->subYears(1.5),
+                'reference' => $this->faker->word,
+                'balance_type' =>  Balance::DEBIT,
+                'amount' => $this->faker->randomFloat(2),
             ]
         );
         $balance->save();
@@ -60,14 +60,14 @@ class AccountBalanceTest extends TestCase
         $this->assertEquals($balance->account->name, $account->name);
         $this->assertEquals($balance->exchangeRate->rate, $exchangeRate->rate);
         $this->assertEquals($balance->reportingPeriod->calendar_year, date("Y"));
-        $this->assertEquals($balance->transaction_no, $account->id.'KES'.date("Y"));
+        $this->assertEquals($balance->transaction_no, $account->id . 'KES' . date("Y"));
         $this->assertEquals(
             $balance->toString(true),
-            'Debit Balance: '.$balance->account->toString().' for year '.Carbon::now()->year
+            'Debit Balance: ' . $balance->account->toString() . ' for year ' . Carbon::now()->year
         );
         $this->assertEquals(
             $balance->toString(),
-            $balance->account->toString().' for year '.Carbon::now()->year
+            $balance->account->toString() . ' for year ' . Carbon::now()->year
         );
     }
 
@@ -120,15 +120,11 @@ class AccountBalanceTest extends TestCase
         $this->expectException(InvalidAccountClassBalance::class);
         $this->expectExceptionMessage('Income Statement Accounts cannot have Opening Balances');
 
-        factory(Balance::class)->create(
-            [
-            "account_id" => factory('IFRS\Models\Account')->create(
-                [
+        factory(Balance::class)->create([
+            "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OPERATING_REVENUE
-                ]
-            )->id,
-            ]
-        );
+            ])->id,
+        ]);
     }
 
     /**
@@ -143,11 +139,9 @@ class AccountBalanceTest extends TestCase
             'Opening Balance Transaction must be one of: Client Invoice, Supplier Bill, Journal Entry'
         );
 
-        factory(Balance::class)->create(
-            [
+        factory(Balance::class)->create([
             'transaction_type' => Transaction::CN,
-            ]
-        );
+        ]);
     }
 
     /**
@@ -160,11 +154,9 @@ class AccountBalanceTest extends TestCase
         $this->expectException(InvalidBalanceType::class);
         $this->expectExceptionMessage('Opening Balance Type must be one of: Debit, Credit');
 
-        factory(Balance::class)->create(
-            [
+        factory(Balance::class)->create([
             "balance_type" => "X"
-            ]
-        );
+        ]);
     }
 
     /**
@@ -177,11 +169,9 @@ class AccountBalanceTest extends TestCase
         $this->expectException(NegativeAmount::class);
         $this->expectExceptionMessage('Balance Amount cannot be negative');
 
-        factory(Balance::class)->create(
-            [
+        factory(Balance::class)->create([
             "amount" => -100
-            ]
-        );
+        ]);
     }
 
     /**
@@ -190,20 +180,16 @@ class AccountBalanceTest extends TestCase
      * @return void
      */
     public function testInvalidBalanceDate()
-    {   
-        $entity = factory(Entity::class)->create(
-            [
-                "mid_year_balances" => true
-            ]
-        );
+    {
+        $entity = factory(Entity::class)->create([
+            "mid_year_balances" => true
+        ]);
 
         //no exception
-        $balance = factory(Balance::class)->create(
-            [
-                "transaction_date" => Carbon::now(),
-                "entity_id" => $entity->id
-            ]
-        );
+        $balance = factory(Balance::class)->create([
+            "transaction_date" => Carbon::now(),
+            "entity_id" => $entity->id
+        ]);
 
         $entity->mid_year_balances = false;
         $entity->save();

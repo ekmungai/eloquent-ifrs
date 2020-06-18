@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Models;
 
 use Illuminate\Support\Facades\Auth;
@@ -61,7 +63,7 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
      * @var string
      */
 
-    const MODELNAME = "IFRS\Models\Balance";
+    const MODELNAME = self::class;
 
     /**
      * Balance Type
@@ -121,7 +123,7 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
 
         if (!isset($attributes['transaction_no']) && isset($attributes['currency_id']) && isset($attributes['account_id'])) {
             $currency = Currency::find($attributes['currency_id'])->currency_code;
-            $attributes['transaction_no'] = $attributes['account_id'].$currency.$reportingPeriod->calendar_year;
+            $attributes['transaction_no'] = $attributes['account_id'] . $currency . $reportingPeriod->calendar_year;
         }
 
         return parent::__construct($attributes);
@@ -163,8 +165,9 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
      */
     public function toString($type = false)
     {
-        $description = $this->account->toString().' for year '.$this->reportingPeriod->calendar_year;
-        return $type? $this->type().' Balance: '.$description : $description;
+        $classname = explode('\\', self::class);
+        $description = $this->account->toString() . ' for year ' . $this->reportingPeriod->calendar_year;
+        return $type ? $this->type() . ' ' . array_pop($classname) . ': ' . $description : $description;
     }
 
     /**
@@ -180,7 +183,7 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
     /**
      * isPosted analog for Assignment model.
      */
-    public function isPosted() : bool
+    public function isPosted(): bool
     {
         return $this->exists();
     }
@@ -190,7 +193,7 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
      *
      * @return bool
      */
-    public function isCredited() : bool
+    public function isCredited(): bool
     {
         return $this->balance_type == Balance::CREDIT;
     }
@@ -200,7 +203,7 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
      *
      * @return string
      */
-    public function getClearedType() : string
+    public function getClearedType(): string
     {
         return Balance::MODELNAME;
     }
@@ -210,7 +213,7 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
      *
      * @return float
      */
-    public function getAmount() : float
+    public function getAmount(): float
     {
         return $this->amount;
     }
@@ -268,7 +271,7 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
     /**
      * Balance Validation.
      */
-    public function save(array $options = []) : bool
+    public function save(array $options = []): bool
     {
 
         if ($this->amount < 0) {

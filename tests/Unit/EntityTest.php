@@ -26,12 +26,10 @@ class EntityTest extends TestCase
     {
         $currency = factory(Currency::class)->create();
 
-        $entity = new Entity(
-            [
+        $entity = new Entity([
             'name' => $this->faker->company,
             'currency_id' => $currency->id,
-            ]
-        );
+        ]);
         $entity->attributes();
         $entity->save();
 
@@ -49,7 +47,7 @@ class EntityTest extends TestCase
         $this->assertEquals($user->entity->name, $entity->name);
         $this->assertEquals($entity->currency->name, $currency->name);
         $this->assertEquals($entity->currentReportingPeriod()->calendar_year, $period->calendar_year);
-        $this->assertEquals($entity->toString(true), 'Entity: '.$entity->name);
+        $this->assertEquals($entity->toString(true), 'Entity: ' . $entity->name);
         $this->assertEquals($entity->toString(), $entity->name);
     }
 
@@ -60,12 +58,10 @@ class EntityTest extends TestCase
      */
     public function testEntityRecycling()
     {
-        $entity = new Entity(
-            [
+        $entity = new Entity([
             'name' => $this->faker->company,
             'currency_id' => factory(Currency::class)->create()->id,
-            ]
-        );
+        ]);
         $entity->delete();
 
         $recycled = RecycledObject::all()->first();

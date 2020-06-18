@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Exceptions;
 
 use Carbon\Carbon;
@@ -26,13 +28,13 @@ class RedundantTransaction extends IFRSException
         $error = "A Transaction Main Account cannot be one of the Line Item Accounts ";
 
         Log::notice(
-            $error.$message,
+            $error . $message,
             [
                 'user_id' => Auth::user()->id,
                 'time' => Carbon::now(),
             ]
         );
 
-        parent::__construct($error.$message, $code=null);
+        parent::__construct($error . $message, $code = null);
     }
 }

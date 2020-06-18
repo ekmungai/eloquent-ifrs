@@ -12,6 +12,7 @@ use IFRS\Tests\TestCase;
 use IFRS\Transactions\ClientInvoice;
 use IFRS\Transactions\CreditNote;
 use IFRS\Models\Assignment;
+use IFRS\Models\Vat;
 use IFRS\Transactions\JournalEntry;
 use IFRS\Reports\AgingSchedule;
 
@@ -24,182 +25,136 @@ class AgingScheduleTest extends TestCase
      */
     public function testReceivablesAgingSchedule()
     {
-        $account1 = factory(Account::class)->create(
-            [
-                'account_type' => Account::RECEIVABLE,
-            ]
-        );
-        $account2 = factory(Account::class)->create(
-            [
-                'account_type' => Account::RECEIVABLE,
-            ]
-        );
+        $account1 = factory(Account::class)->create([
+            'account_type' => Account::RECEIVABLE,
+        ]);
+        $account2 = factory(Account::class)->create([
+            'account_type' => Account::RECEIVABLE,
+        ]);
 
         # 365+ transaction
-        factory(Balance::class)->create(
-            [
-                "account_id" => $account1->id,
-                "balance_type" => Balance::DEBIT,
-                "exchange_rate_id" => factory(ExchangeRate::class)->create(
-                    [
-                        "rate" => 1,
-                    ]
-            )->id,
+        factory(Balance::class)->create([
+            "account_id" => $account1->id,
+            "balance_type" => Balance::DEBIT,
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
+                "rate" => 1,
+            ])->id,
             "amount" => 25,
             'reporting_period_id' => $this->period->id,
-            ]
-        );
+        ]);
 
         # current transaction
         $date = Carbon::now()->endOfYear()->sub('days', 20);
-        $clientInvoice = new ClientInvoice(
-            [
-                "account_id" => $account1->id,
-                "transaction_date" => $date,
-                "narration" => $this->faker->word,
-            ]
-        );
+        $clientInvoice = new ClientInvoice([
+            "account_id" => $account1->id,
+            "transaction_date" => $date,
+            "narration" => $this->faker->word,
+        ]);
 
-        $lineItem = new LineItem(
-            [
-                'vat_id' => factory('IFRS\Models\Vat')->create(["rate" => 0])->id,
-                'account_id' => factory('IFRS\Models\Account')->create(
-                    [
-                        "account_type" => Account::OPERATING_REVENUE
-                    ]
-                )->id,
-                'amount' => 100,
-            ]
-        );
+        $lineItem = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create([
+                "account_type" => Account::OPERATING_REVENUE
+            ])->id,
+            'amount' => 100,
+        ]);
         $clientInvoice->addLineItem($lineItem);
 
         $clientInvoice->post();
 
         //Partially clear Transaction
-        $creditNote = new CreditNote(
-            [
-                "account_id" => $account1->id,
-                "transaction_date" => $date,
-                "narration" => $this->faker->word,
-            ]
-        );
+        $creditNote = new CreditNote([
+            "account_id" => $account1->id,
+            "transaction_date" => $date,
+            "narration" => $this->faker->word,
+        ]);
 
-        $lineItem = new LineItem(
-            [
-                'vat_id' => factory('IFRS\Models\Vat')->create(["rate" => 0])->id,
-                'account_id' => factory('IFRS\Models\Account')->create(
-                    [
-                        "account_type" => Account::OPERATING_REVENUE
-                    ]
-                )->id,
-                'amount' => 50,
-            ]
-        );
+        $lineItem = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create([
+                "account_type" => Account::OPERATING_REVENUE
+            ])->id,
+            'amount' => 50,
+        ]);
         $creditNote->addLineItem($lineItem);
 
         $creditNote->post();
 
-        factory(Assignment::class)->create(
-            [
-                'transaction_id'=> $creditNote->id,
-                'cleared_id'=> $clientInvoice->id,
-                "amount" => 50,
-            ]
-        );
+        factory(Assignment::class)->create([
+            'transaction_id' => $creditNote->id,
+            'cleared_id' => $clientInvoice->id,
+            "amount" => 50,
+        ]);
 
         //Journal Entry Transaction (91 - 180 days)
-        $journalEntry = new JournalEntry(
-            [
-                "account_id" => $account1->id,
-                "transaction_date" => Carbon::now()->endOfYear()->sub('months', 5),
-                "narration" => $this->faker->word,
-                "credited" => false,
-            ]
-        );
+        $journalEntry = new JournalEntry([
+            "account_id" => $account1->id,
+            "transaction_date" => Carbon::now()->endOfYear()->sub('months', 5),
+            "narration" => $this->faker->word,
+            "credited" => false,
+        ]);
 
-        $lineItem = new LineItem(
-            [
-                'vat_id' => factory('IFRS\Models\Vat')->create(["rate" => 0])->id,
-                'account_id' => factory('IFRS\Models\Account')->create(
-                    [
-                        "account_type" => Account::OPERATING_REVENUE
-                    ]
-            )->id,
-                'amount' => 75,
-            ]
-        );
+        $lineItem = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create([
+                "account_type" => Account::OPERATING_REVENUE
+            ])->id,
+            'amount' => 75,
+        ]);
         $journalEntry->addLineItem($lineItem);
 
         $journalEntry->post();
 
         # 31 - 90 days transaction
-        $clientInvoice = new ClientInvoice(
-            [
-                "account_id" => $account2->id,
-                "narration" => $this->faker->word,
-                'transaction_date' => Carbon::now()->endOfYear()->sub('months', 2),
-            ]
-        );
+        $clientInvoice = new ClientInvoice([
+            "account_id" => $account2->id,
+            "narration" => $this->faker->word,
+            'transaction_date' => Carbon::now()->endOfYear()->sub('months', 2),
+        ]);
 
-        $lineItem = new LineItem(
-            [
-                'vat_id' => factory('IFRS\Models\Vat')->create(["rate" => 0])->id,
-                'account_id' => factory('IFRS\Models\Account')->create(
-                    [
-                        "account_type" => Account::OPERATING_REVENUE
-                    ]
-                )->id,
-                'amount' => 100,
-            ]
-        );
+        $lineItem = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create([
+                "account_type" => Account::OPERATING_REVENUE
+            ])->id,
+            'amount' => 100,
+        ]);
         $clientInvoice->addLineItem($lineItem);
 
         $clientInvoice->post();
 
         # 181 - 270 days transaction
-        $clientInvoice = new ClientInvoice(
-            [
-                "account_id" => $account2->id,
-                "narration" => $this->faker->word,
-                'transaction_date' => Carbon::now()->endOfYear()->sub('months', 8),
-            ]
-        );
+        $clientInvoice = new ClientInvoice([
+            "account_id" => $account2->id,
+            "narration" => $this->faker->word,
+            'transaction_date' => Carbon::now()->endOfYear()->sub('months', 8),
+        ]);
 
-        $lineItem = new LineItem(
-            [
-                'vat_id' => factory('IFRS\Models\Vat')->create(["rate" => 0])->id,
-                'account_id' => factory('IFRS\Models\Account')->create(
-                    [
-                        "account_type" => Account::OPERATING_REVENUE
-                    ]
-                )->id,
-                'amount' => 150,
-            ]
-        );
+        $lineItem = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create([
+                "account_type" => Account::OPERATING_REVENUE
+            ])->id,
+            'amount' => 150,
+        ]);
         $clientInvoice->addLineItem($lineItem);
 
         $clientInvoice->post();
 
         # 271 - 365 days transaction
-        $clientInvoice = new ClientInvoice(
-            [
-                "account_id" => $account2->id,
-                "narration" => $this->faker->word,
-                'transaction_date' => Carbon::now()->endOfYear()->sub('months', 10),
-            ]
-        );
+        $clientInvoice = new ClientInvoice([
+            "account_id" => $account2->id,
+            "narration" => $this->faker->word,
+            'transaction_date' => Carbon::now()->endOfYear()->sub('months', 10),
+        ]);
 
-        $lineItem = new LineItem(
-            [
-                'vat_id' => factory('IFRS\Models\Vat')->create(["rate" => 0])->id,
-                'account_id' => factory('IFRS\Models\Account')->create(
-                    [
-                        "account_type" => Account::OPERATING_REVENUE
-                    ]
-                )->id,
-                'amount' => 175,
-            ]
-        );
+        $lineItem = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create([
+                "account_type" => Account::OPERATING_REVENUE
+            ])->id,
+            'amount' => 175,
+        ]);
         $clientInvoice->addLineItem($lineItem);
 
         $clientInvoice->post();
@@ -230,6 +185,5 @@ class AgingScheduleTest extends TestCase
         $this->assertEquals($schedule->accounts[1]->balances['181 - 270 days'], 150);
         $this->assertEquals($schedule->accounts[1]->balances['271 - 365 days'], 175);
         $this->assertEquals($schedule->accounts[1]->balances['365+ (bad debts)'], 0);
-
     }
 }

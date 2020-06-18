@@ -11,10 +11,10 @@ $factory->define(
     Category::class,
     function (Faker $faker) {
         return [
-        'name' => $faker->word,
-        'category_type' => $faker->randomElement(
-            array_keys(config('ifrs')['accounts'])
-        ),
+            'name' => $faker->word,
+            'category_type' => $faker->randomElement(
+                array_keys(config('ifrs')['accounts'])
+            ),
         ];
     }
 );

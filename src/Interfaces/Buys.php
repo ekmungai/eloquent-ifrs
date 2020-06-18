@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Interfaces;
 
 /**
@@ -19,12 +21,12 @@ interface Buys
      *
      * @return void
      */
-    public function save() : bool;
+    public function save(): bool;
 
     /**
      * Validate Buying Transaction LineItems.
      *
      * @return void
      */
-    public function post() : void;
+    public function post(): void;
 }

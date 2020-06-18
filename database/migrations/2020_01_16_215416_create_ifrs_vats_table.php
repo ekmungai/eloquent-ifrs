@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,15 +22,17 @@ class CreateIfrsVatsTable extends Migration
     public function up()
     {
         Schema::create(
-            config('ifrs.table_prefix').'vats',
+            config('ifrs.table_prefix') . 'vats',
             function (Blueprint $table) {
                 $table->bigIncrements('id');
 
                 // relationships
                 $table->unsignedBigInteger('entity_id');
+                $table->unsignedBigInteger('account_id')->nullable();
 
                 // constraints
-                $table->foreign('entity_id')->references('id')->on(config('ifrs.table_prefix').'entities');
+                $table->foreign('entity_id')->references('id')->on(config('ifrs.table_prefix') . 'entities');
+                $table->foreign('account_id')->references('id')->on(config('ifrs.table_prefix') . 'accounts');
 
                 // attributes
                 $table->string('code', 1);
@@ -53,6 +57,6 @@ class CreateIfrsVatsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(config('ifrs.table_prefix').'vats');
+        Schema::dropIfExists(config('ifrs.table_prefix') . 'vats');
     }
 }

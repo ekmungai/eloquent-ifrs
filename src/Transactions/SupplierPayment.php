@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Transactions;
 
 use IFRS\Models\Account;
@@ -54,7 +56,7 @@ class SupplierPayment extends Transaction implements Fetchable, Assignable
      */
     public function save(array $options = []): bool
     {
-        if (is_null($this->account) or $this->account->account_type != Account::PAYABLE) {
+        if (is_null($this->account) || $this->account->account_type != Account::PAYABLE) {
             throw new MainAccount(self::PREFIX, Account::PAYABLE);
         }
 

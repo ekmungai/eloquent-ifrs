@@ -11,11 +11,11 @@ $factory->define(
     Account::class,
     function (Faker $faker) {
         return [
-        'name' => $faker->name,
-        'account_type' => $faker->randomElement(array_keys(config('ifrs')['accounts'])),
-        'currency_id' => factory('IFRS\Models\Currency')->create()->id,
-        'category_id' => factory('IFRS\Models\Category')->create()->id,
-        'code' => $faker->randomDigit,
+            'name' => $faker->name,
+            'account_type' => $faker->randomElement(array_keys(config('ifrs')['accounts'])),
+            'currency_id' => factory('IFRS\Models\Currency')->create()->id,
+            'category_id' => factory('IFRS\Models\Category')->create()->id,
+            'code' => $faker->randomDigit,
         ];
     }
 );

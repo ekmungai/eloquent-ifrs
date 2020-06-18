@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Interfaces;
 
 /**
@@ -17,10 +19,10 @@ interface Sells
     /**
      * Validate Selling Transaction Main Account.
      */
-    public function save() : bool;
+    public function save(): bool;
 
     /**
      * Validate Selling Transaction LineItems.
      */
-    public function post() : void;
+    public function post(): void;
 }

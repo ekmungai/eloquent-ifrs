@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Traits;
 
 use Carbon\Carbon;
@@ -33,7 +35,7 @@ trait Recycling
                         $model->destroyed_at = Carbon::now()->toDateTimeString();
                         $model->save();
                         $model->forceDeleting = false;
-                    }else{
+                    } else {
                         $user = Auth::user();
                         if ($user->entity) {
                             RecycledObject::create(
@@ -43,12 +45,12 @@ trait Recycling
                                     'recyclable_id' => $model->id,
                                     'recyclable_type' => static::class,
                                 ]
-                                );
+                            );
                         }
                     }
                 }
             }
-            );
+        );
         static::restoring(
             function ($model) {
                 if (!is_null($model->destroyed_at)) {
@@ -60,7 +62,7 @@ trait Recycling
                     $recycled->delete();
                 }
             }
-            );
+        );
     }
 
     /**
@@ -70,6 +72,6 @@ trait Recycling
      */
     public function recycled()
     {
-        return $this->morphMany('IFRS\Models\RecycledObject', 'recyclable');
+        return $this->morphMany(RecycledObject::class, 'recyclable');
     }
 }

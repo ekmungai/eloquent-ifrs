@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Exceptions;
 
 use Carbon\Carbon;
@@ -18,22 +20,22 @@ class MissingVatAccount extends IFRSException
     /**
      * Missing Vat Account Exception
      *
-     * @param string $vatName
+     * @param float  $vatRate
      * @param string $message
      * @param int    $code
      */
-    public function __construct(string $vatName, string $message = null, int $code = null)
+    public function __construct(float $vatRate, string $message = null, int $code = null)
     {
-        $error = $vatName." LineItem requires a Vat Account";
+        $error = $vatRate . "% VAT requires a Vat Account";
 
         Log::notice(
-            $error.$message,
+            $error . $message,
             [
                 'user_id' => Auth::user()->id,
                 'time' => Carbon::now(),
             ]
         );
 
-        parent::__construct($error.$message, $code);
+        parent::__construct($error . $message, $code);
     }
 }

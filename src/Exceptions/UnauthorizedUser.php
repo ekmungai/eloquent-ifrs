@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Exceptions;
 
 use Carbon\Carbon;
@@ -25,12 +27,12 @@ class UnauthorizedUser extends IFRSException
         $error = 'You are not Authorized to perform that action ';
 
         Log::notice(
-            $error.$message,
+            $error . $message,
             [
                 'time' => Carbon::now(),
             ]
         );
 
-        parent::__construct($error.$message, $code);
+        parent::__construct($error . $message, $code);
     }
 }

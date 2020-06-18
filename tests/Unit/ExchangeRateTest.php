@@ -21,25 +21,23 @@ class ExchangeRateTest extends TestCase
     {
         $currency  = factory(Currency::class)->create();
 
-        $exchangeRate = new ExchangeRate(
-            [
+        $exchangeRate = new ExchangeRate([
             'valid_from' => Carbon::now(),
             'valid_to' => Carbon::now()->addMonth(),
             'currency_id' => $currency->id,
             'rate' => 10
-            ]
-        );
+        ]);
         $exchangeRate->attributes();
         $exchangeRate->save();
 
         $this->assertEquals($exchangeRate->currency->name, $currency->name);
         $this->assertEquals(
             $exchangeRate->toString(true),
-            'Exchange Rate: '.number_format($exchangeRate->rate, 2).' for '.$exchangeRate->currency->toString(). ' from '.$exchangeRate->valid_from->toDateString()
+            'ExchangeRate: ' . number_format($exchangeRate->rate, 2) . ' for ' . $exchangeRate->currency->toString() . ' from ' . $exchangeRate->valid_from->toDateString()
         );
         $this->assertEquals(
             $exchangeRate->toString(),
-            number_format($exchangeRate->rate, 2).' for '.$exchangeRate->currency->toString(). ' from '.$exchangeRate->valid_from->toDateString()
+            number_format($exchangeRate->rate, 2) . ' for ' . $exchangeRate->currency->toString() . ' from ' . $exchangeRate->valid_from->toDateString()
         );
     }
 
@@ -56,14 +54,12 @@ class ExchangeRateTest extends TestCase
 
         $this->be($user);
 
-        $exchangeRate = new ExchangeRate(
-            [
+        $exchangeRate = new ExchangeRate([
             'valid_from' => Carbon::now(),
             'valid_to' => Carbon::now()->addMonth(),
             'currency_id' => factory(Currency::class)->create()->id,
             'rate' => 10
-            ]
-        );
+        ]);
         $exchangeRate->save();
 
         $this->assertEquals(count(ExchangeRate::all()), 1);
@@ -79,14 +75,12 @@ class ExchangeRateTest extends TestCase
      */
     public function testExchangeRateRecycling()
     {
-        $exchangeRate = new ExchangeRate(
-            [
+        $exchangeRate = new ExchangeRate([
             'valid_from' => Carbon::now(),
             'valid_to' => Carbon::now()->addMonth(),
             'currency_id' => factory(Currency::class)->create()->id,
             'rate' => 10
-            ]
-        );
+        ]);
         $exchangeRate->save();
 
         $recycled = RecycledObject::all()->first();

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Models;
 
 use Illuminate\Support\Facades\Auth;
@@ -67,7 +69,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      * @var array
      */
 
-    const MODELNAME = "IFRS\Models\Transaction";
+    const MODELNAME = self::class;
 
     /**
      * Transaction Types
@@ -109,7 +111,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     public function __construct($attributes = [])
     {
         $entity = Auth::user()->entity;
-        $this->table = config('ifrs.table_prefix').'transactions';
+        $this->table = config('ifrs.table_prefix') . 'transactions';
 
         if (!isset($attributes['currency_id'])) {
             $attributes['currency_id'] = $entity->currency_id;
@@ -119,7 +121,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
             $attributes['exchange_rate_id'] = $entity->defaultRate()->id;
         }
 
-        $attributes['transaction_date'] = !isset($attributes['transaction_date'])? Carbon::now(): Carbon::parse($attributes['transaction_date']);
+        $attributes['transaction_date'] = !isset($attributes['transaction_date']) ? Carbon::now() : Carbon::parse($attributes['transaction_date']);
 
         return parent::__construct($attributes);
     }
@@ -151,7 +153,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     /**
      * Save LineItems.
      */
-    private function saveLineItems() : void
+    private function saveLineItems(): void
     {
         if (count($this->items)) {
             $lineItem = array_pop($this->items);
@@ -168,7 +170,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      *
      * @return string
      */
-    public static function getClass($type) : string
+    public static function getClass($type): string
     {
         $classmap = [
             'CS' => 'CashSale',
@@ -192,7 +194,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      *
      * @return string
      */
-    public static function getType($type) : string
+    public static function getType($type): string
     {
         return config('ifrs')['transactions'][$type];
     }
@@ -204,7 +206,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      *
      * @return array
      */
-    public static function getTypes($types) : array
+    public static function getTypes($types): array
     {
         $typeNames = [];
 
@@ -228,13 +230,13 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
         $period_start = ReportingPeriod::periodStart($transaction_date);
 
         $next_id =  Transaction::withTrashed()
-        ->where("transaction_type", $type)
-        ->where("transaction_date", ">=", $period_start)
-        ->count() + 1;
+            ->where("transaction_type", $type)
+            ->where("transaction_date", ">=", $period_start)
+            ->count() + 1;
 
-        return $type.str_pad((string) $period_count, 2, "0", STR_PAD_LEFT)
-        ."/".
-        str_pad((string) $next_id, 4, "0", STR_PAD_LEFT);
+        return $type . str_pad((string) $period_count, 2, "0", STR_PAD_LEFT)
+            . "/" .
+            str_pad((string) $next_id, 4, "0", STR_PAD_LEFT);
     }
 
     /**
@@ -244,7 +246,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      */
     public function toString($type = false)
     {
-        return $type? $this->type().': '.$this->transaction_no : $this->transaction_no;
+        return $type ? $this->type() . ': ' . $this->transaction_no : $this->transaction_no;
     }
 
     /**
@@ -264,7 +266,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      */
     public function lineItems()
     {
-        return $this->HasMany('IFRS\Models\LineItem', 'transaction_id', 'id');
+        return $this->HasMany(LineItem::class, 'transaction_id', 'id');
     }
 
     /**
@@ -274,7 +276,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      */
     public function ledgers()
     {
-        return $this->HasMany('IFRS\Models\Ledger', 'transaction_id', 'id');
+        return $this->HasMany(Ledger::class, 'transaction_id', 'id');
     }
 
     /**
@@ -314,7 +316,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      */
     public function assignments()
     {
-        return $this->HasMany('IFRS\Models\Assignment', 'transaction_id', 'id');
+        return $this->HasMany(Assignment::class, 'transaction_id', 'id');
     }
 
     /**
@@ -330,7 +332,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      *
      * @return bool
      */
-    public function isCredited() : bool
+    public function isCredited(): bool
     {
         return boolval($this->credited);
     }
@@ -340,7 +342,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      *
      * @return string
      */
-    public function getClearedType() : string
+    public function getClearedType(): string
     {
         return Transaction::MODELNAME;
     }
@@ -395,7 +397,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      *
      * @param LineItem $lineItem
      */
-    public function addLineItem(LineItem $lineItem) : void
+    public function addLineItem(LineItem $lineItem): void
     {
         if (count($lineItem->ledgers) > 0) {
             throw new PostedTransaction("add LineItem to");
@@ -415,7 +417,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      *
      * @param LineItem $lineItem
      */
-    public function removeLineItem(LineItem $lineItem) : void
+    public function removeLineItem(LineItem $lineItem): void
     {
         if (count($lineItem->ledgers) > 0) {
             throw new PostedTransaction("remove LineItem from");
@@ -439,7 +441,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      */
     public function save(array $options = []): bool
     {
-        $period = ReportingPeriod::getPeriod($this->transaction_date);
+        $period = ReportingPeriod::getPeriod(Carbon::parse($this->transaction_date));
 
         if ($period->status == ReportingPeriod::CLOSED) {
             throw new ClosedReportingPeriod($period->calendar_year);
@@ -452,7 +454,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
         $this->transaction_no = Transaction::transactionNo(
             $this->transaction_type,
             Carbon::parse($this->transaction_date)
-            );
+        );
 
         $save = parent::save();
         $this->saveLineItems();
@@ -466,7 +468,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     /**
      * Post Transaction to the Ledger.
      */
-    public function post() : void
+    public function post(): void
     {
         if (empty($this->getLineItems())) {
             throw new MissingLineItem();
@@ -493,7 +495,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
                 $clearance->delete();
                 return $clearance;
             }
-            );
+        );
 
         return parent::delete();
     }
@@ -508,6 +510,6 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
             function ($ledger, $key) {
                 return password_verify($ledger->hashed(), $ledger->hash);
             }
-            );
+        );
     }
 }

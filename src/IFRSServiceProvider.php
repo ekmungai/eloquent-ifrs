@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Eloquent IFRS Accounting
+ *
+ * @author    Edward Mungai
+ * @copyright Edward Mungai, 2020, Germany
+ * @license   MIT
+ */
+
 namespace IFRS;
 
 use Illuminate\Support\ServiceProvider;
@@ -13,7 +21,7 @@ class IFRSServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/ifrs.php', 'ifrs');
+        $this->mergeConfigFrom(__DIR__ . '/../config/ifrs.php', 'ifrs');
     }
 
     /**
@@ -23,13 +31,11 @@ class IFRSServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->publishes(
-            [
-            __DIR__.'/../config/ifrs.php' => config_path('ifrs.php'),
-            ]
-        );
+        $this->publishes([
+            __DIR__ . '/../config/ifrs.php' => config_path('ifrs.php'),
+        ]);
 
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-        $this->loadFactoriesFrom(__DIR__.'/../database/factories');
+        $this->loadFactoriesFrom(__DIR__ . '/../database/factories');
     }
 }

@@ -2,17 +2,23 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use IFRS\Models\LineItem;
 use Faker\Generator as Faker;
 
-$factory->define(LineItem::class, function (Faker $faker) {
-    return [
-        'vat_id' => factory('IFRS\Models\Vat')->create()->id,
-        'transaction_id' => factory('IFRS\Models\Transaction')->create()->id,
-        'account_id' => factory('IFRS\Models\Account')->create()->id,
-        'vat_account_id' => factory('IFRS\Models\Account')->create()->id,
-        'narration' => $faker->sentence,
-        'quantity' => $faker->randomNumber(),
-        'amount' => $faker->randomFloat(2),
-    ];
-});
+use IFRS\Models\LineItem;
+use IFRS\Models\Account;
+use IFRS\Models\Transaction;
+use IFRS\Models\Vat;
+
+$factory->define(
+    LineItem::class,
+    function (Faker $faker) {
+        return [
+            'vat_id' => factory(Vat::class)->create()->id,
+            'transaction_id' => factory(Transaction::class)->create()->id,
+            'account_id' => factory(Account::class)->create()->id,
+            'narration' => $faker->sentence,
+            'quantity' => $faker->randomNumber(),
+            'amount' => $faker->randomFloat(2),
+        ];
+    }
+);

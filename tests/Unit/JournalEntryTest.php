@@ -13,7 +13,7 @@ use IFRS\Models\Balance;
 use IFRS\Models\Currency;
 use IFRS\Models\LineItem;
 use IFRS\Models\Ledger;
-
+use IFRS\Models\Vat;
 use IFRS\Transactions\JournalEntry;
 
 class JournalEntryTest extends TestCase
@@ -27,18 +27,16 @@ class JournalEntryTest extends TestCase
     {
         $mainAccount = factory(Account::class)->create();
 
-        $journalEntry = new JournalEntry(
-            [
+        $journalEntry = new JournalEntry([
             "account_id" => $mainAccount->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
-            ]
-        );
+        ]);
         $journalEntry->save();
 
         $this->assertEquals($journalEntry->account->name, $mainAccount->name);
         $this->assertEquals($journalEntry->account->description, $mainAccount->description);
-        $this->assertEquals($journalEntry->transaction_no, "JN0".$this->period->period_count."/0001");
+        $this->assertEquals($journalEntry->transaction_no, "JN0" . $this->period->period_count . "/0001");
     }
 
     /**
@@ -48,24 +46,18 @@ class JournalEntryTest extends TestCase
      */
     public function testPostJournalEntryTransaction()
     {
-        $journalEntry = new JournalEntry(
-            [
-            "account_id" => factory('IFRS\Models\Account')->create()->id,
+        $journalEntry = new JournalEntry([
+            "account_id" => factory(Account::class)->create()->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
-            ]
-        );
+        ]);
 
-        $lineItem = factory(LineItem::class)->create(
-            [
+        $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('IFRS\Models\Vat')->create(
-                [
+            "vat_id" => factory(Vat::class)->create([
                 "rate" => 0
-                ]
-            )->id,
-            ]
-        );
+            ])->id,
+        ]);
         $journalEntry->addLineItem($lineItem);
 
         $journalEntry->post();
@@ -83,35 +75,25 @@ class JournalEntryTest extends TestCase
 
         $this->assertEquals($journalEntry->getAmount(), 100);
 
-        $journalEntry2 = new JournalEntry(
-            [
-            "account_id" => factory('IFRS\Models\Account')->create()->id,
+        $journalEntry2 = new JournalEntry([
+            "account_id" => factory(Account::class)->create()->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             "credited" => false,
-            ]
-        );
+        ]);
 
-        $lineItem1 = factory(LineItem::class)->create(
-            [
+        $lineItem1 = factory(LineItem::class)->create([
             "amount" => 50,
-            "vat_id" => factory('IFRS\Models\Vat')->create(
-                [
+            "vat_id" => factory(Vat::class)->create([
                 "rate" => 0
-                ]
-            )->id,
-            ]
-        );
-        $lineItem2 = factory(LineItem::class)->create(
-            [
+            ])->id,
+        ]);
+        $lineItem2 = factory(LineItem::class)->create([
             "amount" => 25,
-            "vat_id" => factory('IFRS\Models\Vat')->create(
-                [
+            "vat_id" => factory(Vat::class)->create([
                 "rate" => 16
-                ]
-            )->id,
-            ]
-        );
+            ])->id,
+        ]);
         $journalEntry2->addLineItem($lineItem1);
         $journalEntry2->addLineItem($lineItem2);
 
@@ -145,9 +127,9 @@ class JournalEntryTest extends TestCase
 
         // lineItem 2 Vat
         $this->assertEquals($debit3->post_account, $journalEntry2->account->id);
-        $this->assertEquals($debit3->folio_account, $lineItem2->vat_account_id);
+        $this->assertEquals($debit3->folio_account, $lineItem2->vat->account_id);
         $this->assertEquals($credit3->folio_account, $journalEntry2->account->id);
-        $this->assertEquals($credit3->post_account, $lineItem2->vat_account_id);
+        $this->assertEquals($credit3->post_account, $lineItem2->vat->account_id);
 
         $this->assertEquals($journalEntry2->getAmount(), 79);
     }
@@ -159,18 +141,14 @@ class JournalEntryTest extends TestCase
      */
     public function testJournalEntryFind()
     {
-        $account = factory(Account::class)->create(
-            [
+        $account = factory(Account::class)->create([
             'account_type' => Account::BANK,
-            ]
-        );
-        $transaction = new JournalEntry(
-            [
+        ]);
+        $transaction = new JournalEntry([
             "account_id" => $account,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
-            ]
-        );
+        ]);
         $transaction->save();
 
         $found = JournalEntry::find($transaction->id);
@@ -184,33 +162,25 @@ class JournalEntryTest extends TestCase
      */
     public function testJournalEntryFetch()
     {
-        $account = factory(Account::class)->create(
-            [
+        $account = factory(Account::class)->create([
             'account_type' => Account::PAYABLE,
-            ]
-        );
-        $transaction = new JournalEntry(
-            [
+        ]);
+        $transaction = new JournalEntry([
             "account_id" => $account->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
-            ]
-        );
+        ]);
         $transaction->save();
 
 
-        $account2 = factory(Account::class)->create(
-            [
+        $account2 = factory(Account::class)->create([
             'account_type' => Account::PAYABLE,
-            ]
-        );
-        $transaction2 = new JournalEntry(
-            [
+        ]);
+        $transaction2 = new JournalEntry([
             "account_id" => $account2->id,
             "transaction_date" => Carbon::now()->addWeeks(2),
             "narration" => $this->faker->word,
-            ]
-        );
+        ]);
         $transaction2->save();
 
         // startTime Filter
@@ -223,11 +193,9 @@ class JournalEntryTest extends TestCase
         $this->assertEquals(count(JournalEntry::fetch(null, Carbon::now()->subDay())), 0);
 
         // Account Filter
-        $account3 = factory(Account::class)->create(
-            [
+        $account3 = factory(Account::class)->create([
             'account_type' => Account::PAYABLE,
-            ]
-        );
+        ]);
         $this->assertEquals(count(JournalEntry::fetch(null, null, $account)), 1);
         $this->assertEquals(count(JournalEntry::fetch(null, null, $account2)), 1);
         $this->assertEquals(count(JournalEntry::fetch(null, null, $account3)), 0);

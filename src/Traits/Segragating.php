@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Traits;
 
 use Illuminate\Support\Facades\Auth;
@@ -42,7 +44,7 @@ trait Segragating
                     $model->entity_id = Auth::user()->entity->id;
                 }
             }
-            );
+        );
         return null;
     }
 

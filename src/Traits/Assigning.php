@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,12 +7,8 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
-namespace IFRS\Traits;
 
-/**
- *
- * @author emung
- */
+namespace IFRS\Traits;
 
 trait Assigning
 {
@@ -24,6 +21,6 @@ trait Assigning
         foreach ($this->assignments as $assignment) {
             $balance += $assignment->amount;
         }
-        return $this->getAmount()/$this->exchangeRate->rate - $balance;
+        return $this->getAmount() / $this->exchangeRate->rate - $balance;
     }
 }

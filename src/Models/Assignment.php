@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Models;
 
 use Carbon\Carbon;
@@ -82,14 +84,15 @@ class Assignment extends Model implements Segragatable
      * @param Assignable $transaction
      */
 
-    public static function bulkAssign(Assignable $transaction): void {
+    public static function bulkAssign(Assignable $transaction): void
+    {
 
         $balance = $transaction->balance();
 
         $schedule = new AccountSchedule($transaction->account->id, $transaction->currency->id);
         $schedule->getTransactions();
 
-        foreach ($schedule->transactions as $outstanding){
+        foreach ($schedule->transactions as $outstanding) {
             $unclearedAmount = $outstanding->originalAmount - $outstanding->clearedAmount;
             $cleared = Transaction::find($outstanding->id);
 
@@ -105,7 +108,7 @@ class Assignment extends Model implements Segragatable
                 );
                 $assignment->save();
                 break;
-            }else{
+            } else {
                 $assignment = new Assignment(
                     [
                         'assignment_date' => Carbon::now(),
@@ -124,7 +127,7 @@ class Assignment extends Model implements Segragatable
     /**
      * Assignment Validation.
      */
-    private function validate() : void
+    private function validate(): void
     {
         $transactionType = $this->transaction->transaction_type;
         $clearedType = $this->cleared->transaction_type;
@@ -195,8 +198,9 @@ class Assignment extends Model implements Segragatable
      */
     public function toString($type = false)
     {
-        $description = $this->transaction->toString().' on '.$this->assignment_date;
-        return $type? 'Assignment: '.$description : $description;
+        $classname = explode('\\', self::class);
+        $description = $this->transaction->toString() . ' on ' . $this->assignment_date;
+        return $type ? array_pop($classname) . ': ' . $description : $description;
     }
 
     /**
@@ -242,7 +246,7 @@ class Assignment extends Model implements Segragatable
     /**
      * Assignment Validation.
      */
-    public function save(array $options = []) : bool
+    public function save(array $options = []): bool
     {
         $this->validate();
 

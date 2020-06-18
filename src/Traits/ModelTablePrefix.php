@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Ezeugwu Paschal, 2020, Nigeria
  * @license   MIT
  */
+
 namespace IFRS\Traits;
 
 /**
@@ -17,11 +19,12 @@ trait ModelTablePrefix
     /**
      * Determine the model table name
      */
-    public function getTable() {
+    public function getTable()
+    {
 
         $table = parent::getTable();
         $prefix = (string) config('ifrs.table_prefix');
 
-        return strpos($table, $prefix) !== false? $table: $prefix.$table;
+        return strpos($table, $prefix) !== false ? $table : $prefix . $table;
     }
 }

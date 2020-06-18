@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Reports;
 
 use Carbon\Carbon;
@@ -52,7 +54,7 @@ class BalanceSheet extends FinancialStatement
             array_keys(config('ifrs')[BalanceSheet::LIABILITIES]),
             array_keys(config('ifrs')[BalanceSheet::EQUITY]),
             array_keys(config('ifrs')[BalanceSheet::RECONCILIATION])
-            );
+        );
     }
 
     /**
@@ -62,7 +64,7 @@ class BalanceSheet extends FinancialStatement
      */
     public function __construct(string $endDate = null)
     {
-        $this->period['endDate'] = is_null($endDate)? Carbon::now(): Carbon::parse($endDate);
+        $this->period['endDate'] = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
 
         $period = ReportingPeriod::where("year", $endDate)->first();
         parent::__construct($period);
@@ -93,7 +95,7 @@ class BalanceSheet extends FinancialStatement
     /**
      * Get Balance Sheet Sections.
      */
-    public function getSections() : void
+    public function getSections(): void
     {
         parent::getSections();
 
@@ -115,55 +117,55 @@ class BalanceSheet extends FinancialStatement
      *
      * @codeCoverageIgnore
      */
-    public function toString() : void
+    public function toString(): void
     {
         $indent = "    ";
         $separator = "                        ---------------";
 
         // Title
-        $statement = $this->entity->name.PHP_EOL;
-        $statement .= config('ifrs')['statements'][self::TITLE].PHP_EOL;
+        $statement = $this->entity->name . PHP_EOL;
+        $statement .= config('ifrs')['statements'][self::TITLE] . PHP_EOL;
         $statement .= "As at: ";
-        $statement .= $this->period['endDate']->format('M d Y').PHP_EOL;
+        $statement .= $this->period['endDate']->format('M d Y') . PHP_EOL;
 
         // Asset Accounts
         $assets = $this->printSection(self::ASSETS, $statement, 1, $indent);
         $statement = $assets[0];
 
-        $statement .= $separator.PHP_EOL;
+        $statement .= $separator . PHP_EOL;
         $statement .= "Total Assets         ";
-        $statement .= $indent.($assets[1]).PHP_EOL;
+        $statement .= $indent . ($assets[1]) . PHP_EOL;
 
         // Liability Accounts
         $liabilities = $this->printSection(self::LIABILITIES, $statement, -1, $indent);
         $statement = $liabilities[0];
 
-        $statement .= $separator.PHP_EOL;
+        $statement .= $separator . PHP_EOL;
         $statement .= "Total Liabilities    ";
-        $statement .= $indent.($liabilities[1]).PHP_EOL;
+        $statement .= $indent . ($liabilities[1]) . PHP_EOL;
 
         // Reconciliation Accounts
         $reconciliation = $this->printSection(self::RECONCILIATION, $statement, 1, $indent);
         $statement = $reconciliation[0];
 
-        $statement .= $separator.PHP_EOL;
+        $statement .= $separator . PHP_EOL;
         $statement .= "Total Reconciliation  ";
-        $statement .= $indent.($reconciliation[1]).PHP_EOL;
-        $statement .=PHP_EOL;
+        $statement .= $indent . ($reconciliation[1]) . PHP_EOL;
+        $statement .= PHP_EOL;
 
-        $statement .= $separator.PHP_EOL;
+        $statement .= $separator . PHP_EOL;
         $statement .= "Net Assets           ";
-        $statement .= $indent.($assets[1] - $liabilities[1] - $reconciliation[1]).PHP_EOL;
-        $statement .= str_replace("-", "=", $separator.PHP_EOL);
+        $statement .= $indent . ($assets[1] - $liabilities[1] - $reconciliation[1]) . PHP_EOL;
+        $statement .= str_replace("-", "=", $separator . PHP_EOL);
 
         // Equity Accounts
         $equity = $this->printSection(self::EQUITY, $statement, 1, $indent);
         $statement = $equity[0];
 
-        $statement .= $separator.PHP_EOL;
+        $statement .= $separator . PHP_EOL;
         $statement .= "Total Equity         ";
-        $statement .= $indent.($equity[1]).PHP_EOL;
-        $statement .= str_replace("-", "=", $separator.PHP_EOL);
+        $statement .= $indent . ($equity[1]) . PHP_EOL;
+        $statement .= str_replace("-", "=", $separator . PHP_EOL);
 
         print($statement);
     }

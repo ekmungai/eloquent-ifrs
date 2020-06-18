@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Reports;
 
 use IFRS\Models\Account;
@@ -37,7 +39,7 @@ class TrialBalance extends FinancialStatement
     {
         parent::__construct($year);
 
-        $this->reportingPeriod = is_null($year)? (string)ReportingPeriod::year():$year;
+        $this->reportingPeriod = is_null($year) ? (string) ReportingPeriod::year() : $year;
 
         $this->accounts[IncomeStatement::TITLE] = [];
         $this->accounts[BalanceSheet::TITLE] = [];
@@ -46,7 +48,7 @@ class TrialBalance extends FinancialStatement
     /**
      * Get Trial Balance Sections.
      */
-    public function getSections() : void
+    public function getSections(): void
     {
         foreach (Account::all() as $account) {
             $balance = $account->closingBalance($this->reportingPeriod);
@@ -68,7 +70,7 @@ class TrialBalance extends FinancialStatement
      * @param Account $account
      * @param float   $balance
      */
-    private function getIncomeStatementSections(Account $account, $balance) : void
+    private function getIncomeStatementSections(Account $account, $balance): void
     {
         if (in_array($account->account_type, IncomeStatement::getAccountTypes())) {
             if (array_key_exists($account->account_type, $this->accounts[IncomeStatement::TITLE])) {
@@ -87,7 +89,7 @@ class TrialBalance extends FinancialStatement
      * @param Account $account
      * @param float   $balance
      */
-    private function getBalanceSheetSections(Account $account, $balance) : void
+    private function getBalanceSheetSections(Account $account, $balance): void
     {
 
         if (in_array($account->account_type, BalanceSheet::getAccountTypes())) {

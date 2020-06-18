@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Reports;
 
 use Carbon\Carbon;
@@ -38,11 +40,11 @@ class AccountSchedule extends AccountStatement
      * @param Transaction|Balance $transaction
      * @param string              $transactionType
      */
-    private function getAmounts($transaction, $transactionType) : void
+    private function getAmounts($transaction, $transactionType): void
     {
         $clearedAmount = $originalAmount = 0;
 
-        $originalAmount = $transaction->getAmount()/$transaction->exchangeRate->rate;
+        $originalAmount = $transaction->getAmount() / $transaction->exchangeRate->rate;
         $clearedAmount = $transaction->clearedAmount();
         $unclearedAmount = $originalAmount - $clearedAmount;
 
@@ -91,12 +93,13 @@ class AccountSchedule extends AccountStatement
     /**
      * Get Account Schedule Transactions.
      */
-    public function getTransactions() : void
+    public function getTransactions(): void
     {
         // Opening Balances
         foreach ($this->account->balances->where(
-            "reporting_period_id", ReportingPeriod::getPeriod($this->period['endDate'])->id
-            ) as $balance) {
+            "reporting_period_id",
+            ReportingPeriod::getPeriod($this->period['endDate'])->id
+        ) as $balance) {
             $this->getAmounts($balance, _("Opening Balance"));
         }
 
@@ -104,14 +107,15 @@ class AccountSchedule extends AccountStatement
         $transactions = $this->buildQuery()->whereIn(
             'transaction_type',
             Assignment::CLEARABLES
-        )->select(config('ifrs.table_prefix').'transactions.id');
+        )->select(config('ifrs.table_prefix') . 'transactions.id');
 
         foreach ($transactions->get() as $transaction) {
             $transaction = Transaction::find($transaction->id);
 
-            if ($transaction->transaction_type == Transaction::JN
-                and (($this->account->account_type == Account::RECEIVABLE and $transaction->credited)
-                or ($this->account->account_type == Account::PAYABLE and !$transaction->credited))
+            if (
+                $transaction->transaction_type == Transaction::JN
+                && (($this->account->account_type == Account::RECEIVABLE && $transaction->credited)
+                    || ($this->account->account_type == Account::PAYABLE && !$transaction->credited))
             ) {
                 continue;
             }

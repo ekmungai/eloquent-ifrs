@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Traits;
 
 use Carbon\Carbon;
@@ -18,10 +20,6 @@ use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Transaction;
 use IFRS\Models\Currency;
 
-/**
- *
- * @author emung
- */
 trait Fetching
 {
     /**
@@ -39,7 +37,7 @@ trait Fetching
         Carbon $endTime = null,
         Account $account = null,
         Currency $currency = null
-    ) : Collection {
+    ): Collection {
         $query = Transaction::where("transaction_type", self::PREFIX);
 
         // Account filter

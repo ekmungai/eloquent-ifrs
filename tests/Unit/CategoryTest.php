@@ -21,25 +21,21 @@ class CategoryTest extends TestCase
         $type = $this->faker->randomElement(
             array_keys(config('ifrs')['accounts'])
         );
-        $category = new Category(
-            [
+        $category = new Category([
             'name' => $this->faker->word,
             'category_type' => $type,
-            ]
-        );
+        ]);
         $category->save();
 
-        $account = factory(Account::class)->create(
-            [
+        $account = factory(Account::class)->create([
             "account_type" => $type,
             "category_id" => $category->id,
-            ]
-        );
+        ]);
 
         $this->assertEquals($category->accounts->first()->name, $account->name);
         $this->assertEquals(
             $category->toString(true),
-            Account::getType($category->category_type).' Category: '.$category->name
+            Account::getType($category->category_type) . ' Category: ' . $category->name
         );
         $this->assertEquals(
             $category->toString(),
@@ -60,14 +56,12 @@ class CategoryTest extends TestCase
 
         $this->be($user);
 
-        $category = new Category(
-            [
+        $category = new Category([
             'name' => $this->faker->word,
             'category_type' => $this->faker->randomElement(
                 array_keys(config('ifrs')['accounts'])
             ),
-            ]
-        );
+        ]);
         $category->save();
 
         $category->attributes();
@@ -85,14 +79,12 @@ class CategoryTest extends TestCase
      */
     public function testCategoryRecycling()
     {
-        $category = new Category(
-            [
+        $category = new Category([
             'name' => $this->faker->word,
             'category_type' => $this->faker->randomElement(
                 array_keys(config('ifrs')['accounts'])
             ),
-            ]
-        );
+        ]);
         $category->save();
 
         $recycled = RecycledObject::all()->first();

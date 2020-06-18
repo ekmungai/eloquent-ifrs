@@ -18,6 +18,7 @@ use IFRS\Transactions\CashSale;
 
 use IFRS\Exceptions\LineItemAccount;
 use IFRS\Exceptions\MainAccount;
+use IFRS\Models\Vat;
 
 class CashSaleTest extends TestCase
 {
@@ -28,24 +29,20 @@ class CashSaleTest extends TestCase
      */
     public function testCreateCashSaleTransaction()
     {
-        $bankAccount = factory(Account::class)->create(
-            [
+        $bankAccount = factory(Account::class)->create([
             'account_type' => Account::BANK,
-            ]
-        );
+        ]);
 
-        $cashSale = new CashSale(
-            [
+        $cashSale = new CashSale([
             "account_id" => $bankAccount->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
-            ]
-        );
+        ]);
         $cashSale->save();
 
         $this->assertEquals($cashSale->account->name, $bankAccount->name);
         $this->assertEquals($cashSale->account->description, $bankAccount->description);
-        $this->assertEquals($cashSale->transaction_no, "CS0".$this->period->period_count."/0001");
+        $this->assertEquals($cashSale->transaction_no, "CS0" . $this->period->period_count . "/0001");
     }
 
     /**
@@ -55,33 +52,23 @@ class CashSaleTest extends TestCase
      */
     public function testPostCashSaleTransaction()
     {
-        $cashSale = new CashSale(
-            [
-            "account_id" => factory('IFRS\Models\Account')->create(
-                [
+        $cashSale = new CashSale([
+            "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
-                ]
-            )->id,
+            ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
-            ]
-        );
+        ]);
 
-        $lineItem = factory(LineItem::class)->create(
-            [
+        $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('IFRS\Models\Vat')->create(
-                [
+            "vat_id" => factory(Vat::class)->create([
                 "rate" => 16
-                ]
-            )->id,
-            "account_id" => factory('IFRS\Models\Account')->create(
-                [
+            ])->id,
+            "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OPERATING_REVENUE
-                ]
-            )->id,
-            ]
-        );
+            ])->id,
+        ]);
         $cashSale->addLineItem($lineItem);
 
         $cashSale->post();
@@ -100,9 +87,9 @@ class CashSaleTest extends TestCase
         $vat_credit = Ledger::where("entry_type", Balance::CREDIT)->get()[1];
 
         $this->assertEquals($vat_debit->post_account, $cashSale->account->id);
-        $this->assertEquals($vat_debit->folio_account, $lineItem->vat_account_id);
+        $this->assertEquals($vat_debit->folio_account, $lineItem->vat->account_id);
         $this->assertEquals($vat_credit->folio_account, $cashSale->account->id);
-        $this->assertEquals($vat_credit->post_account, $lineItem->vat_account_id);
+        $this->assertEquals($vat_credit->post_account, $lineItem->vat->account_id);
         $this->assertEquals($vat_debit->amount, 16);
         $this->assertEquals($vat_credit->amount, 16);
 
@@ -116,36 +103,26 @@ class CashSaleTest extends TestCase
      */
     public function testCashSaleLineItemAccount()
     {
-        $cashSale = new CashSale(
-            [
-            "account_id" => factory('IFRS\Models\Account')->create(
-                [
+        $cashSale = new CashSale([
+            "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
-                ]
-            )->id,
+            ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
-            ]
-        );
+        ]);
 
         $this->expectException(LineItemAccount::class);
         $this->expectExceptionMessage('Cash Sale LineItem Account must be of type Operating Revenue');
 
-        $lineItem = factory(LineItem::class)->create(
-            [
+        $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('IFRS\Models\Vat')->create(
-                [
+            "vat_id" => factory(Vat::class)->create([
                 "rate" => 16
-                ]
-            )->id,
-            "account_id" => factory('IFRS\Models\Account')->create(
-                [
+            ])->id,
+            "account_id" => factory(Account::class)->create([
                 "account_type" => Account::RECONCILIATION
-                ]
-            )->id,
-            ]
-        );
+            ])->id,
+        ]);
         $cashSale->addLineItem($lineItem);
 
         $cashSale->post();
@@ -158,36 +135,26 @@ class CashSaleTest extends TestCase
      */
     public function testCashSaleMainAccount()
     {
-        $cashSale = new CashSale(
-            [
-            "account_id" => factory('IFRS\Models\Account')->create(
-                [
+        $cashSale = new CashSale([
+            "account_id" => factory(Account::class)->create([
                 'account_type' => Account::RECONCILIATION,
-                ]
-            )->id,
+            ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
-            ]
-        );
+        ]);
 
         $this->expectException(MainAccount::class);
         $this->expectExceptionMessage('Cash Sale Main Account must be of type Bank');
 
-        $lineItem = factory(LineItem::class)->create(
-            [
+        $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('IFRS\Models\Vat')->create(
-                [
+            "vat_id" => factory(Vat::class)->create([
                 "rate" => 16
-                ]
-            )->id,
-            "account_id" => factory('IFRS\Models\Account')->create(
-                [
+            ])->id,
+            "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OPERATING_REVENUE
-                ]
-            )->id,
-            ]
-        );
+            ])->id,
+        ]);
         $cashSale->addLineItem($lineItem);
 
         $cashSale->post();
@@ -200,17 +167,13 @@ class CashSaleTest extends TestCase
      */
     public function testCashSaleFind()
     {
-        $transaction = new CashSale(
-            [
-            "account_id" => factory('IFRS\Models\Account')->create(
-                [
+        $transaction = new CashSale([
+            "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
-                ]
-            )->id,
+            ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
-            ]
-        );
+        ]);
         $transaction->save();
 
         $found = CashSale::find($transaction->id);
@@ -224,32 +187,24 @@ class CashSaleTest extends TestCase
      */
     public function testCashSaleFetch()
     {
-        $account = factory(Account::class)->create(
-            [
+        $account = factory(Account::class)->create([
             'account_type' => Account::BANK,
-            ]
-        );
-        $transaction = new CashSale(
-            [
+        ]);
+        $transaction = new CashSale([
             "account_id" => $account->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
-            ]
-        );
+        ]);
         $transaction->save();
 
-        $account2 = factory(Account::class)->create(
-            [
+        $account2 = factory(Account::class)->create([
             'account_type' => Account::BANK,
-            ]
-        );
-        $transaction2 = new CashSale(
-            [
+        ]);
+        $transaction2 = new CashSale([
             "account_id" => $account2->id,
             "transaction_date" => Carbon::now()->addWeeks(2),
             "narration" => $this->faker->word,
-            ]
-        );
+        ]);
 
         $transaction2->save();
 
@@ -265,7 +220,7 @@ class CashSaleTest extends TestCase
         // Account Filter
         $account3 = factory(Account::class)->create(
             [
-            'account_type' => Account::BANK,
+                'account_type' => Account::BANK,
             ]
         );
         $this->assertEquals(count(CashSale::fetch(null, null, $account)), 1);

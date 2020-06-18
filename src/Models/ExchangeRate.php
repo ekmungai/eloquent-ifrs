@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -57,8 +59,9 @@ class ExchangeRate extends Model implements Segragatable, Recyclable
      */
     public function toString($type = false)
     {
-        $description = number_format($this->rate, 2).' for '.$this->currency->toString(). ' from '.$this->valid_from->toDateString();
-        return $type? 'Exchange Rate: '.$description : $description;
+        $classname = explode('\\', self::class);
+        $description = number_format($this->rate, 2) . ' for ' . $this->currency->toString() . ' from ' . $this->valid_from->toDateString();
+        return $type ? array_pop($classname) . ': ' . $description : $description;
     }
 
     /**

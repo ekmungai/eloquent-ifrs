@@ -25,19 +25,17 @@ class ReportingPeriodTest extends TestCase
     {
         $entity = Auth::user()->entity;
 
-        $period = new ReportingPeriod(
-            [
+        $period = new ReportingPeriod([
             'period_count' => 1,
             'calendar_year' => Carbon::now()->year,
-            ]
-        );
+        ]);
         $period->save();
 
         $period->attributes();
         $this->assertEquals($entity->reportingPeriods->last()->calendar_year, $period->calendar_year);
         $this->assertEquals(
             $period->toString(true),
-            'Reportiting Period: '.$period->calendar_year
+            'ReportingPeriod: ' . $period->calendar_year
         );
         $this->assertEquals(
             $period->toString(),
@@ -71,12 +69,10 @@ class ReportingPeriodTest extends TestCase
      */
     public function testReportingPeriodRecycling()
     {
-        $period = new ReportingPeriod(
-            [
+        $period = new ReportingPeriod([
             'period_count' => 1,
             'calendar_year' => Carbon::now()->year,
-            ]
-        );
+        ]);
 
         $period->delete();
 
@@ -114,6 +110,6 @@ class ReportingPeriodTest extends TestCase
         $this->expectException(MissingReportingPeriod::class);
         $this->expectExceptionMessage('has no reporting period defined for the year');
 
-        ReportingPeriod::getPeriod("1970");
+        ReportingPeriod::getPeriod(Carbon::parse("1970-01-01"));
     }
 }

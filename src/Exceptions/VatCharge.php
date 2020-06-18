@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Exceptions;
 
 use Carbon\Carbon;
@@ -28,16 +30,16 @@ class VatCharge extends IFRSException
     {
         $transactionType = Transaction::getType($transactionType);
 
-        $error = $transactionType." LineItems cannot be Charged VAT ";
+        $error = $transactionType . " LineItems cannot be Charged VAT ";
 
         Log::notice(
-            $error.$message,
+            $error . $message,
             [
                 'user_id' => Auth::user()->id,
                 'time' => Carbon::now(),
             ]
         );
 
-        parent::__construct($error.$message, $code);
+        parent::__construct($error . $message, $code);
     }
 }

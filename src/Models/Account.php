@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -142,34 +144,34 @@ class Account extends Model implements Recyclable, Segragatable
         string $accountType,
         string $startDate = null,
         string $endDate = null
-        ) : array {
-            $balances = ["sectionTotal" => 0, "sectionCategories" => []];
+    ): array {
+        $balances = ["sectionTotal" => 0, "sectionCategories" => []];
 
-            $startDate = is_null($startDate)?ReportingPeriod::periodStart($endDate):Carbon::parse($startDate);
-            $endDate = is_null($endDate)?Carbon::now():Carbon::parse($endDate);
+        $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate) : Carbon::parse($startDate);
+        $endDate = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
 
-            $year = ReportingPeriod::year($endDate);
+        $year = ReportingPeriod::year($endDate);
 
-            foreach (Account::where("account_type", $accountType)->get() as $account) {
-                $account->openingBalance = $account->openingBalance($year);
-                $account->currentBalance = Ledger::balance($account, $startDate, $endDate);
-                $closingBalance = $account->openingBalance + $account->currentBalance;
+        foreach (Account::where("account_type", $accountType)->get() as $account) {
+            $account->openingBalance = $account->openingBalance($year);
+            $account->currentBalance = Ledger::balance($account, $startDate, $endDate);
+            $closingBalance = $account->openingBalance + $account->currentBalance;
 
-                if ($closingBalance <> 0) {
-                    $categoryName = is_null($account->category)? $account->account_type: $account->category->name;
+            if ($closingBalance <> 0) {
+                $categoryName = is_null($account->category) ? $account->account_type : $account->category->name;
 
-                    if (in_array($categoryName, $balances["sectionCategories"])) {
-                        $balances["sectionCategories"][$categoryName]['accounts']->push($account->attributes());
-                        $balances["sectionCategories"][$categoryName]['total'] += $closingBalance;
-                    } else {
-                        $balances["sectionCategories"][$categoryName]['accounts'] = collect([$account->attributes()]);
-                        $balances["sectionCategories"][$categoryName]['total'] = $closingBalance;
-                    }
+                if (in_array($categoryName, $balances["sectionCategories"])) {
+                    $balances["sectionCategories"][$categoryName]['accounts']->push($account->attributes());
+                    $balances["sectionCategories"][$categoryName]['total'] += $closingBalance;
+                } else {
+                    $balances["sectionCategories"][$categoryName]['accounts'] = collect([$account->attributes()]);
+                    $balances["sectionCategories"][$categoryName]['total'] = $closingBalance;
                 }
-                $balances["sectionTotal"] += $closingBalance;
             }
+            $balances["sectionTotal"] += $closingBalance;
+        }
 
-            return $balances;
+        return $balances;
     }
 
     /**
@@ -189,7 +191,8 @@ class Account extends Model implements Recyclable, Segragatable
      */
     public function toString($type = false)
     {
-        return $type? $this->type().' Account: '.$this->name : $this->name;
+        $classname = explode('\\', self::class);
+        return $type ? $this->type() . ' ' . array_pop($classname) . ': ' . $this->name : $this->name;
     }
 
     /**
@@ -236,22 +239,22 @@ class Account extends Model implements Recyclable, Segragatable
     /**
      * Get Account's Opening Balance for the Reporting Period.
      *
-     * @param string $year
+     * @param int $year
      *
      * @return float
      */
-    public function openingBalance(string $year = null) : float
+    public function openingBalance(int $year = null): float
     {
         if (!is_null($year)) {
             $period = ReportingPeriod::where('calendar_year', $year)->first();
-        }else{
+        } else {
             $period = Auth::user()->entity->currentReportingPeriod();
         }
 
         $balance = 0;
 
         foreach ($this->balances->where("reporting_period_id", $period->id) as $record) {
-            $amount = $record->amount/$record->exchangeRate->rate;
+            $amount = $record->amount / $record->exchangeRate->rate;
             $record->balance_type == Balance::DEBIT ? $balance += $amount : $balance -= $amount;
         }
         return $balance;
@@ -265,10 +268,10 @@ class Account extends Model implements Recyclable, Segragatable
      *
      * @return float
      */
-    public function closingBalance(string $startDate = null, string $endDate = null) : float
+    public function closingBalance(string $startDate = null, string $endDate = null): float
     {
-        $startDate = is_null($startDate)?ReportingPeriod::periodStart($endDate):Carbon::parse($startDate);
-        $endDate = is_null($endDate)? Carbon::now():Carbon::parse($endDate);
+        $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate) : Carbon::parse($startDate);
+        $endDate = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
 
         $year = ReportingPeriod::year($endDate);
 
@@ -278,7 +281,7 @@ class Account extends Model implements Recyclable, Segragatable
     /**
      * Calculate Account Code.
      */
-    public function save(array $options = []) : bool
+    public function save(array $options = []): bool
     {
         if (is_null($this->code)) {
             if (is_null($this->account_type)) {
@@ -287,8 +290,8 @@ class Account extends Model implements Recyclable, Segragatable
 
             $section = Arr::collapse(array_values(config('ifrs')))[$this->account_type];
             $this->code = $section + Account::withTrashed()
-            ->where("account_type", $this->account_type)
-            ->count() + 1;
+                ->where("account_type", $this->account_type)
+                ->count() + 1;
         }
 
         $this->name = ucfirst($this->name);

@@ -37,22 +37,20 @@ class AccountTest extends TestCase
 
         $category = factory(Category::class)->create();
 
-        $account = new Account(
-            [
+        $account = new Account([
             'name' => $this->faker->name,
             'account_type' => $this->faker->randomElement(array_keys(config('ifrs')['accounts'])),
             'currency_id' => $currency->id,
             'code' => $this->faker->randomDigit,
             'category_id' => $category->id
-            ]
-        );
+        ]);
         $account->save();
 
         $this->assertEquals($account->currency->name, $currency->name);
         $this->assertEquals($account->category->name, $category->name);
         $this->assertEquals(
             $account->toString(true),
-            Account::getType($account->account_type).' Account: '.$account->name
+            Account::getType($account->account_type) . ' Account: ' . $account->name
         );
         $this->assertEquals($account->toString(), $account->name);
     }
@@ -70,14 +68,12 @@ class AccountTest extends TestCase
 
         $this->be($user);
 
-        $account = new Account(
-            [
+        $account = new Account([
             'name' => $this->faker->name,
             'currency_id' => factory(Currency::class)->create()->id,
             'account_type' => $this->faker->randomElement(array_keys(config('ifrs')['accounts'])),
             'category_id' => factory(Category::class)->create()->id
-            ]
-        );
+        ]);
 
         $account->save();
 
@@ -94,7 +90,7 @@ class AccountTest extends TestCase
      */
     public function testAccountTypeNames()
     {
-        $this->assertEquals(Account::getTypes([Account::BANK,Account::RECEIVABLE]), ["Bank","Receivable"]);
+        $this->assertEquals(Account::getTypes([Account::BANK, Account::RECEIVABLE]), ["Bank", "Receivable"]);
     }
 
     /**
@@ -119,63 +115,50 @@ class AccountTest extends TestCase
     public function testAccountCodes()
     {
         // Manual code
-        $account = new Account(
-            [
+        $account = new Account([
             'name' => $this->faker->name,
             'code' => 6000,
-            'account_type' => $this->faker->randomElement(array_keys(config('ifrs')['accounts'])),
+            'account_type' => Account::RECEIVABLE,
             'category_id' => factory(Category::class)->create()->id
-            ]
-        );
+        ]);
         $account->save();
 
         $this->assertEquals(6000, $account->code);
 
         // Auto generated code
-        $account = new Account(
-            [
+        $account = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::NON_CURRENT_ASSET,
             'category_id' => factory(Category::class)->create()->id
-            ]
-        );
+        ]);
         $account->save();
 
         $this->assertEquals(1, $account->code);
-        $this->assertEquals(1, $account->code);
 
-        factory(Account::class, 3)->create(
-            [
+        factory(Account::class, 3)->create([
             "account_type" => Account::OPERATING_REVENUE,
             "code" => null
-            ]
-        );
+        ]);
 
-        $account = new Account(
-            [
+        $account = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::OPERATING_REVENUE,
             'category_id' => factory(Category::class)->create()->id
-            ]
-        );
+        ]);
         $account->save();
 
         $this->assertEquals(4004, $account->code);
 
-        factory(Account::class, 12)->create(
-            [
+        factory(Account::class, 12)->create([
             "account_type" => Account::CURRENT_LIABILITY,
             "code" => null
-            ]
-        );
+        ]);
 
-        $account = new Account(
-            [
+        $account = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::CURRENT_LIABILITY,
             'category_id' => factory(Category::class)->create()->id
-            ]
-        );
+        ]);
 
         $account->save();
 
@@ -189,83 +172,65 @@ class AccountTest extends TestCase
      */
     public function testAccountOpeningBalance()
     {
-        $account = new Account(
-            [
+        $account = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::INVENTORY,
             'category_id' => factory(Category::class)->create()->id
-            ]
-        );
+        ]);
 
         $account->save();
 
-        factory(Balance::class, 3)->create(
-            [
+        factory(Balance::class, 3)->create([
             "account_id" => $account->id,
             "balance_type" => Balance::DEBIT,
-            "exchange_rate_id" => factory(ExchangeRate::class)->create(
-                [
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1,
-                ]
-            )->id,
+            ])->id,
             'reporting_period_id' => $this->period->id,
             "amount" => 50
-            ]
-        );
+        ]);
 
-        factory(Balance::class, 2)->create(
-            [
+        factory(Balance::class, 2)->create([
             "account_id" => $account->id,
             "balance_type" => Balance::CREDIT,
-            "exchange_rate_id" => factory(ExchangeRate::class)->create(
-                [
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1,
-                ]
-                )->id,
-                'reporting_period_id' => $this->period->id,
+            ])->id,
+            'reporting_period_id' => $this->period->id,
             "amount" => 40
-            ]
-        );
+        ]);
 
         $this->assertEquals($account->openingBalance(), 70);
 
-        $account = new Account(
-            [
+        $account = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::CONTRA_ASSET,
             'category_id' => factory(Category::class)->create()->id
-            ]
-        );
+        ]);
         $account->save();
 
-        $rate = factory(ExchangeRate::class)->create(
-            [
+        $rate = factory(ExchangeRate::class)->create([
             "rate" => 25
-            ]
-        );
+        ]);
 
         $reportingPeriod = factory(ReportingPeriod::class)->create([
             "calendar_year" => Carbon::now()->addYear()->year,
         ]);
-        factory(Balance::class, 3)->create(
-            [
+        factory(Balance::class, 3)->create([
             "account_id" => $account->id,
             "balance_type" => Balance::DEBIT,
             "exchange_rate_id" => $rate->id,
             'reporting_period_id' => $reportingPeriod->id,
             "amount" => 100
-            ]
-        );
+        ]);
 
-        factory(Balance::class, 2)->create(
-            [
+        factory(Balance::class, 2)->create([
             "account_id" => $account->id,
             "balance_type" => Balance::CREDIT,
             "exchange_rate_id" => $rate->id,
             'reporting_period_id' => $reportingPeriod->id,
             "amount" => 80
-            ]
-        );
+        ]);
 
         $this->assertEquals(5.60, $account->openingBalance(Carbon::now()->addYear()->year));
     }
@@ -277,48 +242,38 @@ class AccountTest extends TestCase
      */
     public function testAccountClosingBalance()
     {
-        $account = new Account(
-            [
+        $account = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::RECEIVABLE,
             'category_id' => factory(Category::class)->create()->id
-            ]
-        );
+        ]);
         $account->save();
 
-        factory(Ledger::class, 3)->create(
-            [
+        factory(Ledger::class, 3)->create([
             "post_account" => $account->id,
             "entry_type" => Balance::DEBIT,
             "date" => Carbon::now(),
             "amount" => 50
-            ]
-        );
+        ]);
 
-        factory(Ledger::class, 2)->create(
-            [
+        factory(Ledger::class, 2)->create([
             "post_account" => $account->id,
             "entry_type" => Balance::CREDIT,
             "date" => Carbon::now(),
             "amount" => 40
-            ]
-        );
+        ]);
 
         $this->assertEquals($account->closingBalance(), 70);
 
-        factory(Balance::class)->create(
-            [
+        factory(Balance::class)->create([
             "account_id" => $account->id,
             "balance_type" => Balance::DEBIT,
-            "exchange_rate_id" => factory(ExchangeRate::class)->create(
-                [
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1,
-                ]
-            )->id,
+            ])->id,
             'reporting_period_id' => $this->period->id,
             "amount" => 100
-            ]
-        );
+        ]);
 
         $account = Account::find($account->id);
         $this->assertEquals($account->closingBalance(), 170);
@@ -331,99 +286,79 @@ class AccountTest extends TestCase
      */
     public function testAccountsSectionBalances()
     {
-        $account1 = new Account(
-            [
+        $account1 = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::RECEIVABLE,
             'category_id' => factory(Category::class)->create()->id
-            ]
-        );
+        ]);
         $account1->save();
 
         $category1 = $account1->category->name;
 
-        $account2 = new Account(
-            [
+        $account2 = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::RECEIVABLE,
             'category_id' => factory(Category::class)->create()->id
-            ]
-        );
+        ]);
         $account2->save();
 
         $category2 = $account2->category->name;
 
-        $account3 = new Account(
-            [
+        $account3 = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::OPERATING_REVENUE,
             'category_id' => factory(Category::class)->create()->id
-            ]
-        );
+        ]);
         $account3->save();
 
         $category3 = $account3->category->name;
 
-        $account4 =
-        new Account(
-            [
+        $account4 = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::CONTROL_ACCOUNT,
             'category_id' => factory(Category::class)->create()->id
-            ]
-        );
+        ]);
         $account4->save();
 
         $category4 = $account4->category->name;
 
-        factory(Balance::class, 3)->create(
-            [
+        factory(Balance::class, 3)->create([
             "account_id" => $account1->id,
             "balance_type" => Balance::DEBIT,
-            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
-                [
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1
-                ]
-            )->id,
+            ])->id,
             'reporting_period_id' => $this->period->id,
             "amount" => 50
-            ]
-        );
+        ]);
 
-        factory(Balance::class, 2)->create(
-            [
-
+        factory(Balance::class, 2)->create([
             "account_id" => $account1->id,
             "balance_type" => Balance::CREDIT,
-            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
-                [
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1
-                ]
-            )->id,
+            ])->id,
             'reporting_period_id' => $this->period->id,
             "amount" => 40
-            ]
-        );
+        ]);
 
         //Client Invoice Transaction
-        $clientInvoice = new ClientInvoice(
-            [
+        $clientInvoice = new ClientInvoice([
             "account_id" => $account2->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-            ]
-        );
+        ]);
 
-        $line = new LineItem(
-            [
-            'vat_id' => factory(Vat::class)->create(["rate" => 16])->id,
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create([
+                "rate" => 16,
+                "account_id" => $account4->id
+            ])->id,
             'account_id' => $account3->id,
-            'vat_account_id' => $account4->id,
             'narration' => $this->faker->sentence,
             'quantity' => $this->faker->randomNumber(),
             'amount' => 100,
-            ]
-        );
+        ]);
 
         $clientInvoice->addLineItem($line);
 
@@ -491,28 +426,22 @@ class AccountTest extends TestCase
      */
     public function testHangingTransactions()
     {
-        $account = new Account(
-            [
+        $account = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::RECEIVABLE,
             'category_id' => factory(Category::class)->create()->id
-            ]
-        );
+        ]);
         $account->save();
 
-        factory(Balance::class)->create(
-            [
+        factory(Balance::class)->create([
             "account_id" => $account->id,
             "balance_type" => Balance::DEBIT,
-            "exchange_rate_id" => factory(ExchangeRate::class)->create(
-                [
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1,
-                ]
-            )->id,
+            ])->id,
             'reporting_period_id' => $this->period->id,
             "amount" => 100
-            ]
-        );
+        ]);
 
         $this->expectException(HangingTransactions::class);
         $this->expectExceptionMessage(

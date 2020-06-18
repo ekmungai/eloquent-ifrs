@@ -18,12 +18,10 @@ class CurrencyTest extends TestCase
      */
     public function testCurrencyRelationships()
     {
-        $currency = new Currency(
-            [
+        $currency = new Currency([
             'name' => $this->faker->word,
             'currency_code' => $this->faker->currencyCode,
-            ]
-        );
+        ]);
         $currency->attributes();
         $currency->save();
 
@@ -31,12 +29,10 @@ class CurrencyTest extends TestCase
         $entity->currency()->associate($currency);
         $entity->save();
 
-        $exchangeRate = factory(ExchangeRate::class)->create(
-            [
-                'currency_id'=> $currency->id,
-                'entity_id'=> $entity->id,
-            ]
-        );
+        $exchangeRate = factory(ExchangeRate::class)->create([
+            'currency_id' => $currency->id,
+            'entity_id' => $entity->id,
+        ]);
 
         $this->assertEquals(
             $currency->exchangeRates->first()->rate,
@@ -49,11 +45,11 @@ class CurrencyTest extends TestCase
         );
         $this->assertEquals(
             $currency->toString(true),
-            'Currency: '.$currency->name.' ('.$currency->currency_code.')'
+            'Currency: ' . $currency->name . ' (' . $currency->currency_code . ')'
         );
         $this->assertEquals(
             $currency->toString(),
-            $currency->name.' ('.$currency->currency_code.')'
+            $currency->name . ' (' . $currency->currency_code . ')'
         );
     }
 
@@ -64,12 +60,10 @@ class CurrencyTest extends TestCase
      */
     public function testCurrencyRecycling()
     {
-        $currency = new Currency(
-            [
+        $currency = new Currency([
             'name' => $this->faker->word,
             'currency_code' => $this->faker->currencyCode,
-            ]
-        );
+        ]);
         $currency->delete();
 
         $recycled = RecycledObject::all()->first();

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Models;
 
 use Carbon\Carbon;
@@ -81,15 +83,17 @@ class ReportingPeriod extends Model implements Segragatable, Recyclable
      */
     public function toString($type = false)
     {
-        return $type? 'Reportiting Period: '.$this->calendar_year : $this->calendar_year;
+        $classname = explode('\\', self::class);
+        return $type ? array_pop($classname) . ': ' . $this->calendar_year : $this->calendar_year;
     }
 
     /**
      * Fetch reporting period for the date
      *
+     * @param Carbon $date
      * @return int
      */
-    public static function getPeriod(string $date = null)
+    public static function getPeriod(Carbon $date = null)
     {
         $year = ReportingPeriod::year($date);
 
@@ -112,7 +116,7 @@ class ReportingPeriod extends Model implements Segragatable, Recyclable
         $year = is_null($date) ? date("Y") : date("Y", strtotime($date));
         $month = is_null($date) ? date("m") : date("m", strtotime($date));
 
-        $year  = intval($month) < Auth::user()->entity->year_start ? intval($year)-1 : $year;
+        $year  = intval($month) < Auth::user()->entity->year_start ? intval($year) - 1 : $year;
 
         return intval($year);
     }
@@ -139,8 +143,8 @@ class ReportingPeriod extends Model implements Segragatable, Recyclable
     public static function periodEnd(string $date = null)
     {
         return ReportingPeriod::periodStart($date)
-        ->addYear()
-        ->subDay();
+            ->addYear()
+            ->subDay();
     }
 
     /**

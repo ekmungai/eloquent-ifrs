@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Reports;
 
 use Carbon\Carbon;
@@ -54,7 +56,7 @@ class IncomeStatement extends FinancialStatement
             array_keys(config('ifrs')[IncomeStatement::NON_OPERATING_REVENUES]),
             array_keys(config('ifrs')[IncomeStatement::OPERATING_EXPENSES]),
             array_keys(config('ifrs')[IncomeStatement::NON_OPERATING_EXPENSES])
-            );
+        );
     }
 
     /**
@@ -65,8 +67,8 @@ class IncomeStatement extends FinancialStatement
      */
     public function __construct(string $startDate = null, string $endDate = null)
     {
-        $this->period['startDate'] = is_null($startDate)? ReportingPeriod::periodStart(): $startDate;
-        $this->period['endDate'] = is_null($endDate)? Carbon::now(): Carbon::parse($endDate);
+        $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart() : $startDate;
+        $this->period['endDate'] = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
 
         $period = ReportingPeriod::where("year", $endDate)->first();
         parent::__construct($period);
@@ -99,18 +101,18 @@ class IncomeStatement extends FinancialStatement
      *
      * @codeCoverageIgnore
      */
-    public function toString() : void
+    public function toString(): void
     {
-        $statement ="";
+        $statement = "";
         $indent = "    ";
         $separator = "                        ---------------";
 
         // Title
-        $statement .= $this->entity->name.PHP_EOL;
-        $statement .= config('ifrs')['statements'][self::TITLE].PHP_EOL;
+        $statement .= $this->entity->name . PHP_EOL;
+        $statement .= config('ifrs')['statements'][self::TITLE] . PHP_EOL;
         $statement .= "For the Period: ";
         $statement .= $this->period['startDate']->format('M d Y');
-        $statement .= " to ".$this->period['endDate']->format('M d Y').PHP_EOL;
+        $statement .= " to " . $this->period['endDate']->format('M d Y') . PHP_EOL;
 
         // Operating Revenues
         $opRevenue = $this->printSection(self::OPERATING_REVENUES, $statement, -1, $indent);
@@ -120,32 +122,32 @@ class IncomeStatement extends FinancialStatement
         $opExpenses = $this->printSection(self::OPERATING_EXPENSES, $statement, 1, $indent);
         $statement = $opExpenses[0];
 
-        $statement .= $separator.PHP_EOL;
+        $statement .= $separator . PHP_EOL;
         $statement .= "Operations Gross Profit ";
-        $statement .= ($opRevenue[1] - $opExpenses[1]).PHP_EOL;
+        $statement .= ($opRevenue[1] - $opExpenses[1]) . PHP_EOL;
 
         // Non Operating Revenue
         $nOpRevenue = $this->printSection(self::NON_OPERATING_REVENUES, $statement, -1, $indent);
         $statement = $nOpRevenue[0];
 
-        $statement .= $separator.PHP_EOL;
+        $statement .= $separator . PHP_EOL;
         $statement .= "Total Revenue       ";
-        $statement .= $indent.($opRevenue[1] - $opExpenses[1] + $nOpRevenue[1]).PHP_EOL;
+        $statement .= $indent . ($opRevenue[1] - $opExpenses[1] + $nOpRevenue[1]) . PHP_EOL;
 
         // Non Operating Expenses
         $nOpExpense = $this->printSection(self::NON_OPERATING_EXPENSES, $statement, 1, $indent);
         $statement = $nOpExpense[0];
-        $statement .=PHP_EOL;
+        $statement .= PHP_EOL;
 
-        $statement .= $separator.PHP_EOL;
+        $statement .= $separator . PHP_EOL;
         $statement .= "Total Expenses       ";
-        $statement .= $indent.($nOpExpense[1]).PHP_EOL;
-        $statement .=PHP_EOL;
+        $statement .= $indent . ($nOpExpense[1]) . PHP_EOL;
+        $statement .= PHP_EOL;
 
-        $statement .= $separator.PHP_EOL;
+        $statement .= $separator . PHP_EOL;
         $statement .= "Net Profit          ";
-        $statement .= $indent.($opRevenue[1] - $opExpenses[1] + $nOpExpense[1]).PHP_EOL;
-        $statement .= str_replace("-", "=", $separator.PHP_EOL);
+        $statement .= $indent . ($opRevenue[1] - $opExpenses[1] + $nOpExpense[1]) . PHP_EOL;
+        $statement .= str_replace("-", "=", $separator . PHP_EOL);
 
         print($statement);
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Ezeugwu Paschal, 2020, Nigeria
  * @license   MIT
  */
+
 namespace IFRS\Traits;
 
 use IFRS\Models\Entity;

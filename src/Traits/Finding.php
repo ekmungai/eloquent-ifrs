@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,14 +7,11 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Traits;
 
 use IFRS\Models\Transaction;
 
-/**
- *
- * @author emung
- */
 trait Finding
 {
     /**
@@ -23,7 +21,7 @@ trait Finding
      *
      * @return Transaction
      */
-    public static function find(int $id) : Transaction
+    public static function find(int $id): Transaction
     {
         return Transaction::find($id);
     }

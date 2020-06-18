@@ -32,7 +32,7 @@ class MissingForexAccount extends IFRSException
                 'user_id' => Auth::user()->id,
                 'time' => Carbon::now(),
             ]
-            );
+        );
 
         parent::__construct($error.$message, $code);
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -53,7 +55,8 @@ class Category extends Model implements Segragatable, Recyclable
      */
     public function toString($type = false)
     {
-        return $type? $this->type().' Category: '.$this->name: $this->name;
+        $classname = explode('\\', self::class);
+        return $type ? $this->type() . ' ' . array_pop($classname) . ': ' . $this->name : $this->name;
     }
 
     /**

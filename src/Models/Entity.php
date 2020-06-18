@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Models;
 
 use Carbon\Carbon;
@@ -55,7 +57,8 @@ class Entity extends Model implements Recyclable
      */
     public function toString($type = false)
     {
-        return $type? 'Entity: '.$this->name: $this->name;
+        $classname = explode('\\', self::class);
+        return $type ? array_pop($classname) . ': ' . $this->name : $this->name;
     }
 
     /**
@@ -103,30 +106,26 @@ class Entity extends Model implements Recyclable
      *
      * @return ExchangeRate
      */
-    public function defaultRate() : ExchangeRate
+    public function defaultRate(): ExchangeRate
     {
-        $existing = ExchangeRate::where(
-            [
-                "entity_id" => $this->id,
-                "currency_id" => $this->currency_id,
-                "valid_from" => Carbon::now(),
-            ]
-            )->first();
+        $existing = ExchangeRate::where([
+            "entity_id" => $this->id,
+            "currency_id" => $this->currency_id,
+            "valid_from" => Carbon::now(),
+        ])->first();
 
-            if (!is_null($existing)) {
-                return $existing;
-            }
+        if (!is_null($existing)) {
+            return $existing;
+        }
 
-            $new = new ExchangeRate(
-                [
-                    'valid_from' => Carbon::now(),
-                    'currency_id' => $this->currency->id,
-                ]
-                );
+        $new = new ExchangeRate([
+            'valid_from' => Carbon::now(),
+            'currency_id' => $this->currency->id,
+        ]);
 
-            $new->save();
+        $new->save();
 
-            return $new;
+        return $new;
     }
 
 
@@ -135,7 +134,7 @@ class Entity extends Model implements Recyclable
      *
      * @return ReportingPeriod
      */
-    public function currentReportingPeriod() : ReportingPeriod
+    public function currentReportingPeriod(): ReportingPeriod
     {
         $existing = $this->reportingPeriods->where('calendar_year', date("Y"))->first();
 
@@ -143,12 +142,10 @@ class Entity extends Model implements Recyclable
             return $existing;
         }
 
-        $new = new ReportingPeriod(
-            [
-                'calendar_year' => date('Y'),
-                'period_count' => count(ReportingPeriod::withTrashed()->get()) +1,
-            ]
-            );
+        $new = new ReportingPeriod([
+            'calendar_year' => date('Y'),
+            'period_count' => count(ReportingPeriod::withTrashed()->get()) + 1,
+        ]);
 
         $new->save();
 

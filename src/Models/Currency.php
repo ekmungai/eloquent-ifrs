@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -49,7 +51,8 @@ class Currency extends Model implements Recyclable
      */
     public function toString($type = false)
     {
-        return $type? 'Currency: '.$this->name.' ('.$this->currency_code.')': $this->name.' ('.$this->currency_code.')';
+        $classname = explode('\\', self::class);
+        return $type ? array_pop($classname) . ': ' . $this->name . ' (' . $this->currency_code . ')' : $this->name . ' (' . $this->currency_code . ')';
     }
 
     /**

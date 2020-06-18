@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,8 +7,11 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Models;
 
+use IFRS\Exceptions\InvalidAccountType;
+use IFRS\Exceptions\MissingVatAccount;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -17,7 +21,6 @@ use IFRS\Interfaces\Recyclable;
 use IFRS\Traits\Recycling;
 use IFRS\Traits\Segragating;
 use IFRS\Traits\ModelTablePrefix;
-// use IFRS\Exceptions\VatPeriodOverlap;
 
 /**
  * Class Vat
@@ -25,6 +28,7 @@ use IFRS\Traits\ModelTablePrefix;
  * @package Ekmungai\Eloquent-IFRS
  *
  * @property Entity $entity
+ * @property Account $account
  * @property string $code
  * @property string $name
  * @property float $rate
@@ -48,6 +52,7 @@ class Vat extends Model implements Segragatable, Recyclable
         'code',
         'rate',
         'valid_from',
+        'account_id',
         'valid_to',
     ];
 
@@ -58,8 +63,9 @@ class Vat extends Model implements Segragatable, Recyclable
      */
     public function toString($type = false)
     {
-        $description = $this->name.' ('.$this->code.') at '.number_format($this->rate, 2).'%';
-        return $type? 'VAT: '.$description : $description;
+        $classname = explode('\\', self::class);
+        $description = $this->name . ' (' . $this->code . ') at ' . number_format($this->rate, 2) . '%';
+        return $type ? array_pop($classname) . ': ' . $description : $description;
     }
 
     /**
@@ -73,17 +79,28 @@ class Vat extends Model implements Segragatable, Recyclable
     }
 
     /**
+     * LineItem Vat Account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function account()
+    {
+        return $this->HasOne(Account::class, 'id', 'account_id');
+    }
+
+    /**
      * Vat Validation.
      */
-    public function save(array $options = []) : bool
+    public function save(array $options = []): bool
     {
-//         $open = Vat::where('valid_from','<=', $this->valid_from)->whereNull('valid_to');
+        if ($this->rate > 0 && is_null($this->account_id)) {
+            throw new MissingVatAccount($this->rate);
+        }
 
-//         $closed = Vat::where('valid_from','<=', $this->valid_from)->where('valid_to','>', $this->valid_from);
+        if ($this->rate > 0 && $this->account->account_type != Account::CONTROL_ACCOUNT) {
+            throw new InvalidAccountType(Account::CONTROL_ACCOUNT);
+        }
 
-//         if (count($open->get()) || count($closed->get())) {
-//             throw new VatPeriodOverlap();
-//         }
         return parent::save();
     }
 }

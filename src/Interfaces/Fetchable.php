@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Interfaces;
 
 use IFRS\Models\Currency;
@@ -29,5 +31,5 @@ interface Fetchable
         Carbon $endTime = null,
         Account $account = null,
         Currency $currency = null
-    ) : Collection;
+    ): Collection;
 }

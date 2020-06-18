@@ -2,13 +2,14 @@
 
 namespace Tests\Unit;
 
+use IFRS\Exceptions\InvalidAccountType;
+use IFRS\Exceptions\MissingVatAccount;
+use IFRS\Models\Account;
 use IFRS\Tests\TestCase;
 
 use IFRS\Models\RecycledObject;
 use IFRS\User;
 use IFRS\Models\Vat;
-// use Carbon\Carbon;
-// use IFRS\Exceptions\VatPeriodOverlap;
 
 class VatTest extends TestCase
 {
@@ -25,29 +26,29 @@ class VatTest extends TestCase
 
         $this->be($user);
 
-        $vat = new Vat(
-            [
+        $vat = new Vat([
             'name' => $this->faker->name,
             'code' => $this->faker->randomLetter(),
             'rate' => 10,
-            ]
-        );
+            'account_id' => factory(Account::class)->create([
+                'account_type' => Account::CONTROL_ACCOUNT
+            ])->id,
+        ]);
         $vat->attributes();
         $vat->save();
 
         $this->assertEquals(
             $vat->toString(true),
-            'VAT: '.$vat->name.' ('.$vat->code.') at '.number_format($vat->rate, 2).'%'
+            'Vat: ' . $vat->name . ' (' . $vat->code . ') at ' . number_format($vat->rate, 2) . '%'
         );
         $this->assertEquals(
             $vat->toString(),
-            $vat->name.' ('.$vat->code.') at '.number_format($vat->rate, 2).'%'
+            $vat->name . ' (' . $vat->code . ') at ' . number_format($vat->rate, 2) . '%'
         );
         $this->assertEquals(count(Vat::all()), 1);
 
         $this->be(User::withoutGlobalScopes()->find(1));
         $this->assertEquals(count(Vat::all()), 0);
-
     }
 
     /**
@@ -57,70 +58,54 @@ class VatTest extends TestCase
      */
     public function testVatRecycling()
     {
-        $vat = new Vat(
-            [
+        $vat = new Vat([
             'name' => $this->faker->name,
             'code' => $this->faker->randomLetter(),
             'rate' => 10,
-            ]
-        );
+            'account_id' => factory(Account::class)->create()->id,
+        ]);
         $vat->delete();
 
         $recycled = RecycledObject::all()->first();
         $this->assertEquals($vat->recycled->first(), $recycled);
     }
 
-//     /**
-//      * Test Vat Open Period Overlap
-//      *
-//      * @return void
-//      */
-//     public function testOpenVatPeriodOverlap()
-//     {
-//         factory(Vat::class)->create([
-//             'valid_from' => Carbon::now()->subMonth(),
-//             'valid_to' => null
-//         ]);
+    /**
+     * Test Missing Vat Account.
+     *
+     * @return void
+     */
+    public function testMissingVatAccount()
+    {
+        $vat = new Vat([
+            'name' => $this->faker->name,
+            'code' => $this->faker->randomLetter(),
+            'rate' => 10,
+        ]);
+        $this->expectException(MissingVatAccount::class);
+        $this->expectExceptionMessage($vat->rate . '% VAT requires a Vat Account');
 
-//         $vat = new Vat(
-//             [
-//                 'name' => $this->faker->name,
-//                 'code' => $this->faker->randomLetter(),
-//                 'rate' => 10,
-//                 'valid_from' => Carbon::now()
-//             ]
-//             );
+        $vat->save();
+    }
 
-//         $this->expectException(VatPeriodOverlap::class);
-//         $this->expectExceptionMessage('A VAT record already exists for that period');
+    /**
+     * Test Invalid Vat Account Type.
+     *
+     * @return void
+     */
+    public function testInvalidVatAccountType()
+    {
+        $vat = new Vat([
+            'name' => $this->faker->name,
+            'code' => $this->faker->randomLetter(),
+            'rate' => 10,
+            'account_id' => factory(Account::class)->create([
+                'account_type' => Account::RECEIVABLE
+            ])->id,
+        ]);
+        $this->expectException(InvalidAccountType::class);
+        $this->expectExceptionMessage('Vat Account must be of Type Control Account');
 
-//         $vat->save();
-//     }
-
-//     /**
-//      * Test Vat Closed Period Overlap
-//      *
-//      * @return void
-//      */
-//     public function testClosedVatPeriodOverlap()
-//     {
-//         factory(Vat::class)->create([
-//             'valid_from' => Carbon::now()->subMonths(2),
-//             'valid_to' => Carbon::now()
-//         ]);
-
-//         $vat = new Vat(
-//             [
-//                 'name' => $this->faker->name,
-//                 'code' => $this->faker->randomLetter(),
-//                 'rate' => 10,
-//                 'valid_from' => Carbon::now()->subMonth()
-//             ]
-//             );
-
-//         $this->expectException(VatPeriodOverlap::class);
-//         $this->expectExceptionMessage('A VAT record already exists for that period');
-
-//         $vat->save();
-//     }
+        $vat->save();
+    }
 }

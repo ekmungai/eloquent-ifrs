@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Transactions;
 
 use IFRS\Interfaces\Sells;
@@ -52,7 +54,7 @@ class CashSale extends Transaction implements Sells, Fetchable
      */
     public function save(array $options = []): bool
     {
-        if (is_null($this->account) or $this->account->account_type != Account::BANK) {
+        if (is_null($this->account) || $this->account->account_type != Account::BANK) {
             throw new MainAccount(self::PREFIX, Account::BANK);
         }
 

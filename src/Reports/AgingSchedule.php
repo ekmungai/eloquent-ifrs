@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Reports;
 
 use Carbon\Carbon;
@@ -60,20 +62,19 @@ class AgingSchedule
      *
      * @return string
      */
-    private function getBracket($age, $brackets) : string
+    private function getBracket($age, $brackets): string
     {
         if (count($brackets) == 1) {
             return array_key_first($brackets);
-        }else {
+        } else {
             $bracket_name = array_key_first($brackets);
             $bracket = array_shift($brackets);
             if ($age < $bracket) {
                 return $bracket_name;
-            }else{
+            } else {
                 return $this->getBracket($age, $brackets);
             }
         }
-
     }
     /**
      * Agine Schedule for the account type as at the endDate.
@@ -84,22 +85,22 @@ class AgingSchedule
      */
     public function __construct(string $accountType = Account::RECEIVABLE, int $currencyId = null, string $endDate = null)
     {
-        $this->period['endDate'] = is_null($endDate)? Carbon::now(): Carbon::parse($endDate);
+        $this->period['endDate'] = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
         $this->entity = Auth::user()->entity;
-        $this->currency = is_null($currencyId)? $this->entity->currency: Currency::find($currencyId);
+        $this->currency = is_null($currencyId) ? $this->entity->currency : Currency::find($currencyId);
 
         $this->brackets = config('ifrs')['aging_schedule_brackets'];
 
         $balances = array_fill_keys(array_keys($this->brackets), 0);
 
-        foreach (Account::where("account_type",$accountType)->get() as $account){
+        foreach (Account::where("account_type", $accountType)->get() as $account) {
 
             $account_balances = array_fill_keys(array_keys($this->brackets), 0);
 
             $schedule = new AccountSchedule($account->id, $currencyId, $endDate);
             $schedule->getTransactions();
 
-            foreach ($schedule->transactions as $transaction){
+            foreach ($schedule->transactions as $transaction) {
                 if ($transaction->unclearedAmount > 0) {
 
                     $bound = $this->getBracket($transaction->age, $this->brackets);

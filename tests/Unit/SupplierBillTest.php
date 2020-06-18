@@ -18,6 +18,7 @@ use IFRS\Transactions\SupplierBill;
 
 use IFRS\Exceptions\LineItemAccount;
 use IFRS\Exceptions\MainAccount;
+use IFRS\Models\Vat;
 
 class SupplierBillTest extends TestCase
 {
@@ -28,24 +29,20 @@ class SupplierBillTest extends TestCase
      */
     public function testCreateSupplierBillTransaction()
     {
-        $supplierAccount = factory(Account::class)->create(
-            [
+        $supplierAccount = factory(Account::class)->create([
             'account_type' => Account::PAYABLE,
-            ]
-        );
+        ]);
 
-        $supplierBill = new SupplierBill(
-            [
+        $supplierBill = new SupplierBill([
             "account_id" => $supplierAccount->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
-            ]
-        );
+        ]);
         $supplierBill->save();
 
         $this->assertEquals($supplierBill->account->name, $supplierAccount->name);
         $this->assertEquals($supplierBill->account->description, $supplierAccount->description);
-        $this->assertEquals($supplierBill->transaction_no, "BL0".$this->period->period_count."/0001");
+        $this->assertEquals($supplierBill->transaction_no, "BL0" . $this->period->period_count . "/0001");
     }
 
     /**
@@ -55,33 +52,23 @@ class SupplierBillTest extends TestCase
      */
     public function testPostSupplierBillTransaction()
     {
-        $supplierBill = new SupplierBill(
-            [
-            "account_id" => factory('IFRS\Models\Account')->create(
-                [
+        $supplierBill = new SupplierBill([
+            "account_id" => factory(Account::class)->create([
                 'account_type' => Account::PAYABLE,
-                ]
-            )->id,
+            ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
-            ]
-        );
+        ]);
 
-        $lineItem = factory(LineItem::class)->create(
-            [
+        $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('IFRS\Models\Vat')->create(
-                [
+            "vat_id" => factory(Vat::class)->create([
                 "rate" => 16
-                ]
-            )->id,
-            "account_id" => factory('IFRS\Models\Account')->create(
-                [
+            ])->id,
+            "account_id" => factory(Account::class)->create([
                 "account_type" => Account::DIRECT_EXPENSE
-                ]
-            )->id,
-            ]
-        );
+            ])->id,
+        ]);
         $supplierBill->addLineItem($lineItem);
 
         $supplierBill->post();
@@ -100,9 +87,9 @@ class SupplierBillTest extends TestCase
         $vat_credit = Ledger::where("entry_type", Balance::CREDIT)->get()[1];
 
         $this->assertEquals($vat_debit->folio_account, $supplierBill->account->id);
-        $this->assertEquals($vat_debit->post_account, $lineItem->vat_account_id);
+        $this->assertEquals($vat_debit->post_account, $lineItem->vat->account_id);
         $this->assertEquals($vat_credit->post_account, $supplierBill->account->id);
-        $this->assertEquals($vat_credit->folio_account, $lineItem->vat_account_id);
+        $this->assertEquals($vat_credit->folio_account, $lineItem->vat->account_id);
         $this->assertEquals($vat_debit->amount, 16);
         $this->assertEquals($vat_credit->amount, 16);
 
@@ -116,40 +103,30 @@ class SupplierBillTest extends TestCase
      */
     public function testSupplierBillLineItemAccount()
     {
-        $supplierBill = new SupplierBill(
-            [
-            "account_id" => factory('IFRS\Models\Account')->create(
-                [
+        $supplierBill = new SupplierBill([
+            "account_id" => factory(Account::class)->create([
                 'account_type' => Account::PAYABLE,
-                ]
-            )->id,
+            ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
-            ]
-        );
+        ]);
 
         $this->expectException(LineItemAccount::class);
         $this->expectExceptionMessage(
             "Supplier Bill LineItem Account must be of type "
-            ."Operating Expense, Direct Expense, Overhead Expense, "
-            ."Other Expense, Non Current Asset, Current Asset, Inventory"
+                . "Operating Expense, Direct Expense, Overhead Expense, "
+                . "Other Expense, Non Current Asset, Current Asset, Inventory"
         );
 
-        $lineItem = factory(LineItem::class)->create(
-            [
+        $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('IFRS\Models\Vat')->create(
-                [
+            "vat_id" => factory(Vat::class)->create([
                 "rate" => 16
-                ]
-            )->id,
-            "account_id" => factory('IFRS\Models\Account')->create(
-                [
+            ])->id,
+            "account_id" => factory(Account::class)->create([
                 "account_type" => Account::RECONCILIATION
-                ]
-            )->id,
-            ]
-        );
+            ])->id,
+        ]);
         $supplierBill->addLineItem($lineItem);
 
         $supplierBill->post();
@@ -162,35 +139,25 @@ class SupplierBillTest extends TestCase
      */
     public function testSupplierBillMainAccount()
     {
-        $supplierBill = new SupplierBill(
-            [
-            "account_id" => factory('IFRS\Models\Account')->create(
-                [
+        $supplierBill = new SupplierBill([
+            "account_id" => factory(Account::class)->create([
                 'account_type' => Account::RECONCILIATION,
-                ]
-            )->id,
+            ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
-            ]
-        );
+        ]);
         $this->expectException(MainAccount::class);
         $this->expectExceptionMessage('Supplier Bill Main Account must be of type Payable');
 
-        $lineItem = factory(LineItem::class)->create(
-            [
+        $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('IFRS\Models\Vat')->create(
-                [
+            "vat_id" => factory(Vat::class)->create([
                 "rate" => 16
-                ]
-            )->id,
-            "account_id" => factory('IFRS\Models\Account')->create(
-                [
+            ])->id,
+            "account_id" => factory(Account::class)->create([
                 "account_type" => Account::DIRECT_EXPENSE
-                ]
-            )->id,
-            ]
-        );
+            ])->id,
+        ]);
         $supplierBill->addLineItem($lineItem);
 
         $supplierBill->post();
@@ -203,18 +170,14 @@ class SupplierBillTest extends TestCase
      */
     public function testSupplierBillFind()
     {
-        $account = factory(Account::class)->create(
-            [
+        $account = factory(Account::class)->create([
             'account_type' => Account::PAYABLE,
-            ]
-        );
-        $transaction = new SupplierBill(
-            [
+        ]);
+        $transaction = new SupplierBill([
             "account_id" => $account->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
-            ]
-        );
+        ]);
 
         $transaction->save();
 
@@ -229,33 +192,25 @@ class SupplierBillTest extends TestCase
      */
     public function testSupplierBillFetch()
     {
-        $account = factory(Account::class)->create(
-            [
+        $account = factory(Account::class)->create([
             'account_type' => Account::PAYABLE,
-            ]
-        );
-        $transaction = new SupplierBill(
-            [
+        ]);
+        $transaction = new SupplierBill([
             "account_id" => $account->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
-            ]
-        );
+        ]);
 
         $transaction->save();
 
-        $account2 = factory(Account::class)->create(
-            [
+        $account2 = factory(Account::class)->create([
             'account_type' => Account::PAYABLE,
-            ]
-        );
-        $transaction2 = new SupplierBill(
-            [
+        ]);
+        $transaction2 = new SupplierBill([
             "account_id" => $account2->id,
             "transaction_date" => Carbon::now()->addWeeks(2),
             "narration" => $this->faker->word,
-            ]
-        );
+        ]);
 
         $transaction2->save();
 
@@ -269,11 +224,9 @@ class SupplierBillTest extends TestCase
         $this->assertEquals(count(SupplierBill::fetch(null, Carbon::now()->subDay())), 0);
 
         // Account Filter
-        $account3 = factory(Account::class)->create(
-            [
+        $account3 = factory(Account::class)->create([
             'account_type' => Account::PAYABLE,
-            ]
-        );
+        ]);
         $this->assertEquals(count(SupplierBill::fetch(null, null, $account)), 1);
         $this->assertEquals(count(SupplierBill::fetch(null, null, $account2)), 1);
         $this->assertEquals(count(SupplierBill::fetch(null, null, $account3)), 0);

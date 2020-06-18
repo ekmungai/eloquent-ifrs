@@ -8,8 +8,9 @@ use IFRS\Tests\TestCase;
 
 use IFRS\Models\Account;
 use IFRS\Models\Balance;
+use IFRS\Models\ExchangeRate;
 use IFRS\Models\LineItem;
-
+use IFRS\Models\Vat;
 use IFRS\Reports\BalanceSheet;
 use IFRS\Reports\IncomeStatement;
 
@@ -29,145 +30,92 @@ class BalanceSheetTest extends TestCase
         $balanceSheet = new BalanceSheet();
         $balanceSheet->attributes();
 
-        factory(Balance::class)->create(
-            [
+        factory(Balance::class)->create([
 
-            "account_id" => factory('IFRS\Models\Account')->create(
-                [
+            "account_id" => factory(Account::class)->create([
                 "account_type" => Account::INVENTORY
-                ]
-            )->id,
+            ])->id,
             "balance_type" => Balance::DEBIT,
-            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
-                [
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1
-                ]
-            )->id,
+            ])->id,
             'reporting_period_id' => $this->period->id,
             "amount" => 100
-            ]
-        );
+        ]);
 
-        factory(Balance::class)->create(
-            [
-
-            "account_id" => factory('IFRS\Models\Account')->create(
-                [
+        factory(Balance::class)->create([
+            "account_id" => factory(Account::class)->create([
                 "account_type" => Account::CURRENT_LIABILITY
-                ]
-            )->id,
+            ])->id,
             "balance_type" => Balance::CREDIT,
-            "exchange_rate_id" => factory('IFRS\Models\ExchangeRate')->create(
-                [
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1
-                ]
-            )->id,
+            ])->id,
             'reporting_period_id' => $this->period->id,
             "amount" => 100
-            ]
-        );
+        ]);
 
-        $bill = new SupplierBill(
-            [
-            "account_id" => factory(Account::class)->create(
-                [
+        $bill = new SupplierBill([
+            "account_id" => factory(Account::class)->create([
                 'account_type' => Account::PAYABLE,
-                ]
-            )->id,
+            ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-            ]
-        );
+        ]);
 
-        $lineItem =  factory(LineItem::class)->create(
-            [
+        $lineItem =  factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory('IFRS\Models\Vat')->create(
-                [
+            "vat_id" => factory(Vat::class)->create([
                 "rate" => 16
-                ]
-            )->id,
-            "account_id" => factory('IFRS\Models\Account')->create(
-                [
-                "account_type" => Account::NON_CURRENT_ASSET
-                ]
-            )->id,
-            "vat_account_id" => factory('IFRS\Models\Account')->create(
-                [
-                "account_type" => Account::CONTROL_ACCOUNT
-                ]
-            )->id,
-            ]
-        );
+            ])->id,
+            "account_id" => factory(Account::class)->create([
+                'account_type' => Account::NON_CURRENT_ASSET,
+            ])->id,
+        ]);
 
         $bill->addLineItem($lineItem);
         $bill->post();
 
-        $cashSale = new CashSale(
-            [
-            "account_id" => factory(Account::class)->create(
-                [
+        $cashSale = new CashSale([
+            "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
-                ]
-            )->id,
+            ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
-            ]
-        );
+        ]);
 
-        $lineItem =  factory(LineItem::class)->create(
-            [
+        $lineItem =  factory(LineItem::class)->create([
             "amount" => 200,
-            "vat_id" => factory('IFRS\Models\Vat')->create(
-                [
+            "vat_id" => factory(Vat::class)->create([
                 "rate" => 16
-                ]
-            )->id,
-            "account_id" => factory('IFRS\Models\Account')->create(
-                [
+            ])->id,
+            "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OPERATING_REVENUE
-                ]
-            )->id,
-            "vat_account_id" => factory('IFRS\Models\Account')->create(
-                [
-                "account_type" => Account::CONTROL_ACCOUNT
-                ]
-            )->id,
-            ]
-        );
+            ])->id,
+        ]);
 
         $cashSale->addLineItem($lineItem);
 
         $cashSale->post();
 
-        $journalEntry = new JournalEntry(
-            [
-            "account_id" => factory(Account::class)->create(
-                [
+        $journalEntry = new JournalEntry([
+            "account_id" => factory(Account::class)->create([
                 'account_type' => Account::EQUITY,
-                ]
-            )->id,
+            ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
             "credited" => false,
-            ]
-        );
+        ]);
 
-        $lineItem = factory(LineItem::class)->create(
-            [
+        $lineItem = factory(LineItem::class)->create([
             "amount" => 70,
-            "vat_id" => factory('IFRS\Models\Vat')->create(
-                [
+            "vat_id" => factory(Vat::class)->create([
                 "rate" => 0
-                ]
-            )->id,
-            "account_id" => factory('IFRS\Models\Account')->create(
-                [
+            ])->id,
+            "account_id" => factory(Account::class)->create([
                 "account_type" => Account::RECONCILIATION
-                ]
-            )->id,
-            ]
-        );
+            ])->id,
+        ]);
         $journalEntry->addLineItem($lineItem);
         $journalEntry->post();
 
