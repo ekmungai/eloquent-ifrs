@@ -107,7 +107,7 @@ $currency = new Currency([
 
 $entity = new Entity([
     "name" => "Example Company",
-    "currency_id" => $currency
+    "currency_id" => $currency->id
 ])->save();
 
 ```
