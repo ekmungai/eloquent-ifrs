@@ -24,7 +24,7 @@ class LineItemTest extends TestCase
         $transaction = factory(Transaction::class)->create();
         $account = factory(Account::class)->create();
         $vatAccount = factory(Account::class)->create([
-            'account_type' => Account::CONTROL_ACCOUNT
+            'account_type' => Account::CONTROL
         ]);
         $vat = factory(Vat::class)->create([
             'account_id' => $vatAccount->id

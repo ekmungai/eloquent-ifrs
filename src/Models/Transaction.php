@@ -120,7 +120,6 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
         if (!isset($attributes['exchange_rate_id'])) {
             $attributes['exchange_rate_id'] = $entity->defaultRate()->id;
         }
-
         $attributes['transaction_date'] = !isset($attributes['transaction_date']) ? Carbon::now() : Carbon::parse($attributes['transaction_date']);
 
         return parent::__construct($attributes);

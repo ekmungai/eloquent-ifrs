@@ -83,4 +83,16 @@ class ExchangeRate extends Model implements Segragatable, Recyclable
     {
         return (object) $this->attributes;
     }
+
+    /**
+     * ExchangeRate Validation.
+     */
+    public function save(array $options = []): bool
+    {
+        if (!is_null($this->rate)) {
+            $this->rate = abs($this->rate);
+        }
+
+        return parent::save();
+    }
 }

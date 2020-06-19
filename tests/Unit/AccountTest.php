@@ -315,7 +315,7 @@ class AccountTest extends TestCase
 
         $account4 = new Account([
             'name' => $this->faker->name,
-            'account_type' => Account::CONTROL_ACCOUNT,
+            'account_type' => Account::CONTROL,
             'category_id' => factory(Category::class)->create()->id
         ]);
         $account4->save();
@@ -368,7 +368,7 @@ class AccountTest extends TestCase
 
         $incomes = Account::sectionBalances(Account::OPERATING_REVENUE);
 
-        $control = Account::sectionBalances(Account::CONTROL_ACCOUNT);
+        $control = Account::sectionBalances(Account::CONTROL);
 
         $this->assertTrue(in_array($category1, array_keys($clients["sectionCategories"])));
         $this->assertEquals($clients["sectionCategories"][$category1]["accounts"][0]->id, $account1->id);

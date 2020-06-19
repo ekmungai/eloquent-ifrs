@@ -93,12 +93,16 @@ class Vat extends Model implements Segragatable, Recyclable
      */
     public function save(array $options = []): bool
     {
+        if (!is_null($this->rate)) {
+            $this->rate = abs($this->rate);
+        }
+
         if ($this->rate > 0 && is_null($this->account_id)) {
             throw new MissingVatAccount($this->rate);
         }
 
-        if ($this->rate > 0 && $this->account->account_type != Account::CONTROL_ACCOUNT) {
-            throw new InvalidAccountType(Account::CONTROL_ACCOUNT);
+        if ($this->rate > 0 && $this->account->account_type != Account::CONTROL) {
+            throw new InvalidAccountType(Account::CONTROL);
         }
 
         return parent::save();

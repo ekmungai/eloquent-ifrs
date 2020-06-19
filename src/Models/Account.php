@@ -64,7 +64,7 @@ class Account extends Model implements Recyclable, Segragatable
     const CURRENT_ASSET = 'CURRENT_ASSET';
     const RECEIVABLE = 'RECEIVABLE';
     const NON_CURRENT_LIABILITY = 'NON_CURRENT_LIABILITY';
-    const CONTROL_ACCOUNT = 'CONTROL_ACCOUNT';
+    const CONTROL = 'CONTROL';
     const CURRENT_LIABILITY = 'CURRENT_LIABILITY';
     const PAYABLE = 'PAYABLE';
     const EQUITY = 'EQUITY';

@@ -31,7 +31,7 @@ class VatTest extends TestCase
             'code' => $this->faker->randomLetter(),
             'rate' => 10,
             'account_id' => factory(Account::class)->create([
-                'account_type' => Account::CONTROL_ACCOUNT
+                'account_type' => Account::CONTROL
             ])->id,
         ]);
         $vat->attributes();
@@ -104,7 +104,7 @@ class VatTest extends TestCase
             ])->id,
         ]);
         $this->expectException(InvalidAccountType::class);
-        $this->expectExceptionMessage('Vat Account must be of Type Control Account');
+        $this->expectExceptionMessage('Vat Account must be of Type Control ');
 
         $vat->save();
     }

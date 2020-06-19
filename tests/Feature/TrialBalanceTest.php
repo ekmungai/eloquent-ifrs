@@ -245,7 +245,7 @@ class TrialBalanceTest extends TestCase
 
 
         $controlAccount = factory(Account::class)->create([
-            'account_type' => Account::CONTROL_ACCOUNT,
+            'account_type' => Account::CONTROL,
         ]);
 
         //balance
@@ -561,7 +561,7 @@ class TrialBalanceTest extends TestCase
         );
 
         $this->assertTrue(
-            $bsAccounts[Account::CONTROL_ACCOUNT]["accounts"]->contains(
+            $bsAccounts[Account::CONTROL]["accounts"]->contains(
                 function ($item, $key) use ($controlAccount) {
                     return $item->id == $controlAccount->id;
                 }

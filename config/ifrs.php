@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Laravel IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
+
 use IFRS\Models\Account;
 use IFRS\Models\Balance;
 use IFRS\Models\Transaction;
@@ -97,7 +99,7 @@ return [
 
         //Balance Sheet: Liabilities Accounts
         Account::NON_CURRENT_LIABILITY => 'Non Current Liability',
-        Account::CONTROL_ACCOUNT => 'Control Account',
+        Account::CONTROL => 'Control',
         Account::CURRENT_LIABILITY => 'Current Liability',
         Account::PAYABLE => 'Payable',
         Account::RECONCILIATION => 'Reconciliation',
@@ -183,7 +185,7 @@ return [
     ],
     BalanceSheet::LIABILITIES => [
         Account::NON_CURRENT_LIABILITY => 2000, // 2000 - 2099
-        Account::CONTROL_ACCOUNT => 2100, // 2100 - 2199
+        Account::CONTROL => 2100, // 2100 - 2199
         Account::CURRENT_LIABILITY => 2200, // 2200 - 2399
         Account::PAYABLE => 2400, // 2400 - 2999
     ],

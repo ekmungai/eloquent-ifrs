@@ -142,7 +142,7 @@ class BalanceSheetTest extends TestCase
         );
 
         $this->assertEquals(
-            $balanceSheet->balances[$liabilities][Account::CONTROL_ACCOUNT],
+            $balanceSheet->balances[$liabilities][Account::CONTROL],
             -16
         );
 
