@@ -83,7 +83,7 @@ class SupplierPaymentTest extends TestCase
         $this->assertEquals($debit->amount, 100);
         $this->assertEquals($credit->amount, 100);
 
-        $this->assertEquals($supplierPayment->getAmount(), 100);
+        $this->assertEquals($supplierPayment->amount, 100);
     }
 
     /**

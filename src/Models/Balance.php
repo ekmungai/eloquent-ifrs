@@ -99,7 +99,7 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
     {
         $entity = Auth::user()->entity;
 
-        $reportingPeriod = $entity->currentReportingPeriod();
+        $reportingPeriod = $entity->current_reporting_period;
 
         if (!isset($attributes['currency_id'])) {
             $attributes['currency_id'] = $entity->currency_id;
@@ -110,7 +110,7 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
         }
 
         if (!isset($attributes['exchange_rate_id'])) {
-            $attributes['exchange_rate_id'] = $entity->defaultRate()->id;
+            $attributes['exchange_rate_id'] = $entity->default_rate->id;
         }
 
         if (!isset($attributes['transaction_type'])) {
@@ -167,7 +167,7 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
     {
         $classname = explode('\\', self::class);
         $description = $this->account->toString() . ' for year ' . $this->reportingPeriod->calendar_year;
-        return $type ? $this->type() . ' ' . array_pop($classname) . ': ' . $description : $description;
+        return $type ? $this->type . ' ' . array_pop($classname) . ': ' . $description : $description;
     }
 
     /**
@@ -175,41 +175,41 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
      *
      * @return string
      */
-    public function type()
+    public function getTypeAttribute()
     {
         return Balance::getType($this->balance_type);
     }
 
     /**
-     * isPosted analog for Assignment model.
+     * is_posted analog for Assignment model.
      */
-    public function isPosted(): bool
+    public function getIsPostedAttribute(): bool
     {
         return $this->exists();
     }
 
     /**
-     * isCredited analog for Assignment model.
+     * is_credited analog for Assignment model.
      *
      * @return bool
      */
-    public function isCredited(): bool
+    public function getIsCreditedAttribute(): bool
     {
         return $this->balance_type == Balance::CREDIT;
     }
 
     /**
-     * getClearedType analog for Assignment model.
+     * cleared_type analog for Assignment model.
      *
      * @return string
      */
-    public function getClearedType(): string
+    public function getClearedTypeAttribute(): string
     {
         return Balance::MODELNAME;
     }
 
     /**
-     * getAmount analog for Assignment model.
+     * getAmount() analog for Assignment model.
      *
      * @return float
      */
@@ -243,7 +243,7 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function exchangeRate()
+    public function exchange_rate()
     {
         return $this->belongsTo(ExchangeRate::class);
     }

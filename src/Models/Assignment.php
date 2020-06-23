@@ -87,7 +87,7 @@ class Assignment extends Model implements Segragatable
     public static function bulkAssign(Assignable $transaction): void
     {
 
-        $balance = $transaction->balance();
+        $balance = $transaction->balance;
 
         $schedule = new AccountSchedule($transaction->account->id, $transaction->currency->id);
         $schedule->getTransactions();
@@ -102,7 +102,7 @@ class Assignment extends Model implements Segragatable
                         'assignment_date' => Carbon::now(),
                         'transaction_id' => $transaction->id,
                         'cleared_id' => $cleared->id,
-                        'cleared_type' => $cleared->getClearedType(),
+                        'cleared_type' => $cleared->cleared_type,
                         'amount' => $balance,
                     ]
                 );
@@ -114,7 +114,7 @@ class Assignment extends Model implements Segragatable
                         'assignment_date' => Carbon::now(),
                         'transaction_id' => $transaction->id,
                         'cleared_id' => $cleared->id,
-                        'cleared_type' => $cleared->getClearedType(),
+                        'cleared_type' => $cleared->cleared_type,
                         'amount' => $unclearedAmount,
                     ]
                 );
@@ -132,8 +132,8 @@ class Assignment extends Model implements Segragatable
         $transactionType = $this->transaction->transaction_type;
         $clearedType = $this->cleared->transaction_type;
 
-        $transactionRate = $this->transaction->exchangeRate->rate;
-        $clearedRate = $this->cleared->exchangeRate->rate;
+        $transactionRate = $this->transaction->exchange_rate->rate;
+        $clearedRate = $this->cleared->exchange_rate->rate;
 
         // Assignable Transactions
         $assignable = [
@@ -158,11 +158,11 @@ class Assignment extends Model implements Segragatable
             throw new NegativeAmount("Assignment");
         }
 
-        if ($this->cleared->id == $this->transaction->id and $this->cleared_type == Transaction::MODELNAME) {
+        if ($this->cleared->id == $this->transaction->id && $this->cleared_type == Transaction::MODELNAME) {
             throw new SelfClearance();
         }
 
-        if (!$this->transaction->isPosted() || !$this->cleared->isPosted()) {
+        if (!$this->transaction->is_posted || !$this->cleared->is_posted) {
             throw new UnpostedAssignment();
         }
 
@@ -174,15 +174,15 @@ class Assignment extends Model implements Segragatable
             throw new InvalidClearanceCurrency();
         }
 
-        if ($this->cleared->isCredited() == $this->transaction->isCredited()) {
+        if ($this->cleared->is_credited == $this->transaction->is_credited) {
             throw new InvalidClearanceEntry();
         }
 
-        if ($this->transaction->balance() < $this->amount) {
+        if ($this->transaction->balance < $this->amount) {
             throw new InsufficientBalance($transactionType, $this->amount, $clearedType);
         }
 
-        if ($this->cleared->getAmount() - $this->cleared->clearedAmount() < $this->amount) {
+        if ($this->cleared->amount - $this->cleared->cleared_amount < $this->amount) {
             throw new OverClearance($clearedType, $this->amount);
         }
 

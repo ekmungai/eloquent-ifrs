@@ -86,7 +86,7 @@ class ClientReceiptTest extends TestCase
         $this->assertEquals($debit->amount, 100);
         $this->assertEquals($credit->amount, 100);
 
-        $this->assertEquals($clientReceipt->getAmount(), 100);
+        $this->assertEquals($clientReceipt->amount, 100);
     }
 
     /**

@@ -41,7 +41,7 @@ use IFRS\Exceptions\AdjustingReportingPeriod;
  * @package Ekmungai\Eloquent-IFRS
  *
  * @property Entity $entity
- * @property ExchangeRate $exchangeRate
+ * @property ExchangeRate $exchange_rate
  * @property Account $account
  * @property Currency $currency
  * @property Carbon $transaction_date
@@ -118,7 +118,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
         }
 
         if (!isset($attributes['exchange_rate_id'])) {
-            $attributes['exchange_rate_id'] = $entity->defaultRate()->id;
+            $attributes['exchange_rate_id'] = $entity->default_rate->id;
         }
         $attributes['transaction_date'] = !isset($attributes['transaction_date']) ? Carbon::now() : Carbon::parse($attributes['transaction_date']);
 
@@ -156,7 +156,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     {
         if (count($this->items)) {
             $lineItem = array_pop($this->items);
-            $this->lineItems()->save($lineItem);
+            $this->line_items()->save($lineItem);
 
             $this->saveLineItems();
         }
@@ -245,7 +245,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      */
     public function toString($type = false)
     {
-        return $type ? $this->type() . ': ' . $this->transaction_no : $this->transaction_no;
+        return $type ? $this->type . ': ' . $this->transaction_no : $this->transaction_no;
     }
 
     /**
@@ -253,7 +253,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      *
      * @return string
      */
-    public function type()
+    public function getTypeAttribute()
     {
         return Transaction::getType($this->transaction_type);
     }
@@ -263,7 +263,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function lineItems()
+    public function line_items()
     {
         return $this->HasMany(LineItem::class, 'transaction_id', 'id');
     }
@@ -303,7 +303,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function exchangeRate()
+    public function exchange_rate()
     {
         return $this->belongsTo(ExchangeRate::class);
     }
@@ -319,45 +319,46 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     }
 
     /**
-     * isPosted analog for Assignment model.
+     * is_posted analog for Assignment model.
      */
-    public function isPosted(): bool
+    public function getIsPostedAttribute(): bool
     {
         return count($this->ledgers) > 0;
     }
 
     /**
-     * isCredited analog for Assignment model.
+     * is_credited analog for Assignment model.
      *
      * @return bool
      */
-    public function isCredited(): bool
+    public function getIsCreditedAttribute(): bool
     {
         return boolval($this->credited);
     }
 
     /**
-     * getClearedType analog for Assignment model.
+     * cleared_type analog for Assignment model.
      *
      * @return string
      */
-    public function getClearedType(): string
+    public function getClearedTypeAttribute(): string
     {
         return Transaction::MODELNAME;
     }
 
     /**
-     * getAmount analog for Assignment model.
+     * amount analog for Assignment model.
      *
      * @return float
      */
-    public function getAmount(): float
+    public function getAmountAttribute(): float
     {
         $amount = 0;
 
-        if ($this->isPosted()) {
+        if ($this->is_posted) {
+
             foreach ($this->ledgers->where("entry_type", Balance::DEBIT) as $ledger) {
-                $amount += $ledger->amount / $this->exchangeRate->rate;
+                $amount += $ledger->amount / $this->exchange_rate->rate;
             }
         } else {
             foreach ($this->getLineItems() as $lineItem) {
@@ -385,7 +386,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      */
     public function getLineItems()
     {
-        foreach ($this->lineItems as $lineItem) {
+        foreach ($this->line_items as $lineItem) {
             $this->addLineItem($lineItem);
         }
         return $this->items;
@@ -432,7 +433,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
         $lineItem->save();
 
         // reload items to reflect changes
-        $this->load('lineItems');
+        $this->load('line_items');
     }
 
     /**
@@ -459,7 +460,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
         $this->saveLineItems();
 
         // reload items to reflect changes
-        $this->load('lineItems');
+        $this->load('line_items');
 
         return $save;
     }
@@ -502,7 +503,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     /**
      * Check Transaction Integrity.
      */
-    public function checkIntegrity(): bool
+    public function getHasIntegrityAttribute(): bool
     {
         // verify transaction ledger hashes
         return $this->ledgers->every(

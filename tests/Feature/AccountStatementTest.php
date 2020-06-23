@@ -236,35 +236,35 @@ class AccountStatementTest extends TestCase
         $this->assertEquals($statement->balances['opening'], 70);
 
         $this->assertEquals($statement->transactions[0]->id, $cashSale->id);
-        $this->assertEquals($statement->transactions[0]->debit, $cashSale->getAmount());
+        $this->assertEquals($statement->transactions[0]->debit, $cashSale->amount);
         $this->assertEquals($statement->transactions[0]->balance, 186);
 
         $this->assertEquals($statement->transactions[1]->id, $creditContraEntry->id);
-        $this->assertEquals($statement->transactions[1]->credit, $creditContraEntry->getAmount());
+        $this->assertEquals($statement->transactions[1]->credit, $creditContraEntry->amount);
         $this->assertEquals($statement->transactions[1]->balance, 136);
 
         $this->assertEquals($statement->transactions[2]->id, $debitContraEntry->id);
-        $this->assertEquals($statement->transactions[2]->debit, $debitContraEntry->getAmount());
+        $this->assertEquals($statement->transactions[2]->debit, $debitContraEntry->amount);
         $this->assertEquals($statement->transactions[2]->balance, 186);
 
         $this->assertEquals($statement->transactions[3]->id, $clientReceipt->id);
-        $this->assertEquals($statement->transactions[3]->debit, $clientReceipt->getAmount());
+        $this->assertEquals($statement->transactions[3]->debit, $clientReceipt->amount);
         $this->assertEquals($statement->transactions[3]->balance, 286);
 
         $this->assertEquals($statement->transactions[4]->id, $cashPurchase->id);
-        $this->assertEquals($statement->transactions[4]->credit, $cashPurchase->getAmount());
+        $this->assertEquals($statement->transactions[4]->credit, $cashPurchase->amount);
         $this->assertEquals($statement->transactions[4]->balance, 199);
 
         $this->assertEquals($statement->transactions[5]->id, $supplierPayment->id);
-        $this->assertEquals($statement->transactions[5]->credit, $supplierPayment->getAmount());
+        $this->assertEquals($statement->transactions[5]->credit, $supplierPayment->amount);
         $this->assertEquals($statement->transactions[5]->balance, 149);
 
         $this->assertEquals($statement->transactions[6]->id, $creditJournalEntry->id);
-        $this->assertEquals($statement->transactions[6]->credit, $creditJournalEntry->getAmount());
+        $this->assertEquals($statement->transactions[6]->credit, $creditJournalEntry->amount);
         $this->assertEquals($statement->transactions[6]->balance, 99);
 
         $this->assertEquals($statement->transactions[7]->id, $debitJournalEntry->id);
-        $this->assertEquals($statement->transactions[7]->debit, $debitJournalEntry->getAmount());
+        $this->assertEquals($statement->transactions[7]->debit, $debitJournalEntry->amount);
         $this->assertEquals($statement->transactions[7]->balance, 149);
 
         $this->assertEquals($statement->balances['closing'], 149);
@@ -406,23 +406,23 @@ class AccountStatementTest extends TestCase
         $this->assertEquals($statement->balances['opening'], 70);
 
         $this->assertEquals($statement->transactions[0]->id, $clientInvoice->id);
-        $this->assertEquals($statement->transactions[0]->debit, $clientInvoice->getAmount());
+        $this->assertEquals($statement->transactions[0]->debit, $clientInvoice->amount);
         $this->assertEquals($statement->transactions[0]->balance, 186);
 
         $this->assertEquals($statement->transactions[1]->id, $creditNote->id);
-        $this->assertEquals($statement->transactions[1]->credit, $creditNote->getAmount());
+        $this->assertEquals($statement->transactions[1]->credit, $creditNote->amount);
         $this->assertEquals($statement->transactions[1]->balance, 128);
 
         $this->assertEquals($statement->transactions[2]->id, $clientReceipt->id);
-        $this->assertEquals($statement->transactions[2]->credit, $clientReceipt->getAmount());
+        $this->assertEquals($statement->transactions[2]->credit, $clientReceipt->amount);
         $this->assertEquals($statement->transactions[2]->balance, 28);
 
         $this->assertEquals($statement->transactions[3]->id, $creditJournalEntry->id);
-        $this->assertEquals($statement->transactions[3]->credit, $creditJournalEntry->getAmount());
+        $this->assertEquals($statement->transactions[3]->credit, $creditJournalEntry->amount);
         $this->assertEquals($statement->transactions[3]->balance, -22);
 
         $this->assertEquals($statement->transactions[4]->id, $debitJournalEntry->id);
-        $this->assertEquals($statement->transactions[4]->debit, $debitJournalEntry->getAmount());
+        $this->assertEquals($statement->transactions[4]->debit, $debitJournalEntry->amount);
         $this->assertEquals($statement->transactions[4]->balance, 28);
 
         $this->assertEquals($statement->balances['closing'], 28);
@@ -559,23 +559,23 @@ class AccountStatementTest extends TestCase
         $this->assertEquals($statement->balances['opening'], -70);
 
         $this->assertEquals($statement->transactions[0]->id, $supplierBill->id);
-        $this->assertEquals($statement->transactions[0]->credit, $supplierBill->getAmount());
+        $this->assertEquals($statement->transactions[0]->credit, $supplierBill->amount);
         $this->assertEquals($statement->transactions[0]->balance, -186);
 
         $this->assertEquals($statement->transactions[1]->id, $debitNote->id);
-        $this->assertEquals($statement->transactions[1]->debit, $debitNote->getAmount());
+        $this->assertEquals($statement->transactions[1]->debit, $debitNote->amount);
         $this->assertEquals($statement->transactions[1]->balance, -128);
 
         $this->assertEquals($statement->transactions[2]->id, $supplierPayment->id);
-        $this->assertEquals($statement->transactions[2]->debit, $supplierPayment->getAmount());
+        $this->assertEquals($statement->transactions[2]->debit, $supplierPayment->amount);
         $this->assertEquals($statement->transactions[2]->balance, -28);
 
         $this->assertEquals($statement->transactions[3]->id, $creditJournalEntry->id);
-        $this->assertEquals($statement->transactions[3]->credit, $creditJournalEntry->getAmount());
+        $this->assertEquals($statement->transactions[3]->credit, $creditJournalEntry->amount);
         $this->assertEquals($statement->transactions[3]->balance, -78);
 
         $this->assertEquals($statement->transactions[4]->id, $debitJournalEntry->id);
-        $this->assertEquals($statement->transactions[4]->debit, $debitJournalEntry->getAmount());
+        $this->assertEquals($statement->transactions[4]->debit, $debitJournalEntry->amount);
         $this->assertEquals($statement->transactions[4]->balance, -28);
 
         $this->assertEquals($statement->balances['closing'], -28);

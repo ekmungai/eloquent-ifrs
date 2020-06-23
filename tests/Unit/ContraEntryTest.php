@@ -83,7 +83,7 @@ class ContraEntryTest extends TestCase
         $this->assertEquals($debit->amount, 100);
         $this->assertEquals($credit->amount, 100);
 
-        $this->assertEquals($contraEntry->getAmount(), 100);
+        $this->assertEquals($contraEntry->amount, 100);
     }
 
     /**

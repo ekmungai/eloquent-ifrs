@@ -93,7 +93,7 @@ class CashSaleTest extends TestCase
         $this->assertEquals($vat_debit->amount, 16);
         $this->assertEquals($vat_credit->amount, 16);
 
-        $this->assertEquals($cashSale->getAmount(), 116);
+        $this->assertEquals($cashSale->amount, 116);
     }
 
     /**

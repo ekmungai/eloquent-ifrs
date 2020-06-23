@@ -36,7 +36,7 @@ class TransactionTest extends TestCase
     {
         $currency = factory(Currency::class)->create();
         $account = factory(Account::class)->create();
-        $exchangeRate = factory(ExchangeRate::class)->create([
+        $exchange_rate = factory(ExchangeRate::class)->create([
             "rate" => 1
         ]);
 
@@ -77,7 +77,7 @@ class TransactionTest extends TestCase
 
         $this->assertEquals($transaction->currency->name, $currency->name);
         $this->assertEquals($transaction->account->name, $account->name);
-        $this->assertEquals($transaction->exchangeRate->rate, $exchangeRate->rate);
+        $this->assertEquals($transaction->exchange_rate->rate, $exchange_rate->rate);
         $this->assertEquals($transaction->ledgers()->get()[0]->post_account, $account->id);
         $this->assertEquals(count($transaction->assignments), 5);
         $this->assertEquals(
@@ -88,6 +88,7 @@ class TransactionTest extends TestCase
             $transaction->toString(),
             $transaction->transaction_no
         );
+        $this->assertEquals($transaction->type, Transaction::getType($transaction->transaction_type));
     }
 
     /**
@@ -417,7 +418,7 @@ class TransactionTest extends TestCase
             'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
-            'cleared_type' => $cleared->getClearedType(),
+            'cleared_type' => $cleared->cleared_type,
             'amount' => 50,
         ]);
         $assignment->save();
@@ -475,21 +476,21 @@ class TransactionTest extends TestCase
             'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
-            'cleared_type' => $cleared->getClearedType(),
+            'cleared_type' => $cleared->cleared_type,
             'amount' => 50,
         ]);
         $assignment->save();
 
         $cleared = Transaction::find($cleared->id);
 
-        $this->assertEquals($transaction->balance(), 75);
-        $this->assertEquals($cleared->clearedAmount(), 50);
+        $this->assertEquals($transaction->balance, 75);
+        $this->assertEquals($cleared->cleared_amount, 50);
 
         $cleared->delete();
 
         $transaction = Transaction::find($transaction->id);
 
-        $this->assertEquals($transaction->balance(), 125);
+        $this->assertEquals($transaction->balance, 125);
     }
 
     /**
@@ -519,18 +520,18 @@ class TransactionTest extends TestCase
         $transaction->addLineItem($line);
         $transaction->post();
 
-        $this->assertEquals($transaction->getAmount(), 125);
-        $this->assertTrue($transaction->checkIntegrity());
+        $this->assertEquals($transaction->amount, 125);
+        $this->assertTrue($transaction->has_integrity);
 
         //Change Transaction Ledger amounts
         DB::statement('update ' . config('ifrs.table_prefix') . 'ledgers set amount = 100 where id IN (1,2)');
 
         $transaction = Transaction::find($transaction->id);
         // Transaction amount has changed
-        $this->assertEquals($transaction->getAmount(), 100);
+        $this->assertEquals($transaction->amount, 100);
 
         //but Transaction Integrity is compromised
-        $this->assertFalse($transaction->checkIntegrity());
+        $this->assertFalse($transaction->has_integrity);
     }
 
     /**

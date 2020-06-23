@@ -87,7 +87,7 @@ class LedgerTest extends TestCase
 
         $transaction->post();
 
-        $this->assertEquals($transaction->getAmount(), 195);
+        $this->assertEquals($transaction->amount, 195);
         $this->assertEquals(Ledger::contribution($lineAccount1, $transaction->id), 75);
         $this->assertEquals(Ledger::contribution($lineAccount2, $transaction->id), 120);
     }

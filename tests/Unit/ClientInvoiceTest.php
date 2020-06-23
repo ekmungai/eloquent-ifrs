@@ -93,7 +93,7 @@ class ClientInvoiceTest extends TestCase
         $this->assertEquals($vat_debit->amount, 16);
         $this->assertEquals($vat_credit->amount, 16);
 
-        $this->assertEquals($clientInvoice->getAmount(), 116);
+        $this->assertEquals($clientInvoice->amount, 116);
     }
 
     /**

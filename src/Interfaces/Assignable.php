@@ -21,5 +21,5 @@ interface Assignable
      *
      * @return float
      */
-    public function balance();
+    public function getBalanceAttribute();
 }

@@ -21,12 +21,12 @@ interface Clearable
      *
      * @return float
      */
-    public function clearedAmount();
+    public function getClearedAmountAttribute();
 
     /**
      * Cleared Object type.
      *
      * @return string
      */
-    public function getClearedType();
+    public function getClearedTypeAttribute();
 }

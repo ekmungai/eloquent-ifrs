@@ -36,10 +36,10 @@ class AccountTest extends TestCase
         $currency = factory(Currency::class)->create();
 
         $category = factory(Category::class)->create();
-
+        $type = $this->faker->randomElement(array_keys(config('ifrs')['accounts']));
         $account = new Account([
             'name' => $this->faker->name,
-            'account_type' => $this->faker->randomElement(array_keys(config('ifrs')['accounts'])),
+            'account_type' => $type,
             'currency_id' => $currency->id,
             'code' => $this->faker->randomDigit,
             'category_id' => $category->id
@@ -53,6 +53,7 @@ class AccountTest extends TestCase
             Account::getType($account->account_type) . ' Account: ' . $account->name
         );
         $this->assertEquals($account->toString(), $account->name);
+        $this->assertEquals($account->type, Account::getType($type));
     }
 
     /**

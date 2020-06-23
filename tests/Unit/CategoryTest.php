@@ -41,6 +41,7 @@ class CategoryTest extends TestCase
             $category->toString(),
             $category->name
         );
+        $this->assertEquals($category->type, Account::getType($type));
     }
 
     /**

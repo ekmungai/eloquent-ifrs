@@ -179,7 +179,7 @@ class Account extends Model implements Recyclable, Segragatable
      *
      * @return string
      */
-    public function type()
+    public function getTypeAttribute()
     {
         return Account::getType($this->account_type);
     }
@@ -192,7 +192,7 @@ class Account extends Model implements Recyclable, Segragatable
     public function toString($type = false)
     {
         $classname = explode('\\', self::class);
-        return $type ? $this->type() . ' ' . array_pop($classname) . ': ' . $this->name : $this->name;
+        return $type ? $this->type . ' ' . array_pop($classname) . ': ' . $this->name : $this->name;
     }
 
     /**
@@ -248,13 +248,13 @@ class Account extends Model implements Recyclable, Segragatable
         if (!is_null($year)) {
             $period = ReportingPeriod::where('calendar_year', $year)->first();
         } else {
-            $period = Auth::user()->entity->currentReportingPeriod();
+            $period = Auth::user()->entity->current_reporting_period;
         }
 
         $balance = 0;
 
         foreach ($this->balances->where("reporting_period_id", $period->id) as $record) {
-            $amount = $record->amount / $record->exchangeRate->rate;
+            $amount = $record->amount / $record->exchange_rate->rate;
             $record->balance_type == Balance::DEBIT ? $balance += $amount : $balance -= $amount;
         }
         return $balance;

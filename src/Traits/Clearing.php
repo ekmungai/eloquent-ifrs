@@ -22,7 +22,7 @@ trait Clearing
     /**
      * Cleared Transaction amount.
      */
-    public function clearedAmount()
+    public function getClearedAmountAttribute()
     {
         $cleared = 0;
         foreach ($this->clearances as $clearance) {

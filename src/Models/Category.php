@@ -56,7 +56,7 @@ class Category extends Model implements Segragatable, Recyclable
     public function toString($type = false)
     {
         $classname = explode('\\', self::class);
-        return $type ? $this->type() . ' ' . array_pop($classname) . ': ' . $this->name : $this->name;
+        return $type ? $this->type . ' ' . array_pop($classname) . ': ' . $this->name : $this->name;
     }
 
     /**
@@ -64,7 +64,7 @@ class Category extends Model implements Segragatable, Recyclable
      *
      * @return string
      */
-    public function type()
+    public function getTypeAttribute()
     {
         return Account::getType($this->category_type);
     }

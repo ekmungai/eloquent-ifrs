@@ -15,12 +15,12 @@ trait Assigning
     /**
      * Balance Remaining on Transaction.
      */
-    public function balance()
+    public function getBalanceAttribute()
     {
         $balance = 0;
         foreach ($this->assignments as $assignment) {
             $balance += $assignment->amount;
         }
-        return $this->getAmount() / $this->exchangeRate->rate - $balance;
+        return $this->amount / $this->exchange_rate->rate - $balance;
     }
 }

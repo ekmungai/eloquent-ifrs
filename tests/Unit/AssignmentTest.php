@@ -79,7 +79,7 @@ class AssignmentTest extends TestCase
             'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
-            'cleared_type' => $cleared->getClearedType(),
+            'cleared_type' => $cleared->cleared_type,
             'amount' => 50,
         ]);
         $assignment->save();
@@ -151,7 +151,7 @@ class AssignmentTest extends TestCase
             'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
-            'cleared_type' => $cleared->getClearedType(),
+            'cleared_type' => $cleared->cleared_type,
             'amount' => 50,
         ]);
         $assignment->save();
@@ -206,7 +206,7 @@ class AssignmentTest extends TestCase
             'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
-            'cleared_type' => $cleared->getClearedType(),
+            'cleared_type' => $cleared->cleared_type,
             'amount' => 50,
         ]);
         $assignment->save();
@@ -214,8 +214,8 @@ class AssignmentTest extends TestCase
         $transaction = Transaction::find($transaction->id);
         $cleared = Transaction::find($cleared->id);
 
-        $this->assertEquals($transaction->balance(), 75);
-        $this->assertEquals($cleared->clearedAmount(), 50);
+        $this->assertEquals($transaction->balance, 75);
+        $this->assertEquals($cleared->cleared_amount, 50);
 
         $cleared2 = new JournalEntry([
             "account_id" => $account->id,
@@ -236,7 +236,7 @@ class AssignmentTest extends TestCase
             'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared2->id,
-            'cleared_type' => $cleared2->getClearedType(),
+            'cleared_type' => $cleared2->cleared_type,
             'amount' => 15,
         ]);
         $assignment->save();
@@ -244,9 +244,9 @@ class AssignmentTest extends TestCase
         $transaction = Transaction::find($transaction->id);
         $cleared2 = Transaction::find($cleared2->id);
 
-        $this->assertEquals($transaction->balance(), 60);
-        $this->assertEquals($cleared->clearedAmount(), 50);
-        $this->assertEquals($cleared2->clearedAmount(), 15);
+        $this->assertEquals($transaction->balance, 60);
+        $this->assertEquals($cleared->cleared_amount, 50);
+        $this->assertEquals($cleared2->cleared_amount, 15);
 
         $transaction2 = new JournalEntry([
             "account_id" => $account->id,
@@ -266,7 +266,7 @@ class AssignmentTest extends TestCase
             'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction2->id,
             'cleared_id' => $cleared->id,
-            'cleared_type' => $cleared->getClearedType(),
+            'cleared_type' => $cleared->cleared_type,
             'amount' => 35,
         ]);
         $assignment->save();
@@ -274,8 +274,8 @@ class AssignmentTest extends TestCase
         $transaction2 = Transaction::find($transaction2->id);
         $cleared = Transaction::find($cleared->id);
 
-        $this->assertEquals($transaction2->balance(), 5);
-        $this->assertEquals($cleared->clearedAmount(), 85);
+        $this->assertEquals($transaction2->balance, 5);
+        $this->assertEquals($cleared->cleared_amount, 85);
 
         $balance = new Balance([
             'account_id' => $account->id,
@@ -290,7 +290,7 @@ class AssignmentTest extends TestCase
             'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $balance->id,
-            'cleared_type' => $balance->getClearedType(),
+            'cleared_type' => $balance->cleared_type,
             'amount' => 35,
         ]);
         $assignment->save();
@@ -298,8 +298,8 @@ class AssignmentTest extends TestCase
         $transaction = Transaction::find($transaction->id);
         $balance = Balance::find($balance->id);
 
-        $this->assertEquals($transaction->balance(), 25);
-        $this->assertEquals($balance->clearedAmount(), 35);
+        $this->assertEquals($transaction->balance, 25);
+        $this->assertEquals($balance->cleared_amount, 35);
     }
 
     /**
@@ -353,7 +353,7 @@ class AssignmentTest extends TestCase
             'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
-            'cleared_type' => $cleared->getClearedType(),
+            'cleared_type' => $cleared->cleared_type,
             'amount' => 300,
         ]);
         $assignment->save();
@@ -410,7 +410,7 @@ class AssignmentTest extends TestCase
             'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
-            'cleared_type' => $cleared->getClearedType(),
+            'cleared_type' => $cleared->cleared_type,
             'amount' => 125,
         ]);
         $assignment->save();
@@ -450,7 +450,7 @@ class AssignmentTest extends TestCase
             'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $transaction->id,
-            'cleared_type' => $transaction->getClearedType(),
+            'cleared_type' => $transaction->cleared_type,
             'amount' => 125,
         ]);
         $assignment->save();
@@ -510,7 +510,7 @@ class AssignmentTest extends TestCase
             'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
-            'cleared_type' => $cleared->getClearedType(),
+            'cleared_type' => $cleared->cleared_type,
             'amount' => 50,
         ]);
         $assignment->save();
@@ -571,7 +571,7 @@ class AssignmentTest extends TestCase
             'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
-            'cleared_type' => $cleared->getClearedType(),
+            'cleared_type' => $cleared->cleared_type,
             'amount' => 50,
         ]);
         $assignment->save();
@@ -628,7 +628,7 @@ class AssignmentTest extends TestCase
             'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
-            'cleared_type' => $cleared->getClearedType(),
+            'cleared_type' => $cleared->cleared_type,
             'amount' => 50,
         ]);
         $assignment->save();
@@ -689,7 +689,7 @@ class AssignmentTest extends TestCase
             'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
-            'cleared_type' => $cleared->getClearedType(),
+            'cleared_type' => $cleared->cleared_type,
             'amount' => 100,
         ]);
         $assignment->save();
@@ -748,7 +748,7 @@ class AssignmentTest extends TestCase
             'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
-            'cleared_type' => $cleared->getClearedType(),
+            'cleared_type' => $cleared->cleared_type,
             'amount' => 100,
         ]);
         $assignment->save();
@@ -806,7 +806,7 @@ class AssignmentTest extends TestCase
             'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
-            'cleared_type' => $cleared->getClearedType(),
+            'cleared_type' => $cleared->cleared_type,
             'amount' => 100,
         ]);
         $assignment->save();
@@ -858,7 +858,7 @@ class AssignmentTest extends TestCase
             'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
-            'cleared_type' => $cleared->getClearedType(),
+            'cleared_type' => $cleared->cleared_type,
             'amount' => -50,
         ]);
         $assignment->save();
@@ -925,9 +925,9 @@ class AssignmentTest extends TestCase
         $cleared = Transaction::find($cleared->id);
         $cleared2 = Transaction::find($cleared2->id);
 
-        $this->assertEquals($transaction->balance(), 25);
-        $this->assertEquals($cleared->clearedAmount(), 75);
-        $this->assertEquals($cleared2->clearedAmount(), 25);
+        $this->assertEquals($transaction->balance, 25);
+        $this->assertEquals($cleared->cleared_amount, 75);
+        $this->assertEquals($cleared2->cleared_amount, 25);
     }
 
     /**
@@ -981,7 +981,7 @@ class AssignmentTest extends TestCase
             'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
-            'cleared_type' => $cleared->getClearedType(),
+            'cleared_type' => $cleared->cleared_type,
             'amount' => 10,
         ]);
         $assignment->save();

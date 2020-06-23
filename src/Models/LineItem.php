@@ -122,7 +122,7 @@ class LineItem extends Model implements Recyclable, Segragatable
     }
 
     /**
-     * Check LineItem Vat.
+     * Validate LineItem.
      */
     public function save(array $options = []): bool
     {

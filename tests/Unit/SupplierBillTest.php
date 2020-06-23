@@ -93,7 +93,7 @@ class SupplierBillTest extends TestCase
         $this->assertEquals($vat_debit->amount, 16);
         $this->assertEquals($vat_credit->amount, 16);
 
-        $this->assertEquals($supplierBill->getAmount(), 116);
+        $this->assertEquals($supplierBill->amount, 116);
     }
 
     /**

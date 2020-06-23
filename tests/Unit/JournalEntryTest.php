@@ -73,7 +73,7 @@ class JournalEntryTest extends TestCase
         $this->assertEquals($debit->amount, 100);
         $this->assertEquals($credit->amount, 100);
 
-        $this->assertEquals($journalEntry->getAmount(), 100);
+        $this->assertEquals($journalEntry->amount, 100);
 
         $journalEntry2 = new JournalEntry([
             "account_id" => factory(Account::class)->create()->id,
@@ -131,7 +131,7 @@ class JournalEntryTest extends TestCase
         $this->assertEquals($credit3->folio_account, $journalEntry2->account->id);
         $this->assertEquals($credit3->post_account, $lineItem2->vat->account_id);
 
-        $this->assertEquals($journalEntry2->getAmount(), 79);
+        $this->assertEquals($journalEntry2->amount, 79);
     }
 
     /**

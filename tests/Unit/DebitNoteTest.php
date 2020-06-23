@@ -93,7 +93,7 @@ class DebitNoteTest extends TestCase
         $this->assertEquals($vat_debit->amount, 16);
         $this->assertEquals($vat_credit->amount, 16);
 
-        $this->assertEquals($debitNote->getAmount(), 116);
+        $this->assertEquals($debitNote->amount, 116);
     }
 
     /**

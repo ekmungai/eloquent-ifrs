@@ -65,7 +65,7 @@ class Ledger extends Model implements Segragatable
         $post = new Ledger();
         $folio = new Ledger();
 
-        if (boolval($transaction->credited)) {
+        if ($transaction->is_credited) {
             $post->entry_type = Balance::CREDIT;
             $folio->entry_type = Balance::DEBIT;
         } else {
@@ -78,7 +78,7 @@ class Ledger extends Model implements Segragatable
         $post->date = $folio->date = $transaction->transaction_date;
         $post->line_item_id = $folio->line_item_id = $lineItem->id;
         $post->vat_id = $folio->vat_id = $lineItem->vat_id;
-        $post->amount = $folio->amount = $amount * $transaction->exchangeRate->rate;
+        $post->amount = $folio->amount = $amount * $transaction->exchange_rate->rate;
 
         // different double entry data
         $post->post_account = $folio->folio_account = $transaction->account_id;
@@ -102,7 +102,7 @@ class Ledger extends Model implements Segragatable
             $post = new Ledger();
             $folio = new Ledger();
 
-            if (boolval($transaction->credited)) {
+            if ($transaction->is_credited) {
                 $post->entry_type = Balance::CREDIT;
                 $folio->entry_type = Balance::DEBIT;
             } else {
@@ -115,7 +115,7 @@ class Ledger extends Model implements Segragatable
             $post->date = $folio->date = $transaction->transaction_date;
             $post->line_item_id = $folio->line_item_id = $lineItem->id;
             $post->vat_id = $folio->vat_id = $lineItem->vat_id;
-            $post->amount = $folio->amount = $lineItem->amount * $transaction->exchangeRate->rate;
+            $post->amount = $folio->amount = $lineItem->amount * $transaction->exchange_rate->rate;
 
             // different double entry data
             $post->post_account = $folio->folio_account = $transaction->account_id;
@@ -128,6 +128,9 @@ class Ledger extends Model implements Segragatable
             if ($lineItem->vat->rate > 0) {
                 Ledger::postVat($lineItem, $transaction);
             }
+
+            // reload ledgers to reflect changes
+            $transaction->load('ledgers');
         }
     }
 
@@ -242,7 +245,7 @@ class Ledger extends Model implements Segragatable
         ]);
 
         foreach ($query->get() as $record) {
-            $amount = $record->amount / $record->transaction->exchangeRate->rate;
+            $amount = $record->amount / $record->transaction->exchange_rate->rate;
             $record->entry_type == Balance::DEBIT ? $contribution += $amount : $contribution -= $amount;
         }
         return $contribution;
