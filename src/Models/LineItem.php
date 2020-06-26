@@ -131,7 +131,7 @@ class LineItem extends Model implements Recyclable, Segragatable
             throw new NegativeAmount("LineItem");
         }
 
-        if (!is_null($this->transaction) && count($this->transaction->ledgers) > 0 and $this->isDirty()) {
+        if (!is_null($this->transaction) && count($this->transaction->ledgers) > 0 && $this->isDirty()) {
             throw new PostedTransaction("change a LineItem of");
         }
 

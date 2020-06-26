@@ -245,7 +245,8 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      */
     public function toString($type = false)
     {
-        return $type ? $this->type . ': ' . $this->transaction_no : $this->transaction_no;
+        $amount = ' for ' . number_format($this->amount, 2);
+        return $type ? $this->type . ': ' . $this->transaction_no . $amount : $this->transaction_no . $amount;
     }
 
     /**
