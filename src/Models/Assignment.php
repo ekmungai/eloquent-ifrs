@@ -53,7 +53,7 @@ class Assignment extends Model implements Segragatable
     use ModelTablePrefix;
 
     /**
-     * Clearable Account Types
+     * Clearable Transaction Types
      *
      * @var array
      */
@@ -61,6 +61,20 @@ class Assignment extends Model implements Segragatable
     const CLEARABLES = [
         Transaction::IN,
         Transaction::BL,
+        Transaction::JN
+    ];
+
+    /**
+     * Assignable Transaction Types
+     *
+     * @var array
+     */
+
+    const ASSIGNABLES = [
+        Transaction::RC,
+        Transaction::PY,
+        Transaction::CN,
+        Transaction::DN,
         Transaction::JN
     ];
 

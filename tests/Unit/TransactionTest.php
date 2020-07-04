@@ -80,13 +80,15 @@ class TransactionTest extends TestCase
         $this->assertEquals($transaction->exchange_rate->rate, $exchange_rate->rate);
         $this->assertEquals($transaction->ledgers()->get()[0]->post_account, $account->id);
         $this->assertEquals(count($transaction->assignments), 5);
+
+        $transaction_no = $transaction->transaction_no . ' for ' . number_format($transaction->amount, 2);
         $this->assertEquals(
             $transaction->toString(true),
-            Transaction::getType($transaction->transaction_type) . ': ' . $transaction->transaction_no
+            Transaction::getType($transaction->transaction_type) . ': ' . $transaction_no
         );
         $this->assertEquals(
             $transaction->toString(),
-            $transaction->transaction_no
+            $transaction_no
         );
         $this->assertEquals($transaction->type, Transaction::getType($transaction->transaction_type));
     }

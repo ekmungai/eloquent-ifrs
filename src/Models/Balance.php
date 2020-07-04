@@ -126,6 +126,10 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
             $attributes['transaction_no'] = $attributes['account_id'] . $currency . $reportingPeriod->calendar_year;
         }
 
+        if (!isset($attributes['entity_id'])) {
+            $this->entity_id = $entity->id; // required for balance date validation prior to saving
+        }
+
         return parent::__construct($attributes);
     }
 
