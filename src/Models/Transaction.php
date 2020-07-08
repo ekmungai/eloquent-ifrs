@@ -66,7 +66,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     /**
      * Transaction Model Name
      *
-     * @var array
+     * @var string
      */
 
     const MODELNAME = self::class;
@@ -356,7 +356,6 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
         $amount = 0;
 
         if ($this->is_posted) {
-
             foreach ($this->ledgers->where("entry_type", Balance::DEBIT) as $ledger) {
                 $amount += $ledger->amount / $this->exchange_rate->rate;
             }
