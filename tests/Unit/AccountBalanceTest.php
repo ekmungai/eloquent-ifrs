@@ -40,11 +40,11 @@ class AccountBalanceTest extends TestCase
             ]
         );
 
-        $exchange_rate = factory(ExchangeRate::class)->create();
+        $exchangeRate = factory(ExchangeRate::class)->create();
 
         $balance = new Balance(
             [
-                'exchange_rate_id' => $exchange_rate->id,
+                'exchange_rate_id' => $exchangeRate->id,
                 'currency_id' => $currency->id,
                 'account_id' => $account->id,
                 'transaction_type' => Transaction::JN,
@@ -58,7 +58,7 @@ class AccountBalanceTest extends TestCase
 
         $this->assertEquals($balance->currency->name, $currency->name);
         $this->assertEquals($balance->account->name, $account->name);
-        $this->assertEquals($balance->exchange_rate->rate, $exchange_rate->rate);
+        $this->assertEquals($balance->exchangeRate->rate, $exchangeRate->rate);
         $this->assertEquals($balance->reportingPeriod->calendar_year, date("Y"));
         $this->assertEquals($balance->transaction_no, $account->id . 'KES' . date("Y"));
         $this->assertEquals(

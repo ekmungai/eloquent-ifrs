@@ -71,7 +71,7 @@ class ExchangeRate extends Model implements Segragatable, Recyclable
      */
     public function currency()
     {
-        return $this->BelongsTo(Currency::class);
+        return $this->belongsTo(Currency::class);
     }
 
     /**
