@@ -91,7 +91,7 @@ class ReportingPeriod extends Model implements Segragatable, Recyclable
      * Fetch reporting period for the date
      *
      * @param Carbon $date
-     * @return int
+     * @return self
      */
     public static function getPeriod(Carbon $date = null)
     {

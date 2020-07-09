@@ -94,7 +94,6 @@ class AgingSchedule
         $balances = array_fill_keys(array_keys($this->brackets), 0);
 
         foreach (Account::where("account_type", $accountType)->get() as $account) {
-
             $account_balances = array_fill_keys(array_keys($this->brackets), 0);
 
             $schedule = new AccountSchedule($account->id, $currencyId, $endDate);
@@ -102,7 +101,6 @@ class AgingSchedule
 
             foreach ($schedule->transactions as $transaction) {
                 if ($transaction->unclearedAmount > 0) {
-
                     $bound = $this->getBracket($transaction->age, $this->brackets);
 
                     $balances[$bound] += $transaction->unclearedAmount;

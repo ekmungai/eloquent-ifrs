@@ -161,7 +161,7 @@ class Ledger extends Model implements Segragatable
      */
     public function postAccount()
     {
-        return $this->HasOne(Account::class, 'id', 'post_account');
+        return $this->hasOne(Account::class, 'id', 'post_account');
     }
 
     /**
@@ -171,7 +171,7 @@ class Ledger extends Model implements Segragatable
      */
     public function folioAccount()
     {
-        return $this->HasOne(Account::class, 'id', 'folio_account');
+        return $this->hasOne(Account::class, 'id', 'folio_account');
     }
 
     /**
@@ -181,7 +181,7 @@ class Ledger extends Model implements Segragatable
      */
     public function lineItem()
     {
-        return $this->BelongsTo(LineItem::class, 'line_item_id', 'id');
+        return $this->belongsTo(LineItem::class, 'line_item_id', 'id');
     }
 
     /**

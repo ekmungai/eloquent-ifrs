@@ -78,7 +78,7 @@ class LineItem extends Model implements Recyclable, Segragatable
      */
     public function ledgers()
     {
-        return $this->HasMany(Ledger::class, 'line_item_id', 'id');
+        return $this->hasMany(Ledger::class, 'line_item_id', 'id');
     }
 
     /**

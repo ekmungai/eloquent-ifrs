@@ -85,7 +85,7 @@ class Vat extends Model implements Segragatable, Recyclable
      */
     public function account()
     {
-        return $this->HasOne(Account::class, 'id', 'account_id');
+        return $this->hasOne(Account::class, 'id', 'account_id');
     }
 
     /**

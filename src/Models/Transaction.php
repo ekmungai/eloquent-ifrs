@@ -41,7 +41,7 @@ use IFRS\Exceptions\AdjustingReportingPeriod;
  * @package Ekmungai\Eloquent-IFRS
  *
  * @property Entity $entity
- * @property ExchangeRate $exchange_rate
+ * @property ExchangeRate $exchangeRate
  * @property Account $account
  * @property Currency $currency
  * @property Carbon $transaction_date
@@ -66,7 +66,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     /**
      * Transaction Model Name
      *
-     * @var array
+     * @var string
      */
 
     const MODELNAME = self::class;
@@ -164,7 +164,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     {
         if (count($this->items)) {
             $lineItem = array_pop($this->items);
-            $this->line_items()->save($lineItem);
+            $this->lineItems()->save($lineItem);
 
             $this->saveLineItems();
         }
@@ -272,9 +272,9 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function line_items()
+    public function lineItems()
     {
-        return $this->HasMany(LineItem::class, 'transaction_id', 'id');
+        return $this->hasMany(LineItem::class, 'transaction_id', 'id');
     }
 
     /**
@@ -284,7 +284,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      */
     public function ledgers()
     {
-        return $this->HasMany(Ledger::class, 'transaction_id', 'id');
+        return $this->hasMany(Ledger::class, 'transaction_id', 'id');
     }
 
     /**
@@ -324,7 +324,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      */
     public function assignments()
     {
-        return $this->HasMany(Assignment::class, 'transaction_id', 'id');
+        return $this->hasMany(Assignment::class, 'transaction_id', 'id');
     }
 
     /**
@@ -365,7 +365,6 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
         $amount = 0;
 
         if ($this->is_posted) {
-
             foreach ($this->ledgers->where("entry_type", Balance::DEBIT) as $ledger) {
                 $amount += $ledger->amount / $this->exchangeRate->rate;
             }
@@ -395,7 +394,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      */
     public function getLineItems()
     {
-        foreach ($this->line_items as $lineItem) {
+        foreach ($this->lineItems as $lineItem) {
             $this->addLineItem($lineItem);
         }
         return $this->items;
@@ -442,7 +441,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
         $lineItem->save();
 
         // reload items to reflect changes
-        $this->load('line_items');
+        $this->load('lineItems');
     }
 
     /**
@@ -469,7 +468,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
         $this->saveLineItems();
 
         // reload items to reflect changes
-        $this->load('line_items');
+        $this->load('lineItems');
 
         return $save;
     }
