@@ -132,8 +132,8 @@ class Assignment extends Model implements Segragatable
         $transactionType = $this->transaction->transaction_type;
         $clearedType = $this->cleared->transaction_type;
 
-        $transactionRate = $this->transaction->exchange_rate->rate;
-        $clearedRate = $this->cleared->exchange_rate->rate;
+        $transactionRate = $this->transaction->exchangeRate->rate;
+        $clearedRate = $this->cleared->exchangeRate->rate;
 
         // Assignable Transactions
         $assignable = [

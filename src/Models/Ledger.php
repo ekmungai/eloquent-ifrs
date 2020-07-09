@@ -78,7 +78,7 @@ class Ledger extends Model implements Segragatable
         $post->date = $folio->date = $transaction->transaction_date;
         $post->line_item_id = $folio->line_item_id = $lineItem->id;
         $post->vat_id = $folio->vat_id = $lineItem->vat_id;
-        $post->amount = $folio->amount = $amount * $transaction->exchange_rate->rate;
+        $post->amount = $folio->amount = $amount * $transaction->exchangeRate->rate;
 
         // different double entry data
         $post->post_account = $folio->folio_account = $transaction->account_id;
@@ -115,7 +115,7 @@ class Ledger extends Model implements Segragatable
             $post->date = $folio->date = $transaction->transaction_date;
             $post->line_item_id = $folio->line_item_id = $lineItem->id;
             $post->vat_id = $folio->vat_id = $lineItem->vat_id;
-            $post->amount = $folio->amount = $lineItem->amount * $transaction->exchange_rate->rate;
+            $post->amount = $folio->amount = $lineItem->amount * $transaction->exchangeRate->rate;
 
             // different double entry data
             $post->post_account = $folio->folio_account = $transaction->account_id;
@@ -161,7 +161,7 @@ class Ledger extends Model implements Segragatable
      */
     public function postAccount()
     {
-        return $this->HasOne(Account::class, 'id', 'post_account');
+        return $this->hasOne(Account::class, 'id', 'post_account');
     }
 
     /**
@@ -171,7 +171,7 @@ class Ledger extends Model implements Segragatable
      */
     public function folioAccount()
     {
-        return $this->HasOne(Account::class, 'id', 'folio_account');
+        return $this->hasOne(Account::class, 'id', 'folio_account');
     }
 
     /**
@@ -181,7 +181,7 @@ class Ledger extends Model implements Segragatable
      */
     public function lineItem()
     {
-        return $this->BelongsTo(LineItem::class, 'line_item_id', 'id');
+        return $this->belongsTo(LineItem::class, 'line_item_id', 'id');
     }
 
     /**
@@ -245,7 +245,7 @@ class Ledger extends Model implements Segragatable
         ]);
 
         foreach ($query->get() as $record) {
-            $amount = $record->amount / $record->transaction->exchange_rate->rate;
+            $amount = $record->amount / $record->transaction->exchangeRate->rate;
             $record->entry_type == Balance::DEBIT ? $contribution += $amount : $contribution -= $amount;
         }
         return $contribution;

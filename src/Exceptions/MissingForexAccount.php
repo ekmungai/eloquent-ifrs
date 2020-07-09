@@ -37,4 +37,3 @@ class MissingForexAccount extends IFRSException
         parent::__construct($error.$message, $code);
     }
 }
-

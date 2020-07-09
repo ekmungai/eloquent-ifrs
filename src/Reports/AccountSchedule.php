@@ -44,7 +44,7 @@ class AccountSchedule extends AccountStatement
     {
         $clearedAmount = $originalAmount = 0;
 
-        $originalAmount = $transaction->amount / $transaction->exchange_rate->rate;
+        $originalAmount = $transaction->amount / $transaction->exchangeRate->rate;
         $clearedAmount = $transaction->cleared_amount;
         $unclearedAmount = $originalAmount - $clearedAmount;
 
@@ -112,8 +112,7 @@ class AccountSchedule extends AccountStatement
         foreach ($transactions->get() as $transaction) {
             $transaction = Transaction::find($transaction->id);
 
-            if (
-                $transaction->transaction_type == Transaction::JN
+            if ($transaction->transaction_type == Transaction::JN
                 && (($this->account->account_type == Account::RECEIVABLE && $transaction->is_credited)
                     || ($this->account->account_type == Account::PAYABLE && !$transaction->is_credited))
             ) {
