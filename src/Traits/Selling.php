@@ -14,6 +14,7 @@ use IFRS\Models\Account;
 
 use IFRS\Exceptions\MainAccount;
 use IFRS\Exceptions\LineItemAccount;
+use IFRS\Models\LineItem;
 
 trait Selling
 {
@@ -30,18 +31,16 @@ trait Selling
     }
 
     /**
-     * Validate Selling Transaction LineItems.
+     * Validate Selling Transaction LineItem.
      */
-    public function post(): void
+    public function addLineItem(LineItem $lineItem): void
     {
         parent::save();
 
-        foreach ($this->getLineItems() as $lineItem) {
-            if ($lineItem->account->account_type != Account::OPERATING_REVENUE) {
-                throw new LineItemAccount(self::PREFIX, [Account::OPERATING_REVENUE]);
-            }
+        if ($lineItem->account->account_type != Account::OPERATING_REVENUE) {
+            throw new LineItemAccount(self::PREFIX, [Account::OPERATING_REVENUE]);
         }
 
-        parent::post();
+        parent::addLineItem($lineItem);
     }
 }

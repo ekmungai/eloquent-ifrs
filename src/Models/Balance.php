@@ -247,7 +247,7 @@ class Balance extends Model implements Recyclable, Clearable, Segragatable
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function exchange_rate()
+    public function exchangeRate()
     {
         return $this->belongsTo(ExchangeRate::class);
     }

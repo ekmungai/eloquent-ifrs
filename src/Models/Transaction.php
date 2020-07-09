@@ -134,6 +134,14 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     private $items = [];
 
     /**
+     * Transactions to be cleared and their clearance amounts
+     *
+     * @var array $assignments
+     */
+
+    private $assignments = [];
+
+    /**
      * Check if LineItem already exists.
      *
      * @param int $id
@@ -304,7 +312,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function exchange_rate()
+    public function exchangeRate()
     {
         return $this->belongsTo(ExchangeRate::class);
     }
@@ -359,7 +367,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
         if ($this->is_posted) {
 
             foreach ($this->ledgers->where("entry_type", Balance::DEBIT) as $ledger) {
-                $amount += $ledger->amount / $this->exchange_rate->rate;
+                $amount += $ledger->amount / $this->exchangeRate->rate;
             }
         } else {
             foreach ($this->getLineItems() as $lineItem) {
@@ -486,7 +494,8 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     public function delete(): bool
     {
         // No hanging assignments
-        if (count($this->assignments) > 0) {
+
+        if (count(Assignment::where("transaction_id", $this->id)->get()) > 0) {
             throw new HangingClearances();
         }
 

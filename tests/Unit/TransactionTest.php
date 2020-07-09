@@ -36,7 +36,7 @@ class TransactionTest extends TestCase
     {
         $currency = factory(Currency::class)->create();
         $account = factory(Account::class)->create();
-        $exchange_rate = factory(ExchangeRate::class)->create([
+        $exchangeRate = factory(ExchangeRate::class)->create([
             "rate" => 1
         ]);
 
@@ -77,7 +77,7 @@ class TransactionTest extends TestCase
 
         $this->assertEquals($transaction->currency->name, $currency->name);
         $this->assertEquals($transaction->account->name, $account->name);
-        $this->assertEquals($transaction->exchange_rate->rate, $exchange_rate->rate);
+        $this->assertEquals($transaction->exchangeRate->rate, $exchangeRate->rate);
         $this->assertEquals($transaction->ledgers()->get()[0]->post_account, $account->id);
         $this->assertEquals(count($transaction->assignments), 5);
 

@@ -14,6 +14,7 @@ use IFRS\Models\Account;
 
 use IFRS\Exceptions\LineItemAccount;
 use IFRS\Exceptions\MainAccount;
+use IFRS\Models\LineItem;
 
 trait Buying
 {
@@ -30,28 +31,16 @@ trait Buying
     }
 
     /**
-     * Validate Buying Transaction LineItems.
+     * Validate Buying Transaction LineItem.
      */
-    public function post(): void
+    public function addLineItem(LineItem $lineItem): void
     {
         parent::save();
 
-        $purchasable = [
-            Account::OPERATING_EXPENSE,
-            Account::DIRECT_EXPENSE,
-            Account::OVERHEAD_EXPENSE,
-            Account::OTHER_EXPENSE,
-            Account::NON_CURRENT_ASSET,
-            Account::CURRENT_ASSET,
-            Account::INVENTORY
-        ];
-
-        foreach ($this->getLineItems() as $lineItem) {
-            if (!in_array($lineItem->account->account_type, $purchasable)) {
-                throw new LineItemAccount(self::PREFIX, $purchasable);
-            }
+        if (!in_array($lineItem->account->account_type, Account::PURCHASABLES)) {
+            throw new LineItemAccount(self::PREFIX, Account::PURCHASABLES);
         }
 
-        parent::post();
+        parent::addLineItem($lineItem);
     }
 }

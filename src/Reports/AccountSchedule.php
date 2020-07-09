@@ -44,7 +44,7 @@ class AccountSchedule extends AccountStatement
     {
         $clearedAmount = $originalAmount = 0;
 
-        $originalAmount = $transaction->amount / $transaction->exchange_rate->rate;
+        $originalAmount = $transaction->amount / $transaction->exchangeRate->rate;
         $clearedAmount = $transaction->cleared_amount;
         $unclearedAmount = $originalAmount - $clearedAmount;
 

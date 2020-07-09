@@ -20,6 +20,7 @@ use IFRS\Traits\Fetching;
 use IFRS\Exceptions\MainAccount;
 use IFRS\Exceptions\LineItemAccount;
 use IFRS\Exceptions\VatCharge;
+use IFRS\Models\LineItem;
 
 class ContraEntry extends Transaction implements Fetchable
 {
@@ -61,22 +62,18 @@ class ContraEntry extends Transaction implements Fetchable
     }
 
     /**
-     * Validate ContraEntry LineItems
+     * Validate ContraEntry LineItem
      */
-    public function post(): void
+    public function addLineItem(LineItem $lineItem): void
     {
-        $this->save();
-
-        foreach ($this->getLineItems() as $lineItem) {
-            if ($lineItem->account->account_type != Account::BANK) {
-                throw new LineItemAccount(self::PREFIX, [Account::BANK]);
-            }
-
-            if ($lineItem->vat->rate > 0) {
-                throw new VatCharge(self::PREFIX);
-            }
+        if ($lineItem->account->account_type != Account::BANK) {
+            throw new LineItemAccount(self::PREFIX, [Account::BANK]);
         }
 
-        parent::post();
+        if ($lineItem->vat->rate > 0) {
+            throw new VatCharge(self::PREFIX);
+        }
+
+        parent::addLineItem($lineItem);
     }
 }

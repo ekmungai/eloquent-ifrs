@@ -21,6 +21,7 @@ use IFRS\Exceptions\MainAccount;
 use IFRS\Exceptions\LineItemAccount;
 use IFRS\Exceptions\VatCharge;
 use IFRS\Interfaces\Assignable;
+use IFRS\Models\LineItem;
 use IFRS\Traits\Assigning;
 
 class ClientReceipt extends Transaction implements Fetchable, Assignable
@@ -64,22 +65,18 @@ class ClientReceipt extends Transaction implements Fetchable, Assignable
     }
 
     /**
-     * Validate ClientReceipt LineItems
+     * Validate Client Receipt LineItem.
      */
-    public function post(): void
+    public function addLineItem(LineItem $lineItem): void
     {
-        $this->save();
-
-        foreach ($this->getLineItems() as $lineItem) {
-            if ($lineItem->account->account_type != Account::BANK) {
-                throw new LineItemAccount(self::PREFIX, [Account::BANK]);
-            }
-
-            if ($lineItem->vat->rate > 0) {
-                throw new VatCharge(self::PREFIX);
-            }
+        if ($lineItem->account->account_type != Account::BANK) {
+            throw new LineItemAccount(self::PREFIX, [Account::BANK]);
         }
 
-        parent::post();
+        if ($lineItem->vat->rate > 0) {
+            throw new VatCharge(self::PREFIX);
+        }
+
+        parent::addLineItem($lineItem);
     }
 }

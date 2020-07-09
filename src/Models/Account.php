@@ -77,6 +77,22 @@ class Account extends Model implements Recyclable, Segragatable
     const RECONCILIATION = 'RECONCILIATION';
 
     /**
+     * Purchaseable Account Types
+     *
+     * @var array
+     */
+
+    const PURCHASABLES = [
+        Account::OPERATING_EXPENSE,
+        Account::DIRECT_EXPENSE,
+        Account::OVERHEAD_EXPENSE,
+        Account::OTHER_EXPENSE,
+        Account::NON_CURRENT_ASSET,
+        Account::CURRENT_ASSET,
+        Account::INVENTORY
+    ];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -254,7 +270,7 @@ class Account extends Model implements Recyclable, Segragatable
         $balance = 0;
 
         foreach ($this->balances->where("reporting_period_id", $period->id) as $record) {
-            $amount = $record->amount / $record->exchange_rate->rate;
+            $amount = $record->amount / $record->exchangeRate->rate;
             $record->balance_type == Balance::DEBIT ? $balance += $amount : $balance -= $amount;
         }
         return $balance;

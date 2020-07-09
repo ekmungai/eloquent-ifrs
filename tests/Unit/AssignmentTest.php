@@ -211,9 +211,7 @@ class AssignmentTest extends TestCase
         ]);
         $assignment->save();
 
-        $transaction = Transaction::find($transaction->id);
         $cleared = Transaction::find($cleared->id);
-
         $this->assertEquals($transaction->balance, 75);
         $this->assertEquals($cleared->cleared_amount, 50);
 
@@ -241,7 +239,7 @@ class AssignmentTest extends TestCase
         ]);
         $assignment->save();
 
-        $transaction = Transaction::find($transaction->id);
+
         $cleared2 = Transaction::find($cleared2->id);
 
         $this->assertEquals($transaction->balance, 60);
@@ -271,7 +269,6 @@ class AssignmentTest extends TestCase
         ]);
         $assignment->save();
 
-        $transaction2 = Transaction::find($transaction2->id);
         $cleared = Transaction::find($cleared->id);
 
         $this->assertEquals($transaction2->balance, 5);
@@ -295,7 +292,6 @@ class AssignmentTest extends TestCase
         ]);
         $assignment->save();
 
-        $transaction = Transaction::find($transaction->id);
         $balance = Balance::find($balance->id);
 
         $this->assertEquals($transaction->balance, 25);
@@ -921,7 +917,6 @@ class AssignmentTest extends TestCase
 
         Assignment::bulkAssign($transaction);
 
-        $transaction = Transaction::find($transaction->id);
         $cleared = Transaction::find($cleared->id);
         $cleared2 = Transaction::find($cleared2->id);
 

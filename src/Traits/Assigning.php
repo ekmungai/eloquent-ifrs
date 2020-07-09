@@ -10,6 +10,8 @@
 
 namespace IFRS\Traits;
 
+use IFRS\Models\Assignment;
+
 trait Assigning
 {
     /**
@@ -18,9 +20,11 @@ trait Assigning
     public function getBalanceAttribute()
     {
         $balance = 0;
+        $this->load('assignments');
         foreach ($this->assignments as $assignment) {
+            // print($this->assignments);
             $balance += $assignment->amount;
         }
-        return $this->amount / $this->exchange_rate->rate - $balance;
+        return $this->amount / $this->exchangeRate->rate - $balance;
     }
 }
