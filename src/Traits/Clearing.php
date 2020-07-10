@@ -25,6 +25,8 @@ trait Clearing
     public function getClearedAmountAttribute()
     {
         $cleared = 0;
+        $this->load('clearances');
+
         foreach ($this->clearances as $clearance) {
             $cleared += $clearance->amount;
         }

@@ -139,6 +139,18 @@ class Assignment extends Model implements Segragatable
     }
 
     /**
+     * Assign a transaction to Transactions in its $assigned array
+     *
+     * @param Assignable $transaction
+     */
+
+    public static function processAssignments(Assignable $transaction): void
+    {
+
+        $balance = $transaction->balance;
+    }
+
+    /**
      * Assignment Validation.
      */
     private function validate(): void
@@ -163,7 +175,6 @@ class Assignment extends Model implements Segragatable
         }
 
         // Clearable Transactions
-
         if (!in_array($clearedType, Assignment::CLEARABLES)) {
             throw new UnclearableTransaction($clearedType, Assignment::CLEARABLES);
         }

@@ -34,6 +34,7 @@ use IFRS\Exceptions\PostedTransaction;
 use IFRS\Exceptions\HangingClearances;
 use IFRS\Exceptions\ClosedReportingPeriod;
 use IFRS\Exceptions\AdjustingReportingPeriod;
+use IFRS\Exceptions\UnpostedAssignment;
 
 /**
  * Class Transaction
@@ -139,7 +140,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      * @var array $assignments
      */
 
-    private $assignments = [];
+    private $assigned = [];
 
     /**
      * Check if LineItem already exists.
@@ -153,6 +154,22 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
         return collect($this->items)->search(
             function ($item, $key) use ($id) {
                 return $item->id == $id;
+            }
+        );
+    }
+
+    /**
+     * Check if Assigned Transaction already exists.
+     *
+     * @param int $id
+     *
+     * @return int|false
+     */
+    private function assignedTransactionExists(int $id = null)
+    {
+        return collect($this->assigned)->search(
+            function ($transaction, $key) use ($id) {
+                return $transaction['id'] == $id;
             }
         );
     }
@@ -179,7 +196,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
      */
     public static function getClass($type): string
     {
-        $classmap = [
+        return [
             'CS' => 'CashSale',
             'IN' => 'ClientInvoice',
             'CN' => 'CreditNote',
@@ -190,8 +207,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
             'PY' => 'SupplierPayment',
             'CE' => 'ContraEntry',
             'JN' => 'JournalEntry',
-        ];
-        return $classmap[$type];
+        ][$type];
     }
 
     /**
@@ -445,6 +461,51 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     }
 
     /**
+     * Get this Transaction's assigned Transactions.
+     *
+     * @return array
+     */
+    public function getAssigned()
+    {
+        return $this->assigned;
+    }
+
+    /**
+     * Add Transaction to this Transaction's assigned Transactions.
+     *
+     * @param array $toBeAssigned
+     */
+    public function addAssigned(array $toBeAssigned): void
+    {
+        if (!Transaction::find($toBeAssigned['id'])->is_posted) {
+            throw new UnpostedAssignment();
+        }
+
+        if ($this->assignedTransactionExists($toBeAssigned['id']) === false && $toBeAssigned['amount'] > 0) {
+            $this->assigned[] = $toBeAssigned;
+        }
+    }
+
+    /**
+     * Add Transaction to Transaction assigned Transactions.
+     */
+    public function processAssigned(): void
+    {
+        foreach ($this->assigned as $outstanding) {
+            $cleared = Transaction::find($outstanding['id']);
+
+            $assignment = new Assignment([
+                'assignment_date' => Carbon::now(),
+                'transaction_id' => $this->id,
+                'cleared_id' => $cleared->id,
+                'cleared_type' => $cleared->cleared_type,
+                'amount' => $outstanding['amount'],
+            ]);
+            $assignment->save();
+        }
+    }
+
+    /**
      * Relate LineItems to Transaction.
      */
     public function save(array $options = []): bool
@@ -493,8 +554,7 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     public function delete(): bool
     {
         // No hanging assignments
-
-        if (count(Assignment::where("transaction_id", $this->id)->get()) > 0) {
+        if (count($this->assignments) > 0) {
             throw new HangingClearances();
         }
 

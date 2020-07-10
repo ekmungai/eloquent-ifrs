@@ -10,6 +10,7 @@ use IFRS\Exceptions\HangingClearances;
 use IFRS\Exceptions\MissingLineItem;
 use IFRS\Exceptions\PostedTransaction;
 use IFRS\Exceptions\RedundantTransaction;
+use IFRS\Exceptions\UnpostedAssignment;
 use IFRS\Models\Account;
 use IFRS\Models\Assignment;
 use IFRS\Models\Currency;
@@ -238,6 +239,139 @@ class TransactionTest extends TestCase
 
         $lineItem = LineItem::find($lineItem->id);
         $transaction->removeLineItem($lineItem);
+    }
+
+    /**
+     * Test Unposted Transation to be Assigned.
+     *
+     * @return void
+     */
+    public function testUnpostedTransactionAssigned()
+    {
+        $account = factory(Account::class)->create([
+            'account_type' => Account::RECEIVABLE,
+        ]);
+        $currency = factory(Currency::class)->create();
+
+        $transaction = $transaction = new JournalEntry([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $currency->id,
+            "credited" => false
+        ]);
+
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create()->id,
+            'amount' => 125,
+        ]);
+        $transaction->addLineItem($line);
+        $transaction->save();
+
+        $cleared = new JournalEntry([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $currency->id,
+        ]);
+
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create()->id,
+            'amount' => 100,
+        ]);
+
+        $cleared->addLineItem($line);
+        $cleared->save();
+
+        $this->expectException(UnpostedAssignment::class);
+        $this->expectExceptionMessage('An Unposted Transaction cannot be Assigned or Cleared');
+
+        $transaction->addAssigned(['id' => $cleared->id, 'amount' => $cleared->amount]);
+    }
+
+    /**
+     * Test Transactions to be Assigned 
+     *
+     * @return void
+     */
+    public function testAssignedTransactions()
+    {
+        $account = factory(Account::class)->create([
+            'account_type' => Account::RECEIVABLE,
+        ]);
+        $currency = factory(Currency::class)->create();
+
+        $transaction = $transaction = new JournalEntry([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $currency->id,
+            "credited" => false
+        ]);
+
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create()->id,
+            'amount' => 125,
+        ]);
+        $transaction->addLineItem($line);
+        $transaction->post();
+
+        $cleared = new JournalEntry([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $currency->id,
+        ]);
+
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create()->id,
+            'amount' => 100,
+        ]);
+
+        $cleared->addLineItem($line);
+        $cleared->post();
+
+        $cleared2 = new JournalEntry([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $currency->id,
+        ]);
+
+        $line2 = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create()->id,
+            'amount' => 100,
+        ]);
+
+        $cleared2->addLineItem($line2);
+        $cleared2->post();
+
+        $this->assertEquals($transaction->getAssigned(), []);
+
+        // no assigned duplication
+        $transaction->addAssigned(['id' => $cleared->id, 'amount' => 50]);
+        $transaction->addAssigned(['id' => $cleared->id, 'amount' => $cleared->amount]);
+        $transaction->addAssigned(['id' => $cleared2->id, 'amount' => 15]);
+
+        $this->assertEquals($transaction->getAssigned(), [
+            ['id' => $cleared->id, 'amount' => 50],
+            ['id' => $cleared2->id, 'amount' => 15],
+        ]);
+
+        // processed assigned transactions
+        $transaction->processAssigned();
+
+        $cleared = Transaction::find($cleared->id);
+        $cleared2 = Transaction::find($cleared2->id);
+
+        $this->assertEquals($transaction->balance, 60);
+        $this->assertEquals($cleared->cleared_amount, 50);
+        $this->assertEquals($cleared2->cleared_amount, 15);
     }
 
     /**
