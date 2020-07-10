@@ -35,8 +35,6 @@ trait Selling
      */
     public function addLineItem(LineItem $lineItem): void
     {
-        parent::save();
-
         if ($lineItem->account->account_type != Account::OPERATING_REVENUE) {
             throw new LineItemAccount(self::PREFIX, [Account::OPERATING_REVENUE]);
         }

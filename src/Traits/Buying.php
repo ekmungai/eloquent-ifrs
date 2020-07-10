@@ -35,7 +35,6 @@ trait Buying
      */
     public function addLineItem(LineItem $lineItem): void
     {
-        parent::save();
 
         if (!in_array($lineItem->account->account_type, Account::PURCHASABLES)) {
             throw new LineItemAccount(self::PREFIX, Account::PURCHASABLES);
