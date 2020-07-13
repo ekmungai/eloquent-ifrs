@@ -16,10 +16,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
-use IFRS\Interfaces\Segragatable;
+use IFRS\Interfaces\Segregatable;
 use IFRS\Interfaces\Recyclable;
 
-use IFRS\Traits\Segragating;
+use IFRS\Traits\Segregating;
 use IFRS\Traits\Recycling;
 use IFRS\Traits\ModelTablePrefix;
 
@@ -37,9 +37,9 @@ use IFRS\Exceptions\MissingReportingPeriod;
  * @property Carbon $destroyed_at
  * @property Carbon $deleted_at
  */
-class ReportingPeriod extends Model implements Segragatable, Recyclable
+class ReportingPeriod extends Model implements Segregatable, Recyclable
 {
-    use Segragating;
+    use Segregating;
     use SoftDeletes;
     use Recycling;
     use ModelTablePrefix;

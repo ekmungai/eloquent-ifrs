@@ -18,7 +18,7 @@ use IFRS\Scopes\EntityScope;
 
 use IFRS\Exceptions\UnauthorizedUser;
 
-trait Segragating
+trait Segregating
 {
 
     /**
@@ -28,7 +28,7 @@ trait Segragating
      *
      * @codeCoverageIgnore
      */
-    public static function bootSegragating()
+    public static function bootSegregating()
     {
         static::addGlobalScope(new EntityScope);
 

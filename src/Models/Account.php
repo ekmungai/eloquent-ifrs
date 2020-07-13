@@ -16,9 +16,9 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
 use IFRS\Interfaces\Recyclable;
-use IFRS\Interfaces\Segragatable;
+use IFRS\Interfaces\Segregatable;
 
-use IFRS\Traits\Segragating;
+use IFRS\Traits\Segregating;
 use IFRS\Traits\Recycling;
 use IFRS\Traits\ModelTablePrefix;
 
@@ -44,9 +44,9 @@ use Carbon\Carbon;
  * @property float $currentBalance
  * @property float $closingBalance
  */
-class Account extends Model implements Recyclable, Segragatable
+class Account extends Model implements Recyclable, Segregatable
 {
-    use Segragating;
+    use Segregating;
     use SoftDeletes;
     use Recycling;
     use ModelTablePrefix;
