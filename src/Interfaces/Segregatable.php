@@ -14,14 +14,14 @@ namespace IFRS\Interfaces;
  *
  * @author emung
  */
-interface Segragatable
+interface Segregatable
 {
     /**
      * Register EntityScope for Model.
      *
      * @return null
      */
-    public static function bootSegragating();
+    public static function bootSegregating();
 
     /**
      * Model's Parent Entity.
