@@ -14,9 +14,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use IFRS\Interfaces\Recyclable;
-use IFRS\Interfaces\Segragatable;
+use IFRS\Interfaces\Segregatable;
 
-use IFRS\Traits\Segragating;
+use IFRS\Traits\Segregating;
 use IFRS\Traits\Recycling;
 use IFRS\Traits\ModelTablePrefix;
 
@@ -38,9 +38,9 @@ use IFRS\Exceptions\PostedTransaction;
  * @property Carbon $destroyed_at
  * @property Carbon $deleted_at
  */
-class LineItem extends Model implements Recyclable, Segragatable
+class LineItem extends Model implements Recyclable, Segregatable
 {
-    use Segragating;
+    use Segregating;
     use SoftDeletes;
     use Recycling;
     use ModelTablePrefix;

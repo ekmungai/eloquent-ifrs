@@ -14,15 +14,21 @@ The package supports multiple Entities (Companies), Account Categorization, Tran
 
 The motivation for this package can be found in detail on my blog post [here](https://karanjamungai.com/posts/accounting_software/)
 ## Table of contents
-1. [Installation](#installation)
-2. [Configuration](#configuration)
-3. [Usage](#usage)
-4. [Changelog](#changelog)
-5. [Getting involved](#getting-involved)
-6. [Contributing](#contributing)
-7. [Roadmap](#roadmap)
-8. [License](#license)
-9. [References](#references)
+- [Eloquent IFRS](#eloquent-ifrs)
+  - [Table of contents](#table-of-contents)
+  - [Installation](#installation)
+      - [For production](#for-production)
+      - [For development](#for-development)
+  - [Configuration](#configuration)
+  - [Usage](#usage)
+    - [DB Collision](#db-collision)
+    - [Examples](#examples)
+  - [Changelog](#changelog)
+  - [Getting Involved](#getting-involved)
+  - [Contributing](#contributing)
+  - [Roadmap](#roadmap)
+  - [License](#license)
+  - [References](#references)
 
 ## Installation
 
@@ -79,10 +85,9 @@ Open your `User` model and implement the below interfaces and also include the t
 
 use IFRS\Traits\IFRSUser;
 use IFRS\Interfaces\Recyclable;
-use IFRS\Interfaces\Segragatable;
 ...
 
-class User ... implements Recyclable, Segregatable {
+class User ... implements Recyclable {
   ...
   use IFRSUser;
   ...
@@ -91,6 +96,7 @@ class User ... implements Recyclable, Segregatable {
 ?>
 ```
 
+### Examples
 This simple example covers the four scenarios to demonstrate the use of the package. First, a description of a Cash Sale to a customer, then a Credit Sale (Invoice) to a client, then a Cash Purchase for an operations expense and finally a Credit Purchase (Bill) from a Supplier for a non operations purpose (Asset Purchase).
 
 First we'll setup the Company (Reporting Entity) and required Accounts to record the Transactions. (Assuming that a registered User already exists):
@@ -100,15 +106,15 @@ use IFRS\Models\Entity;
 use IFRS\Models\Currency;
 
 //Entities require a reporting currency
-$currency = new Currency([
+$currency = Currency::create([
     "name" => "Euro",
     "currency_code" => "EUR"
-)->save();
+]);
 
-$entity = new Entity([
+$entity = Entity::create([
     "name" => "Example Company",
     "currency_id" => $currency->id
-])->save();
+]);
 
 ```
 We also need the VAT Rates that apply to the Entity:
@@ -116,23 +122,23 @@ We also need the VAT Rates that apply to the Entity:
 ```php
 use IFRS\Models\Vat;
 
-$outputVat = new Vat([
+$outputVat = Vat::create([
     'name' => "Standard Output Vat",
     'code' => "O",
     'rate' => 20,
-])->save();
+]);
 
-$outputVat = new Vat([
+$inputVat = Vat::create([
     'name' => "Standard Input Vat",
     'code' => "I",
     'rate' => 10,
-])->save();
+]);
 
-$outputVat = new Vat([
+$zeroVat = Vat::create([
     'name' => "Zero Vat",
     'code' => "Z",
     'rate' => 0,
-])->save();
+]);
 ```
 
 Now we'll set up some Accounts:
@@ -140,45 +146,45 @@ Now we'll set up some Accounts:
 ```php
 use IFRS\Models\Account;
 
-$bankAccount = new Account([
+$bankAccount = Account::create([
     'name' => "Sales Account",
     'account_type' => Account::BANK,
-])->save();
+]);
 
-$revenueAccount = new Account([
+$revenueAccount = Account::create([
     'name' => "Bank Account",
     'account_type' => Account::OPERATING_REVENUE,
-])->save();
+]);
 
-$clientAccount = new Account([
+$clientAccount = Account::create([
     'name' => "Example Client Account",
     'account_type' => Account::RECEIVABLE,
-])->save();
+]);
 
-$supplierAccount = new Account([
+$supplierAccount = Account::create([
     'name' => "Example Supplier Account",
     'account_type' => Account::PAYABLE,
-])->save();
+]);
 
-$opexAccount = new Account([
+$opexAccount = Account::create([
     'name' => "Operations Expense Account",
     'account_type' => Account::OPERATING_EXPENSE,
-])->save();
+]);
 
-$assetAccount = new Account([
+$assetAccount = Account::create([
     'name' => "Office Equipment Account",
     'account_type' => Account::NON_CURRENT_ASSET,
-])->save();
+]);
 
-$salesVatAccount = new Account([
+$salesVatAccount = Account::create([
     'name' => "Sales VAT Account",
     'account_type' => Account::CONTROL_ACCOUNT,
-])->save();
+]);
 
-$purchasesVatAccount = new Account([
+$purchasesVatAccount = Account::create([
     'name' => "Input VAT Account",
     'account_type' => Account::CONTROL_ACCOUNT,
-])->save();
+]);
 ```
 
 Now that all Accounts are prepared, we can create the first Transaction, a Cash Sale:
@@ -186,25 +192,25 @@ Now that all Accounts are prepared, we can create the first Transaction, a Cash 
 ```php
 use IFRS\Transactions\CashSale;
 
-$cashSale = new CashSale([
+$cashSale = CashSale::create([
     'account_id' => $bankAccount->id,
     'date' => Carbon::now(),
     'narration' => "Example Cash Sale",
-])->save(); // Intermediate save does not record the transaction in the Ledger
+]); // Intermediate save does not record the transaction in the Ledger
 ```
 So far the Transaction has only one side of the double entry, so we create a Line Item for the other side:
 
 ```php
 use IFRS\models\LineItem;
 
-$cashSaleLineItem = new LineItem([
+$cashSaleLineItem = LineItem::create([
     'vat_id' => $outputVat->id,
     'account_id' => $revenueAccount->id,
     'vat_account_id' => $salesVatAccount->id,
     'description' => "Example Cash Sale Line Item",
     'quantity' => 1,
     'amount' => 100,
-])->save();
+]);
 
 $cashSale->addLineItem($cashSaleLineItem);
 $cashSale->post(); // This posts the Transaction to the Ledger
@@ -215,20 +221,20 @@ The rest of the transactions:
 ```php
 use IFRS\Transactions\ClientInvoice;
 
-$clientInvoice = new ClientInvoice([
+$clientInvoice = ClientInvoice::create([
     'account_id' => $clientAccount->id,
     'date' => Carbon::now(),
     'narration' => "Example Credit Sale",
-])->save();
+]);
 
-$clientInvoiceLineItem = new LineItem([
+$clientInvoiceLineItem = LineItem::create([
     'vat_id' => $outputVat->id,
     'account_id' => $revenueAccount->id,
     'vat_account_id' => $salesVatAccount->id,
     'description' => "Example Credit Sale Line Item",
     'quantity' => 2,
     'amount' => 50,
-])->save();
+]);
 
 $clientInvoice->addLineItem($clientInvoiceLineItem);
 
@@ -237,58 +243,58 @@ $clientInvoice->post();
 
 use IFRS\Transactions\CashPurchase;
 
-$cashPurchase = new CashPurchase([
+$cashPurchase = CashPurchase::create([
     'account_id' => $clientAccount->id,
     'date' => Carbon::now(),
     'narration' => "Example Cash Purchase",
-])->save();
+]);
 
-$cashPurchaseLineItem = new LineItem([
+$cashPurchaseLineItem = LineItem::create([
     'vat_id' => $inputVat->id,
     'account_id' => $opexAccount->id,
     'vat_account_id' => $purchaseVatAccount->id,
     'description' => "Example Cash Purchase Line Item",
     'quantity' => 4,
     'amount' => 25,
-])->save();
+]);
 
 $cashPurchase->addLineItem($cashPurchaseLineItem)->post();
 
 use IFRS\Transactions\SupplierBill;
 
-$supplierBill = new SupplierBill([
+$supplierBill = SupplierBill::create([
     'account_id' => $supplierAccount->id,
     'date' => Carbon::now(),
     'narration' => "Example Credit Purchase",
-])->save();
+]);
 
-$supplierBillLineItem = new LineItem([
+$supplierBillLineItem = LineItem::create([
     'vat_id' => $inputVat->id,
     'account_id' => $assetAccount->id,
     'vat_account_id' => $purchaseVatAccount->id,
     'description' => "Example Credit Purchase Line Item",
     'quantity' => 4,
     'amount' => 25,
-])->save();
+]);
 
 $supplierBill->addLineItem($supplierBillLineItem)->post();
 
 use IFRS\Transactions\ClientReceipt;
 
-$clientReceipt = new ClientReceipt([
+$clientReceipt = ClientReceipt::create([
     'account_id' => $clientAccount->id,
     'date' => Carbon::now(),
     'narration' => "Example Client Payment",
-])->save();
+]);
 
-$clientReceiptLineItem = new LineItem([
+$clientReceiptLineItem = LineItem::create([
     'vat_id' => $zeroVat->id,
     'account_id' => $bankAccount->id,
     'vat_account_id' => $purchaseVatAccount->id,
     'description' => "Part payment for Client Invoice",
     'quantity' => 1,
     'amount' => 50,
-])->save();
+]);
 
 $clientReceipt->addLineItem($clientReceiptLineItem)->post();
 ```
@@ -300,12 +306,12 @@ use IFRS\Models\Assignment;
 echo $clientInvoice->clearedAmount(); //0: Currently the Invoice has not been cleared at all
 echo $clientReceipt->balance(); //50: The Receipt has not been assigned to clear any transaction
 
-$assignment = new Assignment([
+$assignment = Assignment::create([
     'transaction_id' => $clientReceipt->id,
     'cleared_id' => $clientInvoice->id,
     'cleared_type'=> $clientInvoice->getClearedType(),
     'amount' => 50,
-])->save();
+]);
 
 echo $clientInvoice->clearedAmount(); //50
 echo $clientReceipt->balance(); //0: The Receipt has been assigned fully to the Invoice
@@ -316,10 +322,10 @@ We have now some Transactions in the Ledger, so lets generate some reports. Firs
 ```php
 use IFRS\Models\ReportingPeriod;
 
-$period = new ReportingPeriod([
+$period = ReportingPeriod::create([
     'period_count' => 1,
     'year' => 2020,
-])->save();
+]);
 
 ```
 The Income Statement (Profit and Loss):

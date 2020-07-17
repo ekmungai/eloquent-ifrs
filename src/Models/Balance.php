@@ -18,10 +18,10 @@ use IFRS\Reports\IncomeStatement;
 
 use IFRS\Interfaces\Recyclable;
 use IFRS\Interfaces\Clearable;
-use IFRS\Interfaces\Segragatable;
+use IFRS\Interfaces\Segregatable;
 
 use IFRS\Traits\Recycling;
-use IFRS\Traits\Segragating;
+use IFRS\Traits\Segregating;
 use IFRS\Traits\Clearing;
 use IFRS\Traits\ModelTablePrefix;
 
@@ -49,9 +49,9 @@ use IFRS\Exceptions\InvalidBalanceDate;
  * @property Carbon $destroyed_at
  * @property Carbon $deleted_at
  */
-class Balance extends Model implements Recyclable, Clearable, Segragatable
+class Balance extends Model implements Recyclable, Clearable, Segregatable
 {
-    use Segragating;
+    use Segregating;
     use SoftDeletes;
     use Recycling;
     use Clearing;

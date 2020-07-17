@@ -15,9 +15,9 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use IFRS\Interfaces\Segragatable;
+use IFRS\Interfaces\Segregatable;
 
-use IFRS\Traits\Segragating;
+use IFRS\Traits\Segregating;
 use IFRS\Traits\ModelTablePrefix;
 
 /**
@@ -37,9 +37,9 @@ use IFRS\Traits\ModelTablePrefix;
  * @property Carbon $destroyed_at
  * @property Carbon $deleted_at
  */
-class Ledger extends Model implements Segragatable
+class Ledger extends Model implements Segregatable
 {
-    use Segragating;
+    use Segregating;
     use SoftDeletes;
     use ModelTablePrefix;
 

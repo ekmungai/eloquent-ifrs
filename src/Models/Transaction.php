@@ -17,7 +17,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use IFRS\Interfaces\Segragatable;
+use IFRS\Interfaces\Segregatable;
 use IFRS\Interfaces\Recyclable;
 use IFRS\Interfaces\Assignable;
 use IFRS\Interfaces\Clearable;
@@ -25,7 +25,7 @@ use IFRS\Interfaces\Clearable;
 use IFRS\Traits\Assigning;
 use IFRS\Traits\Clearing;
 use IFRS\Traits\Recycling;
-use IFRS\Traits\Segragating;
+use IFRS\Traits\Segregating;
 use IFRS\Traits\ModelTablePrefix;
 
 use IFRS\Exceptions\MissingLineItem;
@@ -55,9 +55,9 @@ use IFRS\Exceptions\UnpostedAssignment;
  * @property Carbon $destroyed_at
  * @property Carbon $deleted_at
  */
-class Transaction extends Model implements Segragatable, Recyclable, Clearable, Assignable
+class Transaction extends Model implements Segregatable, Recyclable, Clearable, Assignable
 {
-    use Segragating;
+    use Segregating;
     use SoftDeletes;
     use Recycling;
     use Clearing;

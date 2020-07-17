@@ -24,12 +24,12 @@ use IFRS\Exceptions\UnclearableTransaction;
 use IFRS\Exceptions\UnpostedAssignment;
 
 use IFRS\Interfaces\Assignable;
-use IFRS\Interfaces\Segragatable;
+use IFRS\Interfaces\Segregatable;
 
 use IFRS\Reports\AccountSchedule;
 
 use IFRS\Traits\ModelTablePrefix;
-use IFRS\Traits\Segragating;
+use IFRS\Traits\Segregating;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -46,9 +46,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon $destroyed_at
  * @property Carbon $deleted_at
  */
-class Assignment extends Model implements Segragatable
+class Assignment extends Model implements Segregatable
 {
-    use Segragating;
+    use Segregating;
     use SoftDeletes;
     use ModelTablePrefix;
 
