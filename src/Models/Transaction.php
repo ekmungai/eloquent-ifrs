@@ -175,6 +175,21 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
     }
 
     /**
+     * Check the balance remaining after clearing the currently Assigned Transactions.
+     *
+     * @return float
+     */
+    private function assignedAmountBalance()
+    {
+        $balance = $this->balance;
+        foreach ($this->assigned as $assignedSoFar) {
+            $balance -= $assignedSoFar['amount'];
+        }
+
+        return $balance;
+    }
+
+    /**
      * Save LineItems.
      */
     private function saveLineItems(): void
@@ -482,7 +497,14 @@ class Transaction extends Model implements Segragatable, Recyclable, Clearable, 
         }
 
         if ($this->assignedTransactionExists($toBeAssigned['id']) === false && $toBeAssigned['amount'] > 0) {
-            $this->assigned[] = $toBeAssigned;
+            if ($this->assignedAmountBalance() > $toBeAssigned['amount']) {
+                $this->assigned[] = $toBeAssigned;
+            } elseif ($this->assignedAmountBalance() > 0) {
+                $this->assigned[] = [
+                    'id' => $toBeAssigned['id'],
+                    'amount' => $this->assignedAmountBalance()
+                ];
+            }
         }
     }
 

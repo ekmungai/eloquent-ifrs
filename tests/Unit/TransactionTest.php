@@ -375,6 +375,94 @@ class TransactionTest extends TestCase
     }
 
     /**
+     * Test Transactions to be Assigned Underclearance
+     *
+     * @return void
+     */
+    public function testAssignedTransactionsUnderclearance()
+    {
+        $account = factory(Account::class)->create([
+            'account_type' => Account::RECEIVABLE,
+        ]);
+        $currency = factory(Currency::class)->create();
+
+        $transaction = $transaction = new JournalEntry([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $currency->id,
+            "credited" => false
+        ]);
+
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create()->id,
+            'amount' => 125,
+        ]);
+        $transaction->addLineItem($line);
+        $transaction->post();
+
+        $cleared = new JournalEntry([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $currency->id,
+        ]);
+
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create()->id,
+            'amount' => 100,
+        ]);
+
+        $cleared->addLineItem($line);
+        $cleared->post();
+
+        $cleared2 = new JournalEntry([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $currency->id,
+        ]);
+
+        $line2 = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create()->id,
+            'amount' => 100,
+        ]);
+
+        $cleared2->addLineItem($line2);
+        $cleared2->post();
+
+        $cleared3 = new JournalEntry([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $currency->id,
+        ]);
+
+        $line3 = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create()->id,
+            'amount' => 100,
+        ]);
+
+        $cleared3->addLineItem($line3);
+        $cleared3->post();
+
+
+        // overclearing
+        $transaction->addAssigned(['id' => $cleared->id, 'amount' => 100]);
+        $transaction->addAssigned(['id' => $cleared2->id, 'amount' => 100]);
+        $transaction->addAssigned(['id' => $cleared3->id, 'amount' => 100]);
+
+        $this->assertEquals($transaction->getAssigned(), [
+            ['id' => $cleared->id, 'amount' => 100],
+            ['id' => $cleared2->id, 'amount' => 25],
+        ]);
+    }
+
+    /**
      * Test Missing Transaction Line Items.
      *
      * @return void
