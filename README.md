@@ -85,10 +85,9 @@ Open your `User` model and implement the below interfaces and also include the t
 
 use IFRS\Traits\IFRSUser;
 use IFRS\Interfaces\Recyclable;
-use IFRS\Interfaces\Segregatable;
 ...
 
-class User ... implements Recyclable, Segregatable {
+class User ... implements Recyclable {
   ...
   use IFRSUser;
   ...
