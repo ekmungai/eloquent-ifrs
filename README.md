@@ -116,6 +116,8 @@ $entity = Entity::create([
     "currency_id" => $currency->id
 ]);
 
+// Associate the currently logged in User with the just created Entity
+Auth::user()->update(["entity_id" => $entity->id ]);
 ```
 We also need the VAT Rates that apply to the Entity:
 
