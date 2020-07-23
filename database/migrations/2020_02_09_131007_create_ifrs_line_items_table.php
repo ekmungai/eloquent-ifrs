@@ -40,6 +40,7 @@ class CreateIfrsLineItemsTable extends Migration
             $table->string('narration', 500)->nullable();;
             $table->decimal('amount', 13, 4);
             $table->decimal('quantity', 13, 4)->default(1);
+            $table->boolean('vat_inclusive')->default(false);
 
             // *permanent* deletion
             $table->dateTime('destroyed_at')->nullable();

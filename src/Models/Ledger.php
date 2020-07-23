@@ -60,7 +60,7 @@ class Ledger extends Model implements Segregatable
      */
     private static function postVat(LineItem $lineItem, Transaction $transaction): void
     {
-        $amount = $lineItem->amount * $lineItem->vat->rate / 100;
+        $amount = $lineItem->vat_inclusive ?  $lineItem->amount - ($lineItem->amount / (1 + ($lineItem->vat->rate / 100))) : $lineItem->amount * $lineItem->vat->rate / 100;
 
         $post = new Ledger();
         $folio = new Ledger();
@@ -78,11 +78,17 @@ class Ledger extends Model implements Segregatable
         $post->date = $folio->date = $transaction->transaction_date;
         $post->line_item_id = $folio->line_item_id = $lineItem->id;
         $post->vat_id = $folio->vat_id = $lineItem->vat_id;
-        $post->amount = $folio->amount = $amount * $transaction->exchangeRate->rate;
+        $post->amount = $folio->amount = $amount * $transaction->exchangeRate->rate * $lineItem->quantity;
 
         // different double entry data
-        $post->post_account = $folio->folio_account = $transaction->account_id;
-        $post->folio_account = $folio->post_account = $lineItem->vat->account_id;
+        if (!$lineItem->vat_inclusive) {
+            $post->post_account = $folio->folio_account = $transaction->account_id;
+            $post->folio_account = $folio->post_account = $lineItem->vat->account_id;
+        } else {
+            $post->post_account = $folio->folio_account = $lineItem->account_id;
+            $post->folio_account = $folio->post_account = $lineItem->vat->account_id;
+        }
+
 
         $post->save();
         $folio->save();
@@ -115,7 +121,7 @@ class Ledger extends Model implements Segregatable
             $post->date = $folio->date = $transaction->transaction_date;
             $post->line_item_id = $folio->line_item_id = $lineItem->id;
             $post->vat_id = $folio->vat_id = $lineItem->vat_id;
-            $post->amount = $folio->amount = $lineItem->amount * $transaction->exchangeRate->rate;
+            $post->amount = $folio->amount = $lineItem->amount * $transaction->exchangeRate->rate * $lineItem->quantity;
 
             // different double entry data
             $post->post_account = $folio->folio_account = $transaction->account_id;

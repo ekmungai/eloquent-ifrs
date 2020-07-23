@@ -68,6 +68,7 @@ class SupplierPaymentTest extends TestCase
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::BANK
             ])->id,
+            "quantity" => 1,
         ]);
         $supplierPayment->addLineItem($lineItem);
 

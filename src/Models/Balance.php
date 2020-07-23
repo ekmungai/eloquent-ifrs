@@ -99,18 +99,29 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
     {
         $entity = Auth::user()->entity;
 
-        $reportingPeriod = $entity->current_reporting_period;
+        if (!is_null($entity)) {
+            $reportingPeriod = $entity->current_reporting_period;
 
-        if (!isset($attributes['currency_id'])) {
-            $attributes['currency_id'] = $entity->currency_id;
-        }
+            if (!isset($attributes['currency_id'])) {
+                $attributes['currency_id'] = $entity->currency_id;
+            }
 
-        if (!isset($attributes['reporting_period_id'])) {
-            $attributes['reporting_period_id'] = $reportingPeriod->id;
-        }
+            if (!isset($attributes['reporting_period_id'])) {
+                $attributes['reporting_period_id'] = $reportingPeriod->id;
+            }
 
-        if (!isset($attributes['exchange_rate_id'])) {
-            $attributes['exchange_rate_id'] = $entity->default_rate->id;
+            if (!isset($attributes['exchange_rate_id'])) {
+                $attributes['exchange_rate_id'] = $entity->default_rate->id;
+            }
+
+            if (!isset($attributes['transaction_no']) && isset($attributes['currency_id']) && isset($attributes['account_id'])) {
+                $currency = Currency::find($attributes['currency_id'])->currency_code;
+                $attributes['transaction_no'] = $attributes['account_id'] . $currency . $reportingPeriod->calendar_year;
+            }
+
+            if (!isset($attributes['entity_id'])) {
+                $this->entity_id = $entity->id; // required for balance date validation prior to saving
+            }
         }
 
         if (!isset($attributes['transaction_type'])) {
@@ -119,15 +130,6 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
 
         if (!isset($attributes['balance_type'])) {
             $attributes['balance_type'] = Balance::DEBIT;
-        }
-
-        if (!isset($attributes['transaction_no']) && isset($attributes['currency_id']) && isset($attributes['account_id'])) {
-            $currency = Currency::find($attributes['currency_id'])->currency_code;
-            $attributes['transaction_no'] = $attributes['account_id'] . $currency . $reportingPeriod->calendar_year;
-        }
-
-        if (!isset($attributes['entity_id'])) {
-            $this->entity_id = $entity->id; // required for balance date validation prior to saving
         }
 
         return parent::__construct($attributes);

@@ -68,6 +68,7 @@ class ClientInvoiceTest extends TestCase
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OPERATING_REVENUE
             ])->id,
+            "quantity" => 1,
         ]);
         $clientInvoice->addLineItem($lineItem);
 

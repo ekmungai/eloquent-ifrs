@@ -359,6 +359,7 @@ class AccountTest extends TestCase
             'narration' => $this->faker->sentence,
             'quantity' => $this->faker->randomNumber(),
             'amount' => 100,
+            'quantity' => 1,
         ]);
 
         $clientInvoice->addLineItem($line);

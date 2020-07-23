@@ -114,11 +114,11 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         $entity = Auth::user()->entity;
         $this->table = config('ifrs.table_prefix') . 'transactions';
 
-        if (!isset($attributes['currency_id'])) {
+        if (!isset($attributes['currency_id']) && !is_null($entity)) {
             $attributes['currency_id'] = $entity->currency_id;
         }
 
-        if (!isset($attributes['exchange_rate_id'])) {
+        if (!isset($attributes['exchange_rate_id']) && !is_null($entity)) {
             $attributes['exchange_rate_id'] = $entity->default_rate->id;
         }
         $attributes['transaction_date'] = !isset($attributes['transaction_date']) ? Carbon::now() : Carbon::parse($attributes['transaction_date']);
@@ -396,13 +396,24 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         $amount = 0;
 
         if ($this->is_posted) {
-            foreach ($this->ledgers->where("entry_type", Balance::DEBIT) as $ledger) {
+
+            $entry_type = $this->credited ? Balance::CREDIT : Balance::DEBIT;
+
+            foreach ($this->ledgers->where(
+                "entry_type",
+                $entry_type
+            )->where(
+                "post_account",
+                $this->account_id
+            ) as $ledger) {
                 $amount += $ledger->amount / $this->exchangeRate->rate;
             }
         } else {
             foreach ($this->getLineItems() as $lineItem) {
                 $amount += $lineItem->amount * $lineItem->quantity;
-                $amount += $lineItem->amount * ($lineItem->vat->rate / 100) * $lineItem->quantity;
+                if (!$lineItem->vat_inclusive) {
+                    $amount += $lineItem->amount * ($lineItem->vat->rate / 100) * $lineItem->quantity;
+                }
             }
         }
         return $amount;

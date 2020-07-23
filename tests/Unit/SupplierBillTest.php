@@ -68,6 +68,7 @@ class SupplierBillTest extends TestCase
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::DIRECT_EXPENSE
             ])->id,
+            "quantity" => 1,
         ]);
         $supplierBill->addLineItem($lineItem);
 

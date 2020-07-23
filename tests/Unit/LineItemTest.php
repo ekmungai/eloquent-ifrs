@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use Carbon\Carbon;
 use IFRS\Tests\TestCase;
 
 use IFRS\Models\Account;
@@ -11,6 +12,7 @@ use IFRS\Models\Vat;
 use IFRS\Models\Transaction;
 
 use IFRS\Exceptions\NegativeAmount;
+use IFRS\Transactions\ClientInvoice;
 
 class LineItemTest extends TestCase
 {
@@ -101,5 +103,74 @@ class LineItemTest extends TestCase
         $this->expectExceptionMessage('LineItem Amount cannot be negative');
 
         $lineItem->save();
+    }
+
+    /**
+     * Test Tax Inclusive Amount.
+     *
+     * @return void
+     */
+    public function testTaxInclusiveAmount()
+    {
+        $revenueAccount = factory(Account::class)->create([
+            "account_type" => Account::OPERATING_REVENUE
+        ]);
+        $vat = factory(Vat::class)->create([
+            "rate" => 16
+        ]);
+
+        $clientInvoice = new ClientInvoice([
+            "account_id" => factory(Account::class)->create([
+                'account_type' => Account::RECEIVABLE,
+            ])->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
+
+        $lineItem = factory(LineItem::class)->create([
+            "amount" => 100,
+            "vat_id" => $vat->id,
+            "account_id" => $revenueAccount->id,
+            "quantity" => 1,
+        ]);
+        $clientInvoice->addLineItem($lineItem);
+
+        $clientInvoice->post();
+
+        $this->assertEquals($clientInvoice->amount, 116);
+        $this->assertEquals($clientInvoice->account->closingBalance(), 116);
+        $this->assertEquals($revenueAccount->closingBalance(), -100);
+        $this->assertEquals($vat->account->closingBalance(), -16);
+
+        $revenueAccount2 = factory(Account::class)->create([
+            "account_type" => Account::OPERATING_REVENUE
+        ]);
+        $vat2 = factory(Vat::class)->create([
+            "rate" => 16
+        ]);
+
+        $clientInvoice2 = new ClientInvoice([
+            "account_id" => factory(Account::class)->create([
+                'account_type' => Account::RECEIVABLE,
+            ])->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
+
+        $lineItem2 = factory(LineItem::class)->create([
+            "amount" => 100,
+            "vat_id" => $vat2->id,
+            "account_id" => $revenueAccount2->id,
+            "vat_inclusive" => true,
+            "quantity" => 1,
+        ]);
+        $clientInvoice2->addLineItem($lineItem2);
+
+        $clientInvoice2->post();
+
+        $this->assertEquals($clientInvoice2->amount, 100);
+        $this->assertEquals($clientInvoice2->account->closingBalance(), 100);
+        $this->assertEquals(round($revenueAccount2->closingBalance(), 2), -86.21);
+        $this->assertEquals(round($vat2->account->closingBalance(), 2), -13.79);
     }
 }

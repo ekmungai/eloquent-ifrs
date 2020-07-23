@@ -73,6 +73,7 @@ class LedgerTest extends TestCase
             "account_id" => $lineAccount1->id,
             "amount" => 75,
             "vat_id" => $vat->id,
+            "quantity" => 1,
         ]);
 
         $transaction->addLineItem($lineItem1);
@@ -81,6 +82,7 @@ class LedgerTest extends TestCase
             "account_id" => $lineAccount2->id,
             "amount" => 120,
             "vat_id" => $vat->id,
+            "quantity" => 1,
         ]);
 
         $transaction->addLineItem($lineItem2);

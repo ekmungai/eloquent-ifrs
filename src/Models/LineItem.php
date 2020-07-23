@@ -35,6 +35,7 @@ use IFRS\Exceptions\PostedTransaction;
  * @property Carbon $date
  * @property int $quantity
  * @property float $amount
+ * @property bool $vat_inclusive
  * @property Carbon $destroyed_at
  * @property Carbon $deleted_at
  */
@@ -57,6 +58,7 @@ class LineItem extends Model implements Recyclable, Segregatable
         'quantity',
         'description',
         'transaction_id',
+        'vat_inclusive',
     ];
 
     /**

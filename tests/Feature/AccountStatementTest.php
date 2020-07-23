@@ -92,6 +92,7 @@ class AccountStatementTest extends TestCase
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OPERATING_REVENUE
             ])->id,
+            "quantity" => 1,
         ]);
         $cashSale->addLineItem($lineItem);
 
@@ -112,6 +113,7 @@ class AccountStatementTest extends TestCase
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 0
             ])->id,
+            "quantity" => 1,
         ]);
         $creditContraEntry->addLineItem($lineItem);
 
@@ -132,6 +134,7 @@ class AccountStatementTest extends TestCase
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 0
             ])->id,
+            "quantity" => 1,
         ]);
         $debitContraEntry->addLineItem($lineItem);
 
@@ -152,6 +155,7 @@ class AccountStatementTest extends TestCase
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 0
             ])->id,
+            "quantity" => 1,
         ]);
         $clientReceipt->addLineItem($lineItem);
 
@@ -170,6 +174,7 @@ class AccountStatementTest extends TestCase
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OTHER_EXPENSE
             ])->id,
+            "quantity" => 1,
         ]);
         $cashPurchase->addLineItem($lineItem);
 
@@ -190,6 +195,7 @@ class AccountStatementTest extends TestCase
                 "rate" => 0
             ])->id,
             "account_id" => $account->id,
+            "quantity" => 1,
         ]);
         $supplierPayment->addLineItem($lineItem);
 
@@ -207,6 +213,7 @@ class AccountStatementTest extends TestCase
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 0
             ])->id,
+            "quantity" => 1,
         ]);
         $creditJournalEntry->addLineItem($lineItem);
 
@@ -225,6 +232,7 @@ class AccountStatementTest extends TestCase
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 0
             ])->id,
+            "quantity" => 1,
         ]);
         $debitJournalEntry->addLineItem($lineItem);
 
@@ -299,7 +307,7 @@ class AccountStatementTest extends TestCase
                 "rate" => 1,
             ])->id,
             'reporting_period_id' => $this->period->id,
-            "amount" => 40
+            "amount" => 40,
         ]);
 
         //Client Invoice Transaction
@@ -315,6 +323,7 @@ class AccountStatementTest extends TestCase
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OPERATING_REVENUE
             ])->id,
+            "quantity" => 1,
         ]);
         $clientInvoice->addLineItem($lineItem);
 
@@ -335,6 +344,7 @@ class AccountStatementTest extends TestCase
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 16
             ])->id,
+            "quantity" => 1,
         ]);
         $creditNote->addLineItem($lineItem);
 
@@ -356,6 +366,7 @@ class AccountStatementTest extends TestCase
                 "vat_id" => factory(Vat::class)->create([
                     "rate" => 0
                 ])->id,
+                "quantity" => 1,
             ]
         );
         $clientReceipt->addLineItem($lineItem);
@@ -374,6 +385,7 @@ class AccountStatementTest extends TestCase
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 0
             ])->id,
+            "quantity" => 1,
         ]);
         $creditJournalEntry->addLineItem($lineItem);
 
@@ -393,6 +405,7 @@ class AccountStatementTest extends TestCase
                 "vat_id" => factory(Vat::class)->create([
                     "rate" => 0
                 ])->id,
+                "quantity" => 1,
             ]
         );
         $debitJournalEntry->addLineItem($lineItem);
@@ -402,7 +415,6 @@ class AccountStatementTest extends TestCase
         $statement = new AccountStatement($account->id);
         $statement->getTransactions();
 
-        //dd($statement->toString());
         $this->assertEquals($statement->balances['opening'], 70);
 
         $this->assertEquals($statement->transactions[0]->id, $clientInvoice->id);
@@ -473,6 +485,7 @@ class AccountStatementTest extends TestCase
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OPERATING_EXPENSE
             ])->id,
+            "quantity" => 1,
         ]);
         $supplierBill->addLineItem($lineItem);
 
@@ -493,6 +506,7 @@ class AccountStatementTest extends TestCase
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 16
             ])->id,
+            "quantity" => 1,
         ]);
         $debitNote->addLineItem($lineItem);
 
@@ -513,6 +527,7 @@ class AccountStatementTest extends TestCase
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 0
             ])->id,
+            "quantity" => 1,
         ]);
         $supplierPayment->addLineItem($lineItem);
 
@@ -530,6 +545,7 @@ class AccountStatementTest extends TestCase
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 0
             ])->id,
+            "quantity" => 1,
         ]);
         $creditJournalEntry->addLineItem($lineItem);
 
@@ -548,6 +564,7 @@ class AccountStatementTest extends TestCase
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 0
             ])->id,
+            "quantity" => 1,
         ]);
         $debitJournalEntry->addLineItem($lineItem);
 

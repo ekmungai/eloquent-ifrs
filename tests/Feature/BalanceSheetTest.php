@@ -71,6 +71,7 @@ class BalanceSheetTest extends TestCase
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::NON_CURRENT_ASSET,
             ])->id,
+            "quantity" => 1,
         ]);
 
         $bill->addLineItem($lineItem);
@@ -92,6 +93,7 @@ class BalanceSheetTest extends TestCase
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OPERATING_REVENUE
             ])->id,
+            "quantity" => 1,
         ]);
 
         $cashSale->addLineItem($lineItem);
@@ -115,6 +117,7 @@ class BalanceSheetTest extends TestCase
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::RECONCILIATION
             ])->id,
+            "quantity" => 1,
         ]);
         $journalEntry->addLineItem($lineItem);
         $journalEntry->post();

@@ -52,6 +52,7 @@ class IncomeStatementTest extends TestCase
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OPERATING_REVENUE
             ])->id,
+            "quantity" => 1,
         ]);
 
         $cashSale->addLineItem($lineItem);
@@ -74,6 +75,7 @@ class IncomeStatementTest extends TestCase
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OPERATING_REVENUE
             ])->id,
+            "quantity" => 1,
         ]);
         $creditNote->addLineItem($lineItem);
 
@@ -102,6 +104,7 @@ class IncomeStatementTest extends TestCase
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::NON_OPERATING_REVENUE
             ])->id,
+            "quantity" => 1,
         ]);
         $journalEntry->addLineItem($lineItem);
         $journalEntry->post();
@@ -127,6 +130,7 @@ class IncomeStatementTest extends TestCase
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OPERATING_EXPENSE
             ])->id,
+            "quantity" => 1,
         ]);
         $bill->addLineItem($lineItem);
         $bill->post();
@@ -152,6 +156,7 @@ class IncomeStatementTest extends TestCase
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::DIRECT_EXPENSE
             ])->id,
+            "quantity" => 1,
         ]);
         $bill->addLineItem($lineItem);
         $bill->post();
@@ -172,6 +177,7 @@ class IncomeStatementTest extends TestCase
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OVERHEAD_EXPENSE
             ])->id,
+            "quantity" => 1,
         ]);
 
         $journalEntry->addLineItem($lineItem);
@@ -193,6 +199,7 @@ class IncomeStatementTest extends TestCase
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OTHER_EXPENSE
             ])->id,
+            "quantity" => 1,
         ]);
         $cashPurchase->addLineItem($lineItem);
         $cashPurchase->post();
@@ -213,6 +220,7 @@ class IncomeStatementTest extends TestCase
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OTHER_EXPENSE
             ])->id,
+            "quantity" => 1,
         ]);
         $debitNote->addLineItem($lineItem);
 

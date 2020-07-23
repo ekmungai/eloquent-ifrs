@@ -57,6 +57,7 @@ class JournalEntryTest extends TestCase
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 0
             ])->id,
+            "quantity" => 1,
         ]);
         $journalEntry->addLineItem($lineItem);
 
@@ -87,12 +88,14 @@ class JournalEntryTest extends TestCase
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 0
             ])->id,
+            "quantity" => 1,
         ]);
         $lineItem2 = factory(LineItem::class)->create([
             "amount" => 25,
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 16
             ])->id,
+            "quantity" => 1,
         ]);
         $journalEntry2->addLineItem($lineItem1);
         $journalEntry2->addLineItem($lineItem2);

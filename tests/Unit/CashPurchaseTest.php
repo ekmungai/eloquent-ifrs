@@ -68,6 +68,7 @@ class CashPurchaseTest extends TestCase
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OPERATING_EXPENSE
             ])->id,
+            "quantity" => 1,
         ]);
         $cashPurchase->addLineItem($lineItem);
 
