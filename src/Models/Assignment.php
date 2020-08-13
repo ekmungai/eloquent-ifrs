@@ -16,6 +16,7 @@ use IFRS\Exceptions\InvalidClearanceAccount;
 use IFRS\Exceptions\InvalidClearanceCurrency;
 use IFRS\Exceptions\InvalidClearanceEntry;
 use IFRS\Exceptions\MissingForexAccount;
+use IFRS\Exceptions\MixedAssignment;
 use IFRS\Exceptions\NegativeAmount;
 use IFRS\Exceptions\OverClearance;
 use IFRS\Exceptions\SelfClearance;
@@ -149,17 +150,8 @@ class Assignment extends Model implements Segregatable
         $transactionRate = $this->transaction->exchangeRate->rate;
         $clearedRate = $this->cleared->exchangeRate->rate;
 
-        // Assignable Transactions
-        $assignable = [
-            Transaction::RC,
-            Transaction::CN,
-            Transaction::PY,
-            Transaction::DN,
-            Transaction::JN
-        ];
-
-        if (!in_array($transactionType, $assignable)) {
-            throw new UnassignableTransaction($transactionType, $assignable);
+        if (!in_array($transactionType, Assignment::ASSIGNABLES)) {
+            throw new UnassignableTransaction($transactionType, Assignment::ASSIGNABLES);
         }
 
         // Clearable Transactions
@@ -202,6 +194,14 @@ class Assignment extends Model implements Segregatable
         if ($transactionRate !== $clearedRate && is_null($this->forexAccount)) {
             throw new MissingForexAccount();
         }
+
+        if ($this->cleared_type != Balance::MODELNAME && count($this->cleared->assignments) > 0) {
+            throw new MixedAssignment("Assigned", "Cleared");
+        }
+
+        if (count($this->transaction->clearances) > 0) {
+            throw new MixedAssignment("Cleared", "Assigned");
+        }
     }
 
     /**
@@ -212,7 +212,7 @@ class Assignment extends Model implements Segregatable
     public function toString($type = false)
     {
         $classname = explode('\\', self::class);
-        $description = $this->transaction->toString() . ' on ' . $this->assignment_date;
+        $description = 'Assigning ' . $this->transaction->transaction_no . ' on ' . $this->assignment_date;
         return $type ? array_pop($classname) . ': ' . $description : $description;
     }
 

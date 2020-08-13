@@ -31,6 +31,7 @@ use IFRS\Exceptions\InvalidClearanceEntry;
 use IFRS\Exceptions\NegativeAmount;
 use IFRS\Models\Transaction;
 use IFRS\Exceptions\MissingForexAccount;
+use IFRS\Exceptions\MixedAssignment;
 use IFRS\Models\ExchangeRate;
 
 class AssignmentTest extends TestCase
@@ -89,7 +90,7 @@ class AssignmentTest extends TestCase
         $this->assertEquals($assignment->cleared->transaction_no, $cleared->transaction_no);
         $this->assertEquals(
             $assignment->toString(true),
-            'Assignment: ' . $assignment->transaction->toString() . ' on ' . $assignment->assignment_date
+            'Assignment: Assigning' . $assignment->transaction->transaction_no . ' on ' . $assignment->assignment_date
         );
         $this->assertEquals(
             $assignment->toString(),
@@ -499,7 +500,7 @@ class AssignmentTest extends TestCase
         $this->expectExceptionMessage(
             "Client Invoice Transaction cannot have assignments. "
                 . "Assignment Transaction must be one of: "
-                . "Client Receipt, Credit Note, Supplier Payment, Debit Note, Journal Entry"
+                . "Client Receipt, Supplier Payment, Credit Note, Debit Note, Journal Entry"
         );
 
         $assignment = new Assignment([
@@ -980,5 +981,166 @@ class AssignmentTest extends TestCase
             'amount' => 10,
         ]);
         $assignment->save();
+    }
+
+    /**
+     * Test Clearing Assigned Transaction.
+     *
+     * @return void
+     */
+    public function testClearingAssignedTransaction()
+    {
+        $account = factory(Account::class)->create([
+            'account_type' => Account::RECEIVABLE,
+        ]);
+        $currency = factory(Currency::class)->create();
+
+        $transaction = new JournalEntry([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $currency->id,
+            "credited" => false
+        ]);
+
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create()->id,
+            'amount' => 125,
+        ]);
+        $transaction->addLineItem($line);
+        $transaction->post();
+
+        $cleared = new JournalEntry([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $currency->id,
+        ]);
+
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create()->id,
+            'amount' => 100,
+        ]);
+
+        $cleared->addLineItem($line);
+        $cleared->post();
+
+        Assignment::create([
+            'assignment_date' => Carbon::now(),
+            'transaction_id' => $transaction->id,
+            'cleared_id' => $cleared->id,
+            'cleared_type' => $cleared->cleared_type,
+            'amount' => 50,
+        ]);
+
+        $transaction2 = new JournalEntry([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $currency->id,
+            "credited" => true
+        ]);
+
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create()->id,
+            'amount' => 125,
+        ]);
+        $transaction2->addLineItem($line);
+        $transaction2->post();
+
+        $this->expectException(MixedAssignment::class);
+        $this->expectExceptionMessage('A Transaction that has been Assigned cannot be Cleared');
+
+        Assignment::create([
+            'assignment_date' => Carbon::now(),
+            'transaction_id' => $transaction2->id,
+            'cleared_id' => $transaction->id,
+            'cleared_type' => $transaction->cleared_type,
+            'amount' => 50,
+        ]);
+    }
+
+    /**
+     * Test Assigning Cleared Transaction.
+     *
+     * @return void
+     */
+    public function testAssigningClearedTransaction()
+    {
+        $account = factory(Account::class)->create([
+            'account_type' => Account::RECEIVABLE,
+        ]);
+        $currency = factory(Currency::class)->create();
+
+        $transaction = new JournalEntry([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $currency->id,
+            "credited" => false
+        ]);
+
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create()->id,
+            'amount' => 125,
+        ]);
+        $transaction->addLineItem($line);
+        $transaction->post();
+
+        $cleared = new JournalEntry([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $currency->id,
+        ]);
+
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create()->id,
+            'amount' => 100,
+        ]);
+
+        $cleared->addLineItem($line);
+        $cleared->post();
+
+        Assignment::create([
+            'assignment_date' => Carbon::now(),
+            'transaction_id' => $transaction->id,
+            'cleared_id' => $cleared->id,
+            'cleared_type' => $cleared->cleared_type,
+            'amount' => 50,
+        ]);
+
+        $cleared2 = new JournalEntry([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $currency->id,
+            "credited" => false
+        ]);
+
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create()->id,
+            'amount' => 100,
+        ]);
+
+        $cleared2->addLineItem($line);
+        $cleared2->post();
+
+        $this->expectException(MixedAssignment::class);
+        $this->expectExceptionMessage('A Transaction that has been Cleared cannot be Assigned');
+
+        Assignment::create([
+            'assignment_date' => Carbon::now(),
+            'transaction_id' => $cleared->id,
+            'cleared_id' => $cleared2->id,
+            'cleared_type' => $cleared2->cleared_type,
+            'amount' => 50,
+        ]);
     }
 }

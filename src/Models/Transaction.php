@@ -437,7 +437,9 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
     public function getLineItems()
     {
         foreach ($this->lineItems as $lineItem) {
-            $this->addLineItem($lineItem);
+            if ($this->lineItemExists($lineItem->id) === false) {
+                $this->items[] = $lineItem;
+            }
         }
         return $this->items;
     }
@@ -553,10 +555,12 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
             throw new AdjustingReportingPeriod();
         }
 
-        $this->transaction_no = Transaction::transactionNo(
-            $this->transaction_type,
-            Carbon::parse($this->transaction_date)
-        );
+        if (is_null($this->transaction_no)) {
+            $this->transaction_no = Transaction::transactionNo(
+                $this->transaction_type,
+                Carbon::parse($this->transaction_date)
+            );
+        }
 
         $save = parent::save();
         $this->saveLineItems();
