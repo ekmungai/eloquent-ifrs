@@ -420,6 +420,26 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
     }
 
     /**
+     * Transaction is assignable predicate.
+     *
+     * @return bool
+     */
+    public function getAssignableAttribute(): bool
+    {
+        return count($this->clearances) == 0 && in_array($this->transaction_type, Assignment::ASSIGNABLES);
+    }
+
+    /**
+     * Transaction is clearable predicate.
+     *
+     * @return bool
+     */
+    public function getClearableAttribute(): bool
+    {
+        return count($this->assignments) == 0 && in_array($this->transaction_type, Assignment::CLEARABLES);
+    }
+
+    /**
      * Transaction attributes.
      *
      * @return object
@@ -507,6 +527,11 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
     {
         if (!Transaction::find($toBeAssigned['id'])->is_posted) {
             throw new UnpostedAssignment();
+        }
+
+        $existing = $this->assignments->where('cleared_id', $toBeAssigned['id'])->first();
+        if ($existing) {
+            $existing->delete();
         }
 
         if ($this->assignedTransactionExists($toBeAssigned['id']) === false && $toBeAssigned['amount'] > 0) {

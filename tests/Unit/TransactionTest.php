@@ -767,4 +767,70 @@ class TransactionTest extends TestCase
     {
         $this->assertEquals(Transaction::getTypes([Transaction::IN, Transaction::CS]), ["Client Invoice", "Cash Sale"]);
     }
+
+    /**
+     * Test Transaction predicates
+     *
+     * @return void
+     */
+    public function testTransactionPredicates()
+    {
+        $account = factory(Account::class)->create([
+            'account_type' => Account::RECEIVABLE,
+        ]);
+
+        $transaction = new JournalEntry([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
+
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create()->id,
+            'amount' => 125,
+        ]);
+
+        $transaction->addLineItem($line);
+        $transaction->post();
+
+        $cleared = new JournalEntry([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "credited" => false
+        ]);
+
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create()->id,
+            'amount' => 100,
+        ]);
+        $cleared->addLineItem($line);
+        $cleared->post();
+
+        $this->assertTrue($transaction->assignable);
+        $this->assertTrue($transaction->clearable);
+
+        $this->assertTrue($cleared->assignable);
+        $this->assertTrue($cleared->clearable);
+
+        $assignment = new Assignment([
+            'assignment_date' => Carbon::now(),
+            'transaction_id' => $transaction->id,
+            'cleared_id' => $cleared->id,
+            'cleared_type' => $cleared->cleared_type,
+            'amount' => 50,
+        ]);
+        $assignment->save();
+
+        $cleared = Transaction::find($cleared->id);
+        $transaction = Transaction::find($transaction->id);
+
+        $this->assertTrue($transaction->assignable);
+        $this->assertFalse($transaction->clearable);
+
+        $this->assertFalse($cleared->assignable);
+        $this->assertTrue($cleared->clearable);
+    }
 }

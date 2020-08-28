@@ -90,11 +90,11 @@ class AssignmentTest extends TestCase
         $this->assertEquals($assignment->cleared->transaction_no, $cleared->transaction_no);
         $this->assertEquals(
             $assignment->toString(true),
-            'Assignment: Assigning' . $assignment->transaction->transaction_no . ' on ' . $assignment->assignment_date
+            'Assignment: Assigning ' . $assignment->transaction->transaction_no . ' on ' . $assignment->assignment_date
         );
         $this->assertEquals(
             $assignment->toString(),
-            $assignment->transaction->toString() . ' on ' . $assignment->assignment_date
+            'Assigning ' . $assignment->transaction->transaction_no . ' on ' . $assignment->assignment_date
         );
     }
 
