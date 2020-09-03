@@ -70,7 +70,7 @@ abstract class FinancialStatement
     {
         $statements = config('ifrs')['statements'];
 
-        // Add Income Statement as Account Type for Balance Sheet
+        // Add Income Statement as Account Type for Balance Sheet/Cash Flow Statement
         $incomeStatement = [IncomeStatement::TITLE => config('ifrs')['statements'][IncomeStatement::TITLE]];
         $account_names = array_merge(config('ifrs')['accounts'], $incomeStatement);
 
@@ -119,7 +119,7 @@ abstract class FinancialStatement
     {
         foreach (array_keys($this->accounts) as $section) {
             foreach (array_keys(config('ifrs')[$section]) as $accountType) {
-                $account_names = Account::sectionBalances($accountType);
+                $account_names = Account::sectionBalances([$accountType]);
 
                 if ($account_names["sectionTotal"] <> 0) {
                     $this->accounts[$section][$accountType] = $account_names["sectionCategories"];

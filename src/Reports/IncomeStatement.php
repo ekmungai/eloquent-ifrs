@@ -146,7 +146,7 @@ class IncomeStatement extends FinancialStatement
 
         $statement .= $separator . PHP_EOL;
         $statement .= "Net Profit          ";
-        $statement .= $indent . ($opRevenue[1] - $opExpenses[1] + $nOpExpense[1]) . PHP_EOL;
+        $statement .= $indent . (($opRevenue[1] + $nOpRevenue[1]) - ($opExpenses[1] + $nOpExpense[1])) . PHP_EOL;
         $statement .= str_replace("-", "=", $separator . PHP_EOL);
 
         print($statement);

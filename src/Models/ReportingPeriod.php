@@ -107,11 +107,11 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
     /**
      * ReportingPeriod year
      *
-     * @param string $date
+     * @param string | Carbon $date
      *
      * @return int
      */
-    public static function year(string $date = null)
+    public static function year($date = null)
     {
         $year = is_null($date) ? date("Y") : date("Y", strtotime($date));
         $month = is_null($date) ? date("m") : date("m", strtotime($date));
@@ -124,9 +124,9 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
     /**
      * ReportingPeriod start string
      *
-     * @return Carbon
+     * @return string | Carbon $date
      */
-    public static function periodStart(string $date = null)
+    public static function periodStart($date = null)
     {
         return Carbon::create(
             ReportingPeriod::year($date),

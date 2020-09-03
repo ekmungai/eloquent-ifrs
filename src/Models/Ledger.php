@@ -263,12 +263,21 @@ class Ledger extends Model implements Segregatable
      */
     public static function balance(Account $account, Carbon $startDate, Carbon $endDate): float
     {
+
         $debits = Ledger::where([
             "post_account" => $account->id,
             "entry_type" => Balance::DEBIT,
         ])->where("date", ">=", $startDate)
             ->where("date", "<=", $endDate)
             ->sum('amount');
+
+        // print_r(Ledger::where([
+        //     "post_account" => $account->id,
+        //     "entry_type" => Balance::DEBIT,
+        // ])->where("date", ">=", $startDate)
+        //     ->where("date", "<=", $endDate)
+        //     ->getBindings());
+        // print($debits);
 
         $credits = Ledger::where([
             "post_account" => $account->id,
@@ -277,6 +286,13 @@ class Ledger extends Model implements Segregatable
             ->where("date", "<=", $endDate)
             ->sum('amount');
 
+        // print_r(Ledger::where([
+        //     "post_account" => $account->id,
+        //     "entry_type" => Balance::CREDIT,
+        // ])->where("date", ">=", $startDate)
+        //     ->where("date", "<=", $endDate)
+        //     ->getBindings());
+        // print($credits);
         return $debits - $credits;
     }
 }

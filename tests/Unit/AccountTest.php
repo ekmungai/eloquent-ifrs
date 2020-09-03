@@ -20,6 +20,7 @@ use IFRS\Models\Vat;
 use IFRS\Models\LineItem;
 
 use IFRS\Transactions\ClientInvoice;
+use IFRS\Transactions\SupplierBill;
 
 use IFRS\Exceptions\HangingTransactions;
 use IFRS\Exceptions\MissingAccountType;
@@ -366,11 +367,11 @@ class AccountTest extends TestCase
 
         $clientInvoice->post();
 
-        $clients = Account::sectionBalances(Account::RECEIVABLE);
+        $clients = Account::sectionBalances([Account::RECEIVABLE]);
 
-        $incomes = Account::sectionBalances(Account::OPERATING_REVENUE);
+        $incomes = Account::sectionBalances([Account::OPERATING_REVENUE]);
 
-        $control = Account::sectionBalances(Account::CONTROL);
+        $control = Account::sectionBalances([Account::CONTROL]);
 
         $this->assertTrue(in_array($category1, array_keys($clients["sectionCategories"])));
         $this->assertEquals($clients["sectionCategories"][$category1]["accounts"][0]->id, $account1->id);
@@ -451,5 +452,135 @@ class AccountTest extends TestCase
         );
 
         $account->delete();
+    }
+
+    /**
+     * Test Account movement.
+     *
+     * @return void
+     */
+    public function testAccountMovement()
+    {
+        $client = new Account([
+            'name' => $this->faker->name,
+            'account_type' => Account::RECEIVABLE,
+            'category_id' => factory(Category::class)->create()->id
+        ]);
+        $client->save();
+
+        factory(Balance::class)->create([
+            "account_id" => $client->id,
+            "balance_type" => Balance::DEBIT,
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
+                "rate" => 1,
+            ])->id,
+            'reporting_period_id' => $this->period->id,
+            "amount" => 100
+        ]);
+
+        $this->assertEquals(Account::movement([Account::RECEIVABLE]), 0);
+        $this->assertEquals(Account::movement([Account::CONTROL]), 0);
+
+        $revenue = new Account([
+            'name' => $this->faker->name,
+            'account_type' => Account::OPERATING_REVENUE,
+            'category_id' => factory(Category::class)->create()->id
+        ]);
+        $revenue->save();
+
+        $vat = new Account([
+            'name' => $this->faker->name,
+            'account_type' => Account::CONTROL,
+            'category_id' => factory(Category::class)->create()->id
+        ]);
+        $vat->save();
+
+        //Client Invoice Transaction
+        $clientInvoice = new ClientInvoice([
+            "account_id" => $client->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
+
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create([
+                "rate" => 16,
+                "account_id" => $vat->id
+            ])->id,
+            'account_id' => $revenue->id,
+            'narration' => $this->faker->sentence,
+            'quantity' => $this->faker->randomNumber(),
+            'amount' => 100,
+            'quantity' => 1,
+        ]);
+
+        $clientInvoice->addLineItem($line);
+        $clientInvoice->post();
+
+        $this->assertEquals(Account::movement([Account::RECEIVABLE]), -116);
+        $this->assertEquals(Account::movement([Account::CONTROL]), 16);
+
+        $supplier = new Account([
+            'name' => $this->faker->name,
+            'account_type' => Account::PAYABLE,
+            'category_id' => factory(Category::class)->create()->id
+        ]);
+        $supplier->save();
+
+        $asset = new Account([
+            'name' => $this->faker->name,
+            'account_type' => Account::NON_CURRENT_ASSET,
+            'category_id' => factory(Category::class)->create()->id
+        ]);
+        $asset->save();
+
+        factory(Balance::class)->create([
+            "account_id" => $supplier->id,
+            "balance_type" => Balance::CREDIT,
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
+                "rate" => 1,
+            ])->id,
+            'reporting_period_id' => $this->period->id,
+            "amount" => 50
+        ]);
+
+        factory(Balance::class)->create([
+            "account_id" => $asset->id,
+            "balance_type" => Balance::DEBIT,
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
+                "rate" => 1,
+            ])->id,
+            'reporting_period_id' => $this->period->id,
+            "amount" => 50
+        ]);
+
+        $this->assertEquals(Account::movement([Account::PAYABLE]), 0);
+        $this->assertEquals(Account::movement([Account::NON_CURRENT_ASSET]), 0);
+
+        //Supplier Bill Transaction
+        $SupplierBill = new SupplierBill([
+            "account_id" => $supplier->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
+
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create([
+                "rate" => 16,
+                "account_id" => $vat->id
+            ])->id,
+            'account_id' => $asset->id,
+            'narration' => $this->faker->sentence,
+            'quantity' => $this->faker->randomNumber(),
+            'amount' => 50,
+            'quantity' => 1,
+        ]);
+
+        $SupplierBill->addLineItem($line);
+        $SupplierBill->post();
+
+        $this->assertEquals(Account::movement([Account::PAYABLE]), 58);
+        $this->assertEquals(Account::movement([Account::NON_CURRENT_ASSET]), -50);
+        $this->assertEquals(Account::movement([Account::CONTROL]), 8);
     }
 }

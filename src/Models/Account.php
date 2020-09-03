@@ -151,15 +151,15 @@ class Account extends Model implements Recyclable, Segregatable
      * Chart of Account Section Balances for the Reporting Period.
      *
      * @param string $accountType
-     * @param string $startDate
-     * @param string $endDate
+     * @param string | Carbon $startDate
+     * @param string | Carbon $endDate
      *
      * @return array
      */
     public static function sectionBalances(
-        string $accountType,
-        string $startDate = null,
-        string $endDate = null
+        array $accountTypes,
+        $startDate = null,
+        $endDate = null
     ): array {
         $balances = ["sectionTotal" => 0, "sectionCategories" => []];
 
@@ -168,7 +168,7 @@ class Account extends Model implements Recyclable, Segregatable
 
         $year = ReportingPeriod::year($endDate);
 
-        foreach (Account::where("account_type", $accountType)->get() as $account) {
+        foreach (Account::whereIn("account_type", $accountTypes)->get() as $account) {
             $account->openingBalance = $account->openingBalance($year);
             $account->currentBalance = Ledger::balance($account, $startDate, $endDate);
             $closingBalance = $account->openingBalance + $account->currentBalance;
@@ -188,6 +188,34 @@ class Account extends Model implements Recyclable, Segregatable
         }
 
         return $balances;
+    }
+
+
+    /**
+     * Chart of Account Balances movement for the given Period.
+     *
+     * @param array $accountTypes
+     * @param string | carbon $startDate
+     * @param string | carbon $endDate
+     *
+     * @return array
+     */
+
+    public static function movement($accountTypes, $startDate = null, $endDate = null)
+    {
+        $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate) : Carbon::parse($startDate);
+        $endDate = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
+        $periodStart = ReportingPeriod::periodStart($endDate);
+
+        $openingBalance = $closingBalance = 0;
+
+        //balance till period start
+        $openingBalance += Account::sectionBalances($accountTypes, $periodStart, $startDate)["sectionTotal"];
+
+        //balance till period end
+        $closingBalance += Account::sectionBalances($accountTypes, $periodStart, $endDate)["sectionTotal"];
+
+        return ($closingBalance - $openingBalance) * -1;
     }
 
     /**

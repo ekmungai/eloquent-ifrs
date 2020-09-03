@@ -227,7 +227,6 @@ class IncomeStatementTest extends TestCase
         $debitNote->post();
 
         $incomeStatement->getSections();
-
         $operatingRevenues = IncomeStatement::OPERATING_REVENUES;
         $operatingExpenses = IncomeStatement::OPERATING_EXPENSES;
         $nonOperatingRevenues = IncomeStatement::NON_OPERATING_REVENUES;

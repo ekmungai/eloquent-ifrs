@@ -16,6 +16,7 @@ use IFRS\Models\ReportingPeriod;
 use IFRS\Reports\IncomeStatement;
 use IFRS\Reports\BalanceSheet;
 use IFRS\Reports\TrialBalance;
+use IFRS\Reports\CashFlowStatement;
 
 return [
 
@@ -153,6 +154,21 @@ return [
 
         // Trial Balance
         TrialBalance::TITLE => 'Trial Balance',
+
+        // Cash Flow Statement
+        CashFlowStatement::TITLE => 'Cash Flow Statement',
+        CashFlowStatement::PROVISIONS => 'Provisions',
+        CashFlowStatement::RECEIVABLES => 'Receivables',
+        CashFlowStatement::PAYABLES => 'Payables',
+        CashFlowStatement::CURRENT_ASSETS => 'Current Assets',
+        CashFlowStatement::CURRENT_LIABILITIES => 'Current Liabilities',
+        CashFlowStatement::TAXATION => 'Taxation',
+        CashFlowStatement::NON_CURRENT_ASSETS => 'Non Current Assets',
+        CashFlowStatement::NON_CURRENT_LIABILITIES => 'Non Current Liabilities',
+        CashFlowStatement::EQUITY => 'Equity',
+        CashFlowStatement::PROFIT => 'Net Profit',
+        CashFlowStatement::START_CASH_BALANCE => 'Beginning Cash balance',
+        CashFlowStatement::END_CASH_BALANCE => 'Ending Cash balance',
     ],
 
     'balances' => [
@@ -195,6 +211,19 @@ return [
 
     /*
      |--------------------------------------------------------------------------
+     | Reconciliation Accounts
+     |--------------------------------------------------------------------------
+     |
+     | Here you may specify the account code ranges for Reconciliation accounts
+     | such as suspense and misposting accounts.
+     |
+     */
+    BalanceSheet::RECONCILIATION => [
+        Account::RECONCILIATION => 9000, // 9000 - 9999
+    ],
+
+    /*
+     |--------------------------------------------------------------------------
      | Income Statement Accounts
      |--------------------------------------------------------------------------
      |
@@ -219,15 +248,39 @@ return [
 
     /*
      |--------------------------------------------------------------------------
-     | Reconciliation Accounts
+     | Cash Flow Statement Accounts
      |--------------------------------------------------------------------------
      |
-     | Here you may specify the account code ranges for Reconciliation accounts
-     | such as suspense and misposting accounts.
+     | Here you may specify the account code ranges for Cash Flow Statement accounts.
      |
      */
-    BalanceSheet::RECONCILIATION => [
-        Account::RECONCILIATION => 9000, // 9000 - 9999
-    ],
 
+    CashFlowStatement::PROVISIONS => [
+        Account::CONTRA_ASSET => 100, // 100 - 199
+    ],
+    CashFlowStatement::RECEIVABLES => [
+        Account::RECEIVABLE => 200, // 200 - 299
+    ],
+    CashFlowStatement::PAYABLES => [
+        Account::PAYABLE => 2400, // 2400 - 2999
+    ],
+    CashFlowStatement::CURRENT_ASSETS => [
+        Account::INVENTORY => 200, // 200 - 299
+        Account::CURRENT_ASSET => 400, // 400 - 499
+    ],
+    CashFlowStatement::CURRENT_LIABILITIES => [
+        Account::CURRENT_LIABILITY => 2200, // 2200 - 2399
+    ],
+    CashFlowStatement::TAXATION => [
+        Account::CONTROL => 2200, // 2200 - 2399
+    ],
+    CashFlowStatement::NON_CURRENT_ASSETS => [
+        Account::NON_CURRENT_ASSET => 0, // 0 - 99
+    ],
+    CashFlowStatement::NON_CURRENT_LIABILITIES => [
+        Account::NON_CURRENT_LIABILITY => 2000, // 2000 - 2099
+    ],
+    CashFlowStatement::EQUITY => [
+        Account::EQUITY => 3000, // 3000 - 3999
+    ],
 ];
