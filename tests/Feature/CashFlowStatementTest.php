@@ -374,6 +374,7 @@ class CashFlowStatementTest extends TestCase
         $journalEntry->post();
 
         $cashFlowStatement->getSections();
+        $cashFlowStatement->toString();
 
         $provisions = CashFlowStatement::PROVISIONS;
         $receivables = CashFlowStatement::RECEIVABLES;
@@ -386,9 +387,15 @@ class CashFlowStatementTest extends TestCase
         $equity = CashFlowStatement::EQUITY;
         $profit = CashFlowStatement::PROFIT;
         $startCashBalance = CashFlowStatement::START_CASH_BALANCE;
-        $endCashBalance = CashFlowStatement::END_CASH_BALANCE;
 
-        // Statement Sections
+        $endCashBalance = CashFlowStatement::END_CASH_BALANCE;
+        $cashbookBalance = CashFlowStatement::CASHBOOK_BALANCE;
+        $operationsCashFlow = CashFlowStatement::OPERATIONS_CASH_FLOW;
+        $investmentCashFlow = CashFlowStatement::INVESTMENT_CASH_FLOW;
+        $financingCashFlow = CashFlowStatement::FINANCING_CASH_FLOW;
+        $netCashFlow = CashFlowStatement::NET_CASH_FLOW;
+
+        // Statement balances
         $this->assertEquals(
             $cashFlowStatement->balances[$provisions],
             50
@@ -434,8 +441,30 @@ class CashFlowStatementTest extends TestCase
             100
         );
         $this->assertEquals(
-            $cashFlowStatement->balances[$endCashBalance],
+            $cashFlowStatement->balances[$netCashFlow],
+            680
+        );
+
+        // Statement Results
+        $this->assertEquals(
+            $cashFlowStatement->results[$endCashBalance],
             780
+        );
+        $this->assertEquals(
+            $cashFlowStatement->results[$cashbookBalance],
+            780
+        );
+        $this->assertEquals(
+            $cashFlowStatement->results[$operationsCashFlow],
+            630
+        );
+        $this->assertEquals(
+            $cashFlowStatement->results[$investmentCashFlow],
+            -150
+        );
+        $this->assertEquals(
+            $cashFlowStatement->results[$financingCashFlow],
+            200
         );
     }
 }

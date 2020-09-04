@@ -227,6 +227,8 @@ class IncomeStatementTest extends TestCase
         $debitNote->post();
 
         $incomeStatement->getSections();
+        $incomeStatement->toString();
+
         $operatingRevenues = IncomeStatement::OPERATING_REVENUES;
         $operatingExpenses = IncomeStatement::OPERATING_EXPENSES;
         $nonOperatingRevenues = IncomeStatement::NON_OPERATING_REVENUES;
@@ -234,7 +236,7 @@ class IncomeStatementTest extends TestCase
 
         $this->assertEquals(
             $incomeStatement->balances[$operatingRevenues][Account::OPERATING_REVENUE],
-            -150
+            150
         );
 
         $this->assertEquals(
@@ -244,7 +246,7 @@ class IncomeStatementTest extends TestCase
 
         $this->assertEquals(
             $incomeStatement->balances[$nonOperatingRevenues][Account::NON_OPERATING_REVENUE],
-            -200
+            200
         );
 
         $this->assertEquals(

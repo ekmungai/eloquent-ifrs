@@ -123,11 +123,13 @@ class BalanceSheetTest extends TestCase
         $journalEntry->post();
 
         $balanceSheet->getSections();
+        $balanceSheet->toString();
 
         $assets = BalanceSheet::ASSETS;
         $liabilities = BalanceSheet::LIABILITIES;
         $reconciliation = BalanceSheet::RECONCILIATION;
         $equity = BalanceSheet::EQUITY;
+        $profit = BalanceSheet::NET_PROFIT;
 
         $this->assertEquals(
             $balanceSheet->balances[$assets][Account::INVENTORY],
@@ -146,17 +148,17 @@ class BalanceSheetTest extends TestCase
 
         $this->assertEquals(
             $balanceSheet->balances[$liabilities][Account::CONTROL],
-            -16
+            16
         );
 
         $this->assertEquals(
             $balanceSheet->balances[$liabilities][Account::CURRENT_LIABILITY],
-            -100
+            100
         );
 
         $this->assertEquals(
             $balanceSheet->balances[$liabilities][Account::PAYABLE],
-            -116
+            116
         );
 
         $this->assertEquals(
@@ -165,13 +167,8 @@ class BalanceSheetTest extends TestCase
         );
 
         $this->assertEquals(
-            $balanceSheet->balances[$equity][IncomeStatement::TITLE],
-            200
-        );
-
-        $this->assertEquals(
             $balanceSheet->balances[$reconciliation][Account::RECONCILIATION],
-            -70
+            70
         );
     }
 }

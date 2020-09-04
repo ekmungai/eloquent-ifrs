@@ -11,7 +11,7 @@
 namespace IFRS\Reports;
 
 use Carbon\Carbon;
-
+use IFRS\Models\Account;
 use IFRS\Models\ReportingPeriod;
 
 class IncomeStatement extends FinancialStatement
@@ -33,6 +33,10 @@ class IncomeStatement extends FinancialStatement
     const NON_OPERATING_REVENUES = 'NON_OPERATING_REVENUES';
     const OPERATING_EXPENSES = 'OPERATING_EXPENSES';
     const NON_OPERATING_EXPENSES = 'NON_OPERATING_EXPENSES';
+    const GROSS_PROFIT = 'GROSS_PROFIT';
+    const TOTAL_REVENUE = 'TOTAL_REVENUE';
+    const TOTAL_EXPENSES = 'TOTAL_EXPENSES';
+    const NET_PROFIT = 'NET_PROFIT';
 
     /**
      * Income Statement period.
@@ -52,10 +56,10 @@ class IncomeStatement extends FinancialStatement
     public static function getAccountTypes()
     {
         return array_merge(
-            array_keys(config('ifrs')[IncomeStatement::OPERATING_REVENUES]),
-            array_keys(config('ifrs')[IncomeStatement::NON_OPERATING_REVENUES]),
-            array_keys(config('ifrs')[IncomeStatement::OPERATING_EXPENSES]),
-            array_keys(config('ifrs')[IncomeStatement::NON_OPERATING_EXPENSES])
+            config('ifrs')[self::OPERATING_REVENUES],
+            config('ifrs')[self::NON_OPERATING_REVENUES],
+            config('ifrs')[self::OPERATING_EXPENSES],
+            config('ifrs')[self::NON_OPERATING_EXPENSES]
         );
     }
 
@@ -70,7 +74,7 @@ class IncomeStatement extends FinancialStatement
         $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart() : $startDate;
         $this->period['endDate'] = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
 
-        $period = ReportingPeriod::where("year", $endDate)->first();
+        $period = ReportingPeriod::where("calendar_year", $endDate)->first();
         parent::__construct($period);
 
         // Section Accounts
@@ -84,6 +88,12 @@ class IncomeStatement extends FinancialStatement
         $this->balances[self::NON_OPERATING_REVENUES] = [];
         $this->balances[self::OPERATING_EXPENSES] = [];
         $this->balances[self::NON_OPERATING_EXPENSES] = [];
+
+        // Statement Results
+        $this->results[self::GROSS_PROFIT] = 0;
+        $this->results[self::TOTAL_REVENUE] = 0;
+        $this->results[self::TOTAL_EXPENSES] = 0;
+        $this->results[self::NET_PROFIT] = 0;
     }
 
     /**
@@ -97,57 +107,63 @@ class IncomeStatement extends FinancialStatement
     }
 
     /**
+     * Get Cash Flow Statement Sections and Results.
+     */
+    public function getSections(): void
+    {
+        parent::getSections();
+
+        // Gross Profit
+        $this->results[self::GROSS_PROFIT] = array_sum($this->balances[self::OPERATING_REVENUES]) - array_sum($this->balances[self::OPERATING_EXPENSES]);
+
+        // Total Revenue
+        $this->results[self::TOTAL_REVENUE] = $this->results[self::GROSS_PROFIT] + array_sum($this->balances[self::NON_OPERATING_REVENUES]);
+
+        // Total Expenses
+        $this->results[self::TOTAL_EXPENSES] = array_sum($this->balances[self::NON_OPERATING_EXPENSES]);
+
+        // Net Profit
+        $this->results[self::NET_PROFIT] = $this->results[self::TOTAL_REVENUE] - $this->results[self::TOTAL_EXPENSES];
+    }
+
+    /**
      * Print Income Statement.
      *
      * @codeCoverageIgnore
      */
     public function toString(): void
     {
-        $statement = "";
-        $indent = "    ";
-        $separator = "                        ---------------";
+        $this->getSections();
+
+        $statement = $this->statement;
 
         // Title
-        $statement .= $this->entity->name . PHP_EOL;
-        $statement .= config('ifrs')['statements'][self::TITLE] . PHP_EOL;
-        $statement .= "For the Period: ";
-        $statement .= $this->period['startDate']->format('M d Y');
-        $statement .= " to " . $this->period['endDate']->format('M d Y') . PHP_EOL;
+        $statement = $this->printTitle($statement, self::TITLE);
 
         // Operating Revenues
-        $opRevenue = $this->printSection(self::OPERATING_REVENUES, $statement, -1, $indent);
-        $statement = $opRevenue[0];
+        $statement = $this->printSection(self::OPERATING_REVENUES, $statement, $this->indent);
 
         // Operating Expenses
-        $opExpenses = $this->printSection(self::OPERATING_EXPENSES, $statement, 1, $indent);
-        $statement = $opExpenses[0];
+        $statement = $this->printSection(self::OPERATING_EXPENSES, $statement, $this->indent);
 
-        $statement .= $separator . PHP_EOL;
-        $statement .= "Operations Gross Profit ";
-        $statement .= ($opRevenue[1] - $opExpenses[1]) . PHP_EOL;
+        // Gross Profit
+        $statement = $this->printResult(self::GROSS_PROFIT, $statement, $this->indent, $this->result_indents);
 
         // Non Operating Revenue
-        $nOpRevenue = $this->printSection(self::NON_OPERATING_REVENUES, $statement, -1, $indent);
-        $statement = $nOpRevenue[0];
+        $statement = $this->printSection(self::NON_OPERATING_REVENUES, $statement, $this->indent);
 
-        $statement .= $separator . PHP_EOL;
-        $statement .= "Total Revenue       ";
-        $statement .= $indent . ($opRevenue[1] - $opExpenses[1] + $nOpRevenue[1]) . PHP_EOL;
+        // Total Revenue
+        $statement = $this->printResult(self::TOTAL_REVENUE, $statement, $this->indent, $this->result_indents);
 
         // Non Operating Expenses
-        $nOpExpense = $this->printSection(self::NON_OPERATING_EXPENSES, $statement, 1, $indent);
-        $statement = $nOpExpense[0];
-        $statement .= PHP_EOL;
+        $statement = $this->printSection(self::NON_OPERATING_EXPENSES, $statement, $this->indent);
 
-        $statement .= $separator . PHP_EOL;
-        $statement .= "Total Expenses       ";
-        $statement .= $indent . ($nOpExpense[1]) . PHP_EOL;
-        $statement .= PHP_EOL;
+        // Total Expenses
+        $statement = $this->printResult(self::TOTAL_EXPENSES, $statement, $this->indent, $this->result_indents);
 
-        $statement .= $separator . PHP_EOL;
-        $statement .= "Net Profit          ";
-        $statement .= $indent . (($opRevenue[1] + $nOpRevenue[1]) - ($opExpenses[1] + $nOpExpense[1])) . PHP_EOL;
-        $statement .= str_replace("-", "=", $separator . PHP_EOL);
+        // Net Profit
+        $statement = $this->printResult(self::NET_PROFIT, $statement, $this->indent, $this->result_indents);
+        $statement .= $this->grand_total . PHP_EOL;
 
         print($statement);
     }

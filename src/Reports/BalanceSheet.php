@@ -11,7 +11,7 @@
 namespace IFRS\Reports;
 
 use Carbon\Carbon;
-
+use IFRS\Models\Account;
 use IFRS\Models\ReportingPeriod;
 
 class BalanceSheet extends FinancialStatement
@@ -32,6 +32,12 @@ class BalanceSheet extends FinancialStatement
     const LIABILITIES = 'LIABILITIES';
     const EQUITY = 'EQUITY';
     const RECONCILIATION = 'RECONCILIATION';
+    const TOTAL_ASSETS = 'TOTAL_ASSETS';
+    const TOTAL_LIABILITIES = 'TOTAL_LIABILITIES';
+    const NET_ASSETS = 'NET_ASSETS';
+    const TOTAL_RECONCILIATION = 'TOTAL_RECONCILIATION';
+    const NET_PROFIT = 'NET_PROFIT';
+    const TOTAL_EQUITY = 'TOTAL_EQUITY';
 
     /**
      * Balance Sheet period.
@@ -50,10 +56,10 @@ class BalanceSheet extends FinancialStatement
     public static function getAccountTypes()
     {
         return array_merge(
-            array_keys(config('ifrs')[BalanceSheet::ASSETS]),
-            array_keys(config('ifrs')[BalanceSheet::LIABILITIES]),
-            array_keys(config('ifrs')[BalanceSheet::EQUITY]),
-            array_keys(config('ifrs')[BalanceSheet::RECONCILIATION])
+            config('ifrs')[BalanceSheet::ASSETS],
+            config('ifrs')[BalanceSheet::LIABILITIES],
+            config('ifrs')[BalanceSheet::EQUITY],
+            config('ifrs')[BalanceSheet::RECONCILIATION]
         );
     }
 
@@ -80,6 +86,12 @@ class BalanceSheet extends FinancialStatement
         $this->balances[self::LIABILITIES] = [];
         $this->balances[self::EQUITY] = [];
         $this->balances[self::RECONCILIATION] = [];
+
+        // Statement Results
+        $this->results[self::TOTAL_ASSETS] = 0;
+        $this->results[self::TOTAL_LIABILITIES] = 0;
+        $this->results[self::NET_ASSETS] = 0;
+        $this->results[self::TOTAL_EQUITY] = 0;
     }
 
     /**
@@ -99,17 +111,25 @@ class BalanceSheet extends FinancialStatement
     {
         parent::getSections();
 
-        // Income Statement Balance
-        $incomeStatement = new IncomeStatement(null, $this->period['endDate']);
-        $incomeStatement->getSections();
+        // Total Assets
+        $this->results[self::TOTAL_ASSETS] = array_sum($this->balances[self::ASSETS]);
 
-        $credit = $incomeStatement->balances['credit'];
-        $debit = $incomeStatement->balances['debit'];
+        // Total Liabilities
+        $this->results[self::TOTAL_LIABILITIES] = array_sum($this->balances[self::LIABILITIES]);
 
-        $this->balances["credit"] += $credit;
-        $this->balances["debit"] += $debit;
+        // Total Reconciliation
+        $this->results[self::TOTAL_RECONCILIATION] = array_sum($this->balances[self::RECONCILIATION]);
 
-        $this->balances[self::EQUITY][IncomeStatement::TITLE] = $credit - $debit;
+        // Net Assets
+        $this->results[self::NET_ASSETS] = $this->results[self::TOTAL_ASSETS] - ($this->results[self::TOTAL_LIABILITIES] + $this->results[self::TOTAL_RECONCILIATION]);
+
+        // Net Profit
+        $this->balances[self::EQUITY][self::NET_PROFIT] =  Account::sectionBalances(
+            IncomeStatement::getAccountTypes()
+        )["sectionTotal"];
+
+        // Total Equity
+        $this->results[self::TOTAL_EQUITY] = abs(array_sum($this->balances[self::EQUITY]));
     }
 
     /**
@@ -119,53 +139,39 @@ class BalanceSheet extends FinancialStatement
      */
     public function toString(): void
     {
-        $indent = "    ";
-        $separator = "                        ---------------";
+        $statement = $this->statement;
 
         // Title
-        $statement = $this->entity->name . PHP_EOL;
-        $statement .= config('ifrs')['statements'][self::TITLE] . PHP_EOL;
-        $statement .= "As at: ";
-        $statement .= $this->period['endDate']->format('M d Y') . PHP_EOL;
+        $statement = $this->printTitle($statement, self::TITLE);
 
         // Asset Accounts
-        $assets = $this->printSection(self::ASSETS, $statement, 1, $indent);
-        $statement = $assets[0];
+        $statement = $this->printSection(self::ASSETS, $statement, $this->indent);
 
-        $statement .= $separator . PHP_EOL;
-        $statement .= "Total Assets         ";
-        $statement .= $indent . ($assets[1]) . PHP_EOL;
+        // Total Assets
+        $statement = $this->printResult(self::TOTAL_ASSETS, $statement, $this->indent, $this->result_indents);
 
         // Liability Accounts
-        $liabilities = $this->printSection(self::LIABILITIES, $statement, -1, $indent);
-        $statement = $liabilities[0];
+        $statement = $this->printSection(self::LIABILITIES, $statement, $this->indent);
 
-        $statement .= $separator . PHP_EOL;
-        $statement .= "Total Liabilities    ";
-        $statement .= $indent . ($liabilities[1]) . PHP_EOL;
+        // Total Liabilities
+        $statement = $this->printResult(self::TOTAL_LIABILITIES, $statement, $this->indent, $this->result_indents);
 
         // Reconciliation Accounts
-        $reconciliation = $this->printSection(self::RECONCILIATION, $statement, 1, $indent);
-        $statement = $reconciliation[0];
+        $statement = $this->printSection(self::RECONCILIATION, $statement, $this->indent);
 
-        $statement .= $separator . PHP_EOL;
-        $statement .= "Total Reconciliation  ";
-        $statement .= $indent . ($reconciliation[1]) . PHP_EOL;
-        $statement .= PHP_EOL;
+        // Total Reconciliation
+        $statement = $this->printResult(self::TOTAL_RECONCILIATION, $statement, $this->indent, $this->result_indents);
 
-        $statement .= $separator . PHP_EOL;
-        $statement .= "Net Assets           ";
-        $statement .= $indent . ($assets[1] - $liabilities[1] - $reconciliation[1]) . PHP_EOL;
-        $statement .= str_replace("-", "=", $separator . PHP_EOL);
+        // Net Assets
+        $statement = $this->printResult(self::NET_ASSETS, $statement, $this->indent, $this->result_indents);
+        $statement .= $this->grand_total . PHP_EOL;
 
-        // Equity Accounts
-        $equity = $this->printSection(self::EQUITY, $statement, 1, $indent);
-        $statement = $equity[0];
+        // Equity
+        $statement = $this->printSection(self::EQUITY, $statement, $this->indent);
 
-        $statement .= $separator . PHP_EOL;
-        $statement .= "Total Equity         ";
-        $statement .= $indent . ($equity[1]) . PHP_EOL;
-        $statement .= str_replace("-", "=", $separator . PHP_EOL);
+        // Total Assets
+        $statement = $this->printResult(self::TOTAL_EQUITY, $statement, $this->indent, $this->result_indents);
+        $statement .= $this->grand_total . PHP_EOL;
 
         print($statement);
     }

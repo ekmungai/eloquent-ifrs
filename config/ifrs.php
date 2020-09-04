@@ -82,6 +82,61 @@ return [
     ],
 
     /*
+    |--------------------------------------------------------------------------
+    | Accounts Codes
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify the account code ranges forAccounts.
+    |
+    */
+
+    'account_codes' => [
+
+        // BALANCE SHEET 
+        // =============
+
+        // Asset Accounts
+        Account::NON_CURRENT_ASSET => 0, // 0 - 99
+        Account::CONTRA_ASSET => 100, // 100 - 199
+        Account::INVENTORY => 200, // 200 - 299
+        Account::BANK => 300, // 300 - 399
+        Account::CURRENT_ASSET => 400, // 400 - 499
+        Account::RECEIVABLE => 500, // 500 - 1999
+
+        // Liability Accounts
+        Account::NON_CURRENT_LIABILITY => 2000, // 2000 - 2099
+        Account::CONTROL => 2100, // 2100 - 2199
+        Account::CURRENT_LIABILITY => 2200, // 2200 - 2399
+        Account::PAYABLE => 2400, // 2400 - 2999
+
+        // Equity Accounts
+        Account::EQUITY => 3000, // 3000 - 3999
+
+        // INCOME STATEMENT 
+        // ================
+
+        // Operating Revenue Accounts
+        Account::OPERATING_REVENUE => 4000, // 4000 - 4499
+
+        // Non Operating Revenue Accounts
+        Account::NON_OPERATING_REVENUE => 4500, // 4500 - 4999
+
+        // Operating Expense Accounts
+        Account::OPERATING_EXPENSE => 5000, // 5000 - 5999
+
+        // Non Operating Expense Accounts
+        Account::DIRECT_EXPENSE => 6000, // 6000 - 6999
+        Account::OVERHEAD_EXPENSE => 7000, // 7000 - 7999
+        Account::OTHER_EXPENSE => 8000, // 8000 - 8999
+
+        // RECONCILIATION 
+        // ================
+
+        // Reconciliation Accounts
+        Account::RECONCILIATION => 9000, // 9000 - 9999
+    ],
+
+    /*
      |--------------------------------------------------------------------------
      | Glossary
      |--------------------------------------------------------------------------
@@ -90,7 +145,8 @@ return [
      |
      */
     'accounts' => [
-        //Balance Sheet: Assets Accounts
+
+        // Balance Sheet: Asset Accounts
         Account::NON_CURRENT_ASSET => 'Non Current Asset',
         Account::CONTRA_ASSET => 'Contra Asset',
         Account::INVENTORY => 'Inventory',
@@ -98,21 +154,21 @@ return [
         Account::CURRENT_ASSET => 'Current Asset',
         Account::RECEIVABLE => 'Receivable',
 
-        //Balance Sheet: Liabilities Accounts
+        // Balance Sheet: Liabilities Accounts
         Account::NON_CURRENT_LIABILITY => 'Non Current Liability',
         Account::CONTROL => 'Control',
         Account::CURRENT_LIABILITY => 'Current Liability',
         Account::PAYABLE => 'Payable',
         Account::RECONCILIATION => 'Reconciliation',
 
-        //Balance Sheet: Equity Accounts
+        // Balance Sheet: Equity Accounts
         Account::EQUITY => 'Equity',
 
-        //Income Statement: Operations Accounts
+        // Income Statement: Operations Accounts
         Account::OPERATING_REVENUE => 'Operating Revenue',
         Account::OPERATING_EXPENSE => 'Operating Expense',
 
-        //Income Statement: Non Operations Accounts
+        // Income Statement: Non Operations Accounts
         Account::NON_OPERATING_REVENUE => 'Non Operating Revenue',
         Account::DIRECT_EXPENSE => 'Direct Expense',
         Account::OVERHEAD_EXPENSE => 'Overhead Expense',
@@ -120,30 +176,36 @@ return [
     ],
 
     'transactions' => [
-        //client transactions
+        // Client Transactions
         Transaction::CS => 'Cash Sale',
         Transaction::IN => 'Client Invoice',
         Transaction::CN => 'Credit Note',
         Transaction::RC => 'Client Receipt',
 
-        //supplier transactions
+        //Supplier Transactions
         Transaction::CP => 'Cash Purchase',
         Transaction::BL => 'Supplier Bill',
         Transaction::DN => 'Debit Note',
         Transaction::PY => 'Supplier Payment',
 
-        //internal transactions
+        // Internal Transactions
         Transaction::CE => 'Contra Entry',
         Transaction::JN => 'Journal Entry',
     ],
 
     'statements' => [
-        // Income statement
+        // Income statement: Sections
         IncomeStatement::TITLE => 'Income Statement',
         IncomeStatement::OPERATING_REVENUES => 'Operating Revenues',
         IncomeStatement::NON_OPERATING_REVENUES => 'Non Operating Revenues',
         IncomeStatement::OPERATING_EXPENSES => 'Operating Expenses',
         IncomeStatement::NON_OPERATING_EXPENSES => 'Non Operating Expenses',
+
+        // Income statement: Results
+        IncomeStatement::GROSS_PROFIT => 'Gross Profit',
+        IncomeStatement::TOTAL_REVENUE => 'Total Revenue',
+        IncomeStatement::TOTAL_EXPENSES => 'Total Expenses',
+        IncomeStatement::NET_PROFIT => 'Net Profit',
 
         // Balance Sheet
         BalanceSheet::TITLE => 'Balance Sheet',
@@ -151,11 +213,16 @@ return [
         BalanceSheet::LIABILITIES => 'Liabilities',
         BalanceSheet::EQUITY => 'Equity',
         BalanceSheet::RECONCILIATION => 'Reconciliation',
+        BalanceSheet::TOTAL_ASSETS => 'Total Assets',
+        BalanceSheet::TOTAL_LIABILITIES => 'Total Liabilities',
+        BalanceSheet::NET_ASSETS => 'Net Assets',
+        BalanceSheet::TOTAL_RECONCILIATION => 'Total Reconciliation',
+        BalanceSheet::TOTAL_EQUITY => 'Total Equity',
 
         // Trial Balance
         TrialBalance::TITLE => 'Trial Balance',
 
-        // Cash Flow Statement
+        // Cash Flow Statement: Sections
         CashFlowStatement::TITLE => 'Cash Flow Statement',
         CashFlowStatement::PROVISIONS => 'Provisions',
         CashFlowStatement::RECEIVABLES => 'Receivables',
@@ -166,9 +233,16 @@ return [
         CashFlowStatement::NON_CURRENT_ASSETS => 'Non Current Assets',
         CashFlowStatement::NON_CURRENT_LIABILITIES => 'Non Current Liabilities',
         CashFlowStatement::EQUITY => 'Equity',
+
+        // Cash Flow Statement: Results
         CashFlowStatement::PROFIT => 'Net Profit',
+        CashFlowStatement::OPERATIONS_CASH_FLOW => 'Total Operations Cash Flow',
+        CashFlowStatement::INVESTMENT_CASH_FLOW => 'Total Investment Cash Flow',
+        CashFlowStatement::FINANCING_CASH_FLOW => 'Total Financing Cash Flow',
+        CashFlowStatement::NET_CASH_FLOW => 'Cash Flow for the Period',
         CashFlowStatement::START_CASH_BALANCE => 'Beginning Cash balance',
         CashFlowStatement::END_CASH_BALANCE => 'Ending Cash balance',
+        CashFlowStatement::CASHBOOK_BALANCE => 'Cashbook balance',
     ],
 
     'balances' => [
@@ -184,103 +258,93 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Balance Sheet Accounts
+    | Balance Sheet Sections
     |--------------------------------------------------------------------------
     |
-    | Here you may specify the account code ranges for Balance Sheet accounts.
+    | Here you may specify the Balance Sheet Sections.
     |
     */
 
     BalanceSheet::ASSETS => [
-        Account::NON_CURRENT_ASSET => 0, // 0 - 99
-        Account::CONTRA_ASSET => 100, // 100 - 199
-        Account::INVENTORY => 200, // 200 - 299
-        Account::BANK => 300, // 300 - 399
-        Account::CURRENT_ASSET => 400, // 400 - 499
-        Account::RECEIVABLE => 500, // 500 - 1999
+        Account::NON_CURRENT_ASSET,
+        Account::CONTRA_ASSET,
+        Account::INVENTORY,
+        Account::BANK,
+        Account::CURRENT_ASSET,
+        Account::RECEIVABLE,
     ],
     BalanceSheet::LIABILITIES => [
-        Account::NON_CURRENT_LIABILITY => 2000, // 2000 - 2099
-        Account::CONTROL => 2100, // 2100 - 2199
-        Account::CURRENT_LIABILITY => 2200, // 2200 - 2399
-        Account::PAYABLE => 2400, // 2400 - 2999
+        Account::NON_CURRENT_LIABILITY,
+        Account::CONTROL,
+        Account::CURRENT_LIABILITY,
+        Account::PAYABLE,
     ],
     BalanceSheet::EQUITY => [
-        Account::EQUITY => 3000, // 3000 - 3999
+        Account::EQUITY
     ],
-
-    /*
-     |--------------------------------------------------------------------------
-     | Reconciliation Accounts
-     |--------------------------------------------------------------------------
-     |
-     | Here you may specify the account code ranges for Reconciliation accounts
-     | such as suspense and misposting accounts.
-     |
-     */
     BalanceSheet::RECONCILIATION => [
-        Account::RECONCILIATION => 9000, // 9000 - 9999
+        Account::RECONCILIATION
     ],
 
     /*
      |--------------------------------------------------------------------------
-     | Income Statement Accounts
+     | Income Statement Sections
      |--------------------------------------------------------------------------
      |
-     | Here you may specify the account code ranges for Income Statement accounts.
+     | Here you may specify the Income Statement sections.
      |
      */
 
     IncomeStatement::OPERATING_REVENUES => [
-        Account::OPERATING_REVENUE => 4000, // 4000 - 4499
+        Account::OPERATING_REVENUE
     ],
     IncomeStatement::NON_OPERATING_REVENUES => [
-        Account::NON_OPERATING_REVENUE => 4500, // 4500 - 4999
+        Account::NON_OPERATING_REVENUE
     ],
     IncomeStatement::OPERATING_EXPENSES => [
-        Account::OPERATING_EXPENSE => 5000, // 5000 - 5999
+        Account::OPERATING_EXPENSE
     ],
     IncomeStatement::NON_OPERATING_EXPENSES => [
-        Account::DIRECT_EXPENSE => 6000, // 6000 - 6999
-        Account::OVERHEAD_EXPENSE => 7000, // 7000 - 7999
-        Account::OTHER_EXPENSE => 8000, // 8000 - 8999
+        Account::DIRECT_EXPENSE,
+        Account::OVERHEAD_EXPENSE,
+        Account::OTHER_EXPENSE
     ],
 
     /*
      |--------------------------------------------------------------------------
-     | Cash Flow Statement Accounts
+     | Cash Flow Statement Sections
      |--------------------------------------------------------------------------
      |
-     | Here you may specify the account code ranges for Cash Flow Statement accounts.
+     | Here you may specify the  Cash Flow Statement sections.
      |
      */
 
     CashFlowStatement::PROVISIONS => [
-        Account::CONTRA_ASSET => 100, // 100 - 199
+        Account::CONTRA_ASSET
     ],
     CashFlowStatement::RECEIVABLES => [
-        Account::RECEIVABLE => 200, // 200 - 299
+        Account::RECEIVABLE
     ],
     CashFlowStatement::PAYABLES => [
-        Account::PAYABLE => 2400, // 2400 - 2999
+        Account::PAYABLE
     ],
     CashFlowStatement::CURRENT_ASSETS => [
-        Account::INVENTORY => 200, // 200 - 299
-        Account::CURRENT_ASSET => 400, // 400 - 499
+        Account::INVENTORY,
+        Account::CURRENT_ASSET
     ],
     CashFlowStatement::CURRENT_LIABILITIES => [
-        Account::CURRENT_LIABILITY => 2200, // 2200 - 2399
+        Account::CURRENT_LIABILITY
     ],
     CashFlowStatement::TAXATION => [
-        Account::CONTROL => 2200, // 2200 - 2399
+        Account::CONTROL
     ],
     CashFlowStatement::NON_CURRENT_ASSETS => [
-        Account::NON_CURRENT_ASSET => 0, // 0 - 99
+        Account::NON_CURRENT_ASSET
     ],
     CashFlowStatement::NON_CURRENT_LIABILITIES => [
-        Account::NON_CURRENT_LIABILITY => 2000, // 2000 - 2099
+        Account::NON_CURRENT_LIABILITY
     ],
     CashFlowStatement::EQUITY => [
-        Account::EQUITY => 3000, // 3000 - 3999
+        Account::EQUITY
     ],
 ];

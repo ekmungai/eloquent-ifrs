@@ -332,8 +332,7 @@ class Account extends Model implements Recyclable, Segregatable
                 throw new MissingAccountType();
             }
 
-            $section = Arr::collapse(array_values(config('ifrs')))[$this->account_type];
-            $this->code = $section + Account::withTrashed()
+            $this->code = config('ifrs')['account_codes'][$this->account_type] + Account::withTrashed()
                 ->where("account_type", $this->account_type)
                 ->count() + 1;
         }

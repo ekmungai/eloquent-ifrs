@@ -39,8 +39,13 @@ class CashFlowStatement extends FinancialStatement
     const NON_CURRENT_LIABILITIES = 'NON_CURRENT_LIABILITIES';
     const EQUITY = 'EQUITY';
     const PROFIT = 'PROFIT';
+    const OPERATIONS_CASH_FLOW = 'OPERATIONS_CASH_FLOW';
+    const INVESTMENT_CASH_FLOW = 'INVESTMENT_CASH_FLOW';
+    const FINANCING_CASH_FLOW = 'FINANCING_CASH_FLOW';
     const START_CASH_BALANCE = 'START_CASH_BALANCE';
     const END_CASH_BALANCE = 'END_CASH_BALANCE';
+    const NET_CASH_FLOW = 'NET_CASH_FLOW';
+    const CASHBOOK_BALANCE = 'CASHBOOK_BALANCE';
 
     /**
      * Cash Flow Statement period.
@@ -74,6 +79,8 @@ class CashFlowStatement extends FinancialStatement
         $period = ReportingPeriod::where("year", $endDate)->first();
         parent::__construct($period);
 
+        $this->result_indents = 1;
+
         // Section Balances
         $this->balances[self::PROVISIONS] = 0;
         $this->balances[self::RECEIVABLES] = 0;
@@ -84,9 +91,13 @@ class CashFlowStatement extends FinancialStatement
         $this->balances[self::NON_CURRENT_ASSETS] = 0;
         $this->balances[self::NON_CURRENT_LIABILITIES] = 0;
         $this->balances[self::EQUITY] = 0;
-        $this->balances[self::PROFIT] = 0;
-        $this->balances[self::START_CASH_BALANCE] = 0;
-        $this->balances[self::END_CASH_BALANCE] = 0;
+
+        // Statement Results
+        $this->results[self::OPERATIONS_CASH_FLOW] = 0;
+        $this->results[self::INVESTMENT_CASH_FLOW] = 0;
+        $this->results[self::FINANCING_CASH_FLOW] = 0;
+        $this->results[self::CASHBOOK_BALANCE] = 0;
+        $this->results[self::END_CASH_BALANCE] = 0;
     }
 
     /**
@@ -100,45 +111,49 @@ class CashFlowStatement extends FinancialStatement
     }
 
     /**
-     * Get Cash Flow Statement Sections.
+     * Get Cash Flow Statement Sections and Results.
      */
     public function getSections(): void
     {
         // Accounts movements for the Period
         foreach (array_keys($this->balances) as $section) {
-            switch ($section) {
-
-                case self::PROFIT:
-                    // Profit for the Period
-                    $this->balances[self::PROFIT] = Account::sectionBalances(
-                        IncomeStatement::getAccountTypes()
-                    )["sectionTotal"] * -1;
-                    break;
-
-                case self::START_CASH_BALANCE:
-                    // Cash at start of the Period
-                    $periodStart = ReportingPeriod::periodStart($this->period['endDate']);
-
-                    $this->balances[self::START_CASH_BALANCE] = Account::sectionBalances(
-                        [Account::BANK],
-                        $periodStart,
-                        $this->period['startDate']
-                    )["sectionTotal"];
-                    break;
-
-                case self::END_CASH_BALANCE:
-                    // Cash at end of the Period
-                    $this->balances[self::END_CASH_BALANCE] =  Account::sectionBalances(
-                        [Account::BANK],
-                        $this->period['startDate'],
-                        $this->period['endDate']
-                    )["sectionTotal"];
-                    break;
-
-                default:
-                    $this->balances[$section] = Account::movement(array_keys(config('ifrs')[$section]));
-            }
+            $this->balances[$section] = Account::movement(config('ifrs')[$section]);
         }
+
+        // Profit for the Period
+        $this->balances[self::PROFIT] = Account::sectionBalances(
+            IncomeStatement::getAccountTypes()
+        )["sectionTotal"] * -1;
+
+        // Operations Cash Flow
+        $this->results[self::OPERATIONS_CASH_FLOW] = $this->balances[self::PROFIT] + array_sum(array_slice($this->balances, 0, 6));
+
+        // Investment Cash Flow
+        $this->results[self::INVESTMENT_CASH_FLOW] = $this->balances[self::NON_CURRENT_ASSETS];
+
+        // Financing Cash Flow
+        $this->results[self::FINANCING_CASH_FLOW] = $this->balances[self::NON_CURRENT_LIABILITIES] + $this->balances[self::EQUITY];
+
+        // Net Cash Flow
+        $this->balances[self::NET_CASH_FLOW] = $this->results[self::OPERATIONS_CASH_FLOW] + $this->results[self::INVESTMENT_CASH_FLOW] + $this->results[self::FINANCING_CASH_FLOW];
+
+        // Cash at start of the Period
+        $periodStart = ReportingPeriod::periodStart($this->period['endDate']);
+        $this->balances[self::START_CASH_BALANCE] = Account::sectionBalances(
+            [Account::BANK],
+            $periodStart,
+            $this->period['startDate']
+        )["sectionTotal"];
+
+        // Cash at end of the Period
+        $this->results[self::END_CASH_BALANCE] =  $this->balances[self::START_CASH_BALANCE] + $this->balances[self::NET_CASH_FLOW];
+
+        // Cashbook Balance
+        $this->results[self::CASHBOOK_BALANCE] =  Account::sectionBalances(
+            [Account::BANK],
+            $this->period['startDate'],
+            $this->period['endDate']
+        )["sectionTotal"];
     }
 
     /**
@@ -148,77 +163,55 @@ class CashFlowStatement extends FinancialStatement
      */
     public function toString(): void
     {
-        $statements = config('ifrs')['statements'];
-        $statement = "";
-        $indent = "    ";
-        $separator = "                        ---------------";
 
+        $statement = $this->statement;
         // Title
-        $statement .= $this->entity->name . PHP_EOL;
-        $statement .= config('ifrs')['statements'][self::TITLE] . PHP_EOL;
-        $statement .= "For the Period: ";
-        $statement .= $this->period['startDate']->format('M d Y');
-        $statement .= " to " . $this->period['endDate']->format('M d Y') . PHP_EOL;
+        $statement = $this->printTitle($statement, self::TITLE);
 
         // Operating Cash Flow
         $statement .= PHP_EOL;
         $statement .= "Operating Cash Flow" . PHP_EOL;
-        $statement .= $this->printSection(self::PROFIT, "", 1, $indent)[0];
-        $statement .= $this->printSection(self::PROVISIONS, "", 1, $indent)[0];
-        $statement .= $this->printSection(self::RECEIVABLES, "", 1, $indent)[0];
-        $statement .= $this->printSection(self::PAYABLES, "", 1, $indent)[0];
-        $statement .= $this->printSection(self::CURRENT_ASSETS, "", 1, $indent)[0];
-        $statement .= $this->printSection(self::CURRENT_LIABILITIES, "", 1, $indent)[0];
 
-        $totalOperationsCashFlow = $this->balances[self::PROFIT] + $this->balances[self::PROVISIONS] + $this->balances[self::RECEIVABLES] + $this->balances[self::PAYABLES] + $this->balances[self::TAXATION] + $this->balances[self::CURRENT_ASSETS] + $this->balances[self::CURRENT_LIABILITIES];
+        $statement = $this->printSection(self::PROFIT, $statement, $this->indent);
+        $statement = $this->printSection(self::PROVISIONS, $statement, $this->indent);
+        $statement = $this->printSection(self::RECEIVABLES, $statement, $this->indent);
+        $statement = $this->printSection(self::PAYABLES, $statement, $this->indent);
+        $statement = $this->printSection(self::TAXATION, $statement, $this->indent);
+        $statement = $this->printSection(self::CURRENT_ASSETS, $statement, $this->indent);
+        $statement = $this->printSection(self::CURRENT_LIABILITIES, $statement, $this->indent);
 
-        $statement .= $separator . PHP_EOL;
-        $statement .= "Total Operations Cash Flow ";
-        $statement .= $indent . $totalOperationsCashFlow . PHP_EOL;
+        // Total Operating Cash Flow
+        $statement = $this->printResult(self::OPERATIONS_CASH_FLOW, $statement, $this->indent, $this->result_indents);
 
         // Investment Cash Flow
         $statement .= PHP_EOL;
         $statement .= "Investment Cash Flow" . PHP_EOL;
-        $statement .= $this->printSection(self::NON_CURRENT_ASSETS, "", 1, $indent)[0];
+        $statement = $this->printSection(self::NON_CURRENT_ASSETS, $statement, $this->indent);
 
-        $totalInvestmentCashFlow = $this->balances[self::NON_CURRENT_ASSETS];
-
-        $statement .= $separator . PHP_EOL;
-        $statement .= "Total Investment Cash Flow ";
-        $statement .= $indent . $totalInvestmentCashFlow . PHP_EOL;
+        // Total Investment Cash Flow
+        $statement = $this->printResult(self::INVESTMENT_CASH_FLOW, $statement, $this->indent, $this->result_indents);
 
         // Financing Cash Flow
         $statement .= PHP_EOL;
         $statement .= "Financing Cash Flow" . PHP_EOL;
-        $statement .= $this->printSection(self::NON_CURRENT_LIABILITIES, "", 1, $indent)[0];
-        $statement .= $this->printSection(self::EQUITY, "", 1, $indent)[0];
+        $statement = $this->printSection(self::NON_CURRENT_LIABILITIES, $statement, $this->indent);
+        $statement = $this->printSection(self::EQUITY, $statement, $this->indent);
 
-        $totalFinancingCashFlow = $this->balances[self::NON_CURRENT_LIABILITIES] + $this->balances[self::EQUITY];
-
-        $statement .= $separator . PHP_EOL;
-        $statement .= "Total Financing Cash Flow ";
-        $statement .= $indent . $totalFinancingCashFlow . PHP_EOL;
-
+        // Total Financing Cash Flow
+        $statement = $this->printResult(self::FINANCING_CASH_FLOW, $statement, $this->indent, $this->result_indents);
 
         // Net Cash Flow
         $statement .= PHP_EOL;
         $statement .= "Net Cash Flow" . PHP_EOL;
-        $statement .= $indent . $statements[self::START_CASH_BALANCE] . $indent;
-        $statement .= $indent . $this->balances[self::START_CASH_BALANCE] . PHP_EOL;
-        $statement .= $indent . "Cash Flow for the Period" . $indent;
-        $statement .= $indent . ($totalFinancingCashFlow + $totalInvestmentCashFlow + $totalOperationsCashFlow) . PHP_EOL;
-        $statement .= $separator . PHP_EOL;
-        $statement .= $indent . $statements[self::END_CASH_BALANCE] . $indent;
-        $statement .= $indent . $this->balances[self::START_CASH_BALANCE] + $totalFinancingCashFlow + $totalInvestmentCashFlow + $totalOperationsCashFlow . PHP_EOL;
-        $statement .= "                        ================" . PHP_EOL;
+        $statement = $this->printSection(self::START_CASH_BALANCE, $statement, $this->indent);
+        $statement = $this->printSection(self::NET_CASH_FLOW, $statement, $this->indent, $this->result_indents);
+        $statement = $this->printResult(self::END_CASH_BALANCE, $statement, $this->indent, $this->result_indents);
+        $statement .= $this->grand_total . PHP_EOL;
 
-        // Balance as per Cashbook
+        // Cashbook Balance
         $statement .= PHP_EOL;
-        $statement .= "Balance as per Cashbook" . PHP_EOL;
-        $statement .= $separator . PHP_EOL;
-        $statement .= $indent . "Cashbook Balance" . $indent;
-        $statement .= $indent . $this->balances[self::END_CASH_BALANCE] . PHP_EOL;
-        $statement .= "                        ================" . PHP_EOL;
+        $statement = $this->printResult(self::CASHBOOK_BALANCE, $statement, $this->indent, $this->result_indents);
+        $statement .= $this->grand_total . PHP_EOL;
 
         print($statement);
     }
@@ -228,21 +221,18 @@ class CashFlowStatement extends FinancialStatement
      *
      * @param string $section
      * @param string $statement
-     * @param int    $multiplier
      * @param string $indent
      *
-     * @return array[string, float]
+     * @return string
      *
      * @codeCoverageIgnore
      */
-    protected function printSection(string $section, string $statement, int $multiplier, string $indent)
+    protected function printSection(string $section, string $statement, string $indent)
     {
-        $statements = config('ifrs')['statements'];
+        $sectionNames = config('ifrs')['statements'];
 
+        $statement .= $indent . $sectionNames[$section] . $indent;
 
-        $statement .= $indent . $statements[$section] . $indent;
-        $statement .= $indent . $this->balances[$section] . PHP_EOL;
-
-        return [$statement, 0];
+        return $statement . $indent . $this->balances[$section] . PHP_EOL;
     }
 }
