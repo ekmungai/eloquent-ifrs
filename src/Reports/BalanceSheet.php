@@ -88,10 +88,14 @@ class BalanceSheet extends FinancialStatement
         $this->balances[self::RECONCILIATION] = [];
 
         // Statement Results
-        $this->results[self::TOTAL_ASSETS] = 0;
-        $this->results[self::TOTAL_LIABILITIES] = 0;
         $this->results[self::NET_ASSETS] = 0;
         $this->results[self::TOTAL_EQUITY] = 0;
+
+        // Statement Totals
+        $this->totals[self::ASSETS] = 0;
+        $this->totals[self::LIABILITIES] = 0;
+        $this->totals[self::EQUITY] = 0;
+        $this->totals[self::RECONCILIATION] = 0;
     }
 
     /**
@@ -111,25 +115,18 @@ class BalanceSheet extends FinancialStatement
     {
         parent::getSections();
 
-        // Total Assets
-        $this->results[self::TOTAL_ASSETS] = array_sum($this->balances[self::ASSETS]);
-
-        // Total Liabilities
-        $this->results[self::TOTAL_LIABILITIES] = array_sum($this->balances[self::LIABILITIES]);
-
-        // Total Reconciliation
-        $this->results[self::TOTAL_RECONCILIATION] = array_sum($this->balances[self::RECONCILIATION]);
-
-        // Net Assets
-        $this->results[self::NET_ASSETS] = $this->results[self::TOTAL_ASSETS] - ($this->results[self::TOTAL_LIABILITIES] + $this->results[self::TOTAL_RECONCILIATION]);
+        // Net Assets   
+        $this->results[self::NET_ASSETS] = $this->totals[self::ASSETS] + ($this->totals[self::LIABILITIES] + $this->totals[self::RECONCILIATION]);
 
         // Net Profit
-        $this->balances[self::EQUITY][self::NET_PROFIT] =  Account::sectionBalances(
+        $netProfit = Account::sectionBalances(
             IncomeStatement::getAccountTypes()
         )["sectionTotal"];
 
+        $this->balances[self::EQUITY][self::NET_PROFIT] =  $netProfit;
+
         // Total Equity
-        $this->results[self::TOTAL_EQUITY] = abs(array_sum($this->balances[self::EQUITY]));
+        $this->results[self::TOTAL_EQUITY] = abs($this->totals[self::EQUITY] + $netProfit);
     }
 
     /**
@@ -148,28 +145,28 @@ class BalanceSheet extends FinancialStatement
         $statement = $this->printSection(self::ASSETS, $statement, $this->indent);
 
         // Total Assets
-        $statement = $this->printResult(self::TOTAL_ASSETS, $statement, $this->indent, $this->result_indents);
+        $statement = $this->printTotal(self::ASSETS, $statement, $this->indent, 1, $this->result_indents);
 
         // Liability Accounts
-        $statement = $this->printSection(self::LIABILITIES, $statement, $this->indent);
+        $statement = $this->printSection(self::LIABILITIES, $statement, $this->indent, -1);
 
         // Total Liabilities
-        $statement = $this->printResult(self::TOTAL_LIABILITIES, $statement, $this->indent, $this->result_indents);
+        $statement = $this->printTotal(self::LIABILITIES, $statement, $this->indent, -1, $this->result_indents);
 
         // Reconciliation Accounts
-        $statement = $this->printSection(self::RECONCILIATION, $statement, $this->indent);
+        $statement = $this->printSection(self::RECONCILIATION, $statement, $this->indent, 1);
 
         // Total Reconciliation
-        $statement = $this->printResult(self::TOTAL_RECONCILIATION, $statement, $this->indent, $this->result_indents);
+        $statement = $this->printTotal(self::RECONCILIATION, $statement, $this->indent, 1, $this->result_indents);
 
         // Net Assets
         $statement = $this->printResult(self::NET_ASSETS, $statement, $this->indent, $this->result_indents);
         $statement .= $this->grand_total . PHP_EOL;
 
         // Equity
-        $statement = $this->printSection(self::EQUITY, $statement, $this->indent);
+        $statement = $this->printSection(self::EQUITY, $statement, $this->indent, -1);
 
-        // Total Assets
+        // Total Equity
         $statement = $this->printResult(self::TOTAL_EQUITY, $statement, $this->indent, $this->result_indents);
         $statement .= $this->grand_total . PHP_EOL;
 

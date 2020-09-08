@@ -227,12 +227,12 @@ class CashFlowStatement extends FinancialStatement
      *
      * @codeCoverageIgnore
      */
-    protected function printSection(string $section, string $statement, string $indent)
+    protected function printSection(string $section, string $statement, string $indent, int $amountFactor = 1)
     {
         $sectionNames = config('ifrs')['statements'];
 
         $statement .= $indent . $sectionNames[$section] . $indent;
 
-        return $statement . $indent . $this->balances[$section] . PHP_EOL;
+        return $statement . $indent . $this->balances[$section] * $amountFactor . PHP_EOL;
     }
 }

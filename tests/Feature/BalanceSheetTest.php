@@ -12,7 +12,6 @@ use IFRS\Models\ExchangeRate;
 use IFRS\Models\LineItem;
 use IFRS\Models\Vat;
 use IFRS\Reports\BalanceSheet;
-use IFRS\Reports\IncomeStatement;
 
 use IFRS\Transactions\SupplierBill;
 use IFRS\Transactions\CashSale;
@@ -21,7 +20,7 @@ use IFRS\Transactions\JournalEntry;
 class BalanceSheetTest extends TestCase
 {
     /**
-     * Test Income Statement
+     * Test Balance Sheet
      *
      * @return void
      */
@@ -129,7 +128,6 @@ class BalanceSheetTest extends TestCase
         $liabilities = BalanceSheet::LIABILITIES;
         $reconciliation = BalanceSheet::RECONCILIATION;
         $equity = BalanceSheet::EQUITY;
-        $profit = BalanceSheet::NET_PROFIT;
 
         $this->assertEquals(
             $balanceSheet->balances[$assets][Account::INVENTORY],
@@ -148,17 +146,17 @@ class BalanceSheetTest extends TestCase
 
         $this->assertEquals(
             $balanceSheet->balances[$liabilities][Account::CONTROL],
-            16
+            -16
         );
 
         $this->assertEquals(
             $balanceSheet->balances[$liabilities][Account::CURRENT_LIABILITY],
-            100
+            -100
         );
 
         $this->assertEquals(
             $balanceSheet->balances[$liabilities][Account::PAYABLE],
-            116
+            -116
         );
 
         $this->assertEquals(
@@ -167,8 +165,13 @@ class BalanceSheetTest extends TestCase
         );
 
         $this->assertEquals(
+            $balanceSheet->balances[$equity][BalanceSheet::NET_PROFIT],
+            -200
+        );
+
+        $this->assertEquals(
             $balanceSheet->balances[$reconciliation][Account::RECONCILIATION],
-            70
+            -70
         );
     }
 }

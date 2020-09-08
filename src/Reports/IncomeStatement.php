@@ -11,7 +11,6 @@
 namespace IFRS\Reports;
 
 use Carbon\Carbon;
-use IFRS\Models\Account;
 use IFRS\Models\ReportingPeriod;
 
 class IncomeStatement extends FinancialStatement
@@ -92,8 +91,13 @@ class IncomeStatement extends FinancialStatement
         // Statement Results
         $this->results[self::GROSS_PROFIT] = 0;
         $this->results[self::TOTAL_REVENUE] = 0;
-        $this->results[self::TOTAL_EXPENSES] = 0;
         $this->results[self::NET_PROFIT] = 0;
+
+        // Statement Totals
+        $this->totals[self::OPERATING_REVENUES] = 0;
+        $this->totals[self::NON_OPERATING_REVENUES] = 0;
+        $this->totals[self::OPERATING_EXPENSES] = 0;
+        $this->totals[self::NON_OPERATING_EXPENSES] = 0;
     }
 
     /**
@@ -114,16 +118,13 @@ class IncomeStatement extends FinancialStatement
         parent::getSections();
 
         // Gross Profit
-        $this->results[self::GROSS_PROFIT] = array_sum($this->balances[self::OPERATING_REVENUES]) - array_sum($this->balances[self::OPERATING_EXPENSES]);
+        $this->results[self::GROSS_PROFIT] = ($this->totals[self::OPERATING_REVENUES] + $this->totals[self::OPERATING_EXPENSES]) * -1;
 
-        // Total Revenue
-        $this->results[self::TOTAL_REVENUE] = $this->results[self::GROSS_PROFIT] + array_sum($this->balances[self::NON_OPERATING_REVENUES]);
-
-        // Total Expenses
-        $this->results[self::TOTAL_EXPENSES] = array_sum($this->balances[self::NON_OPERATING_EXPENSES]);
+        // Total Revenue    
+        $this->results[self::TOTAL_REVENUE] = $this->results[self::GROSS_PROFIT] + $this->totals[self::NON_OPERATING_REVENUES] * -1;
 
         // Net Profit
-        $this->results[self::NET_PROFIT] = $this->results[self::TOTAL_REVENUE] - $this->results[self::TOTAL_EXPENSES];
+        $this->results[self::NET_PROFIT] = $this->results[self::TOTAL_REVENUE] - $this->totals[self::NON_OPERATING_EXPENSES];
     }
 
     /**
@@ -133,15 +134,13 @@ class IncomeStatement extends FinancialStatement
      */
     public function toString(): void
     {
-        $this->getSections();
-
         $statement = $this->statement;
 
         // Title
         $statement = $this->printTitle($statement, self::TITLE);
 
         // Operating Revenues
-        $statement = $this->printSection(self::OPERATING_REVENUES, $statement, $this->indent);
+        $statement = $this->printSection(self::OPERATING_REVENUES, $statement, $this->indent, -1);
 
         // Operating Expenses
         $statement = $this->printSection(self::OPERATING_EXPENSES, $statement, $this->indent);
@@ -150,7 +149,7 @@ class IncomeStatement extends FinancialStatement
         $statement = $this->printResult(self::GROSS_PROFIT, $statement, $this->indent, $this->result_indents);
 
         // Non Operating Revenue
-        $statement = $this->printSection(self::NON_OPERATING_REVENUES, $statement, $this->indent);
+        $statement = $this->printSection(self::NON_OPERATING_REVENUES, $statement, $this->indent, -1);
 
         // Total Revenue
         $statement = $this->printResult(self::TOTAL_REVENUE, $statement, $this->indent, $this->result_indents);
@@ -159,7 +158,7 @@ class IncomeStatement extends FinancialStatement
         $statement = $this->printSection(self::NON_OPERATING_EXPENSES, $statement, $this->indent);
 
         // Total Expenses
-        $statement = $this->printResult(self::TOTAL_EXPENSES, $statement, $this->indent, $this->result_indents);
+        $statement = $this->printTotal(self::NON_OPERATING_EXPENSES, $statement, $this->indent, 1);
 
         // Net Profit
         $statement = $this->printResult(self::NET_PROFIT, $statement, $this->indent, $this->result_indents);

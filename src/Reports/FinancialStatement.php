@@ -55,6 +55,13 @@ abstract class FinancialStatement
     public $accounts = [];
 
     /**
+     * Financial Statement totals.
+     *
+     * @var array
+     */
+    public $totals = [];
+
+    /**
      * Financial Statement results.
      *
      * @var array
@@ -102,7 +109,7 @@ abstract class FinancialStatement
      *
      * @codeCoverageIgnore
      */
-    protected function printSection(string $section, string $statement, string $indent)
+    protected function printSection(string $section, string $statement, string $indent, int $amountFactor = 1)
     {
         $accountNames = array_merge(config('ifrs')['accounts'], config('ifrs')['statements']);
 
@@ -111,10 +118,32 @@ abstract class FinancialStatement
 
         foreach (array_keys($this->balances[$section]) as $name) {
             $statement .= $indent . $accountNames[$name] . $indent;
-            $statement .= $indent . $this->balances[$section][$name] . PHP_EOL;
+            $statement .= $indent . $this->balances[$section][$name] * $amountFactor . PHP_EOL;
         }
 
         return $statement;
+    }
+
+    /**
+     * Print Statement Total
+     *
+     * @param string $statement
+     * @param string $section
+     * @param string $indent
+     * @param int $indentFactor
+     *
+     * @return string
+     *
+     * @codeCoverageIgnore
+     */
+    protected function printTotal(string $section, string $statement, string $indent, int $amountFactor = 1, int $indentFactor = 1)
+    {
+        $accountNames = array_merge(config('ifrs')['accounts'], config('ifrs')['statements']);
+
+        $statement .= $this->separator . PHP_EOL;
+        $statement .= 'Total ' . $accountNames[$section]  . str_repeat($indent, $indentFactor);
+
+        return $statement .= $this->totals[$section] * $amountFactor . PHP_EOL;
     }
 
     /**
@@ -178,8 +207,10 @@ abstract class FinancialStatement
                 $sectionBalances = Account::sectionBalances([$accountType]);
 
                 if ($sectionBalances["sectionTotal"] <> 0) {
+
                     $this->accounts[$section][$accountType] = $sectionBalances["sectionCategories"];
-                    $this->balances[$section][$accountType] = abs($sectionBalances["sectionTotal"]);
+                    $this->balances[$section][$accountType] = $sectionBalances["sectionTotal"];
+                    $this->totals[$section] += $sectionBalances["sectionTotal"];
 
                     if ($sectionBalances["sectionTotal"] < 0) {
                         $this->balances["credit"] += abs($sectionBalances["sectionTotal"]);
