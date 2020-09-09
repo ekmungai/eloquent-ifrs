@@ -23,6 +23,7 @@ use IFRS\Transactions\ClientInvoice;
 use IFRS\Transactions\SupplierBill;
 
 use IFRS\Exceptions\HangingTransactions;
+use IFRS\Exceptions\InvalidCategoryType;
 use IFRS\Exceptions\MissingAccountType;
 
 class AccountTest extends TestCase
@@ -582,5 +583,24 @@ class AccountTest extends TestCase
         $this->assertEquals(Account::movement([Account::PAYABLE]), 58);
         $this->assertEquals(Account::movement([Account::NON_CURRENT_ASSET]), -50);
         $this->assertEquals(Account::movement([Account::CONTROL]), 8);
+    }
+
+    /**
+     * Test Invalid Category Type.
+     *
+     * @return void
+     */
+    public function testInvalidCategoryType()
+    {
+        $account = new Account([
+            'account_type' => Account::RECEIVABLE,
+            'category_id' => factory(Category::class)->create([
+                'category_type' => Account::PAYABLE,
+            ])->id
+        ]);
+        $this->expectException(InvalidCategoryType::class);
+        $this->expectExceptionMessage('Cannot assign Receivable Account to Payable Category');
+
+        $account->save();
     }
 }

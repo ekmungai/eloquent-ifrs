@@ -88,4 +88,19 @@ class Category extends Model implements Segregatable, Recyclable
     {
         return (object) $this->attributes;
     }
+
+    /**
+     * Category Accounts Balances for the given period.
+     *
+     * @param string $startDate
+     * @param string $endDate
+     *  
+     * @return array
+     */
+    public function getAccountBalances(string $startDate, string $endDate)
+    {
+        foreach ($this->accounts as $account) {
+            $account->closingBalance($startDate, $endDate);
+        }
+    }
 }

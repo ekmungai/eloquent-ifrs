@@ -25,6 +25,7 @@ use IFRS\Traits\ModelTablePrefix;
 use IFRS\Exceptions\MissingAccountType;
 use IFRS\Exceptions\HangingTransactions;
 use Carbon\Carbon;
+use IFRS\Exceptions\InvalidCategoryType;
 
 /**
  * Class Account
@@ -174,7 +175,7 @@ class Account extends Model implements Recyclable, Segregatable
             $closingBalance = $account->openingBalance + $account->currentBalance;
 
             if ($closingBalance <> 0) {
-                $categoryName = is_null($account->category) ? $account->account_type : $account->category->name;
+                $categoryName = is_null($account->category) ? config('ifrs')['accounts'][$account->account_type] : $account->category->name;
 
                 if (in_array($categoryName, $balances["sectionCategories"])) {
                     $balances["sectionCategories"][$categoryName]['accounts']->push($account->attributes());
@@ -335,6 +336,10 @@ class Account extends Model implements Recyclable, Segregatable
             $this->code = config('ifrs')['account_codes'][$this->account_type] + Account::withTrashed()
                 ->where("account_type", $this->account_type)
                 ->count() + 1;
+        }
+
+        if (!is_null($this->category && $this->category->category_type != $this->account_type)) {
+            throw new InvalidCategoryType($this->account_type, $this->category->category_type);
         }
 
         $this->name = ucfirst($this->name);

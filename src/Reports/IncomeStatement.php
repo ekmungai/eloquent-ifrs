@@ -136,6 +136,7 @@ class IncomeStatement extends FinancialStatement
     {
         $statement = $this->statement;
 
+        dd($this->accounts);
         // Title
         $statement = $this->printTitle($statement, self::TITLE);
 
