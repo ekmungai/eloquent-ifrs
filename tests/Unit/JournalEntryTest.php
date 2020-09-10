@@ -25,7 +25,9 @@ class JournalEntryTest extends TestCase
      */
     public function testCreateJournalEntryTransaction()
     {
-        $mainAccount = factory(Account::class)->create();
+        $mainAccount = factory(Account::class)->create([
+            'category_id' => null
+        ]);
 
         $journalEntry = new JournalEntry([
             "account_id" => $mainAccount->id,
@@ -47,7 +49,9 @@ class JournalEntryTest extends TestCase
     public function testPostJournalEntryTransaction()
     {
         $journalEntry = new JournalEntry([
-            "account_id" => factory(Account::class)->create()->id,
+            "account_id" => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
         ]);
@@ -77,7 +81,9 @@ class JournalEntryTest extends TestCase
         $this->assertEquals($journalEntry->amount, 100);
 
         $journalEntry2 = new JournalEntry([
-            "account_id" => factory(Account::class)->create()->id,
+            "account_id" => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             "credited" => false,
@@ -146,6 +152,7 @@ class JournalEntryTest extends TestCase
     {
         $account = factory(Account::class)->create([
             'account_type' => Account::BANK,
+            'category_id' => null
         ]);
         $transaction = new JournalEntry([
             "account_id" => $account,
@@ -167,6 +174,7 @@ class JournalEntryTest extends TestCase
     {
         $account = factory(Account::class)->create([
             'account_type' => Account::PAYABLE,
+            'category_id' => null
         ]);
         $transaction = new JournalEntry([
             "account_id" => $account->id,
@@ -178,6 +186,7 @@ class JournalEntryTest extends TestCase
 
         $account2 = factory(Account::class)->create([
             'account_type' => Account::PAYABLE,
+            'category_id' => null
         ]);
         $transaction2 = new JournalEntry([
             "account_id" => $account2->id,
@@ -198,6 +207,7 @@ class JournalEntryTest extends TestCase
         // Account Filter
         $account3 = factory(Account::class)->create([
             'account_type' => Account::PAYABLE,
+            'category_id' => null
         ]);
         $this->assertEquals(count(JournalEntry::fetch(null, null, $account)), 1);
         $this->assertEquals(count(JournalEntry::fetch(null, null, $account2)), 1);

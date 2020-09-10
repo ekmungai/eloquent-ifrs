@@ -31,6 +31,7 @@ class CashSaleTest extends TestCase
     {
         $bankAccount = factory(Account::class)->create([
             'account_type' => Account::BANK,
+            'category_id' => null
         ]);
 
         $cashSale = new CashSale([
@@ -55,6 +56,7 @@ class CashSaleTest extends TestCase
         $cashSale = new CashSale([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
+                'category_id' => null
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -66,7 +68,8 @@ class CashSaleTest extends TestCase
                 "rate" => 16
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::OPERATING_REVENUE
+                "account_type" => Account::OPERATING_REVENUE,
+                'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
@@ -107,6 +110,7 @@ class CashSaleTest extends TestCase
         $cashSale = new CashSale([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
+                'category_id' => null
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -121,7 +125,8 @@ class CashSaleTest extends TestCase
                 "rate" => 16
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::RECONCILIATION
+                "account_type" => Account::RECONCILIATION,
+                'category_id' => null
             ])->id,
         ]);
         $cashSale->addLineItem($lineItem);
@@ -139,6 +144,7 @@ class CashSaleTest extends TestCase
         $cashSale = new CashSale([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::RECONCILIATION,
+                'category_id' => null
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -153,7 +159,8 @@ class CashSaleTest extends TestCase
                 "rate" => 16
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::OPERATING_REVENUE
+                "account_type" => Account::OPERATING_REVENUE,
+                'category_id' => null
             ])->id,
         ]);
         $cashSale->addLineItem($lineItem);
@@ -171,6 +178,7 @@ class CashSaleTest extends TestCase
         $transaction = new CashSale([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
+                'category_id' => null
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -190,6 +198,7 @@ class CashSaleTest extends TestCase
     {
         $account = factory(Account::class)->create([
             'account_type' => Account::BANK,
+            'category_id' => null
         ]);
         $transaction = new CashSale([
             "account_id" => $account->id,
@@ -200,6 +209,7 @@ class CashSaleTest extends TestCase
 
         $account2 = factory(Account::class)->create([
             'account_type' => Account::BANK,
+            'category_id' => null
         ]);
         $transaction2 = new CashSale([
             "account_id" => $account2->id,
@@ -219,11 +229,10 @@ class CashSaleTest extends TestCase
         $this->assertEquals(count(CashSale::fetch(null, Carbon::now()->subDay())), 0);
 
         // Account Filter
-        $account3 = factory(Account::class)->create(
-            [
-                'account_type' => Account::BANK,
-            ]
-        );
+        $account3 = factory(Account::class)->create([
+            'account_type' => Account::BANK,
+            'category_id' => null
+        ]);
         $this->assertEquals(count(CashSale::fetch(null, null, $account)), 1);
         $this->assertEquals(count(CashSale::fetch(null, null, $account2)), 1);
         $this->assertEquals(count(CashSale::fetch(null, null, $account3)), 0);

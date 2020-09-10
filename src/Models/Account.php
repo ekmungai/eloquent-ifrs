@@ -338,7 +338,7 @@ class Account extends Model implements Recyclable, Segregatable
                 ->count() + 1;
         }
 
-        if (!is_null($this->category && $this->category->category_type != $this->account_type)) {
+        if (!is_null($this->category) && $this->category->category_type != $this->account_type) {
             throw new InvalidCategoryType($this->account_type, $this->category->category_type);
         }
 

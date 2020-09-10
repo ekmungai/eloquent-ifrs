@@ -15,7 +15,9 @@ $factory->define(
         return [
             'vat_id' => factory(Vat::class)->create()->id,
             'transaction_id' => factory(Transaction::class)->create()->id,
-            'account_id' => factory(Account::class)->create()->id,
+            'account_id' => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
             'narration' => $faker->sentence,
             'quantity' => $faker->randomNumber(),
             'amount' => $faker->randomFloat(2),

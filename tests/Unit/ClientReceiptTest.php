@@ -32,6 +32,7 @@ class ClientReceiptTest extends TestCase
     {
         $clientAccount = factory(Account::class)->create([
             'account_type' => Account::RECEIVABLE,
+            'category_id' => null
         ]);
 
         $clientReceipt = new ClientReceipt([
@@ -57,6 +58,7 @@ class ClientReceiptTest extends TestCase
             [
                 "account_id" => factory(Account::class)->create([
                     'account_type' => Account::RECEIVABLE,
+                    'category_id' => null
                 ])->id,
                 "transaction_date" => Carbon::now(),
                 "narration" => $this->faker->word,
@@ -69,7 +71,8 @@ class ClientReceiptTest extends TestCase
                 "rate" => 0
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::BANK
+                "account_type" => Account::BANK,
+                'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
@@ -100,6 +103,7 @@ class ClientReceiptTest extends TestCase
         $clientReceipt = new ClientReceipt([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::RECEIVABLE,
+                'category_id' => null
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -113,7 +117,8 @@ class ClientReceiptTest extends TestCase
                 "rate" => 16
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::RECONCILIATION
+                "account_type" => Account::RECONCILIATION,
+                'category_id' => null
             ])->id,
         ]);
         $clientReceipt->addLineItem($lineItem);
@@ -131,6 +136,7 @@ class ClientReceiptTest extends TestCase
         $clientReceipt = new ClientReceipt([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::RECONCILIATION,
+                'category_id' => null
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -144,7 +150,8 @@ class ClientReceiptTest extends TestCase
                 "rate" => 0
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::BANK
+                "account_type" => Account::BANK,
+                'category_id' => null
             ])->id,
         ]);
         $clientReceipt->addLineItem($lineItem);
@@ -162,6 +169,7 @@ class ClientReceiptTest extends TestCase
         $clientReceipt = new ClientReceipt([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::RECEIVABLE,
+                'category_id' => null
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -175,7 +183,8 @@ class ClientReceiptTest extends TestCase
                 "rate" => 10
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::BANK
+                "account_type" => Account::BANK,
+                'category_id' => null
             ])->id,
         ]);
         $clientReceipt->addLineItem($lineItem);
@@ -192,6 +201,7 @@ class ClientReceiptTest extends TestCase
     {
         $account = factory(Account::class)->create([
             'account_type' => Account::RECEIVABLE,
+            'category_id' => null
         ]);
         $transaction = new ClientReceipt([
             "account_id" => $account->id,
@@ -213,6 +223,7 @@ class ClientReceiptTest extends TestCase
     {
         $account = factory(Account::class)->create([
             'account_type' => Account::RECEIVABLE,
+            'category_id' => null
         ]);
         $transaction = new ClientReceipt([
             "account_id" => $account->id,
@@ -223,6 +234,7 @@ class ClientReceiptTest extends TestCase
 
         $account2 = factory(Account::class)->create([
             'account_type' => Account::RECEIVABLE,
+            'category_id' => null
         ]);
         $transaction2 = new ClientReceipt([
             "account_id" => $account2->id,
@@ -243,6 +255,7 @@ class ClientReceiptTest extends TestCase
         // Account Filter
         $account3 = factory(Account::class)->create([
             'account_type' => Account::RECEIVABLE,
+            'category_id' => null
         ]);
         $this->assertEquals(count(ClientReceipt::fetch(null, null, $account)), 1);
         $this->assertEquals(count(ClientReceipt::fetch(null, null, $account2)), 1);

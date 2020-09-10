@@ -32,7 +32,8 @@ class BalanceSheetTest extends TestCase
         factory(Balance::class)->create([
 
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::INVENTORY
+                "account_type" => Account::INVENTORY,
+                'category_id' => null
             ])->id,
             "balance_type" => Balance::DEBIT,
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
@@ -44,7 +45,8 @@ class BalanceSheetTest extends TestCase
 
         factory(Balance::class)->create([
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::CURRENT_LIABILITY
+                "account_type" => Account::CURRENT_LIABILITY,
+                'category_id' => null
             ])->id,
             "balance_type" => Balance::CREDIT,
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
@@ -57,6 +59,7 @@ class BalanceSheetTest extends TestCase
         $bill = new SupplierBill([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::PAYABLE,
+                'category_id' => null
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -69,6 +72,7 @@ class BalanceSheetTest extends TestCase
             ])->id,
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::NON_CURRENT_ASSET,
+                'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
@@ -79,6 +83,7 @@ class BalanceSheetTest extends TestCase
         $cashSale = new CashSale([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
+                'category_id' => null
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -90,7 +95,8 @@ class BalanceSheetTest extends TestCase
                 "rate" => 16
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::OPERATING_REVENUE
+                "account_type" => Account::OPERATING_REVENUE,
+                'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
@@ -102,6 +108,7 @@ class BalanceSheetTest extends TestCase
         $journalEntry = new JournalEntry([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::EQUITY,
+                'category_id' => null
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -114,7 +121,8 @@ class BalanceSheetTest extends TestCase
                 "rate" => 0
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::RECONCILIATION
+                "account_type" => Account::RECONCILIATION,
+                'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);

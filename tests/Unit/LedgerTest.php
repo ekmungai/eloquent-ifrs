@@ -24,8 +24,12 @@ class LedgerTest extends TestCase
      */
     public function testLedgerRelationships()
     {
-        $account = factory(Account::class)->create();
-        $lineAccount = factory(Account::class)->create();
+        $account = factory(Account::class)->create([
+            'category_id' => null
+        ]);
+        $lineAccount = factory(Account::class)->create([
+            'category_id' => null
+        ]);
         $vat = factory(Vat::class)->create(["rate" => 0]);
 
         $transaction = new JournalEntry([
@@ -58,9 +62,15 @@ class LedgerTest extends TestCase
      */
     public function testLedgerAccountContribution()
     {
-        $account = factory(Account::class)->create();
-        $lineAccount1 = factory(Account::class)->create();
-        $lineAccount2 = factory(Account::class)->create();
+        $account = factory(Account::class)->create([
+            'category_id' => null
+        ]);
+        $lineAccount1 = factory(Account::class)->create([
+            'category_id' => null
+        ]);
+        $lineAccount2 = factory(Account::class)->create([
+            'category_id' => null
+        ]);
         $vat = factory(Vat::class)->create(["rate" => 0]);
 
         $transaction = new JournalEntry([
@@ -101,7 +111,9 @@ class LedgerTest extends TestCase
      */
     public function testLedgerAccountBalance()
     {
-        $account = factory(Account::class)->create();
+        $account = factory(Account::class)->create([
+            'category_id' => null
+        ]);
 
         factory(Ledger::class, 3)->create([
             "post_account" => $account->id,

@@ -19,6 +19,7 @@ $factory->define(
             'currency_id' => factory(Currency::class)->create()->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::INVENTORY,
+                'category_id' => null
             ])->id,
             'reporting_period_id' => 1,
             'transaction_date' => Carbon::now()->subYears(1.5),

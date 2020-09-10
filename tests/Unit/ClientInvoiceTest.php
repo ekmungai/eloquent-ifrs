@@ -31,6 +31,7 @@ class ClientInvoiceTest extends TestCase
     {
         $clientAccount = factory(Account::class)->create([
             'account_type' => Account::RECEIVABLE,
+            'category_id' => null
         ]);
 
         $clientInvoice = new ClientInvoice([
@@ -55,6 +56,7 @@ class ClientInvoiceTest extends TestCase
         $clientInvoice = new ClientInvoice([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::RECEIVABLE,
+                'category_id' => null
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -66,7 +68,8 @@ class ClientInvoiceTest extends TestCase
                 "rate" => 16
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::OPERATING_REVENUE
+                "account_type" => Account::OPERATING_REVENUE,
+                'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
@@ -107,6 +110,7 @@ class ClientInvoiceTest extends TestCase
         $clientInvoice = new ClientInvoice([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::RECEIVABLE,
+                'category_id' => null
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -120,7 +124,8 @@ class ClientInvoiceTest extends TestCase
                 "rate" => 16
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::RECONCILIATION
+                "account_type" => Account::RECONCILIATION,
+                'category_id' => null
             ])->id,
         ]);
         $clientInvoice->addLineItem($lineItem);
@@ -138,6 +143,7 @@ class ClientInvoiceTest extends TestCase
         $clientInvoice = new ClientInvoice([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::RECONCILIATION,
+                'category_id' => null
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -151,7 +157,8 @@ class ClientInvoiceTest extends TestCase
                 "rate" => 16
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::OPERATING_REVENUE
+                "account_type" => Account::OPERATING_REVENUE,
+                'category_id' => null
             ])->id,
         ]);
         $clientInvoice->addLineItem($lineItem);
@@ -168,6 +175,7 @@ class ClientInvoiceTest extends TestCase
     {
         $account = factory(Account::class)->create([
             'account_type' => Account::RECEIVABLE,
+            'category_id' => null
         ]);
         $transaction = new ClientInvoice([
             "account_id" => $account->id,
@@ -189,6 +197,7 @@ class ClientInvoiceTest extends TestCase
     {
         $account = factory(Account::class)->create([
             'account_type' => Account::RECEIVABLE,
+            'category_id' => null
         ]);
         $transaction = new ClientInvoice([
             "account_id" => $account->id,
@@ -199,6 +208,7 @@ class ClientInvoiceTest extends TestCase
 
         $account2 = factory(Account::class)->create([
             'account_type' => Account::RECEIVABLE,
+            'category_id' => null
         ]);
 
         $transaction2 = new ClientInvoice([
@@ -220,6 +230,7 @@ class ClientInvoiceTest extends TestCase
         // Account Filter
         $account3 = factory(Account::class)->create([
             'account_type' => Account::RECEIVABLE,
+            'category_id' => null
         ]);
         $this->assertEquals(count(ClientInvoice::fetch(null, null, $account)), 1);
         $this->assertEquals(count(ClientInvoice::fetch(null, null, $account2)), 1);

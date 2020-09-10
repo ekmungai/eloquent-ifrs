@@ -31,6 +31,7 @@ class DebitNoteTest extends TestCase
     {
         $supplierAccount = factory(Account::class)->create([
             'account_type' => Account::PAYABLE,
+            'category_id' => null
         ]);
 
         $debitNote = new DebitNote([
@@ -55,6 +56,7 @@ class DebitNoteTest extends TestCase
         $debitNote = new DebitNote([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::PAYABLE,
+                'category_id' => null
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -66,7 +68,8 @@ class DebitNoteTest extends TestCase
                 "rate" => 16
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::DIRECT_EXPENSE
+                "account_type" => Account::DIRECT_EXPENSE,
+                'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
@@ -107,6 +110,7 @@ class DebitNoteTest extends TestCase
         $debitNote = new DebitNote([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::PAYABLE,
+                'category_id' => null
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -124,7 +128,8 @@ class DebitNoteTest extends TestCase
                 "rate" => 16
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::RECONCILIATION
+                "account_type" => Account::RECONCILIATION,
+                'category_id' => null
             ])->id,
         ]);
         $debitNote->addLineItem($lineItem);
@@ -142,6 +147,7 @@ class DebitNoteTest extends TestCase
         $debitNote = new DebitNote([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::RECONCILIATION,
+                'category_id' => null
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -155,7 +161,8 @@ class DebitNoteTest extends TestCase
                 "rate" => 16
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::DIRECT_EXPENSE
+                "account_type" => Account::DIRECT_EXPENSE,
+                'category_id' => null
             ])->id,
         ]);
         $debitNote->addLineItem($lineItem);
@@ -172,6 +179,7 @@ class DebitNoteTest extends TestCase
     {
         $account = factory(Account::class)->create([
             'account_type' => Account::PAYABLE,
+            'category_id' => null
         ]);
         $transaction = new DebitNote([
             "account_id" => $account->id,
@@ -193,6 +201,7 @@ class DebitNoteTest extends TestCase
     {
         $account = factory(Account::class)->create([
             'account_type' => Account::PAYABLE,
+            'category_id' => null
         ]);
         $transaction = new DebitNote([
             "account_id" => $account->id,
@@ -203,6 +212,7 @@ class DebitNoteTest extends TestCase
 
         $account2 = factory(Account::class)->create([
             'account_type' => Account::PAYABLE,
+            'category_id' => null
         ]);
         $transaction2 = new DebitNote([
             "account_id" => $account2->id,
@@ -223,6 +233,7 @@ class DebitNoteTest extends TestCase
         // Account Filter
         $account3 = factory(Account::class)->create([
             'account_type' => Account::PAYABLE,
+            'category_id' => null
         ]);
         $this->assertEquals(count(DebitNote::fetch(null, null, $account)), 1);
         $this->assertEquals(count(DebitNote::fetch(null, null, $account2)), 1);

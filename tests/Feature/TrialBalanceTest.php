@@ -42,6 +42,7 @@ class TrialBalanceTest extends TestCase
 
         $nonCurrentAsset = factory(Account::class)->create([
             'account_type' => Account::NON_CURRENT_ASSET,
+            'category_id' => null
         ]);
 
         //balance
@@ -59,6 +60,7 @@ class TrialBalanceTest extends TestCase
         $bill = new SupplierBill([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::PAYABLE,
+                'category_id' => null
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -72,6 +74,7 @@ class TrialBalanceTest extends TestCase
 
         $contraAsset = factory(Account::class)->create([
             'account_type' => Account::CONTRA_ASSET,
+            'category_id' => null
         ]);
 
         //balance
@@ -97,6 +100,7 @@ class TrialBalanceTest extends TestCase
 
         $inventory = factory(Account::class)->create([
             'account_type' => Account::INVENTORY,
+            'category_id' => null
         ]);
 
         //balance
@@ -113,6 +117,7 @@ class TrialBalanceTest extends TestCase
         $cashPurchase = new CashPurchase([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
+                'category_id' => null
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -124,6 +129,7 @@ class TrialBalanceTest extends TestCase
 
         $bank = factory(Account::class)->create([
             'account_type' => Account::BANK,
+            'category_id' => null
         ]);
 
         //balance
@@ -141,6 +147,7 @@ class TrialBalanceTest extends TestCase
         $contraEntry = new ContraEntry([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
+                'category_id' => null
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -159,6 +166,7 @@ class TrialBalanceTest extends TestCase
 
         $currentAsset = factory(Account::class)->create([
             'account_type' => Account::CURRENT_ASSET,
+            'category_id' => null
         ]);
 
         //balance
@@ -185,6 +193,7 @@ class TrialBalanceTest extends TestCase
 
         $receivable = factory(Account::class)->create([
             'account_type' => Account::RECEIVABLE,
+            'category_id' => null
         ]);
 
         //balance
@@ -208,6 +217,7 @@ class TrialBalanceTest extends TestCase
             factory(LineItem::class)->create([
                 "account_id" => factory(Account::class)->create([
                     'account_type' => Account::OPERATING_REVENUE,
+                    'category_id' => null
                 ])->id,
             ])
         );
@@ -221,6 +231,7 @@ class TrialBalanceTest extends TestCase
 
         $nonCurrentLiability = factory(Account::class)->create([
             'account_type' => Account::NON_CURRENT_LIABILITY,
+            'category_id' => null
         ]);
 
         //balance
@@ -246,6 +257,7 @@ class TrialBalanceTest extends TestCase
 
         $controlAccount = factory(Account::class)->create([
             'account_type' => Account::CONTROL,
+            'category_id' => null
         ]);
 
         //balance
@@ -271,6 +283,7 @@ class TrialBalanceTest extends TestCase
 
         $currentLiability = factory(Account::class)->create([
             'account_type' => Account::CURRENT_LIABILITY,
+            'category_id' => null
         ]);
 
         //balance
@@ -298,6 +311,7 @@ class TrialBalanceTest extends TestCase
 
         $payable = factory(Account::class)->create([
             'account_type' => Account::PAYABLE,
+            'category_id' => null
         ]);
 
         //balance
@@ -323,6 +337,7 @@ class TrialBalanceTest extends TestCase
 
         $reconciliation = factory(Account::class)->create([
             'account_type' => Account::RECONCILIATION,
+            'category_id' => null
         ]);
 
         //balance
@@ -353,6 +368,7 @@ class TrialBalanceTest extends TestCase
 
         $equity = factory(Account::class)->create([
             'account_type' => Account::EQUITY,
+            'category_id' => null
         ]);
 
         //balance
@@ -383,6 +399,7 @@ class TrialBalanceTest extends TestCase
 
         $operatingIncome = factory(Account::class)->create([
             'account_type' => Account::OPERATING_REVENUE,
+            'category_id' => null
         ]);
 
         //transaction
@@ -401,12 +418,14 @@ class TrialBalanceTest extends TestCase
 
         $operatingExpenses = factory(Account::class)->create([
             'account_type' => Account::OPERATING_EXPENSE,
+            'category_id' => null
         ]);
 
         //transaction
         $cashPurchase = new CashPurchase([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
+                'category_id' => null
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -423,6 +442,7 @@ class TrialBalanceTest extends TestCase
 
         $nonOperatingRevenue = factory(Account::class)->create([
             'account_type' => Account::NON_OPERATING_REVENUE,
+            'category_id' => null
         ]);
 
         //transaction
@@ -437,6 +457,7 @@ class TrialBalanceTest extends TestCase
 
         $directExpense = factory(Account::class)->create([
             'account_type' => Account::DIRECT_EXPENSE,
+            'category_id' => null
         ]);
 
         //transaction
@@ -451,12 +472,14 @@ class TrialBalanceTest extends TestCase
 
         $overheadExpense = factory(Account::class)->create([
             'account_type' => Account::OVERHEAD_EXPENSE,
+            'category_id' => null
         ]);
 
         //transaction
         $cashPurchase = new CashPurchase([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
+                'category_id' => null
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -467,6 +490,7 @@ class TrialBalanceTest extends TestCase
 
         $otherExpense = factory(Account::class)->create([
             'account_type' => Account::OTHER_EXPENSE,
+            'category_id' => null
         ]);
 
         //transaction

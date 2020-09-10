@@ -15,7 +15,9 @@ $factory->define(
         return [
             'exchange_rate_id' => factory(ExchangeRate::class)->create()->id,
             'currency_id' => factory(Currency::class)->create()->id,
-            'account_id' => factory(Account::class)->create()->id,
+            'account_id' => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
             'transaction_date' => $faker->dateTimeThisMonth(),
             'transaction_no' => $faker->word,
             'transaction_type' => $faker->randomElement(array_keys(config('ifrs')['transactions'])),

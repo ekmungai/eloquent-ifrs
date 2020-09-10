@@ -24,9 +24,12 @@ class LineItemTest extends TestCase
     public function testLineItemRelationships()
     {
         $transaction = factory(Transaction::class)->create();
-        $account = factory(Account::class)->create();
+        $account = factory(Account::class)->create([
+            'category_id' => null
+        ]);
         $vatAccount = factory(Account::class)->create([
-            'account_type' => Account::CONTROL
+            'account_type' => Account::CONTROL,
+            'category_id' => null
         ]);
         $vat = factory(Vat::class)->create([
             'account_id' => $vatAccount->id
@@ -76,7 +79,9 @@ class LineItemTest extends TestCase
 
         $lineItem = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
-            'account_id' => factory(Account::class)->create()->id,
+            'account_id' => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
             'amount' => 100,
         ]);
         $lineItem->save();
@@ -96,7 +101,9 @@ class LineItemTest extends TestCase
     {
         $lineItem = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
-            'account_id' => factory(Account::class)->create()->id,
+            'account_id' => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
             'amount' => -100,
         ]);
         $this->expectException(NegativeAmount::class);
@@ -113,7 +120,8 @@ class LineItemTest extends TestCase
     public function testTaxInclusiveAmount()
     {
         $revenueAccount = factory(Account::class)->create([
-            "account_type" => Account::OPERATING_REVENUE
+            "account_type" => Account::OPERATING_REVENUE,
+            'category_id' => null
         ]);
         $vat = factory(Vat::class)->create([
             "rate" => 16
@@ -122,6 +130,7 @@ class LineItemTest extends TestCase
         $clientInvoice = new ClientInvoice([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::RECEIVABLE,
+                'category_id' => null
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -143,7 +152,8 @@ class LineItemTest extends TestCase
         $this->assertEquals($vat->account->closingBalance(), -16);
 
         $revenueAccount2 = factory(Account::class)->create([
-            "account_type" => Account::OPERATING_REVENUE
+            "account_type" => Account::OPERATING_REVENUE,
+            'category_id' => null
         ]);
         $vat2 = factory(Vat::class)->create([
             "rate" => 16
@@ -152,6 +162,7 @@ class LineItemTest extends TestCase
         $clientInvoice2 = new ClientInvoice([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::RECEIVABLE,
+                'category_id' => null
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,

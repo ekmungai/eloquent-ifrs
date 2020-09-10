@@ -53,6 +53,7 @@ class AccountStatementTest extends TestCase
     {
         $account = factory(Account::class)->create([
             'account_type' => Account::BANK,
+            'category_id' => null
         ]);
 
         //opening balances
@@ -90,7 +91,8 @@ class AccountStatementTest extends TestCase
                 "rate" => 16
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::OPERATING_REVENUE
+                "account_type" => Account::OPERATING_REVENUE,
+                'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
@@ -102,6 +104,7 @@ class AccountStatementTest extends TestCase
         $creditContraEntry = new ContraEntry([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
+                'category_id' => null
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -129,7 +132,8 @@ class AccountStatementTest extends TestCase
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::BANK
+                "account_type" => Account::BANK,
+                'category_id' => null
             ])->id,
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 0
@@ -144,6 +148,7 @@ class AccountStatementTest extends TestCase
         $clientReceipt = new ClientReceipt([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::RECEIVABLE,
+                'category_id' => null
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -172,7 +177,8 @@ class AccountStatementTest extends TestCase
             "amount" => 75,
             "vat_id" => factory(Vat::class)->create(["rate" => 16])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::OTHER_EXPENSE
+                "account_type" => Account::OTHER_EXPENSE,
+                'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
@@ -184,6 +190,7 @@ class AccountStatementTest extends TestCase
         $supplierPayment = new SupplierPayment([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::PAYABLE,
+                'category_id' => null
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -221,7 +228,9 @@ class AccountStatementTest extends TestCase
 
         //Debit Joutnal Entry Transaction
         $debitJournalEntry = new JournalEntry([
-            "account_id" => factory(Account::class)->create()->id,
+            "account_id" => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
         ]);
@@ -287,6 +296,7 @@ class AccountStatementTest extends TestCase
     {
         $account = factory(Account::class)->create([
             'account_type' => Account::RECEIVABLE,
+            'category_id' => null
         ]);
 
         //opening balances
@@ -321,7 +331,8 @@ class AccountStatementTest extends TestCase
             "amount" => 100,
             "vat_id" => factory(Vat::class)->create(["rate" => 16])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::OPERATING_REVENUE
+                "account_type" => Account::OPERATING_REVENUE,
+                'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
@@ -339,7 +350,8 @@ class AccountStatementTest extends TestCase
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::OPERATING_REVENUE
+                "account_type" => Account::OPERATING_REVENUE,
+                'category_id' => null
             ])->id,
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 16
@@ -361,7 +373,8 @@ class AccountStatementTest extends TestCase
             [
                 "amount" => 100,
                 "account_id" => factory(Account::class)->create([
-                    "account_type" => Account::BANK
+                    "account_type" => Account::BANK,
+                    'category_id' => null
                 ])->id,
                 "vat_id" => factory(Vat::class)->create([
                     "rate" => 0
@@ -393,7 +406,9 @@ class AccountStatementTest extends TestCase
 
         //Debit Journal Entry Transaction
         $debitJournalEntry = new JournalEntry([
-            "account_id" => factory(Account::class)->create()->id,
+            "account_id" => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
         ]);
@@ -449,6 +464,7 @@ class AccountStatementTest extends TestCase
     {
         $account = factory(Account::class)->create([
             'account_type' => Account::PAYABLE,
+            'category_id' => null
         ]);
 
         //opening balances
@@ -483,7 +499,8 @@ class AccountStatementTest extends TestCase
             "amount" => 100,
             "vat_id" => factory(Vat::class)->create(["rate" => 16])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::OPERATING_EXPENSE
+                "account_type" => Account::OPERATING_EXPENSE,
+                'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
@@ -501,7 +518,8 @@ class AccountStatementTest extends TestCase
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::OVERHEAD_EXPENSE
+                "account_type" => Account::OVERHEAD_EXPENSE,
+                'category_id' => null
             ])->id,
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 16
@@ -522,7 +540,8 @@ class AccountStatementTest extends TestCase
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::BANK
+                "account_type" => Account::BANK,
+                'category_id' => null
             ])->id,
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 0
@@ -553,7 +572,9 @@ class AccountStatementTest extends TestCase
 
         //Debit Journal Entry Transaction
         $debitJournalEntry = new JournalEntry([
-            "account_id" => factory(Account::class)->create()->id,
+            "account_id" => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
         ]);

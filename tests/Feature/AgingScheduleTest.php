@@ -27,9 +27,11 @@ class AgingScheduleTest extends TestCase
     {
         $account1 = factory(Account::class)->create([
             'account_type' => Account::RECEIVABLE,
+            'category_id' => null
         ]);
         $account2 = factory(Account::class)->create([
             'account_type' => Account::RECEIVABLE,
+            'category_id' => null
         ]);
 
         # 365+ transaction
@@ -54,7 +56,8 @@ class AgingScheduleTest extends TestCase
         $lineItem = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
-                "account_type" => Account::OPERATING_REVENUE
+                "account_type" => Account::OPERATING_REVENUE,
+                'category_id' => null
             ])->id,
             'amount' => 100,
         ]);
@@ -72,7 +75,8 @@ class AgingScheduleTest extends TestCase
         $lineItem = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
-                "account_type" => Account::OPERATING_REVENUE
+                "account_type" => Account::OPERATING_REVENUE,
+                'category_id' => null
             ])->id,
             'amount' => 50,
         ]);
@@ -97,7 +101,8 @@ class AgingScheduleTest extends TestCase
         $lineItem = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
-                "account_type" => Account::OPERATING_REVENUE
+                "account_type" => Account::OPERATING_REVENUE,
+                'category_id' => null
             ])->id,
             'amount' => 75,
         ]);
@@ -115,7 +120,8 @@ class AgingScheduleTest extends TestCase
         $lineItem = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
-                "account_type" => Account::OPERATING_REVENUE
+                "account_type" => Account::OPERATING_REVENUE,
+                'category_id' => null
             ])->id,
             'amount' => 100,
         ]);
@@ -133,7 +139,8 @@ class AgingScheduleTest extends TestCase
         $lineItem = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
-                "account_type" => Account::OPERATING_REVENUE
+                "account_type" => Account::OPERATING_REVENUE,
+                'category_id' => null
             ])->id,
             'amount' => 150,
         ]);
@@ -151,7 +158,8 @@ class AgingScheduleTest extends TestCase
         $lineItem = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
-                "account_type" => Account::OPERATING_REVENUE
+                "account_type" => Account::OPERATING_REVENUE,
+                'category_id' => null
             ])->id,
             'amount' => 175,
         ]);
@@ -160,7 +168,7 @@ class AgingScheduleTest extends TestCase
         $clientInvoice->post();
 
 
-        $schedule = new AgingSchedule(Account::RECEIVABLE, null, Carbon::now()->endOfYear());
+        $schedule = new AgingSchedule(Account::RECEIVABLE, null, Carbon::now()->endOfYear()->toDateString());
 
         $this->assertEquals($schedule->brackets, config('ifrs')['aging_schedule_brackets']);
         $this->assertEquals($schedule->balances['current'], 50);

@@ -60,6 +60,7 @@ class AccountScheduleTest extends TestCase
     {
         $account = factory(Account::class)->create([
             'account_type' => Account::BANK,
+            'category_id' => null
         ]);
 
         $this->expectException(InvalidAccountType::class);
@@ -77,6 +78,7 @@ class AccountScheduleTest extends TestCase
     {
         $account = factory(Account::class)->create([
             'account_type' => Account::RECEIVABLE,
+            'category_id' => null
         ]);
         $currency = factory(Currency::class)->create();
 
@@ -103,7 +105,8 @@ class AccountScheduleTest extends TestCase
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::BANK
+                "account_type" => Account::BANK,
+                'category_id' => null
             ])->id,
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 0
@@ -132,7 +135,8 @@ class AccountScheduleTest extends TestCase
             "amount" => 100,
             "vat_id" => factory(Vat::class)->create(["rate" => 16])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::OPERATING_REVENUE
+                "account_type" => Account::OPERATING_REVENUE,
+                'category_id' => null
             ])->id,
         ]);
         $clientInvoice->addLineItem($lineItem);
@@ -150,7 +154,8 @@ class AccountScheduleTest extends TestCase
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::OPERATING_REVENUE
+                "account_type" => Account::OPERATING_REVENUE,
+                'category_id' => null
             ])->id,
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 16
@@ -244,6 +249,7 @@ class AccountScheduleTest extends TestCase
     {
         $account = factory(Account::class)->create([
             'account_type' => Account::PAYABLE,
+            'category_id' => null
         ]);
 
         $currency = factory(Currency::class)->create();
@@ -271,7 +277,8 @@ class AccountScheduleTest extends TestCase
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::BANK
+                "account_type" => Account::BANK,
+                'category_id' => null
             ])->id,
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 0
@@ -301,7 +308,8 @@ class AccountScheduleTest extends TestCase
             "amount" => 300,
             "vat_id" => factory(Vat::class)->create(["rate" => 16])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::DIRECT_EXPENSE
+                "account_type" => Account::DIRECT_EXPENSE,
+                'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
@@ -320,7 +328,8 @@ class AccountScheduleTest extends TestCase
         $lineItem = factory(LineItem::class)->create([
             "amount" => 175,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::OVERHEAD_EXPENSE
+                "account_type" => Account::OVERHEAD_EXPENSE,
+                'category_id' => null
             ])->id,
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 16
@@ -367,7 +376,9 @@ class AccountScheduleTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 240,
-            "account_id" => factory(Account::class)->create()->id,
+            "account_id" => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 16
             ])->id,

@@ -34,11 +34,10 @@ class AccountBalanceTest extends TestCase
             'currency_code' => 'KES'
         ]);
 
-        $account = factory(Account::class)->create(
-            [
-                'account_type' => Account::INVENTORY,
-            ]
-        );
+        $account = factory(Account::class)->create([
+            'account_type' => Account::INVENTORY,
+            'category_id' => null
+        ]);
 
         $exchangeRate = factory(ExchangeRate::class)->create();
 
@@ -123,7 +122,8 @@ class AccountBalanceTest extends TestCase
 
         factory(Balance::class)->create([
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::OPERATING_REVENUE
+                "account_type" => Account::OPERATING_REVENUE,
+                'category_id' => null
             ])->id,
         ]);
     }

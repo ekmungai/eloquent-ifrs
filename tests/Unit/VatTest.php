@@ -31,7 +31,8 @@ class VatTest extends TestCase
             'code' => $this->faker->randomLetter(),
             'rate' => 10,
             'account_id' => factory(Account::class)->create([
-                'account_type' => Account::CONTROL
+                'account_type' => Account::CONTROL,
+                'category_id' => null
             ])->id,
         ]);
         $vat->attributes();
@@ -62,7 +63,9 @@ class VatTest extends TestCase
             'name' => $this->faker->name,
             'code' => $this->faker->randomLetter(),
             'rate' => 10,
-            'account_id' => factory(Account::class)->create()->id,
+            'account_id' => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
         ]);
         $vat->delete();
 
@@ -100,7 +103,8 @@ class VatTest extends TestCase
             'code' => $this->faker->randomLetter(),
             'rate' => 10,
             'account_id' => factory(Account::class)->create([
-                'account_type' => Account::RECEIVABLE
+                'account_type' => Account::RECEIVABLE,
+                'category_id' => null
             ])->id,
         ]);
         $this->expectException(InvalidAccountType::class);

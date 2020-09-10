@@ -36,9 +36,10 @@ class AccountTest extends TestCase
     public function testAccountRelationships()
     {
         $currency = factory(Currency::class)->create();
-
-        $category = factory(Category::class)->create();
         $type = $this->faker->randomElement(array_keys(config('ifrs')['accounts']));
+        $category = factory(Category::class)->create([
+            'category_type' => $type
+        ]);
         $account = new Account([
             'name' => $this->faker->name,
             'account_type' => $type,
@@ -71,11 +72,13 @@ class AccountTest extends TestCase
 
         $this->be($user);
 
+        $type = $this->faker->randomElement(array_keys(config('ifrs')['accounts']));
+
         $account = new Account([
             'name' => $this->faker->name,
             'currency_id' => factory(Currency::class)->create()->id,
-            'account_type' => $this->faker->randomElement(array_keys(config('ifrs')['accounts'])),
-            'category_id' => factory(Category::class)->create()->id
+            'account_type' => $type,
+            'category_id' => null
         ]);
 
         $account->save();
@@ -103,7 +106,9 @@ class AccountTest extends TestCase
      */
     public function testAccountRecycling()
     {
-        $account = factory(Account::class)->create();
+        $account = factory(Account::class)->create([
+            'category_id' => null
+        ]);
         $account->delete();
 
         $recycled = RecycledObject::all()->first();
@@ -122,7 +127,7 @@ class AccountTest extends TestCase
             'name' => $this->faker->name,
             'code' => 6000,
             'account_type' => Account::RECEIVABLE,
-            'category_id' => factory(Category::class)->create()->id
+            'category_id' => null
         ]);
         $account->save();
 
@@ -132,7 +137,7 @@ class AccountTest extends TestCase
         $account = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::NON_CURRENT_ASSET,
-            'category_id' => factory(Category::class)->create()->id
+            'category_id' => null
         ]);
         $account->save();
 
@@ -140,13 +145,14 @@ class AccountTest extends TestCase
 
         factory(Account::class, 3)->create([
             "account_type" => Account::OPERATING_REVENUE,
-            "code" => null
+            "code" => null,
+            'category_id' => null
         ]);
 
         $account = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::OPERATING_REVENUE,
-            'category_id' => factory(Category::class)->create()->id
+            'category_id' => null
         ]);
         $account->save();
 
@@ -154,13 +160,14 @@ class AccountTest extends TestCase
 
         factory(Account::class, 12)->create([
             "account_type" => Account::CURRENT_LIABILITY,
-            "code" => null
+            "code" => null,
+            'category_id' => null
         ]);
 
         $account = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::CURRENT_LIABILITY,
-            'category_id' => factory(Category::class)->create()->id
+            'category_id' => null
         ]);
 
         $account->save();
@@ -178,7 +185,7 @@ class AccountTest extends TestCase
         $account = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::INVENTORY,
-            'category_id' => factory(Category::class)->create()->id
+            'category_id' => null
         ]);
 
         $account->save();
@@ -208,7 +215,7 @@ class AccountTest extends TestCase
         $account = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::CONTRA_ASSET,
-            'category_id' => factory(Category::class)->create()->id
+            'category_id' => null
         ]);
         $account->save();
 
@@ -248,7 +255,7 @@ class AccountTest extends TestCase
         $account = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::RECEIVABLE,
-            'category_id' => factory(Category::class)->create()->id
+            'category_id' => null
         ]);
         $account->save();
 
@@ -292,7 +299,9 @@ class AccountTest extends TestCase
         $account1 = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::RECEIVABLE,
-            'category_id' => factory(Category::class)->create()->id
+            'category_id' => factory(Category::class)->create([
+                'category_type' => Account::RECEIVABLE
+            ])->id
         ]);
         $account1->save();
 
@@ -301,7 +310,9 @@ class AccountTest extends TestCase
         $account2 = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::RECEIVABLE,
-            'category_id' => factory(Category::class)->create()->id
+            'category_id' => factory(Category::class)->create([
+                'category_type' => Account::RECEIVABLE
+            ])->id
         ]);
         $account2->save();
 
@@ -310,7 +321,9 @@ class AccountTest extends TestCase
         $account3 = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::OPERATING_REVENUE,
-            'category_id' => factory(Category::class)->create()->id
+            'category_id' => factory(Category::class)->create([
+                'category_type' => Account::OPERATING_REVENUE
+            ])->id
         ]);
         $account3->save();
 
@@ -319,7 +332,9 @@ class AccountTest extends TestCase
         $account4 = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::CONTROL,
-            'category_id' => factory(Category::class)->create()->id
+            'category_id' => factory(Category::class)->create([
+                'category_type' => Account::CONTROL
+            ])->id
         ]);
         $account4->save();
 
@@ -433,7 +448,7 @@ class AccountTest extends TestCase
         $account = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::RECEIVABLE,
-            'category_id' => factory(Category::class)->create()->id
+            'category_id' => null
         ]);
         $account->save();
 
@@ -465,7 +480,7 @@ class AccountTest extends TestCase
         $client = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::RECEIVABLE,
-            'category_id' => factory(Category::class)->create()->id
+            'category_id' => null
         ]);
         $client->save();
 
@@ -485,14 +500,14 @@ class AccountTest extends TestCase
         $revenue = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::OPERATING_REVENUE,
-            'category_id' => factory(Category::class)->create()->id
+            'category_id' => null
         ]);
         $revenue->save();
 
         $vat = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::CONTROL,
-            'category_id' => factory(Category::class)->create()->id
+            'category_id' => null
         ]);
         $vat->save();
 
@@ -524,14 +539,14 @@ class AccountTest extends TestCase
         $supplier = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::PAYABLE,
-            'category_id' => factory(Category::class)->create()->id
+            'category_id' => null
         ]);
         $supplier->save();
 
         $asset = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::NON_CURRENT_ASSET,
-            'category_id' => factory(Category::class)->create()->id
+            'category_id' => null
         ]);
         $asset->save();
 

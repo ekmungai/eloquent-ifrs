@@ -17,8 +17,12 @@ $factory->define(
         return [
             'transaction_id' => factory(Transaction::class)->create()->id,
             'vat_id' => factory(Vat::class)->create()->id,
-            'post_account' => factory(Account::class)->create()->id,
-            'folio_account' => factory(Account::class)->create()->id,
+            'post_account' => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
+            'folio_account' => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
             'line_item_id' => factory(LineItem::class)->create()->id,
             'date' => $faker->dateTimeThisMonth(),
             'entry_type' => $faker->randomElement([

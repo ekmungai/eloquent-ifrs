@@ -31,6 +31,7 @@ class ContraEntryTest extends TestCase
     {
         $bankAccount = factory(Account::class)->create([
             'account_type' => Account::BANK,
+            'category_id' => null
         ]);
 
         $contraEntry = new ContraEntry([
@@ -55,6 +56,7 @@ class ContraEntryTest extends TestCase
         $contraEntry = new ContraEntry([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
+                'category_id' => null
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -66,7 +68,8 @@ class ContraEntryTest extends TestCase
                 "rate" => 0
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::BANK
+                "account_type" => Account::BANK,
+                'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
@@ -97,6 +100,7 @@ class ContraEntryTest extends TestCase
         $contraEntry = new ContraEntry([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
+                'category_id' => null
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -110,7 +114,8 @@ class ContraEntryTest extends TestCase
                 "rate" => 16
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::RECONCILIATION
+                "account_type" => Account::RECONCILIATION,
+                'category_id' => null
             ])->id,
         ]);
         $contraEntry->addLineItem($lineItem);
@@ -128,6 +133,7 @@ class ContraEntryTest extends TestCase
         $contraEntry = new ContraEntry([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::RECONCILIATION,
+                'category_id' => null
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -141,7 +147,8 @@ class ContraEntryTest extends TestCase
                 "rate" => 0
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::BANK
+                "account_type" => Account::BANK,
+                'category_id' => null
             ])->id,
         ]);
         $contraEntry->addLineItem($lineItem);
@@ -158,6 +165,7 @@ class ContraEntryTest extends TestCase
     {
         $account = factory(Account::class)->create([
             'account_type' => Account::BANK,
+            'category_id' => null
         ]);
         $transaction = new ContraEntry([
             "account_id" => $account->id,
@@ -179,6 +187,7 @@ class ContraEntryTest extends TestCase
     {
         $account = factory(Account::class)->create([
             'account_type' => Account::BANK,
+            'category_id' => null
         ]);
         $transaction = new ContraEntry([
             "account_id" => $account->id,
@@ -189,6 +198,7 @@ class ContraEntryTest extends TestCase
 
         $account2 = factory(Account::class)->create([
             'account_type' => Account::BANK,
+            'category_id' => null
         ]);
         $transaction2 = new ContraEntry([
             "account_id" => $account2->id,
@@ -209,6 +219,7 @@ class ContraEntryTest extends TestCase
         // Account Filter
         $account3 = factory(Account::class)->create([
             'account_type' => Account::BANK,
+            'category_id' => null
         ]);
         $this->assertEquals(count(ContraEntry::fetch(null, null, $account)), 1);
         $this->assertEquals(count(ContraEntry::fetch(null, null, $account2)), 1);

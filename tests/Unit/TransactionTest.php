@@ -36,7 +36,9 @@ class TransactionTest extends TestCase
     public function testTransactionRelationships()
     {
         $currency = factory(Currency::class)->create();
-        $account = factory(Account::class)->create();
+        $account = factory(Account::class)->create([
+            'category_id' => null
+        ]);
         $exchangeRate = factory(ExchangeRate::class)->create([
             "rate" => 1
         ]);
@@ -158,6 +160,7 @@ class TransactionTest extends TestCase
         $transaction = new ClientInvoice([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::RECEIVABLE,
+                'category_id' => null
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -169,6 +172,7 @@ class TransactionTest extends TestCase
         $transaction = new ClientInvoice([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::RECEIVABLE,
+                'category_id' => null
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -185,6 +189,7 @@ class TransactionTest extends TestCase
         $transaction = new ClientInvoice([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::RECEIVABLE,
+                'category_id' => null
             ])->id,
             "transaction_date" => Carbon::now()->addYear(),
             "narration" => $this->faker->word,
@@ -202,7 +207,9 @@ class TransactionTest extends TestCase
     public function testTransactionLineItems()
     {
         $transaction = new Transaction();
-        $transaction->account_id = factory(Account::class)->create()->id;
+        $transaction->account_id = factory(Account::class)->create([
+            'category_id' => null
+        ])->id;
         $transaction->exchange_rate_id = factory(ExchangeRate::class)->create()->id;
         $transaction->currency_id = factory(Currency::class)->create()->id;
         $transaction->transaction_date = Carbon::now();
@@ -250,6 +257,7 @@ class TransactionTest extends TestCase
     {
         $account = factory(Account::class)->create([
             'account_type' => Account::RECEIVABLE,
+            'category_id' => null
         ]);
         $currency = factory(Currency::class)->create();
 
@@ -263,7 +271,9 @@ class TransactionTest extends TestCase
 
         $line = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
-            'account_id' => factory(Account::class)->create()->id,
+            'account_id' => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
             'amount' => 125,
         ]);
         $transaction->addLineItem($line);
@@ -278,7 +288,9 @@ class TransactionTest extends TestCase
 
         $line = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
-            'account_id' => factory(Account::class)->create()->id,
+            'account_id' => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
             'amount' => 100,
         ]);
 
@@ -300,6 +312,7 @@ class TransactionTest extends TestCase
     {
         $account = factory(Account::class)->create([
             'account_type' => Account::RECEIVABLE,
+            'category_id' => null
         ]);
         $currency = factory(Currency::class)->create();
 
@@ -313,7 +326,9 @@ class TransactionTest extends TestCase
 
         $line = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
-            'account_id' => factory(Account::class)->create()->id,
+            'account_id' => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
             'amount' => 125,
         ]);
         $transaction->addLineItem($line);
@@ -328,7 +343,9 @@ class TransactionTest extends TestCase
 
         $line = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
-            'account_id' => factory(Account::class)->create()->id,
+            'account_id' => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
             'amount' => 100,
         ]);
 
@@ -344,7 +361,9 @@ class TransactionTest extends TestCase
 
         $line2 = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
-            'account_id' => factory(Account::class)->create()->id,
+            'account_id' => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
             'amount' => 100,
         ]);
 
@@ -383,6 +402,7 @@ class TransactionTest extends TestCase
     {
         $account = factory(Account::class)->create([
             'account_type' => Account::RECEIVABLE,
+            'category_id' => null
         ]);
         $currency = factory(Currency::class)->create();
 
@@ -396,7 +416,9 @@ class TransactionTest extends TestCase
 
         $line = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
-            'account_id' => factory(Account::class)->create()->id,
+            'account_id' => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
             'amount' => 125,
         ]);
         $transaction->addLineItem($line);
@@ -411,7 +433,9 @@ class TransactionTest extends TestCase
 
         $line = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
-            'account_id' => factory(Account::class)->create()->id,
+            'account_id' => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
             'amount' => 100,
         ]);
 
@@ -427,7 +451,9 @@ class TransactionTest extends TestCase
 
         $line2 = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
-            'account_id' => factory(Account::class)->create()->id,
+            'account_id' => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
             'amount' => 100,
         ]);
 
@@ -443,7 +469,9 @@ class TransactionTest extends TestCase
 
         $line3 = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
-            'account_id' => factory(Account::class)->create()->id,
+            'account_id' => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
             'amount' => 100,
         ]);
 
@@ -529,6 +557,7 @@ class TransactionTest extends TestCase
         $transaction = new JournalEntry([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::RECONCILIATION,
+                'category_id' => null
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -540,7 +569,8 @@ class TransactionTest extends TestCase
                 "rate" => 16
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::RECONCILIATION
+                "account_type" => Account::RECONCILIATION,
+                'category_id' => null
             ])->id,
         ]);
 
@@ -563,7 +593,8 @@ class TransactionTest extends TestCase
                 "rate" => 16
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::RECONCILIATION
+                "account_type" => Account::RECONCILIATION,
+                'category_id' => null
             ])->id,
         ]);
         $transaction->addLineItem($lineItem);
@@ -578,6 +609,7 @@ class TransactionTest extends TestCase
     {
         $account = factory(Account::class)->create([
             'account_type' => Account::RECONCILIATION,
+            'category_id' => null
         ]);
         $transaction = new JournalEntry([
             "account_id" => $account->id,
@@ -606,7 +638,9 @@ class TransactionTest extends TestCase
      */
     public function testHangingClearances()
     {
-        $account = factory(Account::class)->create();
+        $account = factory(Account::class)->create([
+            'category_id' => null
+        ]);
 
         $transaction = new JournalEntry([
             "account_id" => $account->id,
@@ -616,7 +650,9 @@ class TransactionTest extends TestCase
 
         $line = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
-            'account_id' => factory(Account::class)->create()->id,
+            'account_id' => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
             'amount' => 50,
         ]);
 
@@ -632,7 +668,9 @@ class TransactionTest extends TestCase
 
         $line = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
-            'account_id' => factory(Account::class)->create()->id,
+            'account_id' => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
             'amount' => 50,
         ]);
         $cleared->addLineItem($line);
@@ -664,6 +702,7 @@ class TransactionTest extends TestCase
     {
         $account = factory(Account::class)->create([
             'account_type' => Account::RECEIVABLE,
+            'category_id' => null
         ]);
 
         $transaction = new JournalEntry([
@@ -674,7 +713,9 @@ class TransactionTest extends TestCase
 
         $line = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
-            'account_id' => factory(Account::class)->create()->id,
+            'account_id' => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
             'amount' => 125,
         ]);
 
@@ -690,7 +731,9 @@ class TransactionTest extends TestCase
 
         $line = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
-            'account_id' => factory(Account::class)->create()->id,
+            'account_id' => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
             'amount' => 100,
         ]);
         $cleared->addLineItem($line);
@@ -726,6 +769,7 @@ class TransactionTest extends TestCase
     {
         $account = factory(Account::class)->create([
             'account_type' => Account::RECEIVABLE,
+            'category_id' => null
         ]);
 
         $transaction = new ClientInvoice([
@@ -737,7 +781,8 @@ class TransactionTest extends TestCase
         $line = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
-                'account_type' => Account::OPERATING_REVENUE
+                'account_type' => Account::OPERATING_REVENUE,
+                'category_id' => null
             ])->id,
             'amount' => 125,
         ]);
@@ -777,6 +822,7 @@ class TransactionTest extends TestCase
     {
         $account = factory(Account::class)->create([
             'account_type' => Account::RECEIVABLE,
+            'category_id' => null
         ]);
 
         $transaction = new JournalEntry([
@@ -787,7 +833,9 @@ class TransactionTest extends TestCase
 
         $line = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
-            'account_id' => factory(Account::class)->create()->id,
+            'account_id' => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
             'amount' => 125,
         ]);
 
@@ -803,7 +851,9 @@ class TransactionTest extends TestCase
 
         $line = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
-            'account_id' => factory(Account::class)->create()->id,
+            'account_id' => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
             'amount' => 100,
         ]);
         $cleared->addLineItem($line);

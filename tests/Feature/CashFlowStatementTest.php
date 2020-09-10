@@ -36,6 +36,7 @@ class CashFlowStatementTest extends TestCase
         $bank = factory(Account::class)->create([
             'name' => 'Bank Account',
             'account_type' => Account::BANK,
+            'category_id' => null
         ]);
 
         factory(Balance::class)->create([
@@ -58,6 +59,7 @@ class CashFlowStatementTest extends TestCase
         $clientInvoice = new ClientInvoice([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::RECEIVABLE,
+                'category_id' => null
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -69,7 +71,8 @@ class CashFlowStatementTest extends TestCase
                 "rate" => 16
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::OPERATING_REVENUE
+                "account_type" => Account::OPERATING_REVENUE,
+                'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
@@ -81,6 +84,7 @@ class CashFlowStatementTest extends TestCase
         $creditNote = new CreditNote([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::RECEIVABLE,
+                'category_id' => null
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -92,7 +96,8 @@ class CashFlowStatementTest extends TestCase
                 "rate" => 0
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::OPERATING_REVENUE
+                "account_type" => Account::OPERATING_REVENUE,
+                'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
@@ -119,7 +124,8 @@ class CashFlowStatementTest extends TestCase
                 "rate" => 16
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::NON_OPERATING_REVENUE
+                "account_type" => Account::NON_OPERATING_REVENUE,
+                'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
@@ -134,6 +140,7 @@ class CashFlowStatementTest extends TestCase
         $bill = new SupplierBill([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::PAYABLE,
+                'category_id' => null
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -145,7 +152,8 @@ class CashFlowStatementTest extends TestCase
                 "rate" => 16
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::OPERATING_EXPENSE
+                "account_type" => Account::OPERATING_EXPENSE,
+                'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
@@ -160,6 +168,7 @@ class CashFlowStatementTest extends TestCase
         $bill = new SupplierBill([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::PAYABLE,
+                'category_id' => null
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -171,7 +180,8 @@ class CashFlowStatementTest extends TestCase
                 "rate" => 16
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::DIRECT_EXPENSE
+                "account_type" => Account::DIRECT_EXPENSE,
+                'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
@@ -182,6 +192,7 @@ class CashFlowStatementTest extends TestCase
         $journalEntry = new JournalEntry([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::CONTRA_ASSET,
+                'category_id' => null
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -193,7 +204,8 @@ class CashFlowStatementTest extends TestCase
                 "rate" => 0
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::OTHER_EXPENSE
+                "account_type" => Account::OTHER_EXPENSE,
+                'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
@@ -213,7 +225,8 @@ class CashFlowStatementTest extends TestCase
                 "rate" => 0
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::OTHER_EXPENSE
+                "account_type" => Account::OTHER_EXPENSE,
+                'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
@@ -223,6 +236,7 @@ class CashFlowStatementTest extends TestCase
         $debitNote = new DebitNote([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::PAYABLE,
+                'category_id' => null
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -234,7 +248,8 @@ class CashFlowStatementTest extends TestCase
                 "rate" => 0,
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::OTHER_EXPENSE
+                "account_type" => Account::OTHER_EXPENSE,
+                'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
@@ -251,6 +266,7 @@ class CashFlowStatementTest extends TestCase
         $bill = new SupplierBill([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::PAYABLE,
+                'category_id' => null
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -262,7 +278,8 @@ class CashFlowStatementTest extends TestCase
                 "rate" => 16
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::INVENTORY
+                "account_type" => Account::INVENTORY,
+                'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
@@ -278,6 +295,7 @@ class CashFlowStatementTest extends TestCase
         $journalEntry = new JournalEntry([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::CURRENT_LIABILITY,
+                'category_id' => null
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -313,7 +331,8 @@ class CashFlowStatementTest extends TestCase
                 "rate" => 0
             ])->id,
             "account_id" => factory(Account::class)->create([
-                "account_type" => Account::NON_CURRENT_ASSET
+                "account_type" => Account::NON_CURRENT_ASSET,
+                'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
@@ -330,6 +349,7 @@ class CashFlowStatementTest extends TestCase
         $journalEntry = new JournalEntry([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::NON_CURRENT_LIABILITY,
+                'category_id' => null
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -356,6 +376,7 @@ class CashFlowStatementTest extends TestCase
         $journalEntry = new JournalEntry([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::EQUITY,
+                'category_id' => null
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,

@@ -61,7 +61,9 @@ class RecycledObjectTest extends TestCase
      */
     public function testObjectRecycling()
     {
-        $account = factory(Account::class)->create();
+        $account = factory(Account::class)->create([
+            'category_id' => null
+        ]);
 
         //soft delete
         $account->delete();
