@@ -12,7 +12,6 @@ namespace IFRS\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
 use IFRS\Interfaces\Recyclable;
@@ -26,6 +25,7 @@ use IFRS\Exceptions\MissingAccountType;
 use IFRS\Exceptions\HangingTransactions;
 use Carbon\Carbon;
 use IFRS\Exceptions\InvalidCategoryType;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class Account
@@ -170,22 +170,31 @@ class Account extends Model implements Recyclable, Segregatable
         $year = ReportingPeriod::year($endDate);
 
         foreach (Account::whereIn("account_type", $accountTypes)->get() as $account) {
+
             $account->openingBalance = $account->openingBalance($year);
             $account->currentBalance = Ledger::balance($account, $startDate, $endDate);
-            $closingBalance = $account->openingBalance + $account->currentBalance;
+            $account->closingBalance = $account->openingBalance + $account->currentBalance;
 
-            if ($closingBalance <> 0) {
-                $categoryName = is_null($account->category) ? config('ifrs')['accounts'][$account->account_type] : $account->category->name;
+            if ($account->closingBalance <> 0) {
+
+                if (is_null($account->category)) {
+                    $categoryName =  config('ifrs')['accounts'][$account->account_type];
+                    $categoryId = 0;
+                } else {
+                    $categoryName =  $account->category->name;
+                    $categoryId = $account->category->id;
+                }
 
                 if (in_array($categoryName, $balances["sectionCategories"])) {
-                    $balances["sectionCategories"][$categoryName]['accounts']->push($account->attributes());
-                    $balances["sectionCategories"][$categoryName]['total'] += $closingBalance;
+                    $balances["sectionCategories"][$categoryName]['accounts']->push((object) $account->attributes);
+                    $balances["sectionCategories"][$categoryName]['total'] += $account->closingBalance;
                 } else {
-                    $balances["sectionCategories"][$categoryName]['accounts'] = collect([$account->attributes()]);
-                    $balances["sectionCategories"][$categoryName]['total'] = $closingBalance;
+                    $balances["sectionCategories"][$categoryName]['accounts'] = collect([(object) $account->attributes]);
+                    $balances["sectionCategories"][$categoryName]['total'] = $account->closingBalance;
+                    $balances["sectionCategories"][$categoryName]['id'] = $categoryId;
                 }
             }
-            $balances["sectionTotal"] += $closingBalance;
+            $balances["sectionTotal"] += $account->closingBalance;
         }
 
         return $balances;
@@ -315,12 +324,58 @@ class Account extends Model implements Recyclable, Segregatable
      */
     public function closingBalance(string $startDate = null, string $endDate = null): float
     {
-        $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate) : Carbon::parse($startDate);
+
         $endDate = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
 
-        $year = ReportingPeriod::year($endDate);
+        if (is_null($startDate)) {
+            $startDate = ReportingPeriod::periodStart($endDate);
+            $year = ReportingPeriod::year($endDate);
+            return $this->openingBalance($year) + Ledger::balance($this, $startDate, $endDate);
+        } else {
+            $startDate = Carbon::parse($startDate);
+            return Ledger::balance($this, $startDate, $endDate);
+        }
+    }
 
-        return $this->openingBalance($year) + Ledger::balance($this, $startDate, $endDate);
+    /**
+     * Get Account's Transactions for the Reporting Period.
+     *
+     * @param string $startDate
+     * @param string $endDate
+     *
+     * @return array
+     */
+    public function getTransactions(string $startDate = null, string $endDate = null): array
+    {
+
+        $transactions = [];
+        $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate) : Carbon::parse($startDate);
+        $endDate = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
+        $id = $this->id;
+
+        //select all posted transactions having account as main or line item account
+        $query = DB::table('ifrs_transactions')
+            ->join('ifrs_ledgers', 'ifrs_transactions.id', '=', 'ifrs_ledgers.transaction_id')
+            ->select(
+                'ifrs_transactions.id',
+                'ifrs_transactions.transaction_date',
+                'ifrs_transactions.transaction_no',
+                'ifrs_transactions.transaction_type',
+                'ifrs_ledgers.posting_date'
+            )->where(function ($query) use ($id) {
+                $query->where("ifrs_ledgers.post_account", $id)
+                    ->orwhere("ifrs_ledgers.folio_account", $id);
+            })
+            ->where("posting_date", ">=", $startDate)
+            ->where("posting_date", "<=", $endDate)
+            ->distinct('ifrs_transactions.id');
+
+        foreach ($query->get() as $transaction) {
+
+            $transaction->amount = Ledger::contribution($this, $transaction->id);
+            $transactions[] = $transaction;
+        }
+        return $transactions;
     }
 
     /**

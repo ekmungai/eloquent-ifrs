@@ -24,7 +24,7 @@ $factory->define(
                 'category_id' => null
             ])->id,
             'line_item_id' => factory(LineItem::class)->create()->id,
-            'date' => $faker->dateTimeThisMonth(),
+            'posting_date' => $faker->dateTimeThisMonth(),
             'entry_type' => $faker->randomElement([
                 Balance::DEBIT,
                 Balance::CREDIT

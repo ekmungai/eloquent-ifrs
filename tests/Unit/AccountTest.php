@@ -25,6 +25,7 @@ use IFRS\Transactions\SupplierBill;
 use IFRS\Exceptions\HangingTransactions;
 use IFRS\Exceptions\InvalidCategoryType;
 use IFRS\Exceptions\MissingAccountType;
+use IFRS\Transactions\JournalEntry;
 
 class AccountTest extends TestCase
 {
@@ -262,14 +263,14 @@ class AccountTest extends TestCase
         factory(Ledger::class, 3)->create([
             "post_account" => $account->id,
             "entry_type" => Balance::DEBIT,
-            "date" => Carbon::now(),
+            "posting_date" => Carbon::now(),
             "amount" => 50
         ]);
 
         factory(Ledger::class, 2)->create([
             "post_account" => $account->id,
             "entry_type" => Balance::CREDIT,
-            "date" => Carbon::now(),
+            "posting_date" => Carbon::now(),
             "amount" => 40
         ]);
 
@@ -390,6 +391,7 @@ class AccountTest extends TestCase
         $control = Account::sectionBalances([Account::CONTROL]);
 
         $this->assertTrue(in_array($category1, array_keys($clients["sectionCategories"])));
+        $this->assertEquals($clients["sectionCategories"][$category1]["id"], $account1->category->id);
         $this->assertEquals($clients["sectionCategories"][$category1]["accounts"][0]->id, $account1->id);
         $this->assertEquals($clients["sectionCategories"][$category1]["accounts"][0]->openingBalance, 70);
         $this->assertEquals($clients["sectionCategories"][$category1]["accounts"][0]->currentBalance, 0);
@@ -397,6 +399,7 @@ class AccountTest extends TestCase
         $this->assertEquals($clients["sectionCategories"][$category1]["total"], 70);
 
         $this->assertTrue(in_array($category2, array_keys($clients["sectionCategories"])));
+        $this->assertEquals($clients["sectionCategories"][$category2]["id"], $account2->category->id);
         $this->assertEquals($clients["sectionCategories"][$category2]["accounts"][0]->id, $account2->id);
         $this->assertEquals($clients["sectionCategories"][$category2]["accounts"][0]->openingBalance, 0);
         $this->assertEquals($clients["sectionCategories"][$category2]["accounts"][0]->currentBalance, 116);
@@ -406,6 +409,7 @@ class AccountTest extends TestCase
         $this->assertEquals($clients["sectionTotal"], 186);
 
         $this->assertTrue(in_array($category3, array_keys($incomes["sectionCategories"])));
+        $this->assertEquals($incomes["sectionCategories"][$category3]["id"], $account3->category->id);
         $this->assertEquals($incomes["sectionCategories"][$category3]["accounts"][0]->id, $account3->id);
         $this->assertEquals($incomes["sectionCategories"][$category3]["accounts"][0]->openingBalance, 0);
         $this->assertEquals($incomes["sectionCategories"][$category3]["accounts"][0]->currentBalance, -100);
@@ -617,5 +621,142 @@ class AccountTest extends TestCase
         $this->expectExceptionMessage('Cannot assign Receivable Account to Payable Category');
 
         $account->save();
+    }
+
+    /**
+     * Test Accounts Transactions
+     *
+     * @return void
+     */
+    public function testAccountsTransactions()
+    {
+        $account1 = new Account([
+            'name' => $this->faker->name,
+            'account_type' => Account::RECEIVABLE,
+            'category_id' => null
+        ]);
+        $account1->save();
+
+        // $account2 = new Account([
+        //     'name' => $this->faker->name,
+        //     'account_type' => Account::RECEIVABLE,
+        //     'category_id' => null
+        // ]);
+        // $account2->save();
+
+
+        // $account3 = new Account([
+        //     'name' => $this->faker->name,
+        //     'account_type' => Account::OPERATING_REVENUE,
+        //     'category_id' => null
+        // ]);
+        // $account3->save();
+
+
+        // $account4 = new Account([
+        //     'name' => $this->faker->name,
+        //     'account_type' => Account::CONTROL,
+        //     'category_id' => null
+        // ]);
+        // $account4->save();
+
+        // //Client Invoice Transaction
+        // $clientInvoice = new ClientInvoice([
+        //     "account_id" => $account2->id,
+        //     "date" => Carbon::now(),
+        //     "narration" => $this->faker->word,
+        // ]);
+
+        // $line = new LineItem([
+        //     'vat_id' => factory(Vat::class)->create([
+        //         "rate" => 16,
+        //         "account_id" => $account4->id
+        //     ])->id,
+        //     'account_id' => $account3->id,
+        //     'narration' => $this->faker->sentence,
+        //     'quantity' => $this->faker->randomNumber(),
+        //     'amount' => 100,
+        //     'quantity' => 1,
+        // ]);
+
+        // $clientInvoice->addLineItem($line);
+        // $clientInvoice->post();
+
+        // // Client Account
+        // $clientTransactions = $account2->getTransactions();
+        // $this->assertEquals($clientTransactions[0]->id, $clientInvoice->id);
+        // $this->assertEquals($clientTransactions[0]->transaction_no, $clientInvoice->transaction_no);
+        // $this->assertEquals($clientTransactions[0]->transaction_type, $clientInvoice->transaction_type);
+        // $this->assertEquals($clientTransactions[0]->amount, 116);
+
+        // // Income Account
+        // $incomeTransactions = $account3->getTransactions();
+        // $this->assertEquals($incomeTransactions[0]->id, $clientInvoice->id);
+        // $this->assertEquals($incomeTransactions[0]->transaction_no, $clientInvoice->transaction_no);
+        // $this->assertEquals($incomeTransactions[0]->transaction_type, $clientInvoice->transaction_type);
+        // $this->assertEquals($incomeTransactions[0]->amount, -100);
+
+        // // Vat Account
+        // $vatTransactions = $account4->getTransactions();
+        // $this->assertEquals($vatTransactions[0]->id, $clientInvoice->id);
+        // $this->assertEquals($vatTransactions[0]->transaction_no, $clientInvoice->transaction_no);
+        // $this->assertEquals($vatTransactions[0]->transaction_type, $clientInvoice->transaction_type);
+        // $this->assertEquals($vatTransactions[0]->amount, -16);
+
+        // // Out of range
+        // $clientTransactions = $account2->getTransactions(Carbon::now()->addWeeks(2)->toDateString());
+        // $this->assertEquals($clientTransactions, []);
+
+        // split transaction
+        $journalEntry = new JournalEntry([
+            "account_id" => $account1->id,
+            "transaction_date" => Carbon::now()->addWeeks(3),
+            "narration" => $this->faker->word,
+        ]);
+
+        $account5 = new Account([
+            'name' => $this->faker->name,
+            'account_type' => Account::OPERATING_REVENUE,
+            'category_id' => null
+        ]);
+        $account5->save();
+
+        $account6 = new Account([
+            'name' => $this->faker->name,
+            'account_type' => Account::CONTROL,
+            'category_id' => null
+        ]);
+        $account6->save();
+
+        $line1 = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => $account5->id,
+            'amount' => 125,
+        ]);
+        $line1->save();
+
+        $line2 = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => $account6->id,
+            'amount' => 70,
+        ]);
+        $line2->save();
+
+        $journalEntry->addLineItem($line1);
+        $journalEntry->addLineItem($line2);
+
+        $journalEntry->post();
+
+        $startDate = Carbon::now()->addWeeks(2)->toDateString();
+        $endDate = Carbon::now()->addWeeks(4)->toDateString();
+
+        $clientTransactions = $account1->getTransactions($startDate, $endDate);
+        $this->assertEquals($clientTransactions[0]->amount, -195);
+
+        $incomeTransactions = $account5->getTransactions($startDate, $endDate);
+        $this->assertEquals($incomeTransactions[0]->amount, 125);
+
+        $vatTransactions = $account6->getTransactions($startDate, $endDate);
+        $this->assertEquals($vatTransactions[0]->amount, 70);
     }
 }

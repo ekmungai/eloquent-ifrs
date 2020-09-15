@@ -10,6 +10,7 @@
 
 namespace IFRS\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
@@ -92,15 +93,27 @@ class Category extends Model implements Segregatable, Recyclable
     /**
      * Category Accounts Balances for the given period.
      *
-     * @param string $startDate
-     * @param string $endDate
+     * @param Carbon|null $startDate
+     * @param Carbon|null $endDate
      *  
      * @return array
      */
-    public function getAccountBalances(string $startDate, string $endDate)
+    public function getAccountBalances(Carbon $startDate = null, Carbon $endDate = null)
     {
+        $balances = ["total" => 0, "accounts" => []];
+
         foreach ($this->accounts as $account) {
-            $account->closingBalance($startDate, $endDate);
+
+            $closingBalance = $account->closingBalance($startDate, $endDate);
+
+            if ($closingBalance != 0) {
+                $account->closingBalance = $closingBalance;
+
+                $balances["accounts"][] = $account;
+                $balances["total"] += $closingBalance;
+            }
         }
+
+        return $balances;
     }
 }

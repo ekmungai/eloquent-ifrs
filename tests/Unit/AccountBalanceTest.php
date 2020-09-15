@@ -41,18 +41,16 @@ class AccountBalanceTest extends TestCase
 
         $exchangeRate = factory(ExchangeRate::class)->create();
 
-        $balance = new Balance(
-            [
-                'exchange_rate_id' => $exchangeRate->id,
-                'currency_id' => $currency->id,
-                'account_id' => $account->id,
-                'transaction_type' => Transaction::JN,
-                'transaction_date' => Carbon::now()->subYears(1.5),
-                'reference' => $this->faker->word,
-                'balance_type' =>  Balance::DEBIT,
-                'amount' => $this->faker->randomFloat(2),
-            ]
-        );
+        $balance = new Balance([
+            'exchange_rate_id' => $exchangeRate->id,
+            'currency_id' => $currency->id,
+            'account_id' => $account->id,
+            'transaction_type' => Transaction::JN,
+            'transaction_date' => Carbon::now()->subYears(1.5),
+            'reference' => $this->faker->word,
+            'balance_type' =>  Balance::DEBIT,
+            'amount' => $this->faker->randomFloat(2),
+        ]);
         $balance->save();
 
         $this->assertEquals($balance->currency->name, $currency->name);

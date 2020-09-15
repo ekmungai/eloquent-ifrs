@@ -31,8 +31,8 @@ use IFRS\Traits\ModelTablePrefix;
  * @property Account $postAccount
  * @property Account $folioAccount
  * @property LineItem $lineItem
- * @property Carbon $date
- * @property string $entry_type
+ * @property Carbon $postingDate
+ * @property string $entryType
  * @property float $amount
  * @property Carbon $destroyed_at
  * @property Carbon $deleted_at
@@ -75,7 +75,7 @@ class Ledger extends Model implements Segregatable
 
         // identical double entry data
         $post->transaction_id = $folio->transaction_id = $transaction->id;
-        $post->date = $folio->date = $transaction->transaction_date;
+        $post->posting_date = $folio->posting_date = $transaction->transaction_date;
         $post->line_item_id = $folio->line_item_id = $lineItem->id;
         $post->vat_id = $folio->vat_id = $lineItem->vat_id;
         $post->amount = $folio->amount = $amount * $transaction->exchangeRate->rate * $lineItem->quantity;
@@ -113,7 +113,7 @@ class Ledger extends Model implements Segregatable
 
             // identical double entry data
             $post->transaction_id = $folio->transaction_id = $transaction->id;
-            $post->date = $folio->date = $transaction->transaction_date;
+            $post->posting_date = $folio->posting_date = $transaction->transaction_date;
             $post->line_item_id = $folio->line_item_id = $lineItem->id;
             $post->vat_id = $folio->vat_id = $lineItem->vat_id;
             $post->amount = $folio->amount = $lineItem->amount * $transaction->exchangeRate->rate * $lineItem->quantity;
@@ -200,7 +200,7 @@ class Ledger extends Model implements Segregatable
         $ledger[] = $this->post_account;
         $ledger[] = $this->folio_account;
         $ledger[] = $this->line_item_id;
-        $ledger[] = is_string($this->date) ? $this->date : $this->date->format('Y-m-d H:i:s');
+        $ledger[] = is_string($this->posting_date) ? $this->posting_date : $this->posting_date->format('Y-m-d H:i:s');
         $ledger[] = $this->entry_type;
         $ledger[] = $this->amount;
         $ledger[] = $this->created_at;
@@ -238,18 +238,19 @@ class Ledger extends Model implements Segregatable
      */
     public static function contribution(Account $account, int $transactionId): float
     {
-        $contribution = 0;
-
-        $query = Ledger::where([
+        $debits = Ledger::where([
             "post_account" => $account->id,
+            "entry_type" => Balance::DEBIT,
             "transaction_id" => $transactionId,
-        ]);
+        ])->sum('amount');
 
-        foreach ($query->get() as $record) {
-            $amount = $record->amount / $record->transaction->exchangeRate->rate;
-            $record->entry_type == Balance::DEBIT ? $contribution += $amount : $contribution -= $amount;
-        }
-        return $contribution;
+        $credits = Ledger::where([
+            "post_account" => $account->id,
+            "entry_type" => Balance::CREDIT,
+            "transaction_id" => $transactionId,
+        ])->sum('amount');
+
+        return $debits - $credits;
     }
 
     /**
@@ -267,32 +268,17 @@ class Ledger extends Model implements Segregatable
         $debits = Ledger::where([
             "post_account" => $account->id,
             "entry_type" => Balance::DEBIT,
-        ])->where("date", ">=", $startDate)
-            ->where("date", "<=", $endDate)
+        ])->where("posting_date", ">=", $startDate)
+            ->where("posting_date", "<=", $endDate)
             ->sum('amount');
-
-        // print_r(Ledger::where([
-        //     "post_account" => $account->id,
-        //     "entry_type" => Balance::DEBIT,
-        // ])->where("date", ">=", $startDate)
-        //     ->where("date", "<=", $endDate)
-        //     ->getBindings());
-        // print($debits);
 
         $credits = Ledger::where([
             "post_account" => $account->id,
             "entry_type" => Balance::CREDIT,
-        ])->where("date", ">=", $startDate)
-            ->where("date", "<=", $endDate)
+        ])->where("posting_date", ">=", $startDate)
+            ->where("posting_date", "<=", $endDate)
             ->sum('amount');
 
-        // print_r(Ledger::where([
-        //     "post_account" => $account->id,
-        //     "entry_type" => Balance::CREDIT,
-        // ])->where("date", ">=", $startDate)
-        //     ->where("date", "<=", $endDate)
-        //     ->getBindings());
-        // print($credits);
         return $debits - $credits;
     }
 }

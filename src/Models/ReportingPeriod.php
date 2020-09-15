@@ -122,9 +122,9 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
     }
 
     /**
-     * ReportingPeriod start string
+     * ReportingPeriod start date
      *
-     * @return string | Carbon $date
+     * @return string|Carbon $date
      */
     public static function periodStart($date = null)
     {
@@ -136,11 +136,11 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
     }
 
     /**
-     * ReportingPeriod end string
+     * ReportingPeriod end date
      *
-     * @return string
+     * @return string|Carbon
      */
-    public static function periodEnd(string $date = null)
+    public static function periodEnd($date = null)
     {
         return ReportingPeriod::periodStart($date)
             ->addYear()
