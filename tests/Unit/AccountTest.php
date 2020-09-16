@@ -637,75 +637,75 @@ class AccountTest extends TestCase
         ]);
         $account1->save();
 
-        // $account2 = new Account([
-        //     'name' => $this->faker->name,
-        //     'account_type' => Account::RECEIVABLE,
-        //     'category_id' => null
-        // ]);
-        // $account2->save();
+        $account2 = new Account([
+            'name' => $this->faker->name,
+            'account_type' => Account::RECEIVABLE,
+            'category_id' => null
+        ]);
+        $account2->save();
 
 
-        // $account3 = new Account([
-        //     'name' => $this->faker->name,
-        //     'account_type' => Account::OPERATING_REVENUE,
-        //     'category_id' => null
-        // ]);
-        // $account3->save();
+        $account3 = new Account([
+            'name' => $this->faker->name,
+            'account_type' => Account::OPERATING_REVENUE,
+            'category_id' => null
+        ]);
+        $account3->save();
 
 
-        // $account4 = new Account([
-        //     'name' => $this->faker->name,
-        //     'account_type' => Account::CONTROL,
-        //     'category_id' => null
-        // ]);
-        // $account4->save();
+        $account4 = new Account([
+            'name' => $this->faker->name,
+            'account_type' => Account::CONTROL,
+            'category_id' => null
+        ]);
+        $account4->save();
 
-        // //Client Invoice Transaction
-        // $clientInvoice = new ClientInvoice([
-        //     "account_id" => $account2->id,
-        //     "date" => Carbon::now(),
-        //     "narration" => $this->faker->word,
-        // ]);
+        //Client Invoice Transaction
+        $clientInvoice = new ClientInvoice([
+            "account_id" => $account2->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
 
-        // $line = new LineItem([
-        //     'vat_id' => factory(Vat::class)->create([
-        //         "rate" => 16,
-        //         "account_id" => $account4->id
-        //     ])->id,
-        //     'account_id' => $account3->id,
-        //     'narration' => $this->faker->sentence,
-        //     'quantity' => $this->faker->randomNumber(),
-        //     'amount' => 100,
-        //     'quantity' => 1,
-        // ]);
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create([
+                "rate" => 16,
+                "account_id" => $account4->id
+            ])->id,
+            'account_id' => $account3->id,
+            'narration' => $this->faker->sentence,
+            'quantity' => $this->faker->randomNumber(),
+            'amount' => 100,
+            'quantity' => 1,
+        ]);
 
-        // $clientInvoice->addLineItem($line);
-        // $clientInvoice->post();
+        $clientInvoice->addLineItem($line);
+        $clientInvoice->post();
 
-        // // Client Account
-        // $clientTransactions = $account2->getTransactions();
-        // $this->assertEquals($clientTransactions[0]->id, $clientInvoice->id);
-        // $this->assertEquals($clientTransactions[0]->transaction_no, $clientInvoice->transaction_no);
-        // $this->assertEquals($clientTransactions[0]->transaction_type, $clientInvoice->transaction_type);
-        // $this->assertEquals($clientTransactions[0]->amount, 116);
+        // Client Account
+        $clientTransactions = $account2->getTransactions();
+        $this->assertEquals($clientTransactions[0]->id, $clientInvoice->id);
+        $this->assertEquals($clientTransactions[0]->transaction_no, $clientInvoice->transaction_no);
+        $this->assertEquals($clientTransactions[0]->type, "Client Invoice");
+        $this->assertEquals($clientTransactions[0]->amount, 116);
 
-        // // Income Account
-        // $incomeTransactions = $account3->getTransactions();
-        // $this->assertEquals($incomeTransactions[0]->id, $clientInvoice->id);
-        // $this->assertEquals($incomeTransactions[0]->transaction_no, $clientInvoice->transaction_no);
-        // $this->assertEquals($incomeTransactions[0]->transaction_type, $clientInvoice->transaction_type);
-        // $this->assertEquals($incomeTransactions[0]->amount, -100);
+        // Income Account
+        $incomeTransactions = $account3->getTransactions();
+        $this->assertEquals($incomeTransactions[0]->id, $clientInvoice->id);
+        $this->assertEquals($incomeTransactions[0]->transaction_no, $clientInvoice->transaction_no);
+        $this->assertEquals($clientTransactions[0]->type, "Client Invoice");
+        $this->assertEquals($incomeTransactions[0]->amount, -100);
 
-        // // Vat Account
-        // $vatTransactions = $account4->getTransactions();
-        // $this->assertEquals($vatTransactions[0]->id, $clientInvoice->id);
-        // $this->assertEquals($vatTransactions[0]->transaction_no, $clientInvoice->transaction_no);
-        // $this->assertEquals($vatTransactions[0]->transaction_type, $clientInvoice->transaction_type);
-        // $this->assertEquals($vatTransactions[0]->amount, -16);
+        // Vat Account
+        $vatTransactions = $account4->getTransactions();
+        $this->assertEquals($vatTransactions[0]->id, $clientInvoice->id);
+        $this->assertEquals($vatTransactions[0]->transaction_no, $clientInvoice->transaction_no);
+        $this->assertEquals($clientTransactions[0]->type, "Client Invoice");
+        $this->assertEquals($vatTransactions[0]->amount, -16);
 
-        // // Out of range
-        // $clientTransactions = $account2->getTransactions(Carbon::now()->addWeeks(2)->toDateString());
-        // $this->assertEquals($clientTransactions, []);
+        // Out of range
+        $clientTransactions = $account2->getTransactions(Carbon::now()->addWeeks(2)->toDateString());
+        $this->assertEquals($clientTransactions, []);
 
         // split transaction
         $journalEntry = new JournalEntry([

@@ -366,13 +366,14 @@ class Account extends Model implements Recyclable, Segregatable
                 $query->where("ifrs_ledgers.post_account", $id)
                     ->orwhere("ifrs_ledgers.folio_account", $id);
             })
-            ->where("posting_date", ">=", $startDate)
-            ->where("posting_date", "<=", $endDate)
+            ->where("ifrs_ledgers.posting_date", ">=", $startDate)
+            ->where("ifrs_ledgers.posting_date", "<=", $endDate)
             ->distinct('ifrs_transactions.id');
 
         foreach ($query->get() as $transaction) {
 
             $transaction->amount = Ledger::contribution($this, $transaction->id);
+            $transaction->type = Transaction::getType($transaction->transaction_type);
             $transactions[] = $transaction;
         }
         return $transactions;

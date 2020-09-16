@@ -17,7 +17,7 @@ $factory->define(
             'valid_from' => $faker->dateTimeThisMonth(),
             'valid_to' => Carbon::now(),
             'currency_id' => factory(Currency::class)->create()->id,
-            'rate' => $faker->randomFloat(2),
+            'rate' => $faker->randomFloat(2, 1),
         ];
     }
 );

@@ -289,16 +289,6 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
     }
 
     /**
-     * Instance Type Translator.
-     *
-     * @return string
-     */
-    public function getTypeAttribute()
-    {
-        return Transaction::getType($this->transaction_type);
-    }
-
-    /**
      * Transaction Saved Line Items.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -356,6 +346,16 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
     public function assignments()
     {
         return $this->hasMany(Assignment::class, 'transaction_id', 'id');
+    }
+
+    /**
+     * Instance Type Translator.
+     *
+     * @return string
+     */
+    public function getTypeAttribute()
+    {
+        return Transaction::getType($this->transaction_type);
     }
 
     /**
