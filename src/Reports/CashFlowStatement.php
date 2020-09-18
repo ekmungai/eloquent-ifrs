@@ -14,15 +14,19 @@ use Carbon\Carbon;
 use IFRS\Models\Account;
 use IFRS\Models\ReportingPeriod;
 
-class CashFlowStatement extends FinancialStatement
+class CashflowStatement extends FinancialStatement
 {
 
     /**
-     * Cash Flow Statement Title
+     * Cashflow Statement Title and Headings
      *
      * @var string
      */
     const TITLE = 'CASH_FLOW_STATEMENT';
+    const OPERATIONS_CASH_FLOW = 'OPERATIONS_CASH_FLOW';
+    const INVESTMENT_CASH_FLOW = 'INVESTMENT_CASH_FLOW';
+    const FINANCING_CASH_FLOW = 'FINANCING_CASH_FLOW';
+    const NET_CASH_FLOW = 'NET_CASH_FLOW';
 
     /**
      * Cash Flow Statement Sections
@@ -39,12 +43,11 @@ class CashFlowStatement extends FinancialStatement
     const NON_CURRENT_LIABILITIES = 'NON_CURRENT_LIABILITIES';
     const EQUITY = 'EQUITY';
     const PROFIT = 'PROFIT';
-    const OPERATIONS_CASH_FLOW = 'OPERATIONS_CASH_FLOW';
-    const INVESTMENT_CASH_FLOW = 'INVESTMENT_CASH_FLOW';
-    const FINANCING_CASH_FLOW = 'FINANCING_CASH_FLOW';
+    const TOTAL_OPERATIONS_CASH_FLOW = 'OPERATIONS_CASH_FLOW';
+    const TOTAL_INVESTMENT_CASH_FLOW = 'INVESTMENT_CASH_FLOW';
+    const TOTAL_FINANCING_CASH_FLOW = 'FINANCING_CASH_FLOW';
     const START_CASH_BALANCE = 'START_CASH_BALANCE';
     const END_CASH_BALANCE = 'END_CASH_BALANCE';
-    const NET_CASH_FLOW = 'NET_CASH_FLOW';
     const CASHBOOK_BALANCE = 'CASHBOOK_BALANCE';
 
     /**
@@ -76,7 +79,7 @@ class CashFlowStatement extends FinancialStatement
         $this->period['endDate'] = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
         $this->period['endDate']->addDay();
 
-        $period = ReportingPeriod::where("year", $endDate)->first();
+        $period = ReportingPeriod::where("calendar_year", $endDate)->first();
         parent::__construct($period);
 
         $this->result_indents = 1;
@@ -170,7 +173,7 @@ class CashFlowStatement extends FinancialStatement
 
         // Operating Cash Flow
         $statement .= PHP_EOL;
-        $statement .= "Operating Cash Flow" . PHP_EOL;
+        $statement .= config('ifrs')['statements'][self::OPERATIONS_CASH_FLOW]  . PHP_EOL;
 
         $statement = $this->printSection(self::PROFIT, $statement, $this->indent);
         $statement = $this->printSection(self::PROVISIONS, $statement, $this->indent);
@@ -185,7 +188,7 @@ class CashFlowStatement extends FinancialStatement
 
         // Investment Cash Flow
         $statement .= PHP_EOL;
-        $statement .= "Investment Cash Flow" . PHP_EOL;
+        $statement .= config('ifrs')['statements'][self::INVESTMENT_CASH_FLOW] . PHP_EOL;
         $statement = $this->printSection(self::NON_CURRENT_ASSETS, $statement, $this->indent);
 
         // Total Investment Cash Flow
@@ -193,7 +196,7 @@ class CashFlowStatement extends FinancialStatement
 
         // Financing Cash Flow
         $statement .= PHP_EOL;
-        $statement .= "Financing Cash Flow" . PHP_EOL;
+        $statement .= config('ifrs')['statements'][self::FINANCING_CASH_FLOW] . PHP_EOL;
         $statement = $this->printSection(self::NON_CURRENT_LIABILITIES, $statement, $this->indent);
         $statement = $this->printSection(self::EQUITY, $statement, $this->indent);
 
@@ -202,15 +205,15 @@ class CashFlowStatement extends FinancialStatement
 
         // Net Cash Flow
         $statement .= PHP_EOL;
-        $statement .= "Net Cash Flow" . PHP_EOL;
+        $statement .= config('ifrs')['statements'][self::NET_CASH_FLOW] . PHP_EOL;
         $statement = $this->printSection(self::START_CASH_BALANCE, $statement, $this->indent);
         $statement = $this->printSection(self::NET_CASH_FLOW, $statement, $this->indent, $this->result_indents);
-        $statement = $this->printResult(self::END_CASH_BALANCE, $statement, $this->indent, $this->result_indents);
+        $statement = $this->printResult(self::END_CASH_BALANCE, $statement, $this->indent, $this->result_indents, false);
         $statement .= $this->grand_total . PHP_EOL;
 
         // Cashbook Balance
         $statement .= PHP_EOL;
-        $statement = $this->printResult(self::CASHBOOK_BALANCE, $statement, $this->indent, $this->result_indents);
+        $statement = $this->printResult(self::CASHBOOK_BALANCE, $statement, $this->indent, $this->result_indents, false);
         $statement .= $this->grand_total . PHP_EOL;
 
         print($statement);
@@ -234,5 +237,28 @@ class CashFlowStatement extends FinancialStatement
         $statement .= $indent . $sectionNames[$section] . $indent;
 
         return $statement . $indent . $this->balances[$section] * $amountFactor . PHP_EOL;
+    }
+
+    /**
+     * Print Statement Result
+     *
+     * @param string $statement
+     * @param string $result
+     * @param string $indent
+     * @param int $indentFactor
+     *
+     * @return string
+     *
+     * @codeCoverageIgnore
+     */
+    protected function printResult(string $result, string $statement, string $indent, int $indentFactor, bool $heading = true)
+    {
+        $statement .= $this->separator . PHP_EOL;
+        if ($heading) {
+            $statement .= 'Total ';
+        }
+        $statement .=  config('ifrs')['statements'][$result] . str_repeat($indent, $indentFactor);
+
+        return $statement .= $this->results[$result] . PHP_EOL;
     }
 }

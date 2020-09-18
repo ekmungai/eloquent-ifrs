@@ -223,7 +223,6 @@ return [
         TrialBalance::TITLE => 'Trial Balance',
 
         // Cash Flow Statement: Sections
-        CashFlowStatement::TITLE => 'Cash Flow Statement',
         CashFlowStatement::PROVISIONS => 'Provisions',
         CashFlowStatement::RECEIVABLES => 'Receivables',
         CashFlowStatement::PAYABLES => 'Payables',
@@ -234,12 +233,16 @@ return [
         CashFlowStatement::NON_CURRENT_LIABILITIES => 'Non Current Liabilities',
         CashFlowStatement::EQUITY => 'Equity',
 
+
+        // Cash Flow Statement: Headings
+        CashFlowStatement::TITLE => 'Cash Flow Statement',
+        CashFlowStatement::OPERATIONS_CASH_FLOW => 'Operations Cash Flow',
+        CashFlowStatement::INVESTMENT_CASH_FLOW => 'Investment Cash Flow',
+        CashFlowStatement::FINANCING_CASH_FLOW => 'Financing Cash Flow',
+        CashFlowStatement::NET_CASH_FLOW => 'Net Cash Flow',
+
         // Cash Flow Statement: Results
         CashFlowStatement::PROFIT => 'Net Profit',
-        CashFlowStatement::OPERATIONS_CASH_FLOW => 'Total Operations Cash Flow',
-        CashFlowStatement::INVESTMENT_CASH_FLOW => 'Total Investment Cash Flow',
-        CashFlowStatement::FINANCING_CASH_FLOW => 'Total Financing Cash Flow',
-        CashFlowStatement::NET_CASH_FLOW => 'Cash Flow for the Period',
         CashFlowStatement::START_CASH_BALANCE => 'Beginning Cash balance',
         CashFlowStatement::END_CASH_BALANCE => 'Ending Cash balance',
         CashFlowStatement::CASHBOOK_BALANCE => 'Cashbook balance',
