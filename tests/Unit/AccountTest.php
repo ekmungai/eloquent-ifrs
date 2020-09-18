@@ -54,7 +54,7 @@ class AccountTest extends TestCase
         $this->assertEquals($account->category->name, $category->name);
         $this->assertEquals(
             $account->toString(true),
-            Account::getType($account->account_type) . ' Account: ' . $account->name
+            Account::getType($account->account_type) . ': ' . $account->name
         );
         $this->assertEquals($account->toString(), $account->name);
         $this->assertEquals($account->type, Account::getType($type));
@@ -132,7 +132,7 @@ class AccountTest extends TestCase
         ]);
         $account->save();
 
-        $this->assertEquals(6000, $account->code);
+        $this->assertEquals(501, $account->code);
 
         // Auto generated code
         $account = new Account([
@@ -174,6 +174,21 @@ class AccountTest extends TestCase
         $account->save();
 
         $this->assertEquals(2213, $account->code);
+
+        // Account type change
+        $account = new Account([
+            'name' => $this->faker->name,
+            'account_type' => Account::BANK,
+            'category_id' => null
+        ]);
+        $account->save();
+
+        $this->assertEquals(301, $account->code);
+
+        $account->account_type = Account::RECEIVABLE;
+        $account->save();
+
+        $this->assertEquals(502, $account->code);
     }
 
     /**
@@ -684,28 +699,31 @@ class AccountTest extends TestCase
 
         // Client Account
         $clientTransactions = $account2->getTransactions();
-        $this->assertEquals($clientTransactions[0]->id, $clientInvoice->id);
-        $this->assertEquals($clientTransactions[0]->transaction_no, $clientInvoice->transaction_no);
-        $this->assertEquals($clientTransactions[0]->type, "Client Invoice");
-        $this->assertEquals($clientTransactions[0]->amount, 116);
+        $this->assertEquals($clientTransactions['transactions'][0]->id, $clientInvoice->id);
+        $this->assertEquals($clientTransactions['transactions'][0]->transaction_no, $clientInvoice->transaction_no);
+        $this->assertEquals($clientTransactions['transactions'][0]->type, "Client Invoice");
+        $this->assertEquals($clientTransactions['transactions'][0]->amount, 116);
+        $this->assertEquals($clientTransactions['total'], 116);
 
         // Income Account
         $incomeTransactions = $account3->getTransactions();
-        $this->assertEquals($incomeTransactions[0]->id, $clientInvoice->id);
-        $this->assertEquals($incomeTransactions[0]->transaction_no, $clientInvoice->transaction_no);
-        $this->assertEquals($clientTransactions[0]->type, "Client Invoice");
-        $this->assertEquals($incomeTransactions[0]->amount, -100);
+        $this->assertEquals($incomeTransactions['transactions'][0]->id, $clientInvoice->id);
+        $this->assertEquals($incomeTransactions['transactions'][0]->transaction_no, $clientInvoice->transaction_no);
+        $this->assertEquals($incomeTransactions['transactions'][0]->type, "Client Invoice");
+        $this->assertEquals($incomeTransactions['transactions'][0]->amount, 100);
+        $this->assertEquals($incomeTransactions['total'], 100);
 
         // Vat Account
         $vatTransactions = $account4->getTransactions();
-        $this->assertEquals($vatTransactions[0]->id, $clientInvoice->id);
-        $this->assertEquals($vatTransactions[0]->transaction_no, $clientInvoice->transaction_no);
-        $this->assertEquals($clientTransactions[0]->type, "Client Invoice");
-        $this->assertEquals($vatTransactions[0]->amount, -16);
+        $this->assertEquals($vatTransactions['transactions'][0]->id, $clientInvoice->id);
+        $this->assertEquals($vatTransactions['transactions'][0]->transaction_no, $clientInvoice->transaction_no);
+        $this->assertEquals($vatTransactions['transactions'][0]->type, "Client Invoice");
+        $this->assertEquals($vatTransactions['transactions'][0]->amount, 16);
+        $this->assertEquals($vatTransactions['total'], 16);
 
         // Out of range
         $clientTransactions = $account2->getTransactions(Carbon::now()->addWeeks(2)->toDateString());
-        $this->assertEquals($clientTransactions, []);
+        $this->assertEquals($clientTransactions, ['total' => 0, 'transactions' => []]);
 
         // split transaction
         $journalEntry = new JournalEntry([
@@ -751,12 +769,12 @@ class AccountTest extends TestCase
         $endDate = Carbon::now()->addWeeks(4)->toDateString();
 
         $clientTransactions = $account1->getTransactions($startDate, $endDate);
-        $this->assertEquals($clientTransactions[0]->amount, -195);
+        $this->assertEquals($clientTransactions['total'], 195);
 
         $incomeTransactions = $account5->getTransactions($startDate, $endDate);
-        $this->assertEquals($incomeTransactions[0]->amount, 125);
+        $this->assertEquals($incomeTransactions['total'], 125);
 
         $vatTransactions = $account6->getTransactions($startDate, $endDate);
-        $this->assertEquals($vatTransactions[0]->amount, 70);
+        $this->assertEquals($vatTransactions['total'], 70);
     }
 }

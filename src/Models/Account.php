@@ -104,6 +104,7 @@ class Account extends Model implements Recyclable, Segregatable
         'account_id',
         'currency_id',
         'category_id',
+        'description',
         'code',
     ];
 
@@ -245,8 +246,7 @@ class Account extends Model implements Recyclable, Segregatable
      */
     public function toString($type = false)
     {
-        $classname = explode('\\', self::class);
-        return $type ? $this->type . ' ' . array_pop($classname) . ': ' . $this->name : $this->name;
+        return $type ? $this->type . ': ' . $this->name : $this->name;
     }
 
     /**
@@ -315,26 +315,35 @@ class Account extends Model implements Recyclable, Segregatable
     }
 
     /**
-     * Get Account's Closing Balance for the Reporting Period.
+     * Get Account's Current Balance for the Period given.
      *
      * @param string $startDate
      * @param string $endDate
      *
      * @return float
      */
-    public function closingBalance(string $startDate = null, string $endDate = null): float
+    public function currentBalance(string $startDate = null, string $endDate = null): float
     {
 
+        $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate) : Carbon::parse($startDate);
         $endDate = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
+        return Ledger::balance($this, $startDate, $endDate);
+    }
 
-        if (is_null($startDate)) {
-            $startDate = ReportingPeriod::periodStart($endDate);
-            $year = ReportingPeriod::year($endDate);
-            return $this->openingBalance($year) + Ledger::balance($this, $startDate, $endDate);
-        } else {
-            $startDate = Carbon::parse($startDate);
-            return Ledger::balance($this, $startDate, $endDate);
-        }
+    /**
+     * Get Account's Closing Balance for the Reporting Period.
+     *
+     * @param string $endDate
+     *
+     * @return float
+     */
+    public function closingBalance(string $endDate = null): float
+    {
+        $endDate = is_null($endDate) ? Carbon::now() : $endDate;
+        $startDate = ReportingPeriod::periodStart($endDate);
+        $year = ReportingPeriod::year($endDate);
+
+        return $this->openingBalance($year) + $this->currentBalance($startDate, $endDate);
     }
 
     /**
@@ -348,7 +357,7 @@ class Account extends Model implements Recyclable, Segregatable
     public function getTransactions(string $startDate = null, string $endDate = null): array
     {
 
-        $transactions = [];
+        $transactions = ["total" => 0, "transactions" => []];
         $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate) : Carbon::parse($startDate);
         $endDate = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
         $id = $this->id;
@@ -372,9 +381,10 @@ class Account extends Model implements Recyclable, Segregatable
 
         foreach ($query->get() as $transaction) {
 
-            $transaction->amount = Ledger::contribution($this, $transaction->id);
+            $transaction->amount = abs(Ledger::contribution($this, $transaction->id));
             $transaction->type = Transaction::getType($transaction->transaction_type);
-            $transactions[] = $transaction;
+            $transactions['transactions'][] = $transaction;
+            $transactions['total'] += $transaction->amount;
         }
         return $transactions;
     }
@@ -384,7 +394,7 @@ class Account extends Model implements Recyclable, Segregatable
      */
     public function save(array $options = []): bool
     {
-        if (is_null($this->code)) {
+        if (is_null($this->code) || $this->isDirty('account_type')) {
             if (is_null($this->account_type)) {
                 throw new MissingAccountType();
             }

@@ -513,8 +513,8 @@ class TrialBalanceTest extends TestCase
          */
 
         $this->assertEquals(
-            round($trialBalance->balances['debit']),
-            round($trialBalance->balances['credit'])
+            round($trialBalance->balances['debit'], 0),
+            round($trialBalance->balances['credit'], 0)
         );
         /*
          | ------------------------------

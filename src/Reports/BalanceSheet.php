@@ -72,7 +72,7 @@ class BalanceSheet extends FinancialStatement
     {
         $this->period['endDate'] = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
 
-        $period = ReportingPeriod::where("year", $endDate)->first();
+        $period = ReportingPeriod::where("calendar_year", $endDate)->first();
         parent::__construct($period);
 
         // Section Accounts

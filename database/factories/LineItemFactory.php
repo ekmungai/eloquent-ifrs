@@ -20,7 +20,7 @@ $factory->define(
             ])->id,
             'narration' => $faker->sentence,
             'quantity' => $faker->randomNumber(),
-            'amount' => $faker->randomFloat(2),
+            'amount' => $faker->randomFloat(2, 0, 200),
         ];
     }
 );

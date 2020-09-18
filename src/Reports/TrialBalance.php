@@ -40,6 +40,7 @@ class TrialBalance extends FinancialStatement
         parent::__construct($year);
 
         $this->reportingPeriod = is_null($year) ? (string) ReportingPeriod::year() : $year;
+        $this->endDate = ReportingPeriod::periodEnd($year . "-01-01");
 
         $this->accounts[IncomeStatement::TITLE] = [];
         $this->accounts[BalanceSheet::TITLE] = [];
@@ -51,8 +52,7 @@ class TrialBalance extends FinancialStatement
     public function getSections(): void
     {
         foreach (Account::all() as $account) {
-            $balance = $account->closingBalance($this->reportingPeriod);
-
+            $balance = $account->closingBalance($this->endDate);
             if ($balance > 0) {
                 $this->balances["debit"] += abs($balance);
             } else {
