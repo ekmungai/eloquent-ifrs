@@ -383,6 +383,7 @@ class Account extends Model implements Recyclable, Segregatable
 
             $transaction->amount = abs(Ledger::contribution($this, $transaction->id));
             $transaction->type = Transaction::getType($transaction->transaction_type);
+            $transaction->date = Carbon::parse($transaction->transaction_date)->toFormattedDateString();
             $transactions['transactions'][] = $transaction;
             $transactions['total'] += $transaction->amount;
         }

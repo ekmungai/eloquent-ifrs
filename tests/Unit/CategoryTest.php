@@ -11,6 +11,7 @@ use IFRS\Models\Category;
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\LineItem;
 use IFRS\Models\RecycledObject;
+use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Vat;
 use IFRS\Transactions\ClientInvoice;
 use IFRS\User;
@@ -185,8 +186,11 @@ class CategoryTest extends TestCase
 
         $clientInvoice->post();
 
-        $clientCategoryBalances = $clientCategory->getAccountBalances();
-        $revenueCategoryBalances = $revenueCategory->getAccountBalances();
+
+        $periodStart = ReportingPeriod::periodStart();
+
+        $clientCategoryBalances = $clientCategory->getAccountBalances($periodStart);
+        $revenueCategoryBalances = $revenueCategory->getAccountBalances($periodStart);
 
         $this->assertEquals($clientCategoryBalances["accounts"][0]->id, $account1->id);
         $this->assertEquals($clientCategoryBalances["accounts"][1]->id, $account3->id);

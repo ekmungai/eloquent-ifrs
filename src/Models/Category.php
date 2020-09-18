@@ -102,9 +102,15 @@ class Category extends Model implements Segregatable, Recyclable
     {
         $balances = ["total" => 0, "accounts" => []];
 
+        $periodStart = ReportingPeriod::periodStart($endDate);
+        $year = ReportingPeriod::year($endDate);
+
         foreach ($this->accounts as $account) {
 
-            $closingBalance = $account->closingBalance($startDate, $endDate);
+            $closingBalance = $account->currentBalance($startDate, $endDate);
+            if ($startDate == $periodStart) {
+                $closingBalance += $account->openingBalance($year);
+            }
 
             if ($closingBalance != 0) {
                 $account->closingBalance = $closingBalance;

@@ -440,6 +440,16 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
     }
 
     /**
+     * Transaction date.
+     *
+     * @return string
+     */
+    public function getDateAttribute(): string
+    {
+        return Carbon::parse($this->transaction_date)->toFormattedDateString();
+    }
+
+    /**
      * Transaction attributes.
      *
      * @return object
