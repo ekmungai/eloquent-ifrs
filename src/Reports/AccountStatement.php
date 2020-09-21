@@ -12,18 +12,18 @@ namespace IFRS\Reports;
 
 use Carbon\Carbon;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Query\Builder;
 
+use IFRS\Models\Entity;
+use IFRS\Models\Ledger;
 use IFRS\Models\Account;
 use IFRS\Models\Currency;
-use IFRS\Models\Entity;
-use IFRS\Models\ReportingPeriod;
-use IFRS\Models\Ledger;
 use IFRS\Models\Transaction;
+use IFRS\Models\ReportingPeriod;
 
 use IFRS\Exceptions\MissingAccount;
-use Illuminate\Database\Query\Builder;
 
 class AccountStatement
 {

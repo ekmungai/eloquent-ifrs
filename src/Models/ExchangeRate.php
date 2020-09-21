@@ -13,11 +13,11 @@ namespace IFRS\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use IFRS\Interfaces\Segregatable;
 use IFRS\Interfaces\Recyclable;
+use IFRS\Interfaces\Segregatable;
 
-use IFRS\Traits\Segregating;
 use IFRS\Traits\Recycling;
+use IFRS\Traits\Segregating;
 use IFRS\Traits\ModelTablePrefix;
 
 /**

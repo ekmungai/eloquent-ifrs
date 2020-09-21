@@ -10,17 +10,17 @@
 
 namespace IFRS\Transactions;
 
-use IFRS\Models\Account;
-use IFRS\Models\Transaction;
-
 use IFRS\Interfaces\Fetchable;
 
 use IFRS\Traits\Fetching;
 
+use IFRS\Models\Account;
+use IFRS\Models\LineItem;
+use IFRS\Models\Transaction;
+
+use IFRS\Exceptions\VatCharge;
 use IFRS\Exceptions\MainAccount;
 use IFRS\Exceptions\LineItemAccount;
-use IFRS\Exceptions\VatCharge;
-use IFRS\Models\LineItem;
 
 class ContraEntry extends Transaction implements Fetchable
 {

@@ -10,31 +10,30 @@
 
 namespace IFRS\Models;
 
-use Illuminate\Support\Facades\Auth;
-
 use Carbon\Carbon;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use IFRS\Interfaces\Segregatable;
-use IFRS\Interfaces\Recyclable;
-use IFRS\Interfaces\Assignable;
 use IFRS\Interfaces\Clearable;
+use IFRS\Interfaces\Assignable;
+use IFRS\Interfaces\Recyclable;
+use IFRS\Interfaces\Segregatable;
 
-use IFRS\Traits\Assigning;
 use IFRS\Traits\Clearing;
+use IFRS\Traits\Assigning;
 use IFRS\Traits\Recycling;
 use IFRS\Traits\Segregating;
 use IFRS\Traits\ModelTablePrefix;
 
 use IFRS\Exceptions\MissingLineItem;
-use IFRS\Exceptions\RedundantTransaction;
-use IFRS\Exceptions\PostedTransaction;
 use IFRS\Exceptions\HangingClearances;
+use IFRS\Exceptions\PostedTransaction;
+use IFRS\Exceptions\UnpostedAssignment;
+use IFRS\Exceptions\RedundantTransaction;
 use IFRS\Exceptions\ClosedReportingPeriod;
 use IFRS\Exceptions\AdjustingReportingPeriod;
-use IFRS\Exceptions\UnpostedAssignment;
 
 /**
  * Class Transaction

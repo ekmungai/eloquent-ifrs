@@ -16,20 +16,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use IFRS\Reports\IncomeStatement;
 
-use IFRS\Interfaces\Recyclable;
 use IFRS\Interfaces\Clearable;
+use IFRS\Interfaces\Recyclable;
 use IFRS\Interfaces\Segregatable;
 
+use IFRS\Traits\Clearing;
 use IFRS\Traits\Recycling;
 use IFRS\Traits\Segregating;
-use IFRS\Traits\Clearing;
 use IFRS\Traits\ModelTablePrefix;
 
-use IFRS\Exceptions\InvalidAccountClassBalance;
-use IFRS\Exceptions\InvalidBalanceTransaction;
 use IFRS\Exceptions\NegativeAmount;
 use IFRS\Exceptions\InvalidBalanceType;
 use IFRS\Exceptions\InvalidBalanceDate;
+use IFRS\Exceptions\InvalidBalanceTransaction;
+use IFRS\Exceptions\InvalidAccountClassBalance;
 
 /**
  * Class Balance
