@@ -11,14 +11,15 @@
 namespace IFRS\Reports;
 
 use Carbon\Carbon;
+
 use IFRS\Models\Balance;
+use IFRS\Models\Account;
+use IFRS\Models\Assignment;
 use IFRS\Models\Transaction;
 use IFRS\Models\ReportingPeriod;
-use IFRS\Models\Account;
 
 use IFRS\Exceptions\MissingAccount;
 use IFRS\Exceptions\InvalidAccountType;
-use IFRS\Models\Assignment;
 
 class AccountSchedule extends AccountStatement
 {

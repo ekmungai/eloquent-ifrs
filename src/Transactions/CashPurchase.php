@@ -10,8 +10,8 @@
 
 namespace IFRS\Transactions;
 
-use IFRS\Interfaces\Fetchable;
 use IFRS\Interfaces\Buys;
+use IFRS\Interfaces\Fetchable;
 
 use IFRS\Traits\Buying;
 use IFRS\Traits\Fetching;
