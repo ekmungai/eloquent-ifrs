@@ -347,10 +347,52 @@ class Account extends Model implements Recyclable, Segregatable
     }
 
     /**
+     * Account Transactions Query
+     * 
+     * @param Carbon $startDate
+     * @param Carbon $endDate
+     * 
+     * @return Builder
+     */
+    public function transactionsQuery(Carbon $startDate, Carbon $endDate)
+    {
+        $transactionTable = config('ifrs.table_prefix') . 'transactions';
+        $ledgerTable = config('ifrs.table_prefix') . 'ledgers';
+
+
+        $query = DB::table(
+            $transactionTable
+        )
+            ->leftJoin($ledgerTable, $transactionTable . '.id', '=', $ledgerTable . '.transaction_id')
+            ->where($transactionTable . '.deleted_at', null)
+            ->where($transactionTable . '.entity_id', $this->entity_id)
+            ->where($transactionTable . '.transaction_date', ">=", $startDate)
+            ->where($transactionTable . '.transaction_date', "<=", $endDate)
+            ->where($transactionTable . '.currency_id', $this->currency->id)
+            ->select(
+                $transactionTable . '.id',
+                $transactionTable . '.transaction_date',
+                $transactionTable . '.transaction_no',
+                $transactionTable . '.reference',
+                $transactionTable . '.transaction_type',
+                $transactionTable . '.narration'
+            )->distinct();
+
+        $query->where(
+            function ($query) use ($ledgerTable) {
+                $query->where($ledgerTable . '.post_account', $this->id)
+                    ->orwhere($ledgerTable . '.folio_account', $this->id);
+            }
+        );
+
+        return $query;
+    }
+
+    /**
      * Get Account's Transactions for the Reporting Period.
      *
-     * @param string $startDate
-     * @param string $endDate
+     * @param Carbon $startDate
+     * @param Carbon $endDate
      *
      * @return array
      */
@@ -360,26 +402,8 @@ class Account extends Model implements Recyclable, Segregatable
         $transactions = ["total" => 0, "transactions" => []];
         $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate) : Carbon::parse($startDate);
         $endDate = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
-        $id = $this->id;
 
-        //select all posted transactions having account as main or line item account
-        $query = DB::table('ifrs_transactions')
-            ->join('ifrs_ledgers', 'ifrs_transactions.id', '=', 'ifrs_ledgers.transaction_id')
-            ->select(
-                'ifrs_transactions.id',
-                'ifrs_transactions.transaction_date',
-                'ifrs_transactions.transaction_no',
-                'ifrs_transactions.transaction_type',
-                'ifrs_ledgers.posting_date'
-            )->where(function ($query) use ($id) {
-                $query->where("ifrs_ledgers.post_account", $id)
-                    ->orwhere("ifrs_ledgers.folio_account", $id);
-            })
-            ->where("ifrs_ledgers.posting_date", ">=", $startDate)
-            ->where("ifrs_ledgers.posting_date", "<=", $endDate)
-            ->distinct('ifrs_transactions.id');
-
-        foreach ($query->get() as $transaction) {
+        foreach ($this->transactionsQuery($startDate, $endDate)->get() as $transaction) {
 
             $transaction->amount = abs(Ledger::contribution($this, $transaction->id));
             $transaction->type = Transaction::getType($transaction->transaction_type);

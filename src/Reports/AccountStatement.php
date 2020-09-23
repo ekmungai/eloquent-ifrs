@@ -76,43 +76,6 @@ class AccountStatement
     public $transactions = [];
 
     /**
-     * Build Statement Query
-     *
-     * @return Builder
-     */
-    protected function buildQuery()
-    {
-        $transactionModel = new Transaction;
-        $ledgerModel = new Ledger();
-        $query = DB::table(
-            $transactionModel->getTable()
-        )
-            ->leftJoin($ledgerModel->getTable(), $transactionModel->getTable() . '.id', '=', $ledgerModel->getTable() . '.transaction_id')
-            ->where($transactionModel->getTable() . '.deleted_at', null)
-            ->where($transactionModel->getTable() . '.entity_id', $this->entity->id)
-            ->where($transactionModel->getTable() . '.transaction_date', ">=", $this->period['startDate'])
-            ->where($transactionModel->getTable() . '.transaction_date', "<=", $this->period['endDate'])
-            ->where($transactionModel->getTable() . '.currency_id', $this->currency->id)
-            ->select(
-                $transactionModel->getTable() . '.id',
-                $transactionModel->getTable() . '.transaction_date',
-                $transactionModel->getTable() . '.transaction_no',
-                $transactionModel->getTable() . '.reference',
-                $transactionModel->getTable() . '.transaction_type',
-                $transactionModel->getTable() . '.narration'
-            )->distinct();
-
-        $query->where(
-            function ($query) use ($ledgerModel) {
-                $query->where($ledgerModel->getTable() . '.post_account', $this->account->id)
-                    ->orwhere($ledgerModel->getTable() . '.folio_account', $this->account->id);
-            }
-        );
-
-        return $query;
-    }
-
-    /**
      * Print Account Statement attributes.
      *
      * @return object
@@ -161,11 +124,12 @@ class AccountStatement
      */
     public function getTransactions(): void
     {
-        $query = $this->buildQuery();
+        $query = $this->account->transactionsQuery($this->period['startDate'], $this->period['endDate']);
         $this->balances['opening'] = $this->account->openingBalance(ReportingPeriod::year($this->period['startDate']));
         $this->balances['closing'] += $this->balances['opening'];
 
         $balance = $this->balances['opening'];
+
         foreach ($query->get() as $transaction) {
             $transaction->debit = $transaction->credit = 0;
 

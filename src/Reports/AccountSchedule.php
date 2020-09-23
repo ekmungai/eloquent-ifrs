@@ -104,7 +104,10 @@ class AccountSchedule extends AccountStatement
         }
 
         // Clearable Transactions
-        $transactions = $this->buildQuery()->whereIn(
+        $transactions = $this->account->transactionsQuery(
+            $this->period['startDate'],
+            $this->period['endDate']
+        )->whereIn(
             'transaction_type',
             Assignment::CLEARABLES
         )->select(config('ifrs.table_prefix') . 'transactions.id');
@@ -112,7 +115,8 @@ class AccountSchedule extends AccountStatement
         foreach ($transactions->get() as $transaction) {
             $transaction = Transaction::find($transaction->id);
 
-            if ($transaction->transaction_type == Transaction::JN
+            if (
+                $transaction->transaction_type == Transaction::JN
                 && (($this->account->account_type == Account::RECEIVABLE && $transaction->is_credited)
                     || ($this->account->account_type == Account::PAYABLE && !$transaction->is_credited))
             ) {

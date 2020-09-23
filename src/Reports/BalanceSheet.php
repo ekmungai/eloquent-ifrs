@@ -123,7 +123,12 @@ class BalanceSheet extends FinancialStatement
             IncomeStatement::getAccountTypes()
         )["sectionTotal"];
 
-        $this->balances[self::EQUITY][self::NET_PROFIT] =  $netProfit;
+        $this->balances[self::EQUITY][self::NET_PROFIT] = $netProfit;
+        $this->accounts[self::EQUITY][self::EQUITY][config('ifrs')['statements'][self::NET_PROFIT]] = [
+            "accounts" => null,
+            "total" => $netProfit,
+            "id" => 0
+        ];
 
         // Total Equity
         $this->results[self::TOTAL_EQUITY] = abs($this->totals[self::EQUITY] + $netProfit);

@@ -76,11 +76,13 @@ class AccountScheduleTest extends TestCase
      */
     public function AccountScheduleTest()
     {
+
+        $currency = factory(Currency::class)->create();
         $account = factory(Account::class)->create([
             'account_type' => Account::RECEIVABLE,
-            'category_id' => null
+            'category_id' => null,
+            'currency_id' => $currency->id,
         ]);
-        $currency = factory(Currency::class)->create();
 
         //opening balances
         $balance = factory(Balance::class)->create([
@@ -247,12 +249,12 @@ class AccountScheduleTest extends TestCase
      */
     public function testSupplierAccountAccountSchedule()
     {
+        $currency = factory(Currency::class)->create();
         $account = factory(Account::class)->create([
             'account_type' => Account::PAYABLE,
-            'category_id' => null
+            'category_id' => null,
+            'currency_id' => $currency->id,
         ]);
-
-        $currency = factory(Currency::class)->create();
 
         //opening balances
         $balance = factory(Balance::class)->create([
