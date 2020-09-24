@@ -409,7 +409,7 @@ class AccountTest extends TestCase
         $this->assertEquals($clients["sectionCategories"][$category1]["id"], $account1->category->id);
         $this->assertEquals($clients["sectionCategories"][$category1]["accounts"][0]->id, $account1->id);
         $this->assertEquals($clients["sectionCategories"][$category1]["accounts"][0]->openingBalance, 70);
-        $this->assertEquals($clients["sectionCategories"][$category1]["accounts"][0]->currentBalance, 0);
+        $this->assertEquals($clients["sectionCategories"][$category1]["accounts"][0]->balanceMovement, 0);
         $this->assertEquals($clients["sectionCategories"][$category1]["accounts"][0]->closingBalance, 70);
         $this->assertEquals($clients["sectionCategories"][$category1]["total"], 70);
 
@@ -417,30 +417,30 @@ class AccountTest extends TestCase
         $this->assertEquals($clients["sectionCategories"][$category2]["id"], $account2->category->id);
         $this->assertEquals($clients["sectionCategories"][$category2]["accounts"][0]->id, $account2->id);
         $this->assertEquals($clients["sectionCategories"][$category2]["accounts"][0]->openingBalance, 0);
-        $this->assertEquals($clients["sectionCategories"][$category2]["accounts"][0]->currentBalance, 116);
+        $this->assertEquals($clients["sectionCategories"][$category2]["accounts"][0]->balanceMovement, -116);
         $this->assertEquals($clients["sectionCategories"][$category2]["accounts"][0]->closingBalance, 116);
         $this->assertEquals($clients["sectionCategories"][$category2]["total"], 116);
 
-        $this->assertEquals($clients["sectionTotal"], 186);
+        $this->assertEquals($clients["sectionClosingBalance"], 186);
 
         $this->assertTrue(in_array($category3, array_keys($incomes["sectionCategories"])));
         $this->assertEquals($incomes["sectionCategories"][$category3]["id"], $account3->category->id);
         $this->assertEquals($incomes["sectionCategories"][$category3]["accounts"][0]->id, $account3->id);
         $this->assertEquals($incomes["sectionCategories"][$category3]["accounts"][0]->openingBalance, 0);
-        $this->assertEquals($incomes["sectionCategories"][$category3]["accounts"][0]->currentBalance, -100);
+        $this->assertEquals($incomes["sectionCategories"][$category3]["accounts"][0]->balanceMovement, 100);
         $this->assertEquals($incomes["sectionCategories"][$category3]["accounts"][0]->closingBalance, -100);
         $this->assertEquals($incomes["sectionCategories"][$category3]["total"], -100);
 
-        $this->assertEquals($incomes["sectionTotal"], -100);
+        $this->assertEquals($incomes["sectionClosingBalance"], -100);
 
         $this->assertTrue(in_array($category4, array_keys($control["sectionCategories"])));
         $this->assertEquals($control["sectionCategories"][$category4]["accounts"][0]->id, $account4->id);
         $this->assertEquals($control["sectionCategories"][$category4]["accounts"][0]->openingBalance, 0);
-        $this->assertEquals($control["sectionCategories"][$category4]["accounts"][0]->currentBalance, -16);
+        $this->assertEquals($control["sectionCategories"][$category4]["accounts"][0]->balanceMovement, 16);
         $this->assertEquals($control["sectionCategories"][$category4]["accounts"][0]->closingBalance, -16);
         $this->assertEquals($control["sectionCategories"][$category4]["total"], -16);
 
-        $this->assertEquals($control["sectionTotal"], -16);
+        $this->assertEquals($control["sectionClosingBalance"], -16);
     }
 
     /**
@@ -499,9 +499,19 @@ class AccountTest extends TestCase
         $client = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::RECEIVABLE,
-            'category_id' => null
+            'category_id' => factory(Category::class)->create([
+                'category_type' => Account::RECEIVABLE,
+            ])->id,
         ]);
         $client->save();
+        $client2 = new Account([
+            'name' => $this->faker->name,
+            'account_type' => Account::RECEIVABLE,
+            'category_id' => factory(Category::class)->create([
+                'category_type' => Account::RECEIVABLE,
+            ])->id,
+        ]);
+        $client2->save();
 
         factory(Balance::class)->create([
             "account_id" => $client->id,
@@ -513,8 +523,18 @@ class AccountTest extends TestCase
             "amount" => 100
         ]);
 
-        $this->assertEquals(Account::movement([Account::RECEIVABLE]), 0);
-        $this->assertEquals(Account::movement([Account::CONTROL]), 0);
+        factory(Balance::class)->create([
+            "account_id" => $client2->id,
+            "balance_type" => Balance::DEBIT,
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
+                "rate" => 1,
+            ])->id,
+            'reporting_period_id' => $this->period->id,
+            "amount" => 25
+        ]);
+
+        $this->assertEquals(Account::sectionBalances([Account::RECEIVABLE])['sectionMovement'], 0);
+        $this->assertEquals(Account::sectionBalances([Account::CONTROL])['sectionMovement'], 0);
 
         $revenue = new Account([
             'name' => $this->faker->name,
@@ -552,8 +572,8 @@ class AccountTest extends TestCase
         $clientInvoice->addLineItem($line);
         $clientInvoice->post();
 
-        $this->assertEquals(Account::movement([Account::RECEIVABLE]), -116);
-        $this->assertEquals(Account::movement([Account::CONTROL]), 16);
+        $this->assertEquals(Account::sectionBalances([Account::RECEIVABLE])['sectionMovement'], -116);
+        $this->assertEquals(Account::sectionBalances([Account::CONTROL])['sectionMovement'], 16);
 
         $supplier = new Account([
             'name' => $this->faker->name,
@@ -589,8 +609,8 @@ class AccountTest extends TestCase
             "amount" => 50
         ]);
 
-        $this->assertEquals(Account::movement([Account::PAYABLE]), 0);
-        $this->assertEquals(Account::movement([Account::NON_CURRENT_ASSET]), 0);
+        $this->assertEquals(Account::sectionBalances([Account::PAYABLE])['sectionMovement'], 0);
+        $this->assertEquals(Account::sectionBalances([Account::NON_CURRENT_ASSET])['sectionMovement'], 0);
 
         //Supplier Bill Transaction
         $SupplierBill = new SupplierBill([
@@ -614,9 +634,10 @@ class AccountTest extends TestCase
         $SupplierBill->addLineItem($line);
         $SupplierBill->post();
 
-        $this->assertEquals(Account::movement([Account::PAYABLE]), 58);
-        $this->assertEquals(Account::movement([Account::NON_CURRENT_ASSET]), -50);
-        $this->assertEquals(Account::movement([Account::CONTROL]), 8);
+
+        $this->assertEquals(Account::sectionBalances([Account::PAYABLE])['sectionMovement'], 58);
+        $this->assertEquals(Account::sectionBalances([Account::NON_CURRENT_ASSET])['sectionMovement'], -50);
+        $this->assertEquals(Account::sectionBalances([Account::CONTROL])['sectionMovement'], 8);
     }
 
     /**

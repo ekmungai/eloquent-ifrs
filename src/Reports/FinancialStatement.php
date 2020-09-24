@@ -206,16 +206,16 @@ abstract class FinancialStatement
             foreach (config('ifrs')[$section] as $accountType) {
                 $sectionBalances = Account::sectionBalances([$accountType]);
 
-                if ($sectionBalances["sectionTotal"] <> 0) {
+                if ($sectionBalances["sectionClosingBalance"] <> 0) {
 
                     $this->accounts[$section][$accountType] = $sectionBalances["sectionCategories"];
-                    $this->balances[$section][$accountType] = $sectionBalances["sectionTotal"];
-                    $this->totals[$section] += $sectionBalances["sectionTotal"];
+                    $this->balances[$section][$accountType] = $sectionBalances["sectionClosingBalance"];
+                    $this->totals[$section] += $sectionBalances["sectionClosingBalance"];
 
-                    if ($sectionBalances["sectionTotal"] < 0) {
-                        $this->balances["credit"] += abs($sectionBalances["sectionTotal"]);
+                    if ($sectionBalances["sectionClosingBalance"] < 0) {
+                        $this->balances["credit"] += abs($sectionBalances["sectionClosingBalance"]);
                     } else {
-                        $this->balances["debit"] += abs($sectionBalances["sectionTotal"]);
+                        $this->balances["debit"] += abs($sectionBalances["sectionClosingBalance"]);
                     }
                 }
             }

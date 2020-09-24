@@ -25,6 +25,7 @@ use IFRS\Exceptions\MissingAccountType;
 use IFRS\Exceptions\HangingTransactions;
 use Carbon\Carbon;
 use IFRS\Exceptions\InvalidCategoryType;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -163,20 +164,25 @@ class Account extends Model implements Recyclable, Segregatable
         $startDate = null,
         $endDate = null
     ): array {
-        $balances = ["sectionTotal" => 0, "sectionCategories" => []];
+        $balances = ['sectionOpeningBalance' => 0, 'sectionClosingBalance' => 0, 'sectionMovement' => 0, 'sectionCategories' => []];
 
         $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate) : Carbon::parse($startDate);
         $endDate = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
+        $periodStart = ReportingPeriod::periodStart($endDate);
 
         $year = ReportingPeriod::year($endDate);
 
-        foreach (Account::whereIn("account_type", $accountTypes)->get() as $account) {
+        foreach (Account::whereIn('account_type', $accountTypes)->get() as $account) {
 
-            $account->openingBalance = $account->openingBalance($year);
-            $account->currentBalance = Ledger::balance($account, $startDate, $endDate);
-            $account->closingBalance = $account->openingBalance + $account->currentBalance;
+            $account->openingBalance = $account->openingBalance($year) + Ledger::balance($account, $periodStart, $startDate);
 
-            if ($account->closingBalance <> 0) {
+            $periodChange = Ledger::balance($account, $startDate, $endDate);
+
+            $account->closingBalance = $account->openingBalance + $periodChange;
+
+            $account->balanceMovement = ($account->closingBalance - $account->openingBalance) * -1;
+
+            if ($account->closingBalance <> 0 || $account->balanceMovement <> 0) {
 
                 if (is_null($account->category)) {
                     $categoryName =  config('ifrs')['accounts'][$account->account_type];
@@ -186,47 +192,21 @@ class Account extends Model implements Recyclable, Segregatable
                     $categoryId = $account->category->id;
                 }
 
-                if (in_array($categoryName, $balances["sectionCategories"])) {
-                    $balances["sectionCategories"][$categoryName]['accounts']->push((object) $account->attributes);
-                    $balances["sectionCategories"][$categoryName]['total'] += $account->closingBalance;
+                if (in_array($categoryName, $balances['sectionCategories'])) {
+                    $balances['sectionCategories'][$categoryName]['accounts']->push((object) $account->attributes);
+                    $balances['sectionCategories'][$categoryName]['total'] += $account->closingBalance;
                 } else {
-                    $balances["sectionCategories"][$categoryName]['accounts'] = collect([(object) $account->attributes]);
-                    $balances["sectionCategories"][$categoryName]['total'] = $account->closingBalance;
-                    $balances["sectionCategories"][$categoryName]['id'] = $categoryId;
+                    $balances['sectionCategories'][$categoryName]['accounts'] = collect([(object) $account->attributes]);
+                    $balances['sectionCategories'][$categoryName]['total'] = $account->closingBalance;
+                    $balances['sectionCategories'][$categoryName]['id'] = $categoryId;
                 }
+                $balances['sectionOpeningBalance'] += $account->openingBalance;
+                $balances['sectionMovement'] += $account->balanceMovement;
+                $balances['sectionClosingBalance'] += $account->closingBalance;
             }
-            $balances["sectionTotal"] += $account->closingBalance;
         }
 
         return $balances;
-    }
-
-
-    /**
-     * Chart of Account Balances movement for the given Period.
-     *
-     * @param array $accountTypes
-     * @param string | carbon $startDate
-     * @param string | carbon $endDate
-     *
-     * @return array
-     */
-
-    public static function movement($accountTypes, $startDate = null, $endDate = null)
-    {
-        $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate) : Carbon::parse($startDate);
-        $endDate = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
-        $periodStart = ReportingPeriod::periodStart($endDate);
-
-        $openingBalance = $closingBalance = 0;
-
-        //balance till period start
-        $openingBalance += Account::sectionBalances($accountTypes, $periodStart, $startDate)["sectionTotal"];
-
-        //balance till period end
-        $closingBalance += Account::sectionBalances($accountTypes, $periodStart, $endDate)["sectionTotal"];
-
-        return ($closingBalance - $openingBalance) * -1;
     }
 
     /**
@@ -286,7 +266,7 @@ class Account extends Model implements Recyclable, Segregatable
      */
     public function attributes()
     {
-        $this->attributes['closingBalance'] = $this->closingBalance(date("Y-m-d"));
+        $this->attributes['closingBalance'] = $this->closingBalance(date('Y-m-d'));
         return (object) $this->attributes;
     }
 
@@ -307,7 +287,7 @@ class Account extends Model implements Recyclable, Segregatable
 
         $balance = 0;
 
-        foreach ($this->balances->where("reporting_period_id", $period->id) as $record) {
+        foreach ($this->balances->where('reporting_period_id', $period->id) as $record) {
             $amount = $record->amount / $record->exchangeRate->rate;
             $record->balance_type == Balance::DEBIT ? $balance += $amount : $balance -= $amount;
         }
@@ -366,8 +346,8 @@ class Account extends Model implements Recyclable, Segregatable
             ->leftJoin($ledgerTable, $transactionTable . '.id', '=', $ledgerTable . '.transaction_id')
             ->where($transactionTable . '.deleted_at', null)
             ->where($transactionTable . '.entity_id', $this->entity_id)
-            ->where($transactionTable . '.transaction_date', ">=", $startDate)
-            ->where($transactionTable . '.transaction_date', "<=", $endDate)
+            ->where($transactionTable . '.transaction_date', '>=', $startDate)
+            ->where($transactionTable . '.transaction_date', '<=', $endDate)
             ->where($transactionTable . '.currency_id', $this->currency->id)
             ->select(
                 $transactionTable . '.id',
@@ -399,7 +379,7 @@ class Account extends Model implements Recyclable, Segregatable
     public function getTransactions(string $startDate = null, string $endDate = null): array
     {
 
-        $transactions = ["total" => 0, "transactions" => []];
+        $transactions = ['total' => 0, 'transactions' => []];
         $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate) : Carbon::parse($startDate);
         $endDate = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
 
@@ -425,7 +405,7 @@ class Account extends Model implements Recyclable, Segregatable
             }
 
             $this->code = config('ifrs')['account_codes'][$this->account_type] + Account::withTrashed()
-                ->where("account_type", $this->account_type)
+                ->where('account_type', $this->account_type)
                 ->count() + 1;
         }
 

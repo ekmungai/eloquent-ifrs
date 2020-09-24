@@ -121,7 +121,7 @@ class BalanceSheet extends FinancialStatement
         // Net Profit
         $netProfit = Account::sectionBalances(
             IncomeStatement::getAccountTypes()
-        )["sectionTotal"];
+        )["sectionClosingBalance"];
 
         $this->balances[self::EQUITY][self::NET_PROFIT] = $netProfit;
         $this->accounts[self::EQUITY][self::EQUITY][config('ifrs')['statements'][self::NET_PROFIT]] = [
