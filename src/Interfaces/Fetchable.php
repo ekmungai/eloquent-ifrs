@@ -10,10 +10,12 @@
 
 namespace IFRS\Interfaces;
 
-use IFRS\Models\Currency;
-use IFRS\Models\Account;
 use Carbon\Carbon;
+
 use Illuminate\Support\Collection;
+
+use IFRS\Models\Account;
+use IFRS\Models\Currency;
 
 /**
  *

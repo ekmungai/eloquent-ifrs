@@ -10,15 +10,15 @@
 
 namespace IFRS\Transactions;
 
-use IFRS\Models\Transaction;
-
 use IFRS\Interfaces\Buys;
 use IFRS\Interfaces\Fetchable;
+use IFRS\Interfaces\Assignable;
 
 use IFRS\Traits\Buying;
 use IFRS\Traits\Fetching;
-use IFRS\Interfaces\Assignable;
 use IFRS\Traits\Assigning;
+
+use IFRS\Models\Transaction;
 
 class DebitNote extends Transaction implements Buys, Fetchable, Assignable
 {

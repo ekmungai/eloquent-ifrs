@@ -16,9 +16,9 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 use IFRS\Models\Account;
-use IFRS\Models\ReportingPeriod;
-use IFRS\Models\Transaction;
 use IFRS\Models\Currency;
+use IFRS\Models\Transaction;
+use IFRS\Models\ReportingPeriod;
 
 trait Fetching
 {

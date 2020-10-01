@@ -16,8 +16,8 @@ use IFRS\Interfaces\Fetchable;
 use IFRS\Traits\Selling;
 use IFRS\Traits\Fetching;
 
-use IFRS\Models\Transaction;
 use IFRS\Models\Account;
+use IFRS\Models\Transaction;
 
 use IFRS\Exceptions\MainAccount;
 

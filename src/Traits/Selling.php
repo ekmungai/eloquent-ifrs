@@ -11,10 +11,10 @@
 namespace IFRS\Traits;
 
 use IFRS\Models\Account;
+use IFRS\Models\LineItem;
 
 use IFRS\Exceptions\MainAccount;
 use IFRS\Exceptions\LineItemAccount;
-use IFRS\Models\LineItem;
 
 trait Selling
 {

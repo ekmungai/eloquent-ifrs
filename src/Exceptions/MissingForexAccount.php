@@ -10,8 +10,8 @@ namespace IFRS\Exceptions;
 
 use Carbon\Carbon;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class MissingForexAccount extends IFRSException
 {

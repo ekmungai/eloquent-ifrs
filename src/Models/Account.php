@@ -10,23 +10,23 @@
 
 namespace IFRS\Models;
 
+use Carbon\Carbon;
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Auth;
 
 use IFRS\Interfaces\Recyclable;
 use IFRS\Interfaces\Segregatable;
 
-use IFRS\Traits\Segregating;
 use IFRS\Traits\Recycling;
+use IFRS\Traits\Segregating;
 use IFRS\Traits\ModelTablePrefix;
 
 use IFRS\Exceptions\MissingAccountType;
 use IFRS\Exceptions\HangingTransactions;
-use Carbon\Carbon;
 use IFRS\Exceptions\InvalidCategoryType;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Class Account
