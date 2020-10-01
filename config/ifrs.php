@@ -318,7 +318,7 @@ return [
      | Cash Flow Statement Sections
      |--------------------------------------------------------------------------
      |
-     | Here you may specify the  Cash Flow Statement sections.
+     | Here you may specify the Cash Flow Statement sections.
      |
      */
 
@@ -336,7 +336,8 @@ return [
         Account::CURRENT_ASSET
     ],
     CashFlowStatement::CURRENT_LIABILITIES => [
-        Account::CURRENT_LIABILITY
+        Account::CURRENT_LIABILITY,
+        Account::RECONCILIATION
     ],
     CashFlowStatement::TAXATION => [
         Account::CONTROL
@@ -349,5 +350,8 @@ return [
     ],
     CashFlowStatement::EQUITY => [
         Account::EQUITY
+    ],
+    CashFlowStatement::NET_CASH_FLOW => [
+        Account::BANK
     ],
 ];

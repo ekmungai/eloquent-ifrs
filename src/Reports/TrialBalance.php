@@ -44,6 +44,9 @@ class TrialBalance extends FinancialStatement
 
         $this->accounts[IncomeStatement::TITLE] = [];
         $this->accounts[BalanceSheet::TITLE] = [];
+
+        $this->results[IncomeStatement::TITLE] = ['debit' => 0, 'credit' => 0];
+        $this->results[BalanceSheet::TITLE] = ['debit' => 0, 'credit' => 0];
     }
 
     /**
@@ -72,13 +75,21 @@ class TrialBalance extends FinancialStatement
      */
     private function getIncomeStatementSections(Account $account, $balance): void
     {
+
         if (in_array($account->account_type, IncomeStatement::getAccountTypes())) {
+
+            if ($balance > 0) {
+                $this->results[IncomeStatement::TITLE]["debit"] += abs($balance);
+            } else {
+                $this->results[IncomeStatement::TITLE]["credit"] += abs($balance);
+            }
+
             if (array_key_exists($account->account_type, $this->accounts[IncomeStatement::TITLE])) {
                 $this->accounts[IncomeStatement::TITLE][$account->account_type]['accounts']->push($account->attributes());
-                $this->accounts[IncomeStatement::TITLE][$account->account_type]['balance'] += abs($balance);
+                $this->accounts[IncomeStatement::TITLE][$account->account_type]['balance'] += $balance;
             } else {
                 $this->accounts[IncomeStatement::TITLE][$account->account_type]['accounts'] = collect([$account->attributes()]);
-                $this->accounts[IncomeStatement::TITLE][$account->account_type]['balance'] = abs($balance);
+                $this->accounts[IncomeStatement::TITLE][$account->account_type]['balance'] = $balance;
             }
         }
     }
@@ -91,14 +102,20 @@ class TrialBalance extends FinancialStatement
      */
     private function getBalanceSheetSections(Account $account, $balance): void
     {
-
         if (in_array($account->account_type, BalanceSheet::getAccountTypes())) {
+
+            if ($balance > 0) {
+                $this->results[BalanceSheet::TITLE]["debit"] += abs($balance);
+            } else {
+                $this->results[BalanceSheet::TITLE]["credit"] += abs($balance);
+            }
+
             if (array_key_exists($account->account_type, $this->accounts[BalanceSheet::TITLE])) {
                 $this->accounts[BalanceSheet::TITLE][$account->account_type]['accounts']->push($account->attributes());
-                $this->accounts[BalanceSheet::TITLE][$account->account_type]['balance'] += abs($balance);
+                $this->accounts[BalanceSheet::TITLE][$account->account_type]['balance'] += $balance;
             } else {
                 $this->accounts[BalanceSheet::TITLE][$account->account_type]['accounts'] = collect([$account->attributes()]);
-                $this->accounts[BalanceSheet::TITLE][$account->account_type]['balance'] = abs($balance);
+                $this->accounts[BalanceSheet::TITLE][$account->account_type]['balance'] = $balance;
             }
         }
     }

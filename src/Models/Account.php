@@ -151,6 +151,28 @@ class Account extends Model implements Recyclable, Segregatable
     }
 
     /**
+     * Get all accounts with opening balances for the given year
+     *
+     * @param int $year
+     *
+     * @return array
+     */
+    public static function openingBalances(int $year)
+    {
+        $accounts = collect([]);
+        $balances = 0;
+
+        foreach (Account::all() as $account) {
+            $account->openingBalance = $account->openingBalance($year);
+            if ($account->openingBalance != 0) {
+                $balances += $account->openingBalance;
+                $accounts->push((object) $account->attributes);
+            }
+        }
+        return [$balances == 0, $accounts];
+    }
+
+    /**
      * Chart of Account Section Balances for the Reporting Period.
      *
      * @param string $accountType
