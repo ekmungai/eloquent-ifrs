@@ -85,7 +85,7 @@ class AgingSchedule
      * @param int    $currencyId
      * @param string $endDate
      */
-    public function __construct(string $accountType = Account::RECEIVABLE, int $currencyId = null, string $endDate = null)
+    public function __construct(string $accountType = Account::RECEIVABLE, string $endDate = null, int $currencyId = null)
     {
         $this->period['endDate'] = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
         $this->entity = Auth::user()->entity;

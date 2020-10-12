@@ -41,32 +41,30 @@ class AccountSchedule extends AccountStatement
      * @param Transaction|Balance $transaction
      * @param string              $transactionType
      */
-    private function getAmounts($transaction, $transactionType): void
+    private function getAmounts($transaction): void
     {
-        $clearedAmount = $originalAmount = 0;
+        if ($transaction instanceof Balance) {
+            $transaction->transactionType = Transaction::getType($transaction->transaction_type);
+        } else {
+            $transaction->transactionType = $transaction->type;
+        }
 
-        $originalAmount = $transaction->amount / $transaction->exchangeRate->rate;
-        $clearedAmount = $transaction->cleared_amount;
-        $unclearedAmount = $originalAmount - $clearedAmount;
+        $transaction->originalAmount = $transaction->amount;
+        $transaction->clearedAmount = $transaction->cleared_amount;
+        $unclearedAmount = $transaction->originalAmount - $transaction->clearedAmount;
 
         if ($unclearedAmount > 0) {
-            $outstanding = new \stdClass();
 
-            $outstanding->id = $transaction->id;
             $date = Carbon::parse($transaction->transaction_date);
-            $outstanding->age  = $date->diffInDays($this->period['endDate']);
-            $outstanding->transactionType = $transactionType;
+            $transaction->age  = $date->diffInDays($this->period['endDate']);
 
-            $this->balances["originalAmount"] += $originalAmount;
-            $outstanding->originalAmount = $originalAmount;
-
-            $this->balances['clearedAmount'] += $clearedAmount;
-            $outstanding->clearedAmount = $clearedAmount;
-
+            $this->balances["originalAmount"] += $transaction->originalAmount;
+            $this->balances['clearedAmount'] += $transaction->clearedAmount;
             $this->balances['unclearedAmount'] += $unclearedAmount;
-            $outstanding->unclearedAmount = $unclearedAmount;
 
-            array_push($this->transactions, $outstanding);
+            $transaction->unclearedAmount = $unclearedAmount;
+
+            array_push($this->transactions, $transaction);
         }
     }
 
@@ -123,7 +121,7 @@ class AccountSchedule extends AccountStatement
             ) {
                 continue;
             }
-            $this->getAmounts($transaction, config('ifrs')['transactions'][$transaction->transaction_type]);
+            $this->getAmounts($transaction);
         }
     }
 }

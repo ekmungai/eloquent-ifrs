@@ -168,7 +168,7 @@ class AgingScheduleTest extends TestCase
         $clientInvoice->post();
 
 
-        $schedule = new AgingSchedule(Account::RECEIVABLE, null, Carbon::now()->endOfYear()->toDateString());
+        $schedule = new AgingSchedule(Account::RECEIVABLE, Carbon::now()->endOfYear()->toDateString());
 
         $this->assertEquals($schedule->brackets, config('ifrs')['aging_schedule_brackets']);
         $this->assertEquals($schedule->balances['current'], 50);

@@ -33,6 +33,7 @@ use IFRS\Reports\AccountSchedule;
 
 use IFRS\Exceptions\MissingAccount;
 use IFRS\Exceptions\InvalidAccountType;
+use IFRS\Models\Transaction;
 use IFRS\Models\Vat;
 
 class AccountScheduleTest extends TestCase
@@ -402,7 +403,7 @@ class AccountScheduleTest extends TestCase
         $schedule->getTransactions();
 
         $this->assertEquals($schedule->transactions[0]->id, $balance->id);
-        $this->assertEquals($schedule->transactions[0]->transactionType, "Opening Balance");
+        $this->assertEquals($schedule->transactions[0]->transactionType, Transaction::getType($balance->transaction_type));
         $this->assertEquals($schedule->transactions[0]->originalAmount, 60);
         $this->assertEquals($schedule->transactions[0]->clearedAmount, 24);
         $this->assertEquals($schedule->transactions[0]->unclearedAmount, 36);

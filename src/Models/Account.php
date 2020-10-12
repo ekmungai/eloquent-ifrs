@@ -160,16 +160,20 @@ class Account extends Model implements Recyclable, Segregatable
     public static function openingBalances(int $year)
     {
         $accounts = collect([]);
-        $balances = 0;
+        $balances = ['debit' => 0, 'credit' => 0];
 
         foreach (Account::all() as $account) {
             $account->openingBalance = $account->openingBalance($year);
             if ($account->openingBalance != 0) {
-                $balances += $account->openingBalance;
-                $accounts->push((object) $account->attributes);
+                $accounts->push($account);
+            }
+            if ($account->openingBalance > 0) {
+                $balances['debit'] += $account->openingBalance;
+            } else {
+                $balances['credit'] += $account->openingBalance;
             }
         }
-        return [$balances == 0, $accounts];
+        return ['balances' => $balances, 'accounts' => $accounts];
     }
 
     /**
@@ -350,10 +354,10 @@ class Account extends Model implements Recyclable, Segregatable
 
     /**
      * Account Transactions Query
-     * 
+     *
      * @param Carbon $startDate
      * @param Carbon $endDate
-     * 
+     *
      * @return Builder
      */
     public function transactionsQuery(Carbon $startDate, Carbon $endDate)

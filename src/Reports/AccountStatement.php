@@ -12,15 +12,12 @@ namespace IFRS\Reports;
 
 use Carbon\Carbon;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Query\Builder;
 
 use IFRS\Models\Entity;
 use IFRS\Models\Ledger;
 use IFRS\Models\Account;
 use IFRS\Models\Currency;
-use IFRS\Models\Transaction;
 use IFRS\Models\ReportingPeriod;
 
 use IFRS\Exceptions\MissingAccount;
@@ -140,7 +137,8 @@ class AccountStatement
 
             $contribution > 0 ? $transaction->debit = abs($contribution) : $transaction->credit = abs($contribution);
 
-            $transaction->transaction_type = config('ifrs')['transactions'][$transaction->transaction_type];
+            $transaction->transactionType = config('ifrs')['transactions'][$transaction->transaction_type];
+            $transaction->transactionDate = Carbon::parse($transaction->transaction_date)->toFormattedDateString();
 
             array_push($this->transactions, $transaction);
         }

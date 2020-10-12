@@ -896,10 +896,10 @@ class AccountTest extends TestCase
 
         $openingBalances = Account::openingBalances(intval(date("Y")));
 
-        $this->assertTrue($openingBalances[0]);
-        $this->assertEquals($openingBalances[1][0]->openingBalance, 70);
-        $this->assertEquals($openingBalances[1][1]->openingBalance, 20);
-        $this->assertEquals($openingBalances[1][2]->openingBalance, -50);
-        $this->assertEquals($openingBalances[1][3]->openingBalance, -40);
+        $this->assertTrue(array_sum($openingBalances['balances']) == 0);
+        $this->assertEquals($openingBalances['accounts'][0]->openingBalance, 70);
+        $this->assertEquals($openingBalances['accounts'][1]->openingBalance, 20);
+        $this->assertEquals($openingBalances['accounts'][2]->openingBalance, -50);
+        $this->assertEquals($openingBalances['accounts'][3]->openingBalance, -40);
     }
 }
