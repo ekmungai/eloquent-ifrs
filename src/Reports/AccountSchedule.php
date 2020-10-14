@@ -33,6 +33,7 @@ class AccountSchedule extends AccountStatement
         "originalAmount" => 0,
         "clearedAmount" => 0,
         "unclearedAmount" => 0,
+        "totalAge" => 0,
     ];
 
     /**
@@ -43,24 +44,26 @@ class AccountSchedule extends AccountStatement
      */
     private function getAmounts($transaction): void
     {
-        if ($transaction instanceof Balance) {
-            $transaction->transactionType = Transaction::getType($transaction->transaction_type);
-        } else {
-            $transaction->transactionType = $transaction->type;
-        }
-
         $transaction->originalAmount = $transaction->amount;
         $transaction->clearedAmount = $transaction->cleared_amount;
         $unclearedAmount = $transaction->originalAmount - $transaction->clearedAmount;
 
         if ($unclearedAmount > 0) {
 
+            if ($transaction instanceof Balance) {
+                $transaction->transactionType = Transaction::getType($transaction->transaction_type);
+            } else {
+                $transaction->transactionType = $transaction->type;
+            }
+
             $date = Carbon::parse($transaction->transaction_date);
             $transaction->age  = $date->diffInDays($this->period['endDate']);
+            $transaction->transactionDate = Carbon::parse($transaction->transaction_date)->toFormattedDateString();
 
             $this->balances["originalAmount"] += $transaction->originalAmount;
             $this->balances['clearedAmount'] += $transaction->clearedAmount;
             $this->balances['unclearedAmount'] += $unclearedAmount;
+            $this->balances['totalAge'] += $transaction->age;
 
             $transaction->unclearedAmount = $unclearedAmount;
 
@@ -123,5 +126,6 @@ class AccountSchedule extends AccountStatement
             }
             $this->getAmounts($transaction);
         }
+        $this->balances['averageAge'] = round($this->balances['totalAge'] / count($this->transactions), 0);
     }
 }

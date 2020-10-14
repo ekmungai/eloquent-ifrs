@@ -46,6 +46,7 @@ class AccountScheduleTest extends TestCase
      */
     public function testAccountScheduleMissingAccount()
     {
+
         $this->expectException(MissingAccount::class);
         $this->expectExceptionMessage('Account Schedule Transactions require an Account');
 
@@ -59,6 +60,7 @@ class AccountScheduleTest extends TestCase
      */
     public function testAccountScheduleInvalidAccountType()
     {
+
         $account = factory(Account::class)->create([
             'account_type' => Account::BANK,
             'category_id' => null
@@ -75,7 +77,7 @@ class AccountScheduleTest extends TestCase
      *
      * @return void
      */
-    public function AccountScheduleTest()
+    public function testClientAccountScheduleTest()
     {
 
         $currency = factory(Currency::class)->create();
@@ -114,6 +116,7 @@ class AccountScheduleTest extends TestCase
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 0
             ])->id,
+            "quantity" => 1,
         ]);
         $clientReceipt->addLineItem($lineItem);
 
@@ -129,7 +132,7 @@ class AccountScheduleTest extends TestCase
         //Client Invoice Transaction
         $clientInvoice = new ClientInvoice([
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "date" => Carbon::now()->subMonth(),
             "narration" => $this->faker->word,
             'currency_id' => $currency->id,
         ]);
@@ -139,8 +142,9 @@ class AccountScheduleTest extends TestCase
             "vat_id" => factory(Vat::class)->create(["rate" => 16])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OPERATING_REVENUE,
-                'category_id' => null
+                'category_id' => null,
             ])->id,
+            "quantity" => 1,
         ]);
         $clientInvoice->addLineItem($lineItem);
 
@@ -163,6 +167,7 @@ class AccountScheduleTest extends TestCase
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 16
             ])->id,
+            "quantity" => 1,
         ]);
         $creditNote->addLineItem($lineItem);
 
@@ -177,7 +182,7 @@ class AccountScheduleTest extends TestCase
         //Debit Journal Entry Transaction
         $debitJournalEntry = new JournalEntry([
             "account_id" => $account->id,
-            "date" => Carbon::now(),
+            "date" => Carbon::now()->subMonths(2),
             "narration" => $this->faker->word,
             "credited" => false,
             'currency_id' => $currency->id,
@@ -188,6 +193,7 @@ class AccountScheduleTest extends TestCase
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 0
             ])->id,
+            "quantity" => 1,
         ]);
         $debitJournalEntry->addLineItem($lineItem);
 
@@ -203,10 +209,13 @@ class AccountScheduleTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 30,
-            "account_id" => factory(Account::class)->create()->id,
+            "account_id" => factory(Account::class)->create([
+                'category_id' => null,
+            ])->id,
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 0
             ])->id,
+            "quantity" => 1,
         ]);
 
         $creditJournalEntry->addLineItem($lineItem);
@@ -225,7 +234,7 @@ class AccountScheduleTest extends TestCase
         $schedule->getTransactions();
 
         $this->assertEquals($schedule->transactions[0]->id, $balance->id);
-        $this->assertEquals($schedule->transactions[0]->transactionType, "Opening Balance");
+        $this->assertEquals($schedule->transactions[0]->transactionType, Transaction::getType($balance->transaction_type));
         $this->assertEquals($schedule->transactions[0]->originalAmount, 50);
         $this->assertEquals($schedule->transactions[0]->clearedAmount, 15);
         $this->assertEquals($schedule->transactions[0]->unclearedAmount, 35);
@@ -241,6 +250,12 @@ class AccountScheduleTest extends TestCase
         $this->assertEquals($schedule->transactions[2]->originalAmount, 75);
         $this->assertEquals($schedule->transactions[2]->clearedAmount, 30);
         $this->assertEquals($schedule->transactions[2]->unclearedAmount, 45);
+
+        $this->assertEquals($schedule->balances["originalAmount"], 241);
+        $this->assertEquals($schedule->balances["clearedAmount"], 95);
+        $this->assertEquals($schedule->balances["unclearedAmount"], 146);
+        $this->assertEquals($schedule->balances["totalAge"], 366);
+        $this->assertEquals($schedule->balances["averageAge"], 122);
     }
 
     /**
@@ -250,6 +265,7 @@ class AccountScheduleTest extends TestCase
      */
     public function testSupplierAccountAccountSchedule()
     {
+
         $currency = factory(Currency::class)->create();
         $account = factory(Account::class)->create([
             'account_type' => Account::PAYABLE,
