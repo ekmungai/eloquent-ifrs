@@ -11,7 +11,7 @@
 namespace IFRS\Models;
 
 use Carbon\Carbon;
-
+use IFRS\Exceptions\DuplicateAssignment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -152,5 +152,22 @@ class Entity extends Model implements Recyclable
         $new->save();
 
         return $new;
+    }
+
+    /**
+     * Associate Currency.
+     */
+    public function save(array $options = []): bool
+    {
+        $currency = Currency::find($this->currency_id);
+
+        if (!is_null($currency->entity_id)) {
+            throw new DuplicateAssignment();
+        }
+        parent::save($options);
+
+        $currency->entity_id = $this->id;
+
+        return $currency->save();
     }
 }

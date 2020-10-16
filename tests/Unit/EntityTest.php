@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use IFRS\Exceptions\DuplicateAssignment;
 use IFRS\Tests\TestCase;
 
 use Illuminate\Support\Facades\Auth;
@@ -46,6 +47,7 @@ class EntityTest extends TestCase
 
         $this->assertEquals($user->entity->name, $entity->name);
         $this->assertEquals($entity->currency->name, $currency->name);
+        $this->assertEquals($currency->entity->name, $entity->name);
         $this->assertEquals($entity->current_reporting_period->calendar_year, $period->calendar_year);
         $this->assertEquals($entity->toString(true), 'Entity: ' . $entity->name);
         $this->assertEquals($entity->toString(), $entity->name);
@@ -82,5 +84,30 @@ class EntityTest extends TestCase
         $this->expectExceptionMessage('You are not Authorized to perform that action');
 
         factory(Account::class)->create();
+    }
+
+    /**
+     * Test Currency Duplicate Assignment.
+     *
+     * @return void
+     */
+    public function testCurrencyDuplicateAssignment()
+    {
+        $currency = factory(Currency::class)->create();
+
+        Entity::create([
+            'name' => $this->faker->company,
+            'currency_id' => $currency->id,
+        ]);
+
+        $entity = new Entity([
+            'name' => $this->faker->company,
+            'currency_id' => $currency->id,
+        ]);
+
+        $this->expectException(DuplicateAssignment::class);
+        $this->expectExceptionMessage('This Currency has already been assigned to an Entity');
+
+        $entity->save();
     }
 }
