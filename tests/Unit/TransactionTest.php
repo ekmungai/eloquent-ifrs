@@ -108,9 +108,11 @@ class TransactionTest extends TestCase
         $user->save();
         $this->be($user);
 
+        $currency = factory(Currency::class)->create();
+
         $entity = new Entity();
         $entity->name = "Test Entity";
-        $entity->currency_id = 2;
+        $entity->currency_id = $currency->id;
         $entity->save();
 
         factory(ReportingPeriod::class)->create([

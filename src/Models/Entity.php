@@ -46,6 +46,7 @@ class Entity extends Model implements Recyclable
     protected $fillable = [
         'name',
         'currency_id',
+        'parent_id',
         'year_start',
         'multi_currency',
     ];
@@ -59,6 +60,16 @@ class Entity extends Model implements Recyclable
     {
         $classname = explode('\\', self::class);
         return $type ? array_pop($classname) . ': ' . $this->name : $this->name;
+    }
+
+    /**
+     * Model's Parent Entity (if exists).
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function parent()
+    {
+        return $this->belongsTo(Entity::class);
     }
 
     /**
@@ -161,9 +172,16 @@ class Entity extends Model implements Recyclable
     {
         $currency = Currency::find($this->currency_id);
 
-        if (!is_null($currency->entity_id)) {
-            throw new DuplicateAssignment();
+        if (is_null($this->id)) {
+            if (!is_null($this->parent_id)) {
+                $parent = Entity::find($this->parent_id);
+            }
+
+            if ((!is_null($currency->entity_id) && is_null($this->parent_id)) || (!is_null($this->parent_id) && $parent->currency->id != $currency->id)) {
+                throw new DuplicateAssignment();
+            }
         }
+
         parent::save($options);
 
         $currency->entity_id = $this->id;

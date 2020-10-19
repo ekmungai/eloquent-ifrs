@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eloquent IFRS Accounting
  *
@@ -6,6 +7,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license MIT
  */
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,12 +22,17 @@ class CreateIfrsEntitiesTable extends Migration
     public function up()
     {
         Schema::create(
-            config('ifrs.table_prefix').'entities',
+            config('ifrs.table_prefix') . 'entities',
             function (Blueprint $table) {
                 $table->bigIncrements('id');
 
                 // relationships
                 $table->unsignedBigInteger('currency_id');
+                $table->unsignedBigInteger('parent_id')->nullable();
+
+                // constraints
+                $table->foreign('parent_id')->references('id')->on(config('ifrs.table_prefix') . 'entities');
+                $table->foreign('currency_id')->references('id')->on(config('ifrs.table_prefix') . 'currencies');
 
                 // attributes
                 $table->string('name', 300);
@@ -51,6 +58,6 @@ class CreateIfrsEntitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists(config('ifrs.table_prefix').'entities');
+        Schema::dropIfExists(config('ifrs.table_prefix') . 'entities');
     }
 }

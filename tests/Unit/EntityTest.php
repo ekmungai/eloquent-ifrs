@@ -27,6 +27,7 @@ class EntityTest extends TestCase
     {
         $currency = factory(Currency::class)->create();
 
+        // Parent entity
         $entity = new Entity([
             'name' => $this->faker->company,
             'currency_id' => $currency->id,
@@ -45,6 +46,14 @@ class EntityTest extends TestCase
             'calendar_year' => date("Y")
         ]);
 
+        // Daughter entity
+        $entity2 = new Entity([
+            'name' => $this->faker->company,
+            'currency_id' => $currency->id,
+            'parent_id' => $entity->id,
+        ]);
+        $entity2->save();
+
         $this->assertEquals($user->entity->name, $entity->name);
         $this->assertEquals($entity->currency->name, $currency->name);
         $this->assertEquals($currency->entity->name, $entity->name);
@@ -52,6 +61,9 @@ class EntityTest extends TestCase
         $this->assertEquals($entity->toString(true), 'Entity: ' . $entity->name);
         $this->assertEquals($entity->toString(), $entity->name);
         $this->assertEquals($entity->default_rate->rate, 1);
+
+        $this->assertNull($entity->parent);
+        $this->assertEquals($entity2->parent->name, $entity->name);
     }
 
     /**
