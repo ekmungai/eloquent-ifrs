@@ -32,7 +32,6 @@ class CreateIfrsEntitiesTable extends Migration
 
                 // constraints
                 $table->foreign('parent_id')->references('id')->on(config('ifrs.table_prefix') . 'entities');
-                $table->foreign('currency_id')->references('id')->on(config('ifrs.table_prefix') . 'currencies');
 
                 // attributes
                 $table->string('name', 300);

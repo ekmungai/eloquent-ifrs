@@ -66,16 +66,6 @@ class Currency extends Model implements Recyclable
     }
 
     /**
-     * Currency Entities.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function entities()
-    {
-        return $this->hasMany(Entity::class);
-    }
-
-    /**
      * Model's Parent Entity.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne

@@ -73,6 +73,16 @@ class Entity extends Model implements Recyclable
     }
 
     /**
+     * Model's Daughter Entities (if any).
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function daughters()
+    {
+        return $this->hasMany(Entity::class, 'parent_id', 'id');
+    }
+
+    /**
      * Users associated with the reporting Entity.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -90,6 +100,16 @@ class Entity extends Model implements Recyclable
     public function currency()
     {
         return $this->belongsTo(Currency::class);
+    }
+
+    /**
+     * Entity's Registered Currencies.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function currencies()
+    {
+        return $this->hasMany(Currency::class);
     }
 
     /**
@@ -172,20 +192,17 @@ class Entity extends Model implements Recyclable
     {
         $currency = Currency::find($this->currency_id);
 
-        if (is_null($this->id)) {
-            if (!is_null($this->parent_id)) {
-                $parent = Entity::find($this->parent_id);
-            }
-
-            if ((!is_null($currency->entity_id) && is_null($this->parent_id)) || (!is_null($this->parent_id) && $parent->currency->id != $currency->id)) {
-                throw new DuplicateAssignment();
-            }
+        if (is_null($this->id) && !is_null($currency->entity_id) && is_null($this->parent_id)) {
+            throw new DuplicateAssignment();
         }
 
         parent::save($options);
 
-        $currency->entity_id = $this->id;
+        if (is_null($this->parent_id)) {
+            $currency->entity_id = $this->id;
+            $currency->save();
+        }
 
-        return $currency->save();
+        return parent::save($options);
     }
 }

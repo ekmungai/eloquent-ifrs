@@ -40,7 +40,7 @@ class CurrencyTest extends TestCase
         );
 
         $this->assertEquals(
-            $currency->entities->first()->name,
+            $currency->entity->name,
             $entity->name
         );
         $this->assertEquals(
