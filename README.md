@@ -149,12 +149,12 @@ Now we'll set up some Accounts:
 use IFRS\Models\Account;
 
 $bankAccount = Account::create([
-    'name' => "Sales Account",
+    'name' => "Bank Account",
     'account_type' => Account::BANK,
 ]);
 
 $revenueAccount = Account::create([
-    'name' => "Bank Account",
+    'name' => "Sales Account",
     'account_type' => Account::OPERATING_REVENUE,
 ]);
 

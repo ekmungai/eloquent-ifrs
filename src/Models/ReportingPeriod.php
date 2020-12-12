@@ -113,6 +113,10 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
      */
     public static function year($date = null)
     {
+        if (is_null(Auth::user()->entity)) {
+            return date("Y");
+        }
+
         $year = is_null($date) ? date("Y") : date("Y", strtotime($date));
         $month = is_null($date) ? date("m") : date("m", strtotime($date));
 
@@ -128,6 +132,10 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
      */
     public static function periodStart($date = null)
     {
+        if (is_null(Auth::user()->entity)) {
+            return date("Y");
+        }
+
         return Carbon::create(
             ReportingPeriod::year($date),
             Auth::user()->entity->year_start,

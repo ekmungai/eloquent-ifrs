@@ -202,11 +202,11 @@ class Account extends Model implements Recyclable, Segregatable
 
             $account->openingBalance = $account->openingBalance($year) + Ledger::balance($account, $periodStart, $startDate);
 
-            $periodChange = Ledger::balance($account, $startDate, $endDate);
+            $account->balanceMovement = $account->currentBalance($startDate, $endDate);
 
-            $account->closingBalance = $account->openingBalance + $periodChange;
+            $account->closingBalance = $account->openingBalance + $account->balanceMovement;
 
-            $account->balanceMovement = ($account->closingBalance - $account->openingBalance) * -1;
+            $account->balanceMovement *= -1;
 
             if ($account->closingBalance <> 0 || $account->balanceMovement <> 0) {
 
@@ -218,7 +218,7 @@ class Account extends Model implements Recyclable, Segregatable
                     $categoryId = $account->category->id;
                 }
 
-                if (in_array($categoryName, $balances['sectionCategories'])) {
+                if (array_key_exists($categoryName, $balances['sectionCategories'])) {
                     $balances['sectionCategories'][$categoryName]['accounts']->push((object) $account->attributes);
                     $balances['sectionCategories'][$categoryName]['total'] += $account->closingBalance;
                 } else {

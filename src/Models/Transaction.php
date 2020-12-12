@@ -556,7 +556,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
     }
 
     /**
-     * Add Transaction to Transaction assigned Transactions.
+     * Create assignments for the assigned transactions being staged.
      */
     public function processAssigned(): void
     {

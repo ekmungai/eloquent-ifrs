@@ -688,7 +688,6 @@ class AccountTest extends TestCase
         ]);
         $account3->save();
 
-
         $account4 = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::CONTROL,
@@ -746,10 +745,19 @@ class AccountTest extends TestCase
         $clientTransactions = $account2->getTransactions(Carbon::now()->addWeeks(2)->toDateString());
         $this->assertEquals($clientTransactions, ['total' => 0, 'transactions' => []]);
 
+        $splitTransactionDate = Carbon::now()->addWeeks(3);
+
+        // Check Reporting Period for date
+        if (is_null(ReportingPeriod::where("calendar_year", $splitTransactionDate->year)->first())) {
+            factory(ReportingPeriod::class)->create([
+                "calendar_year" => $splitTransactionDate->year
+            ]);
+        }
+
         // split transaction
         $journalEntry = new JournalEntry([
             "account_id" => $account1->id,
-            "transaction_date" => Carbon::now()->addWeeks(3),
+            "transaction_date" => $splitTransactionDate,
             "narration" => $this->faker->word,
         ]);
 
@@ -901,5 +909,83 @@ class AccountTest extends TestCase
         $this->assertEquals($openingBalances['accounts'][1]->openingBalance, 20);
         $this->assertEquals($openingBalances['accounts'][2]->openingBalance, -50);
         $this->assertEquals($openingBalances['accounts'][3]->openingBalance, -40);
+    }
+
+    /**
+     * Test Account movement.
+     *
+     * @return void
+     */
+    public function testAccountSectionAccounts()
+    {
+        $client = new Account([
+            'name' => $this->faker->name,
+            'account_type' => Account::RECEIVABLE,
+        ]);
+        $client->save();
+        $client2 = new Account([
+            'name' => $this->faker->name,
+            'account_type' => Account::RECEIVABLE,
+        ]);
+        $client2->save();
+
+        $revenue = new Account([
+            'name' => $this->faker->name,
+            'account_type' => Account::OPERATING_REVENUE,
+            'category_id' => null
+        ]);
+        $revenue->save();
+
+        //Client1 Invoice Transaction
+        $clientInvoice = new ClientInvoice([
+            "account_id" => $client->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
+
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create([
+                "rate" => 0,
+            ])->id,
+            'account_id' => $revenue->id,
+            'narration' => $this->faker->sentence,
+            'quantity' => $this->faker->randomNumber(),
+            'amount' => 100,
+            'quantity' => 1,
+        ]);
+        $clientInvoice->addLineItem($line);
+        $clientInvoice->post();
+
+
+
+        //Client2 Invoice Transaction
+        $clientInvoice = new ClientInvoice([
+            "account_id" => $client2->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
+
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create([
+                "rate" => 0,
+            ])->id,
+            'account_id' => $revenue->id,
+            'narration' => $this->faker->sentence,
+            'quantity' => $this->faker->randomNumber(),
+            'amount' => 100,
+            'quantity' => 1,
+        ]);
+        $clientInvoice->addLineItem($line);
+        $clientInvoice->post();
+
+        $section = Account::sectionBalances([Account::RECEIVABLE]);
+        $sectionAccounts = $section['sectionCategories']['Receivable']['accounts'];
+
+        $sectionAccountsTotalBalance = $sectionAccounts->reduce(function ($carry, $account) {
+            return $carry + $account->closingBalance;
+        });
+
+        $this->assertEquals(count($sectionAccounts), 2);
+        $this->assertEquals($section['sectionClosingBalance'], $sectionAccountsTotalBalance);
     }
 }
