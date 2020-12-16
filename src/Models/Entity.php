@@ -12,6 +12,7 @@ namespace IFRS\Models;
 
 use Carbon\Carbon;
 use IFRS\Exceptions\DuplicateAssignment;
+use IFRS\Exceptions\MissingCurrency;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -50,6 +51,16 @@ class Entity extends Model implements Recyclable
         'year_start',
         'multi_currency',
     ];
+
+    /**
+     * Entity's Reporting Currency.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\hasOne
+     */
+    protected function currency()
+    {
+        return $this->hasOne(Currency::class);
+    }
 
     /**
      * Instance Identifier.
@@ -93,19 +104,9 @@ class Entity extends Model implements Recyclable
     }
 
     /**
-     * Entity's Reporting Currency.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function currency()
-    {
-        return $this->belongsTo(Currency::class);
-    }
-
-    /**
      * Entity's Registered Currencies.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\hasMany
      */
     public function currencies()
     {
@@ -139,6 +140,10 @@ class Entity extends Model implements Recyclable
      */
     public function getDefaultRateAttribute(): ExchangeRate
     {
+        if (is_null($this->reportingCurrency)) {
+            throw new MissingCurrency();
+        }
+
         $now = Carbon::now();
         $existing = ExchangeRate::where([
             "entity_id" => $this->id,
@@ -152,7 +157,7 @@ class Entity extends Model implements Recyclable
 
         $new = new ExchangeRate([
             'valid_from' => Carbon::now(),
-            'currency_id' => $this->currency->id,
+            'currency_id' => $this->reportingCurrency->id,
             "rate" => 1
         ]);
 
@@ -160,7 +165,6 @@ class Entity extends Model implements Recyclable
 
         return $new;
     }
-
 
     /**
      * Current Reporting Period for the Entity.
@@ -186,23 +190,12 @@ class Entity extends Model implements Recyclable
     }
 
     /**
-     * Associate Currency.
+     * Reporting Currency for the Entity.
+     *
+     * @return Currency
      */
-    public function save(array $options = []): bool
+    public function getReportingCurrencyAttribute(): Currency
     {
-        $currency = Currency::find($this->currency_id);
-
-        if (is_null($this->id) && !is_null($currency->entity_id) && is_null($this->parent_id)) {
-            throw new DuplicateAssignment();
-        }
-
-        parent::save($options);
-
-        if (is_null($this->parent_id)) {
-            $currency->entity_id = $this->id;
-            $currency->save();
-        }
-
-        return parent::save($options);
+        return is_null($this->parent) ? $this->currency : $this->parent->currency;
     }
 }

@@ -15,17 +15,17 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
-class DuplicateAssignment extends IFRSException
+class MissingCurrency extends IFRSException
 {
     /**
-     * Duplicate Assignment Exception
+     * Missing Currency Exception
      *
      * @param string $message
      * @param int    $code
      */
     public function __construct(string $message = null, int $code = null)
     {
-        $error = "This Currency has already been assigned to an Entity ";
+        $error = "An Entity must have a Reporting Currency ";
 
         Log::notice(
             $error . $message,

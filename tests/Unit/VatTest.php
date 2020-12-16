@@ -5,6 +5,8 @@ namespace Tests\Unit;
 use IFRS\Exceptions\InvalidAccountType;
 use IFRS\Exceptions\MissingVatAccount;
 use IFRS\Models\Account;
+use IFRS\Models\Currency;
+use IFRS\Models\Entity;
 use IFRS\Tests\TestCase;
 
 use IFRS\Models\RecycledObject;
@@ -20,8 +22,11 @@ class VatTest extends TestCase
      */
     public function testVatEntityScope()
     {
+        $newEntity = factory(Entity::class)->create();
+        $newEntity->currency_id = factory(Currency::class)->create()->id;
+
         $user = factory(User::class)->create();
-        $user->entity_id = 2;
+        $user->entity()->associate($newEntity);
         $user->save();
 
         $this->be($user);

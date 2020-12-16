@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-use IFRS\Exceptions\DuplicateAssignment;
 use IFRS\Tests\TestCase;
 
 use Illuminate\Support\Facades\Auth;
@@ -25,25 +24,25 @@ class EntityTest extends TestCase
      */
     public function testEntityRelationships()
     {
-        $currency = factory(Currency::class)->create([
-            'name' => 'Test Currency'
-        ]);
-
         // Parent entity
         $entity = new Entity([
             'name' => $this->faker->company,
-            'currency_id' => $currency->id,
         ]);
         $entity->attributes();
         $entity->save();
 
-        $currency = Currency::find($currency->id);
-
         $user = factory(User::class)->create();
-        $user->entity_id = $entity->id;
+        $user->entity()->associate($entity);
         $user->save();
 
         $this->be($user);
+
+        $currency = factory(Currency::class)->create([
+            'name' => 'Test Currency'
+        ]);
+
+        $entity->currency_id = $currency->id; // Reporting Currency must be explicitly set
+        $entity->save();
 
         $period = factory(ReportingPeriod::class)->create([
             'entity_id' => $entity->id,
@@ -51,7 +50,6 @@ class EntityTest extends TestCase
         ]);
 
         $currency2 = factory(Currency::class)->create([
-            'entity_id' => $entity->id,
             'name' => 'Test Currency 2'
         ]);
 
@@ -85,10 +83,10 @@ class EntityTest extends TestCase
         // Daughters
         $this->assertNull($entity->parent);
         $this->assertEquals($entity2->parent->name, $entity->name);
-        $this->assertEquals($entity2->currency->name, $currency2->name);
+        $this->assertEquals($entity2->reportingCurrency->name, $currency->name); // daughters report in the parent's reporting currency
         $this->assertEquals($entity->daughters[0]->name, $entity2->name);
         $this->assertEquals($entity3->parent->name, $entity->name);
-        $this->assertEquals($entity3->currency->name, $currency2->name);
+        $this->assertEquals($entity3->reportingCurrency->name, $currency->name); // daughters report in the parent's reporting currency
         $this->assertEquals($entity->daughters[1]->name, $entity3->name);
     }
 
@@ -122,30 +120,5 @@ class EntityTest extends TestCase
         $this->expectExceptionMessage('You are not Authorized to perform that action');
 
         factory(Account::class)->create();
-    }
-
-    /**
-     * Test Currency Duplicate Assignment.
-     *
-     * @return void
-     */
-    public function testCurrencyDuplicateAssignment()
-    {
-        $currency = factory(Currency::class)->create();
-
-        Entity::create([
-            'name' => $this->faker->company,
-            'currency_id' => $currency->id,
-        ]);
-
-        $entity = new Entity([
-            'name' => $this->faker->company,
-            'currency_id' => $currency->id,
-        ]);
-
-        $this->expectException(DuplicateAssignment::class);
-        $this->expectExceptionMessage('This Currency has already been assigned to an Entity');
-
-        $entity->save();
     }
 }

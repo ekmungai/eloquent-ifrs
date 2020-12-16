@@ -14,9 +14,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use IFRS\Interfaces\Recyclable;
+use IFRS\Interfaces\Segregatable;
 
 use IFRS\Traits\Recycling;
 use IFRS\Traits\ModelTablePrefix;
+use IFRS\Traits\Segregating;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Currency
@@ -28,8 +31,9 @@ use IFRS\Traits\ModelTablePrefix;
  * @property Carbon $destroyed_at
  * @property Carbon $deleted_at
  */
-class Currency extends Model implements Recyclable
+class Currency extends Model implements Recyclable, Segregatable
 {
+    use Segregating;
     use SoftDeletes;
     use Recycling;
     use ModelTablePrefix;
@@ -68,11 +72,11 @@ class Currency extends Model implements Recyclable
     /**
      * Model's Parent Entity.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\belongsTo
      */
     public function entity()
     {
-        return $this->hasOne(Entity::class);
+        return $this->belongsTo(Entity::class);
     }
 
     /**
@@ -83,5 +87,17 @@ class Currency extends Model implements Recyclable
     public function attributes()
     {
         return (object) $this->attributes;
+    }
+
+    /**
+     * Associate Entity.
+     */
+    public function save(array $options = []): bool
+    {
+        if (!isset($this->entity_id) && Auth::user()->entity) {
+            $this->entity_id = Auth::user()->entity->id;
+        }
+
+        return parent::save($options);
     }
 }

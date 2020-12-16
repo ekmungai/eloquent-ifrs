@@ -126,6 +126,9 @@ class AccountSchedule extends AccountStatement
             }
             $this->getAmounts($transaction);
         }
-        $this->balances['averageAge'] = round($this->balances['totalAge'] / count($this->transactions), 0);
+        $totaltransactions = count($this->transactions);
+        if ($totaltransactions > 0) {
+            $this->balances['averageAge'] = round($this->balances['totalAge'] / $totaltransactions, 0);
+        }
     }
 }

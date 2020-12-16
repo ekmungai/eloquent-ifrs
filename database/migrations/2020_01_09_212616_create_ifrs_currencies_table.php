@@ -27,7 +27,7 @@ class CreateIfrsCurrenciesTable extends Migration
                 $table->bigIncrements('id');
 
                 // relationships
-                $table->unsignedBigInteger('entity_id')->nullable();
+                $table->unsignedBigInteger('entity_id');
 
                 // constraints
                 $table->foreign('entity_id')->references('id')->on(config('ifrs.table_prefix') . 'entities');

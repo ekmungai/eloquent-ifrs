@@ -5,8 +5,10 @@ namespace Tests\Unit;
 use IFRS\Tests\TestCase;
 
 use IFRS\Models\Currency;
+use IFRS\Models\Entity;
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\RecycledObject;
+use IFRS\User;
 use Illuminate\Support\Facades\Auth;
 
 class CurrencyTest extends TestCase
@@ -26,12 +28,9 @@ class CurrencyTest extends TestCase
         $currency->save();
 
         $entity = Auth::user()->entity;
-        $entity->currency()->associate($currency);
-        $entity->save();
 
         $exchangeRate = factory(ExchangeRate::class)->create([
             'currency_id' => $currency->id,
-            'entity_id' => $entity->id,
         ]);
 
         $this->assertEquals(
@@ -52,6 +51,30 @@ class CurrencyTest extends TestCase
             $currency->name . ' (' . $currency->currency_code . ')'
         );
     }
+
+    /**
+     * Test Currency model Entity Scope.
+     *
+     * @return void
+     */
+    public function testCurrencyEntityScope()
+    {
+        $newEntity = factory(Entity::class)->create();
+
+        $user = factory(User::class)->create();
+        $user->entity()->associate($newEntity);
+        $user->save();
+
+        $this->be($user);
+
+        factory(Currency::class, 3)->create();
+
+        $this->assertEquals(count(Currency::all()), 3);
+
+        $this->be(User::withoutGlobalScopes()->find(1));
+        $this->assertEquals(count(Currency::all()), 1); // Default Entity Reporting Currency
+    }
+
 
     /**
      * Test Currency Model recylcling

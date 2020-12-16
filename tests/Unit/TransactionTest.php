@@ -103,9 +103,13 @@ class TransactionTest extends TestCase
      */
     public function testTransactionEntityScope()
     {
+        $newEntity = factory(Entity::class)->create();
+        $newEntity->currency_id = factory(Currency::class)->create()->id;
+
         $user = factory(User::class)->create();
-        $user->entity_id = 2;
+        $user->entity()->associate($newEntity);
         $user->save();
+
         $this->be($user);
 
         $currency = factory(Currency::class)->create();

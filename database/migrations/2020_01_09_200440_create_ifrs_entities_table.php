@@ -27,7 +27,7 @@ class CreateIfrsEntitiesTable extends Migration
                 $table->bigIncrements('id');
 
                 // relationships
-                $table->unsignedBigInteger('currency_id');
+                $table->unsignedBigInteger('currency_id')->nullable();
                 $table->unsignedBigInteger('parent_id')->nullable();
 
                 // constraints

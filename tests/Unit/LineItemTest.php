@@ -12,6 +12,8 @@ use IFRS\Models\Vat;
 use IFRS\Models\Transaction;
 
 use IFRS\Exceptions\NegativeAmount;
+use IFRS\Models\Currency;
+use IFRS\Models\Entity;
 use IFRS\Transactions\ClientInvoice;
 
 class LineItemTest extends TestCase
@@ -71,11 +73,16 @@ class LineItemTest extends TestCase
      */
     public function testLineItemEntityScope()
     {
+        $newEntity = factory(Entity::class)->create();
+
         $user = factory(User::class)->create();
-        $user->entity_id = 2;
+        $user->entity()->associate($newEntity);
         $user->save();
 
         $this->be($user);
+
+        $newEntity->currency_id = factory(Currency::class)->create()->id;
+        $newEntity->save();
 
         $lineItem = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,

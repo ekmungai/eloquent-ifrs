@@ -7,6 +7,8 @@ use Faker\Factory as Faker;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 use IFRS\IFRSServiceProvider;
+use IFRS\Models\Currency;
+use IFRS\Models\Entity;
 use IFRS\Models\ReportingPeriod;
 use IFRS\User;
 use Illuminate\Support\Facades\Config;
@@ -26,6 +28,13 @@ abstract class TestCase extends Orchestra
 
         $user = factory(User::class)->create();
         $this->be($user);
+
+        $currency = factory(Currency::class)->create();
+
+        $entity = $user->entity;
+        $entity->currency_id = $currency->id;
+        $entity->save();
+
         $this->period = factory(ReportingPeriod::class)->create([
             "calendar_year" => date("Y"),
             "entity_id" => $user->entity->id,

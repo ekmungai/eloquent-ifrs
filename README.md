@@ -105,19 +105,19 @@ First we'll setup the Company (Reporting Entity) and required Accounts to record
 use IFRS\Models\Entity;
 use IFRS\Models\Currency;
 
+$entity = Entity::create([
+    "name" => "Example Company",
+]);
+
 //Entities require a reporting currency
 $currency = Currency::create([
     "name" => "Euro",
     "currency_code" => "EUR"
 ]);
 
-$entity = Entity::create([
-    "name" => "Example Company",
-    "currency_id" => $currency->id
-]);
-
-// Associate the currently logged in User with the just created Entity
-Auth::user()->update(["entity_id" => $entity->id ]);
+// Set the currency as the Entity's Reporting Currency 
+$entity->currency_id = $currency;
+$entity->save();
 ```
 We also need the VAT Rates that apply to the Entity:
 

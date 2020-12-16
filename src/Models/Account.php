@@ -110,18 +110,6 @@ class Account extends Model implements Recyclable, Segregatable
     ];
 
     /**
-     * Construct new Account.
-     */
-    public function __construct($attributes = [])
-    {
-        if (!isset($attributes['currency_id']) && Auth::user()->entity) {
-            $attributes['currency_id'] = Auth::user()->entity->currency_id;
-        }
-
-        return parent::__construct($attributes);
-    }
-
-    /**
      * Get Human Readable Account Type.
      *
      * @param string $type
@@ -365,7 +353,6 @@ class Account extends Model implements Recyclable, Segregatable
         $transactionTable = config('ifrs.table_prefix') . 'transactions';
         $ledgerTable = config('ifrs.table_prefix') . 'ledgers';
 
-
         $query = DB::table(
             $transactionTable
         )
@@ -425,6 +412,10 @@ class Account extends Model implements Recyclable, Segregatable
      */
     public function save(array $options = []): bool
     {
+        if (!isset($this->currency_id) && Auth::user()->entity) {
+            $this->currency_id = Auth::user()->entity->currency_id;
+        }
+
         if (is_null($this->code) || $this->isDirty('account_type')) {
             if (is_null($this->account_type)) {
                 throw new MissingAccountType();

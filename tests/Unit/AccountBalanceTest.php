@@ -76,9 +76,11 @@ class AccountBalanceTest extends TestCase
      */
     public function testBalanceEntityScope()
     {
+        $newEntity = factory(Entity::class)->create();
+
         factory(Balance::class, 3)->create()->each(
-            function ($balance) {
-                $balance->entity_id = 2;
+            function ($balance) use ($newEntity) {
+                $balance->entity_id = $newEntity->id;
                 $balance->save();
             }
         );
@@ -86,10 +88,13 @@ class AccountBalanceTest extends TestCase
         $this->assertEquals(count(Balance::all()), 0);
 
         $user = factory(User::class)->create();
-        $user->entity_id = 2;
+        $user->entity()->associate($newEntity);
         $user->save();
 
         $this->be($user);
+
+        $newEntity->currency_id = factory(Currency::class)->create()->id;
+        $newEntity->save();
 
         $this->assertEquals(count(Balance::all()), 3);
     }

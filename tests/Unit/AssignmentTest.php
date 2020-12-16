@@ -32,6 +32,7 @@ use IFRS\Exceptions\NegativeAmount;
 use IFRS\Models\Transaction;
 use IFRS\Exceptions\MissingForexAccount;
 use IFRS\Exceptions\MixedAssignment;
+use IFRS\Models\Entity;
 use IFRS\Models\ExchangeRate;
 
 class AssignmentTest extends TestCase
@@ -111,11 +112,15 @@ class AssignmentTest extends TestCase
      */
     public function testAssignmentEntityScope()
     {
+        $newEntity = factory(Entity::class)->create();
+        $newEntity->currency_id = factory(Currency::class)->create()->id;
+
         $user = factory(User::class)->create();
-        $user->entity_id = 2;
+        $user->entity()->associate($newEntity);
         $user->save();
 
         $this->be($user);
+
         $this->period = factory(ReportingPeriod::class)->create([
             "calendar_year" => date("Y"),
         ]);
