@@ -41,7 +41,7 @@ trait Recycling
                             RecycledObject::create(
                                 [
                                     'user_id' => $user->id,
-                                    'entity_id' => $user->entity->id,
+                                    'entity_id' => $user->entity_id,
                                     'recyclable_id' => $model->id,
                                     'recyclable_type' => static::class,
                                 ]

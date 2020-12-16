@@ -95,7 +95,7 @@ class Currency extends Model implements Recyclable, Segregatable
     public function save(array $options = []): bool
     {
         if (!isset($this->entity_id) && Auth::user()->entity) {
-            $this->entity_id = Auth::user()->entity->id;
+            $this->entity_id = Auth::user()->entity_id;
         }
 
         return parent::save($options);

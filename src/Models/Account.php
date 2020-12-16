@@ -202,8 +202,9 @@ class Account extends Model implements Recyclable, Segregatable
                     $categoryName =  config('ifrs')['accounts'][$account->account_type];
                     $categoryId = 0;
                 } else {
-                    $categoryName =  $account->category->name;
-                    $categoryId = $account->category->id;
+                    $category = $account->category;
+                    $categoryName =  $category->name;
+                    $categoryId = $category->id;
                 }
 
                 if (array_key_exists($categoryName, $balances['sectionCategories'])) {
@@ -361,7 +362,7 @@ class Account extends Model implements Recyclable, Segregatable
             ->where($transactionTable . '.entity_id', $this->entity_id)
             ->where($transactionTable . '.transaction_date', '>=', $startDate)
             ->where($transactionTable . '.transaction_date', '<=', $endDate)
-            ->where($transactionTable . '.currency_id', $this->currency->id)
+            ->where($transactionTable . '.currency_id', $this->currency_id)
             ->select(
                 $transactionTable . '.id',
                 $transactionTable . '.transaction_date',

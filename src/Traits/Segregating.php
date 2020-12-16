@@ -41,7 +41,7 @@ trait Segregating
                 }
 
                 if (Auth::check() && is_null($model->entity_id)) {
-                    $model->entity_id = Auth::user()->entity->id;
+                    $model->entity_id = Auth::user()->entity_id;
                 }
             }
         );

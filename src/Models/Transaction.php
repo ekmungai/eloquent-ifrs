@@ -484,7 +484,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
             throw new PostedTransaction("add LineItem to");
         }
 
-        if ($lineItem->account->id == $this->account->id) {
+        if ($lineItem->account_id == $this->account_id) {
             throw new RedundantTransaction();
         }
 

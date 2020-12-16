@@ -105,7 +105,7 @@ class Assignment extends Model implements Segregatable
 
         $balance = $transaction->balance;
 
-        $schedule = new AccountSchedule($transaction->account->id, $transaction->currency->id);
+        $schedule = new AccountSchedule($transaction->account_id, $transaction->currency_id);
         $schedule->getTransactions();
 
         foreach ($schedule->transactions as $outstanding) {
@@ -162,7 +162,7 @@ class Assignment extends Model implements Segregatable
             throw new NegativeAmount("Assignment");
         }
 
-        if ($this->cleared->id == $this->transaction->id && $this->cleared_type == Transaction::MODELNAME) {
+        if ($this->cleared_id == $this->transaction_id && $this->cleared_type == Transaction::MODELNAME) {
             throw new SelfClearance();
         }
 
