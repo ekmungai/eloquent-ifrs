@@ -196,6 +196,9 @@ class Entity extends Model implements Recyclable
      */
     public function getReportingCurrencyAttribute(): Currency
     {
+        if (is_null($this->currency)) {
+            return new Currency();
+        }
         return is_null($this->parent) ? $this->currency : $this->parent->currency;
     }
 }

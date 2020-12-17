@@ -46,6 +46,7 @@ class Currency extends Model implements Recyclable, Segregatable
     protected $fillable = [
         'name',
         'currency_code',
+        'entity_id',
     ];
 
     /**
