@@ -71,16 +71,15 @@ class EntityTest extends TestCase
 
         $currency = Currency::find($currency->id);
 
-        // $this->assertEquals($user->entity->name, $entity->name);
-        // $this->assertEquals($entity->currency->name, $currency->name);
-        // $this->assertEquals($entity->currencies[1]->name, $currency2->name);
-        // $this->assertEquals($currency->entity->name, $entity->name);
-        // $this->assertEquals($entity->current_reporting_period->calendar_year, $period->calendar_year);
-        // $this->assertEquals($entity->toString(true), 'Entity: ' . $entity->name);
-        // $this->assertEquals($entity->toString(), $entity->name);
-        // $this->assertEquals($entity->default_rate->rate, 1);
+        $this->assertEquals($user->entity->name, $entity->name);
+        $this->assertEquals($entity->currency->name, $currency->name);
+        $this->assertEquals($entity->currencies[1]->name, $currency2->name);
+        $this->assertEquals($currency->entity->name, $entity->name);
+        $this->assertEquals($entity->current_reporting_period->calendar_year, $period->calendar_year);
+        $this->assertEquals($entity->toString(true), 'Entity: ' . $entity->name);
+        $this->assertEquals($entity->toString(), $entity->name);
+        $this->assertEquals($entity->default_rate->rate, 1);
 
-        // dd($entity2->reportingCurrency);
         // Daughters
         $this->assertNull($entity->parent);
         $this->assertEquals($entity2->parent->name, $entity->name);

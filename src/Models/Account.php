@@ -189,14 +189,14 @@ class Account extends Model implements Recyclable, Segregatable
         foreach (Account::whereIn('account_type', $accountTypes)->get() as $account) {
 
             $account->openingBalance = $account->openingBalance($year) + Ledger::balance($account, $periodStart, $startDate);
-            
-            // if(in_array("BANK",$accountTypes)){
-            //     dd($year);
-            // }
             $account->balanceMovement = $account->currentBalance($startDate, $endDate);
 
             $account->closingBalance = $account->openingBalance + $account->balanceMovement;
 
+            if(in_array("BANK",$accountTypes)){
+                echo 1;
+            }
+            
             $account->balanceMovement *= -1;
 
             if ($account->closingBalance <> 0 || $account->balanceMovement <> 0) {
@@ -303,7 +303,6 @@ class Account extends Model implements Recyclable, Segregatable
             $period = Auth::user()->entity->current_reporting_period;
         }
         
-
         $balance = 0;
 
         foreach ($this->balances->where('reporting_period_id', $period->id) as $record) {

@@ -46,7 +46,9 @@ class CashFlowStatementTest extends TestCase
     public function testCashFlowStatement()
     {
         $lastMonth = Carbon::now()->subMonths(1);
-        $cashFlowStatement = new CashFlowStatement($lastMonth->toDateString());
+        $date = $lastMonth->format("Y") ==  date("Y")? $lastMonth : date("Y")."01-01";
+        
+        $cashFlowStatement = new CashFlowStatement($date);
         $cashFlowStatement->attributes();
 
         $bank = factory(Account::class)->create([
@@ -487,7 +489,7 @@ class CashFlowStatementTest extends TestCase
         );
         $this->assertEquals(
             $cashFlowStatement->results[$cashbookBalance],
-            680
+            780
         );
         $this->assertEquals(
             $cashFlowStatement->results[$operationsCashFlow],

@@ -27,7 +27,7 @@ $factory->define(
                 'account_type' => Account::INVENTORY,
                 'category_id' => null
             ])->id,
-            'reporting_period_id' => $period_id,
+            'reporting_period_id' => 1,
             'transaction_date' => Carbon::now()->subYears(1.5),
             'transaction_no' => $faker->word,
             'transaction_type' => $faker->randomElement([
