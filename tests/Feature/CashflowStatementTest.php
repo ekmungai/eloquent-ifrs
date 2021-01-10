@@ -46,7 +46,7 @@ class CashFlowStatementTest extends TestCase
     public function testCashFlowStatement()
     {
         $lastMonth = Carbon::now()->subMonths(1);
-        $date = $lastMonth->format("Y") ==  date("Y")? $lastMonth : date("Y")."01-01";
+        $date = $lastMonth->format("Y") ==  date("Y")? $lastMonth : date("Y")."-01-01";
         
         $cashFlowStatement = new CashFlowStatement($date);
         $cashFlowStatement->attributes();
