@@ -8,7 +8,6 @@ use Orchestra\Testbench\TestCase as Orchestra;
 
 use IFRS\IFRSServiceProvider;
 use IFRS\Models\Currency;
-use IFRS\Models\Entity;
 use IFRS\Models\ReportingPeriod;
 use IFRS\User;
 use Illuminate\Support\Facades\Config;
