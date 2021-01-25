@@ -2,12 +2,11 @@ env:
   global:
     - CC_TEST_REPORTER_ID=0b4c62815258542c19806faa0474164a9dee0bf0a7eb56e8357770bc3e5118b4
     - GIT_COMMITTED_AT=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then git log -1 --pretty=format:%ct; else git log -1 --skip 1 --pretty=format:%ct; fi)
-    - XDEBUG_MODE=coverage
     
 language: php
 
 php:
-  - '7.3.26'    
+  - '7.3'    
 
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
@@ -30,7 +29,7 @@ env:
 language: php
 
 php:
-  - '7.3.26'    
+  - '7.3'    
 
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
@@ -43,5 +42,5 @@ install:
 dist: trusty
 
 script:
-  - "vendor/bin/phpunit --coverage-text --coverage-clover build/logs/clover.xml"
+  - "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-text --coverage-clover build/logs/clover.xml"
   - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
