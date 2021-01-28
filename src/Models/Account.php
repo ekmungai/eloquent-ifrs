@@ -420,16 +420,15 @@ class Account extends Model implements Recyclable, Segregatable
             $this->currency_id = Auth::user()->entity->currency_id;
         }
 
-        if (is_null($this->code) || $this->isDirty('account_type')) {
-            if (is_null($this->account_type)) {
-                throw new MissingAccountType();
-            }
+        if (is_null($this->account_type)) {
+            throw new MissingAccountType();
+        }
 
-            if (is_null($this->code)){
-                $this->code = config('ifrs')['account_codes'][$this->account_type] + Account::withTrashed()
+        $typeChanged = $this->isDirty('account_type') && $this->account_type != $this->getOriginal('account_type') && !is_null($this->id);
+        if (is_null($this->code) ||  $typeChanged) {
+            $this->code = config('ifrs')['account_codes'][$this->account_type] + Account::withTrashed()
                 ->where('account_type', $this->account_type)
                 ->count() + 1;
-            }
         }
 
         if (!is_null($this->category) && $this->category->category_type != $this->account_type) {

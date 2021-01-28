@@ -132,7 +132,7 @@ class AccountTest extends TestCase
         ]);
         $account->save();
 
-        $this->assertEquals(501, $account->code);
+        $this->assertEquals(6000, $account->code);
 
         // Auto generated code
         $account = new Account([
@@ -141,8 +141,8 @@ class AccountTest extends TestCase
             'category_id' => null
         ]);
         $account->save();
-
-        $this->assertEquals(1, $account->code);
+        
+        $this->assertEquals(config('ifrs')['account_codes'][Account::NON_CURRENT_ASSET] + 1, $account->code);
 
         factory(Account::class, 3)->create([
             "account_type" => Account::OPERATING_REVENUE,
@@ -157,7 +157,7 @@ class AccountTest extends TestCase
         ]);
         $account->save();
 
-        $this->assertEquals(4004, $account->code);
+        $this->assertEquals(config('ifrs')['account_codes'][Account::OPERATING_REVENUE] + 4, $account->code);
 
         factory(Account::class, 12)->create([
             "account_type" => Account::CURRENT_LIABILITY,
@@ -173,7 +173,7 @@ class AccountTest extends TestCase
 
         $account->save();
 
-        $this->assertEquals(2213, $account->code);
+        $this->assertEquals(config('ifrs')['account_codes'][Account::CURRENT_LIABILITY] + 13, $account->code);
 
         // Account type change
         $account = new Account([
@@ -183,12 +183,12 @@ class AccountTest extends TestCase
         ]);
         $account->save();
 
-        $this->assertEquals(301, $account->code);
+        $this->assertEquals(config('ifrs')['account_codes'][Account::BANK] + 1, $account->code);
 
         $account->account_type = Account::RECEIVABLE;
         $account->save();
 
-        $this->assertEquals(502, $account->code);
+        $this->assertEquals(config('ifrs')['account_codes'][Account::RECEIVABLE] + 2, $account->code);
     }
 
     /**
