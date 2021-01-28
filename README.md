@@ -84,12 +84,15 @@ Open your `User` model and implement the below interfaces and also include the t
 <?php
 
 use IFRS\Traits\IFRSUser;
+use IFRS\Traits\Recycling;
+
 use IFRS\Interfaces\Recyclable;
 ...
 
 class User ... implements Recyclable {
   ...
   use IFRSUser;
+  use Recycling;
   ...
 }
 ...
