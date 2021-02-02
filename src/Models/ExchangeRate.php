@@ -50,6 +50,7 @@ class ExchangeRate extends Model implements Segregatable, Recyclable
         'valid_to',
         'currency_id',
         'rate',
+        'entity_id',
     ];
 
     /**

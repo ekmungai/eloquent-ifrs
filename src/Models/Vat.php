@@ -55,6 +55,7 @@ class Vat extends Model implements Segregatable, Recyclable
         'valid_from',
         'account_id',
         'valid_to',
+        'entity_id',
     ];
 
     /**

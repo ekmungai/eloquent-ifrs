@@ -49,7 +49,7 @@ class RecycledObject extends Model implements Segregatable
      * @var array
      */
     protected $fillable = [
-        'user_id', 'entity_id', 'recyclable_id', 'recyclable_type',
+        'user_id', 'entity_id', 'recyclable_id', 'recyclable_type', 'entity_id',
     ];
 
     /**

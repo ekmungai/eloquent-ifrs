@@ -102,7 +102,8 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         'reference',
         'credited',
         'transaction_type',
-        'transaction_no'
+        'transaction_no',
+        'entity_id',
     ];
 
     /**

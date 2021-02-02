@@ -87,6 +87,7 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
         'transaction_no',
         'reference',
         'balance_type',
+        'entity_id',
         'transaction_type',
         'transaction_date',
         'amount'

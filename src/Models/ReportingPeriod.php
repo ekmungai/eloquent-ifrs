@@ -63,6 +63,7 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
         'period_count',
         'calendar_year',
         'status',
+        'entity_id',
     ];
 
     /**

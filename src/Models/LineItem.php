@@ -59,6 +59,7 @@ class LineItem extends Model implements Recyclable, Segregatable
         'description',
         'transaction_id',
         'vat_inclusive',
+        'entity_id',
     ];
 
     /**

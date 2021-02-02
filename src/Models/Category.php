@@ -48,6 +48,7 @@ class Category extends Model implements Segregatable, Recyclable
     protected $fillable = [
         'name',
         'category_type',
+        'entity_id',
     ];
 
     /**

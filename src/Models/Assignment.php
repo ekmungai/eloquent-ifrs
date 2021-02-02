@@ -90,6 +90,7 @@ class Assignment extends Model implements Segregatable
         'transaction_id',
         'cleared_id',
         'cleared_type',
+        'entity_id',
         'forex_account_id',
         'amount',
     ];

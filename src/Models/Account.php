@@ -105,6 +105,7 @@ class Account extends Model implements Recyclable, Segregatable
         'account_id',
         'currency_id',
         'category_id',
+        'entity_id',
         'description',
         'code',
     ];
