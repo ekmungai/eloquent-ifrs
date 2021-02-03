@@ -138,11 +138,124 @@ class TransactionTest extends TestCase
      */
     public function testTransactionRecycling()
     {
-        $transaction = factory(Transaction::class)->create();
+        $currency = factory(Currency::class)->create();
+        $account = factory(Account::class)->create([
+            'category_id' => null
+        ]);
+
+        $transaction = JournalEntry::create([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $currency->id
+        ]);
+        $transaction->addLineItem(
+            LineItem::create([
+                'vat_id' => factory(Vat::class)->create([
+                    'rate' => 0
+                ])->id,
+                'account_id' => factory(Account::class)->create([
+                    'account_type' => Account::CONTROL,
+                    'category_id' => null
+                ])->id,
+                'narration' => $this->faker->sentence,
+                'quantity' => 1,
+                'amount' => 50,
+            ])
+        );
+
+        // Unposted Transaction deleting is possible
         $transaction->delete();
 
         $recycled = RecycledObject::all()->first();
         $this->assertEquals($transaction->recycled->first(), $recycled);
+        $this->assertEquals($recycled->recyclable->id, $transaction->id);
+
+        $transaction->restore();
+
+        $this->assertEquals(count($transaction->recycled()->get()), 0);
+        $this->assertEquals($transaction->deleted_at, null);
+
+        //'hard' delete
+        $transaction->forceDelete();
+
+        $this->assertEquals(count(Transaction::all()), 0);
+        $this->assertEquals(count(Transaction::withoutGlobalScopes()->get()), 1);
+        $this->assertNotEquals($transaction->deleted_at, null);
+        $this->assertNotEquals($transaction->destroyed_at, null);
+
+        //destroyed objects cannot be restored
+        $transaction->restore();
+
+        $this->assertNotEquals($transaction->deleted_at, null);
+        $this->assertNotEquals($transaction->destroyed_at, null);
+
+        //Posted transaction cannot be deleted
+        $transaction = JournalEntry::create([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $currency->id
+        ]);
+        $transaction->addLineItem(
+            LineItem::create([
+                'vat_id' => factory(Vat::class)->create([
+                    'rate' => 0
+                ])->id,
+                'account_id' => factory(Account::class)->create([
+                    'account_type' => Account::CONTROL,
+                    'category_id' => null
+                ])->id,
+                'narration' => $this->faker->sentence,
+                'quantity' => 1,
+                'amount' => 50,
+            ])
+        );
+        $transaction->post();
+
+        $this->expectException(PostedTransaction::class);
+        $this->expectExceptionMessage('Cannot delete a posted Transaction ');
+        $transaction->delete();
+    }
+
+        /**
+     * Test Transaction Model recylcling
+     *
+     * @return void
+     */
+    public function testTransactionDestroying()
+    {
+        $currency = factory(Currency::class)->create();
+        $account = factory(Account::class)->create([
+            'category_id' => null
+        ]);
+
+        //Posted transaction cannot be deleted
+        $transaction = JournalEntry::create([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $currency->id
+        ]);
+        $transaction->addLineItem(
+            LineItem::create([
+                'vat_id' => factory(Vat::class)->create([
+                    'rate' => 0
+                ])->id,
+                'account_id' => factory(Account::class)->create([
+                    'account_type' => Account::CONTROL,
+                    'category_id' => null
+                ])->id,
+                'narration' => $this->faker->sentence,
+                'quantity' => 1,
+                'amount' => 50,
+            ])
+        );
+        $transaction->post();
+
+        $this->expectException(PostedTransaction::class);
+        $this->expectExceptionMessage('Cannot delete a posted Transaction ');
+        $transaction->forceDelete();
     }
 
     /**
@@ -759,7 +872,7 @@ class TransactionTest extends TestCase
         $this->assertEquals($transaction->balance, 75);
         $this->assertEquals($cleared->cleared_amount, 50);
 
-        $cleared->delete();
+        $assignment->delete();
 
         $transaction = Transaction::find($transaction->id);
 

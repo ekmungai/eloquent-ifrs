@@ -97,14 +97,35 @@ class EntityTest extends TestCase
      */
     public function testEntityRecycling()
     {
-        $entity = new Entity([
+        $entity = Entity::create([
             'name' => $this->faker->company,
             'currency_id' => factory(Currency::class)->create()->id,
         ]);
+
         $entity->delete();
 
         $recycled = RecycledObject::all()->first();
-        $this->assertEquals($entity->recycled()->first(), $recycled);
+        $this->assertEquals($entity->recycled->first(), $recycled);
+        $this->assertEquals($recycled->recyclable->id, $entity->id);
+        
+        $entity->restore();
+
+        $this->assertEquals(count($entity->recycled()->get()), 0);
+        $this->assertEquals($entity->deleted_at, null);
+
+        //'hard' delete
+        $entity->forceDelete();
+
+        $this->assertEquals(count(Entity::all()), 1);
+        $this->assertEquals(count(Entity::withoutGlobalScopes()->get()), 2);
+        $this->assertNotEquals($entity->deleted_at, null);
+        $this->assertNotEquals($entity->destroyed_at, null);
+
+        //destroyed objects cannot be restored
+        $entity->restore();
+
+        $this->assertNotEquals($entity->deleted_at, null);
+        $this->assertNotEquals($entity->destroyed_at, null);
     }
 
     /**

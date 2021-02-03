@@ -110,10 +110,32 @@ class AccountTest extends TestCase
         $account = factory(Account::class)->create([
             'category_id' => null
         ]);
+
+        //soft delete
         $account->delete();
 
         $recycled = RecycledObject::all()->first();
         $this->assertEquals($account->recycled->first(), $recycled);
+        $this->assertEquals($recycled->recyclable->id, $account->id);
+
+        $account->restore();
+
+        $this->assertEquals(count($account->recycled()->get()), 0);
+        $this->assertEquals($account->deleted_at, null);
+
+        //'hard' delete
+        $account->forceDelete();
+
+        $this->assertEquals(count(Account::all()), 0);
+        $this->assertEquals(count(Account::withoutGlobalScopes()->get()), 1);
+        $this->assertNotEquals($account->deleted_at, null);
+        $this->assertNotEquals($account->destroyed_at, null);
+
+        //destroyed objects cannot be restored
+        $account->restore();
+
+        $this->assertNotEquals($account->deleted_at, null);
+        $this->assertNotEquals($account->destroyed_at, null);
     }
 
     /**

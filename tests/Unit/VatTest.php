@@ -64,11 +64,12 @@ class VatTest extends TestCase
      */
     public function testVatRecycling()
     {
-        $vat = new Vat([
+        $vat = Vat::create([
             'name' => $this->faker->name,
             'code' => $this->faker->randomLetter(),
             'rate' => 10,
             'account_id' => factory(Account::class)->create([
+                'account_type' => Account::CONTROL,
                 'category_id' => null
             ])->id,
         ]);
@@ -76,6 +77,26 @@ class VatTest extends TestCase
 
         $recycled = RecycledObject::all()->first();
         $this->assertEquals($vat->recycled->first(), $recycled);
+        $this->assertEquals($recycled->recyclable->id, $vat->id);
+
+        $vat->restore();
+
+        $this->assertEquals(count($vat->recycled()->get()), 0);
+        $this->assertEquals($vat->deleted_at, null);
+
+        //'hard' delete
+        $vat->forceDelete();
+
+        $this->assertEquals(count(Vat::all()), 0);
+        $this->assertEquals(count(Vat::withoutGlobalScopes()->get()), 1);
+        $this->assertNotEquals($vat->deleted_at, null);
+        $this->assertNotEquals($vat->destroyed_at, null);
+
+        //destroyed objects cannot be restored
+        $vat->restore();
+
+        $this->assertNotEquals($vat->deleted_at, null);
+        $this->assertNotEquals($vat->destroyed_at, null);
     }
 
     /**

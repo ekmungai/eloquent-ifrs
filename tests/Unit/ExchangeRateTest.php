@@ -75,15 +75,35 @@ class ExchangeRateTest extends TestCase
      */
     public function testExchangeRateRecycling()
     {
-        $exchangeRate = new ExchangeRate([
+        $exchangeRate = ExchangeRate::create([
             'valid_from' => Carbon::now(),
             'valid_to' => Carbon::now()->addMonth(),
             'currency_id' => factory(Currency::class)->create()->id,
             'rate' => 10
         ]);
-        $exchangeRate->save();
+        $exchangeRate->delete();
 
         $recycled = RecycledObject::all()->first();
         $this->assertEquals($exchangeRate->recycled->first(), $recycled);
+        $this->assertEquals($recycled->recyclable->id, $exchangeRate->id);
+
+        $exchangeRate->restore();
+
+        $this->assertEquals(count($exchangeRate->recycled()->get()), 0);
+        $this->assertEquals($exchangeRate->deleted_at, null);
+
+        //'hard' delete
+        $exchangeRate->forceDelete();
+
+        $this->assertEquals(count(ExchangeRate::all()), 0);
+        $this->assertEquals(count(ExchangeRate::withoutGlobalScopes()->get()), 1);
+        $this->assertNotEquals($exchangeRate->deleted_at, null);
+        $this->assertNotEquals($exchangeRate->destroyed_at, null);
+
+        //destroyed objects cannot be restored
+        $exchangeRate->restore();
+
+        $this->assertNotEquals($exchangeRate->deleted_at, null);
+        $this->assertNotEquals($exchangeRate->destroyed_at, null);
     }
 }

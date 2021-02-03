@@ -75,7 +75,6 @@ class CurrencyTest extends TestCase
         $this->assertEquals(count(Currency::all()), 1); // Default Entity Reporting Currency
     }
 
-
     /**
      * Test Currency Model recylcling
      *
@@ -83,7 +82,7 @@ class CurrencyTest extends TestCase
      */
     public function testCurrencyRecycling()
     {
-        $currency = new Currency([
+        $currency = Currency::create([
             'name' => $this->faker->word,
             'currency_code' => $this->faker->currencyCode,
         ]);
@@ -91,5 +90,25 @@ class CurrencyTest extends TestCase
 
         $recycled = RecycledObject::all()->first();
         $this->assertEquals($currency->recycled->first(), $recycled);
+        $this->assertEquals($recycled->recyclable->id, $currency->id);
+        
+        $currency->restore();
+
+        $this->assertEquals(count($currency->recycled()->get()), 0);
+        $this->assertEquals($currency->deleted_at, null);
+
+        //'hard' delete
+        $currency->forceDelete();
+
+        $this->assertEquals(count(Currency::all()), 1);
+        $this->assertEquals(count(Currency::withoutGlobalScopes()->get()), 2);
+        $this->assertNotEquals($currency->deleted_at, null);
+        $this->assertNotEquals($currency->destroyed_at, null);
+
+        //destroyed objects cannot be restored
+        $currency->restore();
+
+        $this->assertNotEquals($currency->deleted_at, null);
+        $this->assertNotEquals($currency->destroyed_at, null);
     }
 }

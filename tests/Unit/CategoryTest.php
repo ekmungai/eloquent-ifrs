@@ -52,7 +52,7 @@ class CategoryTest extends TestCase
     }
 
     /**
-     * Test Category model Entity Scope.
+     * Test Category model categ$category Scope.
      *
      * @return void
      */
@@ -87,16 +87,36 @@ class CategoryTest extends TestCase
      */
     public function testCategoryRecycling()
     {
-        $category = new Category([
+        $category = Category::create([
             'name' => $this->faker->word,
             'category_type' => $this->faker->randomElement(
                 array_keys(config('ifrs')['accounts'])
             ),
         ]);
-        $category->save();
+        $category->delete();
 
         $recycled = RecycledObject::all()->first();
         $this->assertEquals($category->recycled->first(), $recycled);
+        $this->assertEquals($recycled->recyclable->id, $category->id);
+        
+        $category->restore();
+
+        $this->assertEquals(count($category->recycled()->get()), 0);
+        $this->assertEquals($category->deleted_at, null);
+
+        //'hard' delete
+        $category->forceDelete();
+
+        $this->assertEquals(count(Category::all()), 0);
+        $this->assertEquals(count(Category::withoutGlobalScopes()->get()), 1);
+        $this->assertNotEquals($category->deleted_at, null);
+        $this->assertNotEquals($category->destroyed_at, null);
+
+        //destroyed objects cannot be restored
+        $category->restore();
+
+        $this->assertNotEquals($category->deleted_at, null);
+        $this->assertNotEquals($category->destroyed_at, null);
     }
 
     /**

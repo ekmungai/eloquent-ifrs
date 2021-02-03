@@ -629,6 +629,11 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         if (count($this->assignments) > 0) {
             throw new HangingClearances();
         }
+        
+        // No deleting posted transactions
+        if (count($this->ledgers) > 0) {
+            throw new PostedTransaction('delete');
+        }
 
         // Remove clearance records
         $this->clearances->map(
