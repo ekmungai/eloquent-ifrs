@@ -56,14 +56,17 @@ class TrialBalance extends FinancialStatement
     {
         foreach (Account::all() as $account) {
             $balance = $account->closingBalance($this->endDate);
-            if ($balance > 0) {
-                $this->balances["debit"] += abs($balance);
-            } else {
-                $this->balances["credit"] += abs($balance);
-            }
+            
+            if ($balance <> 0) {
+                if ($balance > 0) {
+                    $this->balances["debit"] += abs($balance);
+                } else {
+                    $this->balances["credit"] += abs($balance);
+                }
 
-            $this->getIncomeStatementSections($account, $balance);
-            $this->getBalanceSheetSections($account, $balance);
+                $this->getIncomeStatementSections($account, $balance);
+                $this->getBalanceSheetSections($account, $balance);
+            }
         }
     }
 

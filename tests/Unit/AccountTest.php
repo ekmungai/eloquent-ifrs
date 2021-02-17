@@ -211,6 +211,17 @@ class AccountTest extends TestCase
         $account->save();
 
         $this->assertEquals(config('ifrs')['account_codes'][Account::RECEIVABLE] + 2, $account->code);
+
+        // Different entity resets the account code
+        $account = new Account([
+            'name' => $this->faker->name,
+            'account_type' => Account::OPERATING_REVENUE,
+            'category_id' => null,
+            'entity_id' => 2
+        ]);
+        $account->save();
+
+        $this->assertEquals(config('ifrs')['account_codes'][Account::OPERATING_REVENUE] + 1, $account->code);
     }
 
     /**

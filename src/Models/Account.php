@@ -194,10 +194,6 @@ class Account extends Model implements Recyclable, Segregatable
 
             $account->closingBalance = $account->openingBalance + $account->balanceMovement;
 
-            if(in_array("BANK",$accountTypes)){
-                echo 1;
-            }
-            
             $account->balanceMovement *= -1;
 
             if ($account->closingBalance <> 0 || $account->balanceMovement <> 0) {
@@ -413,7 +409,7 @@ class Account extends Model implements Recyclable, Segregatable
     }
 
     /**
-     * Calculate Account Code.
+     * Validate Account.
      */
     public function save(array $options = []): bool
     {
@@ -426,10 +422,9 @@ class Account extends Model implements Recyclable, Segregatable
         }
 
         $typeChanged = $this->isDirty('account_type') && $this->account_type != $this->getOriginal('account_type') && !is_null($this->id);
+        
         if (is_null($this->code) ||  $typeChanged) {
-            $this->code = config('ifrs')['account_codes'][$this->account_type] + Account::withTrashed()
-                ->where('account_type', $this->account_type)
-                ->count() + 1;
+            $this->code = $this->getAccountCode();
         }
 
         if (!is_null($this->category) && $this->category->category_type != $this->account_type) {
@@ -438,6 +433,20 @@ class Account extends Model implements Recyclable, Segregatable
 
         $this->name = ucfirst($this->name);
         return parent::save($options);
+    }
+
+    /**
+     * Calculate Account Code.
+     */
+    private function getAccountCode(): int
+    {
+        $query = Account::withTrashed()
+        ->where('account_type', $this->account_type);
+
+        if(!is_null($this->entity_id)){
+            $query->withoutGlobalScopes()->where('entity_id', $this->entity_id);
+        }
+        return config('ifrs')['account_codes'][$this->account_type] + $query->count() + 1;
     }
 
     /**
