@@ -71,7 +71,7 @@ class IncomeStatement extends FinancialStatement
      */
     public function __construct(string $startDate = null, string $endDate = null)
     {
-        $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart() : $startDate;
+        $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart() : Carbon::parse($startDate);
         $this->period['endDate'] = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
 
         $period = ReportingPeriod::where("calendar_year", $endDate)->first();
