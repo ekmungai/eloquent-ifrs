@@ -91,10 +91,10 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
     /**
      * Fetch reporting period for the date
      *
-     * @param Carbon $date
+     * @param string|Carbon $date
      * @return self
      */
-    public static function getPeriod(Carbon $date = null)
+    public static function getPeriod($date = null)
     {
         $year = ReportingPeriod::year($date);
         
