@@ -114,7 +114,7 @@ class IncomeStatement extends FinancialStatement
     /**
      * Get Cash Flow Statement Sections and Results.
      */
-    public function getSections($startDate, $endDate, $fullbalance = true): void
+    public function getSections($startDate = null, $endDate = null, $fullbalance = true): void
     {
         
         parent::getSections($this->period['startDate'], $this->period['endDate'], false);

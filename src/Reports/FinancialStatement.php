@@ -202,7 +202,7 @@ abstract class FinancialStatement
      *
      * Get Statement Sections.
      */
-    public function getSections($startDate, $endDate, $fullbalance = true): void
+    public function getSections($startDate = null, $endDate = null, $fullbalance = true): void
     {
         foreach (array_keys($this->accounts) as $section) {
             foreach (config('ifrs')[$section] as $accountType) {

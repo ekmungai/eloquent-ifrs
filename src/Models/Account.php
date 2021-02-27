@@ -182,8 +182,8 @@ class Account extends Model implements Recyclable, Segregatable
     ): array {
         $balances = ['sectionOpeningBalance' => 0, 'sectionClosingBalance' => 0, 'sectionMovement' => 0, 'sectionCategories' => []];
 
-        $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate) : $startDate;
-        $endDate = is_null($endDate) ? Carbon::now() : $endDate;
+        $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate) : Carbon::parse($startDate);
+        $endDate = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
         $periodStart = ReportingPeriod::periodStart($endDate);
 
         $year = ReportingPeriod::year($endDate);
