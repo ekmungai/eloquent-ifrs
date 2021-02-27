@@ -169,12 +169,12 @@ abstract class FinancialStatement
     /**
      * Construct Financial Statement for the given period
      *
-     * @param string $year
+     * @param ReportingPeriod $period
      */
-    public function __construct(string $year = null)
+    public function __construct(ReportingPeriod $period = null)
     {
         $this->entity = Auth::user()->entity;
-        $this->reportingPeriod = is_null($year) ? (string) ReportingPeriod::year() : $year;
+        $this->reportingPeriod = is_null($period) ? $this->entity->currentReportingPeriod : $period;
 
         $this->statement = "";
         $this->indent = "    ";

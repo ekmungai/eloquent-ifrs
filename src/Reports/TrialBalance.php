@@ -10,6 +10,7 @@
 
 namespace IFRS\Reports;
 
+use Carbon\Carbon;
 use IFRS\Models\Account;
 use IFRS\Models\ReportingPeriod;
 
@@ -23,24 +24,18 @@ class TrialBalance extends FinancialStatement
     const TITLE = 'TRIAL_BALANCE';
 
     /**
-     * Trial Balance Reporting Period.
-     *
-     * @var string
-     */
-    public $reportingPeriod = null;
-
-
-    /**
      * Construct Trial Balance
      *
      * @param string $year
      */
     public function __construct(string $year = null)
     {
-        parent::__construct($year);
-
-        $this->reportingPeriod = is_null($year) ? (string) ReportingPeriod::year() : $year;
-        $this->endDate = ReportingPeriod::periodEnd($year . "-01-01");
+        $startDate = $year."-01-01";
+        $period = ReportingPeriod::getPeriod(Carbon::parse($startDate));
+        
+        parent::__construct($period);
+        
+        $this->endDate = ReportingPeriod::periodEnd($startDate);
 
         $this->accounts[IncomeStatement::TITLE] = [];
         $this->accounts[BalanceSheet::TITLE] = [];

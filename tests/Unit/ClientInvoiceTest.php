@@ -34,12 +34,11 @@ class ClientInvoiceTest extends TestCase
             'category_id' => null
         ]);
 
-        $clientInvoice = new ClientInvoice([
+        $clientInvoice = ClientInvoice::create([
             "account_id" => $clientAccount->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
         ]);
-        $clientInvoice->save();
 
         $this->assertEquals($clientInvoice->account->name, $clientAccount->name);
         $this->assertEquals($clientInvoice->account->description, $clientAccount->description);
