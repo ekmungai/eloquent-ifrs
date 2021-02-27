@@ -51,3 +51,6 @@ Homestead.json
 .phpunit.result.cache
 clover.*
 /.settings
+
+# PHPSTORM
+.idea
