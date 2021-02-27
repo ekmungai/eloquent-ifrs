@@ -71,9 +71,10 @@ class BalanceSheet extends FinancialStatement
      */
     public function __construct(string $endDate = null)
     {
-        $this->period['endDate'] = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
+        $this->period['startDate'] = ReportingPeriod::periodStart($endDate);
+        $this->period['endDate'] = is_null($endDate) ? ReportingPeriod::periodEnd() : Carbon::parse($endDate);
 
-        $period = ReportingPeriod::getPeriod($endDate);
+        $period = ReportingPeriod::getPeriod($this->period['endDate']);
         parent::__construct($period);
 
         // Section Accounts
@@ -112,9 +113,9 @@ class BalanceSheet extends FinancialStatement
     /**
      * Get Balance Sheet Sections.
      */
-    public function getSections(): void
+    public function getSections($startDate, $endDate, $fullbalance = true): void
     {
-        parent::getSections();
+        parent::getSections($this->period['startDate'], $this->period['endDate']);
 
         // Net Assets   
         $this->results[self::NET_ASSETS] = $this->totals[self::ASSETS] + ($this->totals[self::LIABILITIES] + $this->totals[self::RECONCILIATION]);

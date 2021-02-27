@@ -10,6 +10,7 @@ use IFRS\Models\Account;
 use IFRS\Models\Balance;
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\LineItem;
+use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Vat;
 use IFRS\Reports\CashFlowStatement;
 
@@ -395,7 +396,10 @@ class CashFlowStatementTest extends TestCase
         $journalEntry->addLineItem($lineItem);
         $journalEntry->post();
 
-        $cashFlowStatement->getSections();
+        $startDate = ReportingPeriod::periodStart();
+        $endDate = ReportingPeriod::periodEnd();
+
+        $cashFlowStatement->getSections($startDate, $endDate);
         $cashFlowStatement->toString();
 
         $provisions = CashFlowStatement::PROVISIONS;

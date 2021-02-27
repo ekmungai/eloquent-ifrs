@@ -10,6 +10,7 @@ use IFRS\Models\Account;
 use IFRS\Models\Balance;
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\LineItem;
+use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Vat;
 use IFRS\Reports\BalanceSheet;
 
@@ -129,7 +130,11 @@ class BalanceSheetTest extends TestCase
         $journalEntry->addLineItem($lineItem);
         $journalEntry->post();
 
-        $balanceSheet->getSections();
+        $startDate = ReportingPeriod::periodStart();
+        $endDate = ReportingPeriod::periodEnd();
+
+        // dd(Account::sectionBalances([Account::INVENTORY], $startDate, $endDate));
+        $balanceSheet->getSections($startDate, $endDate);
         $balanceSheet->toString();
 
         $assets = BalanceSheet::ASSETS;

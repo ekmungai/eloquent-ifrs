@@ -72,10 +72,10 @@ class IncomeStatement extends FinancialStatement
     public function __construct(string $startDate = null, string $endDate = null)
     {
         $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart() : $startDate;
-        $this->period['endDate'] = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
+        $this->period['endDate'] = is_null($endDate) ? ReportingPeriod::periodEnd() : Carbon::parse($endDate);
 
-        $period = ReportingPeriod::getPeriod($endDate);
-        parent::__construct($period);
+        $reportingPeriod = ReportingPeriod::getPeriod($endDate);
+        parent::__construct($reportingPeriod);
 
         // Section Accounts
         $this->accounts[self::OPERATING_REVENUES] = [];
@@ -114,9 +114,10 @@ class IncomeStatement extends FinancialStatement
     /**
      * Get Cash Flow Statement Sections and Results.
      */
-    public function getSections(): void
+    public function getSections($startDate, $endDate, $fullbalance = true): void
     {
-        parent::getSections();
+        
+        parent::getSections($this->period['startDate'], $this->period['endDate'], false);
 
         // Gross Profit
         $this->results[self::GROSS_PROFIT] = ($this->totals[self::OPERATING_REVENUES] + $this->totals[self::OPERATING_EXPENSES]) * -1;

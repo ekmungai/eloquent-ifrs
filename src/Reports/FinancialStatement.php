@@ -198,13 +198,15 @@ abstract class FinancialStatement
     }
 
     /**
+     * @param bool $fullbalance
+     *
      * Get Statement Sections.
      */
-    public function getSections(): void
+    public function getSections($startDate, $endDate, $fullbalance = true): void
     {
         foreach (array_keys($this->accounts) as $section) {
             foreach (config('ifrs')[$section] as $accountType) {
-                $sectionBalances = Account::sectionBalances([$accountType]);
+                $sectionBalances = Account::sectionBalances([$accountType], $startDate, $endDate, $fullbalance);
 
                 if ($sectionBalances["sectionClosingBalance"] <> 0) {
 

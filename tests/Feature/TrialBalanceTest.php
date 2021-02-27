@@ -10,6 +10,7 @@ use IFRS\Models\Account;
 use IFRS\Models\Balance;
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\LineItem;
+use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Vat;
 use IFRS\Reports\BalanceSheet;
 use IFRS\Reports\IncomeStatement;
@@ -503,8 +504,11 @@ class TrialBalanceTest extends TestCase
         $bill->addLineItem(factory(LineItem::class)->create(["account_id" => $otherExpense]));
         $bill->post();
 
+        $startDate = ReportingPeriod::periodStart();
+        $endDate = ReportingPeriod::periodEnd();
+
         $trialBalance = new TrialBalance();
-        $trialBalance->getSections();
+        $trialBalance->getSections($startDate, $endDate);
 
         /*
          | ------------------------------

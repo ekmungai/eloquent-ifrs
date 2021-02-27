@@ -8,6 +8,7 @@ use IFRS\Tests\TestCase;
 
 use IFRS\Models\Account;
 use IFRS\Models\LineItem;
+use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Vat;
 use IFRS\Reports\IncomeStatement;
 
@@ -242,7 +243,11 @@ class IncomeStatementTest extends TestCase
 
         $debitNote->post();
 
-        $incomeStatement->getSections();
+        $startDate = ReportingPeriod::periodStart();
+        $endDate = ReportingPeriod::periodEnd();
+
+        $incomeStatement->getSections($startDate, $endDate, false);
+
         $incomeStatement->toString();
 
         $operatingRevenues = IncomeStatement::OPERATING_REVENUES;
