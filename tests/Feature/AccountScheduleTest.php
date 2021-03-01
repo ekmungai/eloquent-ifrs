@@ -254,7 +254,7 @@ class AccountScheduleTest extends TestCase
         $this->assertEquals($schedule->balances["originalAmount"], 241);
         $this->assertEquals($schedule->balances["clearedAmount"], 95);
         $this->assertEquals($schedule->balances["unclearedAmount"], 146);
-        $this->assertEquals($schedule->balances["totalAge"], 366);
+        $this->assertEquals($schedule->balances["totalAge"], 365);
         $this->assertEquals($schedule->balances["averageAge"], 122);
     }
 

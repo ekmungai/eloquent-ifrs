@@ -126,7 +126,7 @@ class BalanceSheet extends FinancialStatement
         )["sectionClosingBalance"];
 
         $this->balances[self::EQUITY][self::NET_PROFIT] = $netProfit;
-        $this->accounts[self::EQUITY][self::EQUITY][config('ifrs')['statements'][self::NET_PROFIT]] = [
+        $this->accounts[self::EQUITY][self::NET_PROFIT][config('ifrs')['statements'][self::NET_PROFIT]] = [
             "accounts" => null,
             "total" => $netProfit,
             "id" => 0
