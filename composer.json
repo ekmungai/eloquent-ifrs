@@ -24,7 +24,8 @@
 		"php" : "^7.2.5",
 		"illuminate/database" : "^6.0|^7.30.4",
 		"illuminate/auth" : "^6.0|^7.30.4",
-		"calebporzio/parental" : "^0.10.0"
+		"calebporzio/parental" : "^0.10.0",
+		"doctrine/dbal": "^2.5"
 	},
 	"require-dev" : {
 		"facade/ignition" : "^1.4",

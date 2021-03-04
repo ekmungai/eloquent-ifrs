@@ -12,6 +12,7 @@ namespace IFRS\Models;
 
 use Carbon\Carbon;
 use IFRS\Exceptions\MissingCurrency;
+use IFRS\Exceptions\UnconfiguredLocale;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -49,6 +50,7 @@ class Entity extends Model implements Recyclable
         'parent_id',
         'year_start',
         'multi_currency',
+        'locale',
     ];
 
     /**
@@ -200,5 +202,21 @@ class Entity extends Model implements Recyclable
         }
 
         return is_null($this->parent) ? $this->currency : $this->parent->currency;
+    }
+
+    /**
+     * Validate Entity.
+     */
+    public function save(array $options = []): bool
+    {
+        if(is_null($this->locale)){
+            $this->locale = config('ifrs.locales')[0];
+        }else{
+            if(!in_array($this->locale, config('ifrs.locales'))){
+                throw new UnconfiguredLocale($this->locale);
+            }
+        }
+
+        return parent::save();
     }
 }

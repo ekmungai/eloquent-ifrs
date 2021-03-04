@@ -27,9 +27,23 @@ return [
     |
     | This configation maps Financial Statements account types to a coding scheme of your
     | choice such as the German SKr04 or Swedish BAS as well a defining the a glossary of
-    | terms and names used in the application
+    | terms and names used in the application among other settings
     |
     */
+
+    /*
+     |--------------------------------------------------------------------------
+     | Locales
+     |--------------------------------------------------------------------------
+     |
+     | These are the locales whose currencies can be localized for reporting. At least one
+     | locale must be specified to serve as the default
+     |
+     */
+    'locales' => [
+        'en_GB',
+        'ar_BH'
+    ],
 
     /*
      |--------------------------------------------------------------------------

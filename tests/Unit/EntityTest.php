@@ -14,6 +14,7 @@ use IFRS\User;
 use IFRS\Models\Account;
 
 use IFRS\Exceptions\UnauthorizedUser;
+use IFRS\Exceptions\UnconfiguredLocale;
 
 class EntityTest extends TestCase
 {
@@ -141,5 +142,45 @@ class EntityTest extends TestCase
         $this->expectExceptionMessage('You are not Authorized to perform that action');
 
         factory(Account::class)->create();
+    }
+
+    /**
+     * Test Entity Locale
+     *
+     * @return void
+     */
+    public function testEntityLocale()
+    {
+        $entity = new Entity([
+            'name' => $this->faker->company,
+        ]);
+        $entity->save();
+
+        $this->assertEquals($entity->locale, 'en_GB');
+
+        $entity = new Entity([
+            'name' => $this->faker->company,
+            'locale' => 'ar_BH'
+        ]);
+        $entity->save();
+
+        $this->assertEquals($entity->locale, 'ar_BH');
+    }
+
+    /**
+     * Test Entity Locale Exception
+     *
+     * @return void
+     */
+    public function testEntityLocaleException()
+    {
+        $entity = new Entity([
+            'name' => $this->faker->company,
+            'locale' => 'en_US'
+        ]);
+        $this->expectException(UnconfiguredLocale::class);
+        $this->expectExceptionMessage('Locale en_US is not configured');
+
+        $entity->save();
     }
 }
