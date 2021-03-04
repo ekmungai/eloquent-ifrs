@@ -362,7 +362,7 @@ class Account extends Model implements Recyclable, Segregatable
             ->where($transactionTable . '.deleted_at', null)
             ->where($transactionTable . '.entity_id', $this->entity_id)
             ->where($transactionTable . '.transaction_date', '>=', $startDate)
-            ->where($transactionTable . '.transaction_date', '<=', $endDate)
+            ->where($transactionTable . '.transaction_date', '<=', $endDate->endOfDay())
             ->where($transactionTable . '.currency_id', $this->currency_id)
             ->select(
                 $transactionTable . '.id',

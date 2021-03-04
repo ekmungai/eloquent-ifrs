@@ -11,8 +11,10 @@
 namespace IFRS\Reports;
 
 use Carbon\Carbon;
-
+use IFRS\Models\Balance;
 use IFRS\Models\ReportingPeriod;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class IncomeStatement extends FinancialStatement
 {
@@ -61,6 +63,72 @@ class IncomeStatement extends FinancialStatement
             config('ifrs')[self::OPERATING_EXPENSES],
             config('ifrs')[self::NON_OPERATING_EXPENSES]
         );
+    }
+
+    /**
+     * Get Income Statement Account Types.
+     *
+     * @param int month
+     * @param int year
+     * @return array
+     */
+    private static function getBalance( array $accountTypes, Carbon $startDate, Carbon $endDate)
+    {
+        $accountTable = config('ifrs.table_prefix') . 'accounts';
+        $ledgerTable = config('ifrs.table_prefix') . 'ledgers';
+
+        $baseQuery = DB::table(
+            $accountTable
+        )
+            ->leftJoin($ledgerTable, $accountTable . '.id', '=', $ledgerTable . '.post_account')
+            ->whereIn('account_type', $accountTypes)
+            ->where($ledgerTable . '.deleted_at', null)
+            ->where($accountTable . '.entity_id', Auth::user()->entity_id)
+            ->where($ledgerTable . '.posting_date', '>=', $startDate)
+            ->where($ledgerTable . '.posting_date', '<=', $endDate->endOfDay());
+            
+            $cloneQuery = clone $baseQuery;
+        
+        $debits = $baseQuery
+        ->where($ledgerTable . '.entry_type', Balance::DEBIT)
+        ->sum($ledgerTable . '.amount');
+
+        $credits = $cloneQuery
+        ->where($ledgerTable . '.entry_type', Balance::CREDIT)
+        ->sum($ledgerTable . '.amount');
+        
+        return $debits - $credits;
+    }
+
+    /**
+     * Get Income Statement Account Types.
+     *
+     * @param int|string month
+     * @param int|string year
+     * @return array
+     */
+    public static function getResults($month, $year)
+    {
+        
+        $startDate = Carbon::parse($year.'-'.$month.'-01');
+        $endDate = Carbon::parse($year.'-'.$month.'-01')->endOfMonth();
+        
+        $revenues = self::getBalance(config('ifrs')[self::OPERATING_REVENUES], $startDate, $endDate);
+
+        $otherRevenues = self::getBalance(config('ifrs')[self::NON_OPERATING_REVENUES], $startDate, $endDate);
+
+        $cogs = self::getBalance(config('ifrs')[self::OPERATING_EXPENSES], $startDate, $endDate);
+
+        $expenses = self::getBalance(config('ifrs')[self::NON_OPERATING_EXPENSES], $startDate, $endDate);
+        
+        return [
+            self::OPERATING_REVENUES => abs($revenues),
+            self::NON_OPERATING_REVENUES => abs($otherRevenues),
+            self::OPERATING_EXPENSES => $cogs,
+            self::GROSS_PROFIT => abs($revenues + $otherRevenues + $cogs),
+            self::NON_OPERATING_EXPENSES => $expenses,
+            self::NET_PROFIT => abs($revenues + $otherRevenues + $cogs + $expenses),
+        ];
     }
 
     /**

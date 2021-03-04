@@ -264,21 +264,18 @@ class Ledger extends Model implements Segregatable
      */
     public static function balance(Account $account, Carbon $startDate, Carbon $endDate): float
     {
-        $debits = Ledger::where([
-            "post_account" => $account->id,
-            "entry_type" => Balance::DEBIT,
-        ])->where("posting_date", ">=", $startDate)
-            ->where("posting_date", "<=", $endDate)
-            ->sum('amount');
+        $baseQuery = Ledger::where("post_account", $account->id)
+        ->where("posting_date", ">=", $startDate)
+            ->where("posting_date", "<=", $endDate);
+        
+            $cloneQuery = clone $baseQuery;
+        
+        $debits = $baseQuery->where("entry_type", Balance::DEBIT)
+        ->sum('amount');
 
-        $credits = Ledger::where([
-            "post_account" => $account->id,
-            "entry_type" => Balance::CREDIT,
-        ])->where("posting_date", ">=", $startDate)
-            ->where("posting_date", "<=", $endDate)
-            ->sum('amount');
-
-
+        $credits = $cloneQuery->where("entry_type", Balance::CREDIT)
+        ->sum('amount');
+        
         return $debits - $credits;
     }
 }

@@ -284,5 +284,37 @@ class IncomeStatementTest extends TestCase
             $incomeStatement->balances[$nonOperatingExpenses][Account::OTHER_EXPENSE],
             20
         );
+
+        $results = IncomeStatement::getResults(date('m'),date('y'));
+
+        $this->assertEquals(
+            $results[IncomeStatement::OPERATING_REVENUES],
+            150
+        );
+
+        $this->assertEquals(
+            $results[IncomeStatement::NON_OPERATING_REVENUES],
+            200
+        );
+
+        $this->assertEquals(
+            $results[IncomeStatement::OPERATING_EXPENSES],
+            100
+        );
+
+        $this->assertEquals(
+            $results[IncomeStatement::GROSS_PROFIT],
+            250
+        );
+
+        $this->assertEquals(
+            $results[IncomeStatement::NON_OPERATING_EXPENSES],
+            160
+        );
+
+        $this->assertEquals(
+            $results[IncomeStatement::NET_PROFIT],
+            90
+        );
     }
 }
