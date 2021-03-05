@@ -15,17 +15,18 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
-class MissingCurrency extends IFRSException
+class MissingReportingCurrency extends IFRSException
 {
     /**
-     * Missing Currency Exception
+     * Missing Reporting Currency Exception
      *
+     * @param string $entity
      * @param string $message
      * @param int    $code
      */
-    public function __construct(string $message = null, int $code = null)
+    public function __construct(string $entity, string $message = null, int $code = null)
     {
-        $error = "An Entity must have a Reporting Currency ";
+        $error = "Entity '" . $entity . "' has no Reporting Currency defined ";
 
         Log::notice(
             $error . $message,
@@ -35,6 +36,6 @@ class MissingCurrency extends IFRSException
             ]
         );
 
-        parent::__construct($error . $message, $code = null);
+        parent::__construct($error . $message, $code);
     }
 }

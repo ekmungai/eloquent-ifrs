@@ -113,7 +113,6 @@ class AssignmentTest extends TestCase
     public function testAssignmentEntityScope()
     {
         $newEntity = factory(Entity::class)->create();
-        $newEntity->currency_id = factory(Currency::class)->create()->id;
 
         $user = factory(User::class)->create();
         $user->entity()->associate($newEntity);
@@ -121,6 +120,9 @@ class AssignmentTest extends TestCase
 
         $this->be($user);
 
+        $newEntity->currency()->associate(factory(Currency::class)->create());
+        $newEntity->save();
+        
         $this->period = factory(ReportingPeriod::class)->create([
             "calendar_year" => date("Y"),
         ]);

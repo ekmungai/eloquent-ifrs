@@ -11,7 +11,7 @@
 namespace IFRS\Models;
 
 use Carbon\Carbon;
-use IFRS\Exceptions\MissingCurrency;
+use IFRS\Exceptions\MissingReportingCurrency;
 use IFRS\Exceptions\UnconfiguredLocale;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -20,6 +20,7 @@ use IFRS\Interfaces\Recyclable;
 
 use IFRS\Traits\Recycling;
 use IFRS\Traits\ModelTablePrefix;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Entity
@@ -56,11 +57,11 @@ class Entity extends Model implements Recyclable
     /**
      * Entity's Reporting Currency.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\hasOne
+     * @return \Illuminate\Database\Eloquent\Relations\belongsTo
      */
-    protected function currency()
+    public function currency()
     {
-        return $this->hasOne(Currency::class);
+        return $this->belongsTo(Currency::class);
     }
 
     /**
@@ -141,10 +142,7 @@ class Entity extends Model implements Recyclable
      */
     public function getDefaultRateAttribute(): ExchangeRate
     {
-        if (is_null($this->reportingCurrency)) {
-            throw new MissingCurrency();
-        }
-
+  
         $now = Carbon::now();
         $existing = ExchangeRate::where([
             "entity_id" => $this->id,
@@ -198,10 +196,32 @@ class Entity extends Model implements Recyclable
     public function getReportingCurrencyAttribute(): Currency
     {
         if (is_null($this->currency) && is_null($this->parent)) {
-            return new Currency();
+            throw new MissingReportingCurrency($this->name);
         }
 
         return is_null($this->parent) ? $this->currency : $this->parent->currency;
+    }
+
+    /**
+     * Format the given amount and currency according to the given locale.
+     *
+     * @param float $amount
+     * @param string $currencyCode
+     * @param string $locale
+     * @return string
+     */
+    public function localizeAmount(float $amount, string $currencyCode = null, $locale = null){
+        $entity = Auth::user()->entity;
+        
+        if(is_null($locale)){
+            $locale = $entity->locale;
+        }
+        if(is_null($currencyCode)){
+            $currencyCode = $entity->reportingCurrency->currency_code;
+        }
+
+        $format = \NumberFormatter::create($locale, \NumberFormatter::CURRENCY );
+        return $format->formatCurrency($amount, $currencyCode);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use IFRS\Exceptions\MissingReportingCurrency;
 use IFRS\Tests\TestCase;
 
 use Illuminate\Support\Facades\Auth;
@@ -182,5 +183,58 @@ class EntityTest extends TestCase
         $this->expectExceptionMessage('Locale en_US is not configured');
 
         $entity->save();
+    }
+
+    /**
+     * Test Entity Amount Localization
+     *
+     * @return void
+     */
+    public function testEntityAmountLocalization()
+    {
+        $entity = Auth::user()->entity;
+
+        $currency = factory(Currency::class)->create([
+            'name' => 'Euros',
+            'currency_code' => 'EUR',
+            'entity_id' => $entity->id
+        ]);
+
+        $entity->currency()->associate($currency);
+        
+        $this->assertEquals($entity->localizeAmount(1234567.891), "€1,234,567.89");
+        $this->assertEquals($entity->localizeAmount(1234567.891, 'EUR', 'de_DE'), "1.234.567,89\xc2\xa0€");
+
+        $entity = new Entity([
+            'name' => $this->faker->company,
+            'locale' => 'ar_BH'
+        ]);
+        $entity->save();
+
+        $user = factory(User::class)->create();
+        $user->entity()->associate($entity);
+        $user->save();
+
+        $this->be($user);
+        
+        $this->assertEquals($entity->localizeAmount(1234567.891, 'EUR'), "١٬٢٣٤٬٥٦٧٫٨٩\xc2\xa0€");
+        $this->assertEquals($entity->localizeAmount(1234567.891, 'BHD'), "١٬٢٣٤٬٥٦٧٫٨٩١\xc2\xa0د.ب.‏");
+    }
+    
+    /**
+     * Test Entity Reporting Currency Exception
+     *
+     * @return void
+     */
+    public function testEntityReportingCurrencyException()
+    {
+        $entity = new Entity([
+            'name' => $this->faker->company,
+        ]);
+        $entity->save();
+        $this->expectException(MissingReportingCurrency::class);
+        $this->expectExceptionMessage("Entity '". $entity->name ."' has no Reporting Currency defined ");
+
+        $entity->reportingCurrency;
     }
 }
