@@ -106,6 +106,10 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         'entity_id',
     ];
 
+    protected $dates = [
+        'transaction_date'
+    ];
+
     /**
      * Construct new Transaction.
      */
