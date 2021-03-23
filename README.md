@@ -212,7 +212,7 @@ $cashSaleLineItem = LineItem::create([
     'vat_id' => $outputVat->id,
     'account_id' => $revenueAccount->id,
     'vat_account_id' => $salesVatAccount->id,
-    'description' => "Example Cash Sale Line Item",
+    'narration' => "Example Cash Sale Line Item",
     'quantity' => 1,
     'amount' => 100,
 ]);
@@ -236,7 +236,7 @@ $clientInvoiceLineItem = LineItem::create([
     'vat_id' => $outputVat->id,
     'account_id' => $revenueAccount->id,
     'vat_account_id' => $salesVatAccount->id,
-    'description' => "Example Credit Sale Line Item",
+    'narration' => "Example Credit Sale Line Item",
     'quantity' => 2,
     'amount' => 50,
 ]);
@@ -258,7 +258,7 @@ $cashPurchaseLineItem = LineItem::create([
     'vat_id' => $inputVat->id,
     'account_id' => $opexAccount->id,
     'vat_account_id' => $purchaseVatAccount->id,
-    'description' => "Example Cash Purchase Line Item",
+    'narration' => "Example Cash Purchase Line Item",
     'quantity' => 4,
     'amount' => 25,
 ]);
@@ -277,7 +277,7 @@ $supplierBillLineItem = LineItem::create([
     'vat_id' => $inputVat->id,
     'account_id' => $assetAccount->id,
     'vat_account_id' => $purchaseVatAccount->id,
-    'description' => "Example Credit Purchase Line Item",
+    'narration' => "Example Credit Purchase Line Item",
     'quantity' => 4,
     'amount' => 25,
 ]);
@@ -296,7 +296,7 @@ $clientReceiptLineItem = LineItem::create([
     'vat_id' => $zeroVat->id,
     'account_id' => $bankAccount->id,
     'vat_account_id' => $purchaseVatAccount->id,
-    'description' => "Part payment for Client Invoice",
+    'narration' => "Part payment for Client Invoice",
     'quantity' => 1,
     'amount' => 50,
 ]);
@@ -466,9 +466,9 @@ I am acutely aware that as a professionally trained Accountant I may have used s
 
 ## Roadmap
 
-* Add Cashflow Statement
-* Add Changes in Equity Statement
-* Add Multicurrency support
+- [x] Add Cashflow Statement
+- [ ] Laravel 8 Compatibility
+- [ ] Add Multicurrency support
 
 ## License
 This software is distributed for free under the MIT License
