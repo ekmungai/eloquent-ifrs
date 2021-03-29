@@ -52,18 +52,6 @@ class CreateIfrsAccountsTable extends Migration
                 $table->timestamps();
             }
         );
-        
-        Schema::table(
-            config('ifrs.table_prefix').'accounts',
-            function (Blueprint $table) {
-                
-                // constraints
-                $table->foreign('entity_id')->references('id')->on(config('ifrs.table_prefix').'entities');
-                $table->foreign('category_id')->references('id')->on(config('ifrs.table_prefix').'categories')  ;
-                $table->foreign('currency_id')->references('id')->on(config('ifrs.table_prefix').'currencies');
-
-            }
-        );
     }
 
     /**

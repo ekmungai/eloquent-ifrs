@@ -29,7 +29,7 @@ class CreateIfrsRecycledObjectsTable extends Migration
                 $table->unsignedBigInteger('user_id');
 
                 // constraints
-                $userModel = config('ifrs.user_model');
+                $userModel = is_array(config('ifrs.user_model')) ? config('ifrs.user_model')[intval(App::version())] : config('ifrs.user_model');
                 $table->foreign('entity_id')->references('id')->on(config('ifrs.table_prefix').'entities');
                 $table->foreign('user_id')->references('id')->on((new $userModel())->getTable());
 
