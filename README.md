@@ -32,7 +32,7 @@ The motivation for this package can be found in detail on my blog post [here](ht
 
 ## Installation
 
-Use composer to Install the package into your laravel or lumen application. Eloquent IFRS requires PHP version 7.2 and Eloquent version 6 and above.
+Use composer to Install the package into your laravel or lumen application. Eloquent IFRS requires PHP version 7.2 and Eloquent version 7 and above.
 
 #### For production
 
@@ -329,7 +329,7 @@ use IFRS\Models\ReportingPeriod;
 
 $period = ReportingPeriod::create([
     'period_count' => 1,
-    'year' => 2020,
+    'year' => 2021,
 ]);
 
 ```
@@ -339,8 +339,8 @@ The Income Statement (Profit and Loss):
 use IFRS\Reports\IncomeStatement;
 
 $incomeStatement = new IncomeStatement(
-    "2020-01-01",   // Report start date
-    "2020-12-31",   // Report end date
+    "2021-01-01",   // Report start date
+    "2021-12-31",   // Report end date
 )->getSections();// Fetch balances from the ledger and store them internally
 
 /**
@@ -351,7 +351,7 @@ dd($incomeStatement->toString());
 
 Example Company
 Income Statement
-For the Period: Jan 01 2020 to Dec 31 2020
+For the Period: Jan 01 2021 to Dec 31 2021
 
 Operating Revenues
     Operating Revenue        200 (100 cash sales + 100 credit sales)
@@ -383,7 +383,7 @@ The Balance Sheet:
 use IFRS\Reports\BalanceSheet;
 
 $balanceSheet = new BalanceSheet(
-    "2020-12-31"  // Report end date
+    "2021-12-31"  // Report end date
 )->getSections();
 
 /**
@@ -394,7 +394,7 @@ dd($balanceSheet->toString());
 
 Example Company
 Balance Sheet
-As at: Dec 31 2020
+As at: Dec 31 2021
 
 Assets
     Non Current Asset        120 (asset purchase)
@@ -467,7 +467,7 @@ I am acutely aware that as a professionally trained Accountant I may have used s
 ## Roadmap
 
 - [x] Add Cashflow Statement
-- [ ] Laravel 8 Compatibility
+- [x] Laravel 8 Compatibility
 - [ ] Add Multicurrency support
 
 ## License
