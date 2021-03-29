@@ -38,6 +38,7 @@ class CreateIfrsEntitiesTable extends Migration
                 $table->boolean('multi_currency')->default(false);
                 $table->boolean('mid_year_balances')->default(false);
                 $table->integer('year_start')->default(1);
+                $table->string('locale', 20)->default(config('ifrs.locales')[0]);
 
                 // *permanent* deletion
                 $table->dateTime('destroyed_at')->nullable();

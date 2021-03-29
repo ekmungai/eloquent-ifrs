@@ -25,6 +25,7 @@ use IFRS\Transactions\SupplierBill;
 use IFRS\Exceptions\HangingTransactions;
 use IFRS\Exceptions\InvalidCategoryType;
 use IFRS\Exceptions\MissingAccountType;
+use IFRS\Models\Entity;
 use IFRS\Transactions\JournalEntry;
 
 class AccountTest extends TestCase
@@ -216,8 +217,7 @@ class AccountTest extends TestCase
         $account = new Account([
             'name' => $this->faker->name,
             'account_type' => Account::OPERATING_REVENUE,
-            'category_id' => null,
-            'entity_id' => 2
+            'entity_id' => factory(Entity::class)->create()->id
         ]);
         $account->save();
 
