@@ -282,7 +282,7 @@ class Account extends Model implements Recyclable, Segregatable
      */
     public function attributes()
     {
-        $this->attributes['closingBalance'] = $this->closingBalance(date('Y-m-d'));
+        $this->attributes['closingBalance'] = $this->closingBalance();
         return (object) $this->attributes;
     }
 
