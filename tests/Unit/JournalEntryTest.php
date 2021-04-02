@@ -155,7 +155,7 @@ class JournalEntryTest extends TestCase
             'category_id' => null
         ]);
         $transaction = new JournalEntry([
-            "account_id" => $account,
+            "account_id" => $account->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
         ]);

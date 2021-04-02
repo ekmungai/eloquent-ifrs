@@ -8,6 +8,7 @@
  */
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;
 
 class IfrsCreateOrUpdateUsersTable extends Migration
@@ -81,7 +82,7 @@ class IfrsCreateOrUpdateUsersTable extends Migration
 
     private function getTableName()
     {
-        $userModel = config('ifrs.user_model');
+        $userModel = is_array(config('ifrs.user_model')) ? config('ifrs.user_model')[intval(App::version())] : config('ifrs.user_model');
         return (new $userModel())->getTable();
     }
 }
