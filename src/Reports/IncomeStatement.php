@@ -110,7 +110,7 @@ class IncomeStatement extends FinancialStatement
     public static function getResults($month, $year)
     {
         
-        $startDate = Carbon::parse($year.'-'.$month.'-01');
+        $startDate = Carbon::parse($year.'-'.$month.'-01')->startOfDay();
         $endDate = Carbon::parse($year.'-'.$month.'-01')->endOfMonth();
         
         $revenues = self::getBalance(config('ifrs')[self::OPERATING_REVENUES], $startDate, $endDate);
