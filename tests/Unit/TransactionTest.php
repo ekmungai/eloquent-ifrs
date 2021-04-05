@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use Carbon\Carbon;
 use IFRS\User;
+
 use IFRS\Exceptions\AdjustingReportingPeriod;
 use IFRS\Exceptions\ClosedReportingPeriod;
 use IFRS\Exceptions\HangingClearances;
@@ -11,6 +12,8 @@ use IFRS\Exceptions\MissingLineItem;
 use IFRS\Exceptions\PostedTransaction;
 use IFRS\Exceptions\RedundantTransaction;
 use IFRS\Exceptions\UnpostedAssignment;
+use IFRS\Exceptions\InvalidTransactionDate;
+
 use IFRS\Models\Account;
 use IFRS\Models\Assignment;
 use IFRS\Models\Currency;
@@ -21,9 +24,11 @@ use IFRS\Models\RecycledObject;
 use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Transaction;
 use IFRS\Models\Vat;
+
 use IFRS\Tests\TestCase;
 use IFRS\Transactions\ClientInvoice;
 use IFRS\Transactions\JournalEntry;
+
 use Illuminate\Support\Facades\DB;
 
 class TransactionTest extends TestCase
@@ -1003,5 +1008,21 @@ class TransactionTest extends TestCase
 
         $this->assertFalse($cleared->assignable);
         $this->assertTrue($cleared->clearable);
+    }
+
+    /**
+     * Test Invalid Transaction Date.
+     *
+     * @return void
+     */
+    public function testInvalidTransactionDate()
+    {
+        
+        $this->expectException(InvalidTransactionDate::class);
+        $this->expectExceptionMessage('Transaction date cannot be at the beginning of the first day of the Reporting Period. Use a Balance object instead');
+        
+        Transaction::create([
+            'transaction_date' => Carbon::parse(date('Y').'-01-01'),
+        ]);
     }
 }
