@@ -831,13 +831,13 @@ class AccountTest extends TestCase
         $endDate = Carbon::now()->addWeeks(4)->toDateString();
 
         $clientTransactions = $account1->getTransactions($startDate, $endDate);
-        $this->assertEquals($clientTransactions['total'], 195);
+        $this->assertEquals($clientTransactions['total'], -195);
 
         $incomeTransactions = $account5->getTransactions($startDate, $endDate);
-        $this->assertEquals($incomeTransactions['total'], 125);
+        $this->assertEquals($incomeTransactions['total'], -125);
 
         $vatTransactions = $account6->getTransactions($startDate, $endDate);
-        $this->assertEquals($vatTransactions['total'], 70);
+        $this->assertEquals($vatTransactions['total'], -70);
     }
 
     /**

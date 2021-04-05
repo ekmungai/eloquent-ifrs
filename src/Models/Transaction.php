@@ -33,6 +33,7 @@ use IFRS\Exceptions\PostedTransaction;
 use IFRS\Exceptions\UnpostedAssignment;
 use IFRS\Exceptions\RedundantTransaction;
 use IFRS\Exceptions\ClosedReportingPeriod;
+use IFRS\Exceptions\InvalidTransactionDate;
 use IFRS\Exceptions\AdjustingReportingPeriod;
 
 /**
@@ -585,6 +586,10 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
     public function save(array $options = []): bool
     {
         $period = ReportingPeriod::getPeriod(Carbon::parse($this->transaction_date));
+
+        if (ReportingPeriod::periodStart($this->transaction_date)->eq(Carbon::parse($this->transaction_date))) {
+            throw new InvalidTransactionDate();
+        }
 
         if ($period->status == ReportingPeriod::CLOSED) {
             throw new ClosedReportingPeriod($period->calendar_year);
