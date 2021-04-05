@@ -370,6 +370,7 @@ class Account extends Model implements Recyclable, Segregatable
                 $transactionTable . '.transaction_no',
                 $transactionTable . '.reference',
                 $transactionTable . '.transaction_type',
+                $transactionTable . '.credited',
                 $transactionTable . '.narration'
             )->distinct();
 
@@ -404,7 +405,7 @@ class Account extends Model implements Recyclable, Segregatable
             $transaction->type = Transaction::getType($transaction->transaction_type);
             $transaction->date = Carbon::parse($transaction->transaction_date)->toFormattedDateString();
             $transactions['transactions'][] = $transaction;
-            $transactions['total'] += $transaction->amount;
+            $transactions['total'] += $transaction->credited ? $transaction->amount * -1 : $transaction->amount;
         }
         return $transactions;
     }
