@@ -10,6 +10,9 @@ use IFRS\Models\Account;
 use IFRS\Models\LineItem;
 use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Vat;
+use IFRS\Models\ExchangeRate;
+use IFRS\Models\Assignment;
+
 use IFRS\Reports\IncomeStatement;
 
 use IFRS\Transactions\CashSale;
@@ -18,6 +21,7 @@ use IFRS\Transactions\JournalEntry;
 use IFRS\Transactions\SupplierBill;
 use IFRS\Transactions\CashPurchase;
 use IFRS\Transactions\DebitNote;
+use IFRS\Transactions\ClientInvoice;
 
 class IncomeStatementTest extends TestCase
 {
@@ -59,16 +63,20 @@ class IncomeStatementTest extends TestCase
         ]);
 
         $cashSale->addLineItem($lineItem);
-
         $cashSale->post();
 
+        $client = factory(Account::class)->create([
+            'account_type' => Account::RECEIVABLE,
+            'category_id' => null
+        ]);
+
         $creditNote = new CreditNote([
-            "account_id" => factory(Account::class)->create([
-                'account_type' => Account::RECEIVABLE,
-                'category_id' => null
-            ])->id,
+            "account_id" => $client->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
+                "rate" => 1.1
+            ])->id
         ]);
 
         $lineItem = factory(LineItem::class)->create([
@@ -85,6 +93,42 @@ class IncomeStatementTest extends TestCase
         $creditNote->addLineItem($lineItem);
 
         $creditNote->post();
+
+        $ClientInvoice = new ClientInvoice([
+            "account_id" => $client->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
+                "rate" => 1
+            ])->id
+        ]);
+
+        $lineItem = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create([
+                'account_type' => Account::OPERATING_REVENUE,
+                'category_id' => null
+            ])->id,
+            'amount' => 100,
+        ]);
+
+        $ClientInvoice->addLineItem($lineItem);
+        $ClientInvoice->post();
+        
+        $forex = factory(Account::class)->create([
+            'account_type' => Account::NON_OPERATING_REVENUE,
+            'category_id' => null
+        ]);
+
+        $assignment = new Assignment([
+            'assignment_date' => Carbon::now(),
+            'transaction_id' => $creditNote->id,
+            'cleared_id' => $ClientInvoice->id,
+            'cleared_type' => $ClientInvoice->cleared_type,
+            'amount' => 50,
+            'forex_account_id' => $forex->id,
+        ]);
+        $assignment->save();
 
         /*
          | ------------------------------
@@ -257,7 +301,7 @@ class IncomeStatementTest extends TestCase
 
         $this->assertEquals(
             $incomeStatement->balances[$operatingRevenues][Account::OPERATING_REVENUE],
-            -150
+            -245
         );
 
         $this->assertEquals(
@@ -267,7 +311,7 @@ class IncomeStatementTest extends TestCase
 
         $this->assertEquals(
             $incomeStatement->balances[$nonOperatingRevenues][Account::NON_OPERATING_REVENUE],
-            -200
+            -205
         );
 
         $this->assertEquals(
@@ -289,12 +333,12 @@ class IncomeStatementTest extends TestCase
 
         $this->assertEquals(
             $results[IncomeStatement::OPERATING_REVENUES],
-            150
+            245
         );
 
         $this->assertEquals(
             $results[IncomeStatement::NON_OPERATING_REVENUES],
-            200
+            205
         );
 
         $this->assertEquals(
@@ -304,7 +348,7 @@ class IncomeStatementTest extends TestCase
 
         $this->assertEquals(
             $results[IncomeStatement::GROSS_PROFIT],
-            250
+            350
         );
 
         $this->assertEquals(
@@ -314,7 +358,7 @@ class IncomeStatementTest extends TestCase
 
         $this->assertEquals(
             $results[IncomeStatement::NET_PROFIT],
-            90
+            190
         );
     }
 }

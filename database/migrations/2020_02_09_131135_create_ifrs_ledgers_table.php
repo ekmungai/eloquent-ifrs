@@ -28,13 +28,15 @@ class CreateIfrsLedgersTable extends Migration
             // relationships
             $table->unsignedBigInteger('entity_id');
             $table->unsignedBigInteger('transaction_id');
-            $table->unsignedBigInteger('vat_id');
+            $table->unsignedBigInteger('vat_id')->nullable();
             $table->unsignedBigInteger('post_account');
             $table->unsignedBigInteger('folio_account');
-            $table->unsignedBigInteger('line_item_id');
+            $table->unsignedBigInteger('line_item_id')->nullable();
+            $table->unsignedBigInteger('currency_id');
 
             // constraints
             $table->foreign('entity_id')->references('id')->on(config('ifrs.table_prefix') . 'entities');
+            $table->foreign('currency_id')->references('id')->on(config('ifrs.table_prefix').'currencies');
             $table->foreign('vat_id')->references('id')->on(config('ifrs.table_prefix') . 'vats');
             $table->foreign('transaction_id')->references('id')->on(config('ifrs.table_prefix') . 'transactions');
             $table->foreign('post_account')->references('id')->on(config('ifrs.table_prefix') . 'accounts');

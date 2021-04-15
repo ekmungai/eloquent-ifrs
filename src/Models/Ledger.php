@@ -12,6 +12,7 @@ namespace IFRS\Models;
 
 use Carbon\Carbon;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -75,6 +76,7 @@ class Ledger extends Model implements Segregatable
 
         // identical double entry data
         $post->transaction_id = $folio->transaction_id = $transaction->id;
+        $post->currency_id = $folio->currency_id = $transaction->currency_id;
         $post->posting_date = $folio->posting_date = $transaction->transaction_date;
         $post->line_item_id = $folio->line_item_id = $lineItem->id;
         $post->vat_id = $folio->vat_id = $lineItem->vat_id;
@@ -83,7 +85,6 @@ class Ledger extends Model implements Segregatable
         // different double entry data
         $post->post_account = $folio->folio_account = $lineItem->vat_inclusive ? $lineItem->account_id : $transaction->account_id;
         $post->folio_account = $folio->post_account = $lineItem->vat->account_id;
-
 
         $post->save();
         $folio->save();
@@ -113,6 +114,7 @@ class Ledger extends Model implements Segregatable
 
             // identical double entry data
             $post->transaction_id = $folio->transaction_id = $transaction->id;
+            $post->currency_id = $folio->currency_id = $transaction->currency_id;
             $post->posting_date = $folio->posting_date = $transaction->transaction_date;
             $post->line_item_id = $folio->line_item_id = $lineItem->id;
             $post->vat_id = $folio->vat_id = $lineItem->vat_id;
@@ -124,7 +126,6 @@ class Ledger extends Model implements Segregatable
 
             $post->save();
             $folio->save();
-            $transaction->amount += $lineItem->amount;
 
             if ($lineItem->vat->rate > 0) {
                 Ledger::postVat($lineItem, $transaction);
@@ -133,6 +134,43 @@ class Ledger extends Model implements Segregatable
             // reload ledgers to reflect changes
             $transaction->load('ledgers');
         }
+    }
+
+     /**
+     * Create Ledger entries for the Assignments' Forex differences.
+     *
+     * @param Assignment $assignment
+     * @param float $transactionRate 
+     * @param float $clearedRate
+     */
+    public static function postForex(Assignment $assignment, $transactionRate, $clearedRate): void
+    {
+        $rateDifference = round($transactionRate - $clearedRate, config('ifrs.forex_scale'));
+        $transaction = $assignment->transaction;
+
+        $post = new Ledger();
+        $folio = new Ledger();
+        
+        if ($transaction->is_credited && $rateDifference < 0 || !$transaction->is_credited && $rateDifference > 0) {
+            $post->entry_type = Balance::CREDIT;
+            $folio->entry_type = Balance::DEBIT;
+        } elseif ($transaction->is_credited && $rateDifference > 0 || !$transaction->is_credited && $rateDifference < 0) {
+            $post->entry_type = Balance::DEBIT;
+            $folio->entry_type = Balance::CREDIT;
+        }
+
+        // identical double entry data
+        $post->transaction_id = $folio->transaction_id = $transaction->id;
+        $post->currency_id = $folio->currency_id = Auth::user()->entity->currency_id;
+        $post->posting_date = $folio->posting_date = $assignment->assignment_date;
+        $post->amount = $folio->amount = abs($rateDifference) * $assignment->amount;
+
+        // different double entry data
+        $post->post_account = $folio->folio_account = $transaction->account_id;
+        $post->folio_account = $folio->post_account = $assignment->forex_account_id;
+
+        $post->save();
+        $folio->save();
     }
 
     /**
@@ -196,6 +234,7 @@ class Ledger extends Model implements Segregatable
 
         $ledger[] = $this->entity_id;
         $ledger[] = $this->transaction_id;
+        $ledger[] = $this->currency_id;
         $ledger[] = $this->vat_id;
         $ledger[] = $this->post_account;
         $ledger[] = $this->folio_account;

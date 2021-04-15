@@ -6,18 +6,25 @@ use Carbon\Carbon;
 
 use IFRS\Tests\TestCase;
 
+use IFRS\User;
+
 use IFRS\Models\Account;
 use IFRS\Models\Assignment;
 use IFRS\Models\Currency;
 use IFRS\Models\ReportingPeriod;
-use IFRS\User;
 use IFRS\Models\Vat;
 use IFRS\Models\LineItem;
 use IFRS\Models\Balance;
+use IFRS\Models\Entity;
+use IFRS\Models\ExchangeRate;
+use IFRS\Models\Transaction;
+use IFRS\Models\Ledger;
 
 use IFRS\Transactions\JournalEntry;
 use IFRS\Transactions\ClientInvoice;
 use IFRS\Transactions\ClientReceipt;
+use IFRS\Transactions\SupplierPayment;
+use IFRS\Transactions\SupplierBill;
 
 use IFRS\Exceptions\InsufficientBalance;
 use IFRS\Exceptions\OverClearance;
@@ -29,11 +36,8 @@ use IFRS\Exceptions\InvalidClearanceAccount;
 use IFRS\Exceptions\InvalidClearanceCurrency;
 use IFRS\Exceptions\InvalidClearanceEntry;
 use IFRS\Exceptions\NegativeAmount;
-use IFRS\Models\Transaction;
 use IFRS\Exceptions\MissingForexAccount;
 use IFRS\Exceptions\MixedAssignment;
-use IFRS\Models\Entity;
-use IFRS\Models\ExchangeRate;
 
 class AssignmentTest extends TestCase
 {
@@ -325,6 +329,282 @@ class AssignmentTest extends TestCase
 
         $this->assertEquals($transaction->balance, 25);
         $this->assertEquals($balance->cleared_amount, 35);
+    }
+
+    /**
+     * Test Realized Forex gain.
+     *
+     * @return void
+     */
+    public function testRealizedForexGain()
+    {
+        // Receivables
+        $account = factory(Account::class)->create([
+            'account_type' => Account::RECEIVABLE,
+            'category_id' => null
+        ]);
+
+        $transaction = new ClientReceipt([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
+                "rate" => 110
+            ])->id
+        ]);
+        
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create([
+                'account_type' => Account::BANK,
+                'category_id' => null
+            ])->id,
+            'amount' => 100,
+        ]);
+        
+        $transaction->addLineItem($line);
+        $transaction->post();
+
+        $cleared = new ClientInvoice([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
+                "rate" => 100
+            ])->id
+        ]);
+
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create([
+                'account_type' => Account::OPERATING_REVENUE,
+                'category_id' => null
+            ])->id,
+            'amount' => 100,
+        ]);
+
+        $cleared->addLineItem($line);
+        $cleared->post();
+        
+        $forex = factory(Account::class)->create([
+            'account_type' => Account::NON_OPERATING_REVENUE,
+            'category_id' => null
+        ]);
+
+        $assignment = new Assignment([
+            'assignment_date' => Carbon::now(),
+            'transaction_id' => $transaction->id,
+            'cleared_id' => $cleared->id,
+            'cleared_type' => $cleared->cleared_type,
+            'amount' => 100,
+            'forex_account_id' => $forex->id,
+        ]);
+        $assignment->save();
+
+        $this->assertEquals($forex->Closingbalance(), -1000);
+
+        // Payables
+        $account = factory(Account::class)->create([
+            'account_type' => Account::PAYABLE,
+            'category_id' => null
+        ]);
+
+        $transaction = new SupplierPayment([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
+                "rate" => 100
+            ])->id
+        ]);
+        
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create([
+                'account_type' => Account::BANK,
+                'category_id' => null
+            ])->id,
+            'amount' => 50,
+        ]);
+        
+        $transaction->addLineItem($line);
+        $transaction->post();
+
+        $cleared = new SupplierBill([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
+                "rate" => 110
+            ])->id
+        ]);
+
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create([
+                'account_type' => Account::NON_CURRENT_ASSET,
+                'category_id' => null
+            ])->id,
+            'amount' => 100,
+        ]);
+
+        $cleared->addLineItem($line);
+        $cleared->post();
+        
+        $forex = factory(Account::class)->create([
+            'account_type' => Account::NON_OPERATING_REVENUE,
+            'category_id' => null
+        ]);
+
+        $assignment = new Assignment([
+            'assignment_date' => Carbon::now(),
+            'transaction_id' => $transaction->id,
+            'cleared_id' => $cleared->id,
+            'cleared_type' => $cleared->cleared_type,
+            'amount' => 50,
+            'forex_account_id' => $forex->id,
+        ]);
+        $assignment->save();
+
+        $this->assertEquals($forex->Closingbalance(), -500);
+    }
+
+    /**
+     * Test Realized Forex loss.
+     *
+     * @return void
+     */
+    public function testRealizedForexLoss()
+    {
+        // Receivables
+        $account = factory(Account::class)->create([
+            'account_type' => Account::RECEIVABLE,
+            'category_id' => null
+        ]);
+
+        $transaction = new ClientReceipt([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
+                "rate" => 100
+            ])->id
+        ]);
+        
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create([
+                'account_type' => Account::BANK,
+                'category_id' => null
+            ])->id,
+            'amount' => 50,
+        ]);
+        
+        $transaction->addLineItem($line);
+        $transaction->post();
+
+        $cleared = new ClientInvoice([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
+                "rate" => 110
+            ])->id
+        ]);
+
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create([
+                'account_type' => Account::OPERATING_REVENUE,
+                'category_id' => null
+            ])->id,
+            'amount' => 100,
+        ]);
+
+        $cleared->addLineItem($line);
+        $cleared->post();
+        
+        $forex = factory(Account::class)->create([
+            'account_type' => Account::NON_OPERATING_REVENUE,
+            'category_id' => null
+        ]);
+
+        $assignment = new Assignment([
+            'assignment_date' => Carbon::now(),
+            'transaction_id' => $transaction->id,
+            'cleared_id' => $cleared->id,
+            'cleared_type' => $cleared->cleared_type,
+            'amount' => 50,
+            'forex_account_id' => $forex->id,
+        ]);
+        $assignment->save();
+
+        $this->assertEquals($forex->Closingbalance(), 500);
+
+        // Payables
+        $account = factory(Account::class)->create([
+            'account_type' => Account::PAYABLE,
+            'category_id' => null
+        ]);
+
+        $transaction = new SupplierPayment([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
+                "rate" => 110
+            ])->id
+        ]);
+        
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create([
+                'account_type' => Account::BANK,
+                'category_id' => null
+            ])->id,
+            'amount' => 100,
+        ]);
+        
+        $transaction->addLineItem($line);
+        $transaction->post();
+
+        $cleared = new SupplierBill([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
+                "rate" => 100
+            ])->id
+        ]);
+
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create([
+                'account_type' => Account::NON_CURRENT_ASSET,
+                'category_id' => null
+            ])->id,
+            'amount' => 100,
+        ]);
+
+        $cleared->addLineItem($line);
+        $cleared->post();
+        
+        $forex = factory(Account::class)->create([
+            'account_type' => Account::NON_OPERATING_REVENUE,
+            'category_id' => null
+        ]);
+
+        $assignment = new Assignment([
+            'assignment_date' => Carbon::now(),
+            'transaction_id' => $transaction->id,
+            'cleared_id' => $cleared->id,
+            'cleared_type' => $cleared->cleared_type,
+            'amount' => 100,
+            'forex_account_id' => $forex->id,
+        ]);
+        $assignment->save();
+
+        $this->assertEquals($forex->Closingbalance(), 1000);
     }
 
     /**
@@ -1066,7 +1346,7 @@ class AssignmentTest extends TestCase
         $cleared->post();
 
         $this->expectException(MissingForexAccount::class);
-        $this->expectExceptionMessage('A Forex Differences Account is required for Assignment Transactions with different exchange rates');
+        $this->expectExceptionMessage("A Forex Differences Account of type 'Non Operating Revenue' is required for Assignment Transactions with different exchange rates");
 
         $assignment =  new Assignment([
             'assignment_date' => Carbon::now(),

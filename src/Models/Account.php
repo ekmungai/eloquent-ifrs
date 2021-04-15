@@ -400,12 +400,12 @@ class Account extends Model implements Recyclable, Segregatable
         $endDate = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
 
         foreach ($this->transactionsQuery($startDate, $endDate)->get() as $transaction) {
-
             $transaction->amount = abs(Ledger::contribution($this, $transaction->id));
+            $transaction->contribution = $transaction->credited ? $transaction->amount * -1 : $transaction->amount;
             $transaction->type = Transaction::getType($transaction->transaction_type);
             $transaction->date = Carbon::parse($transaction->transaction_date)->toFormattedDateString();
             $transactions['transactions'][] = $transaction;
-            $transactions['total'] += $transaction->credited ? $transaction->amount * -1 : $transaction->amount;
+            $transactions['total'] += $transaction->contribution;
         }
         return $transactions;
     }

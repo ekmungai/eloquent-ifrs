@@ -9,6 +9,7 @@ use IFRS\Models\Ledger;
 use IFRS\Models\Account;
 use IFRS\Models\LineItem;
 use IFRS\Models\Transaction;
+use IFRS\Models\Currency;
 use IFRS\Models\Vat;
 
 $factory->define(
@@ -16,6 +17,7 @@ $factory->define(
     function (Faker $faker) {
         return [
             'transaction_id' => factory(Transaction::class)->create()->id,
+            'currency_id' => factory(Currency::class)->create()->id,
             'vat_id' => factory(Vat::class)->create()->id,
             'post_account' => factory(Account::class)->create([
                 'category_id' => null

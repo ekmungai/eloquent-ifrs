@@ -404,13 +404,12 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
 
             $entry_type = $this->credited ? Balance::CREDIT : Balance::DEBIT;
 
-            foreach ($this->ledgers->where(
-                "entry_type",
-                $entry_type
-            )->where(
-                "post_account",
-                $this->account_id
-            ) as $ledger) {
+            foreach (Ledger::where([
+                "transaction_id" => $this->id,
+                "entry_type" => $entry_type,
+                "post_account" => $this->account_id,
+                "currency_id" => $this->currency_id
+            ])->get() as $ledger) {
                 $amount += $ledger->amount / $this->exchangeRate->rate;
             }
         } else {
@@ -422,6 +421,28 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
             }
         }
         return $amount;
+    }
+
+    /**
+     * Total Vat amount of the transaction.
+     *
+     * @return array
+     */
+    public function getVatAttribute(): array
+    {
+        $vat = ['total' => 0];
+        foreach ($this->getLineItems() as $lineItem) {
+            if ($lineItem->vat->rate > 0) {
+                $vatAmount = $lineItem->amount * ($lineItem->vat->rate / 100) * $lineItem->quantity;
+                $vat['total'] += $vatAmount;
+                if (array_key_exists($lineItem->vat->code, $vat)) {
+                    $vat[$lineItem->vat->code] += $vatAmount;
+                } else {
+                    $vat[$lineItem->vat->code] = $vatAmount;
+                }
+            }
+        }
+        return $vat;
     }
 
     /**

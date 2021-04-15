@@ -13,6 +13,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
+use IFRS\Models\Account;
+
 class MissingForexAccount extends IFRSException
 {
 
@@ -24,7 +26,7 @@ class MissingForexAccount extends IFRSException
      */
     public function __construct(string $message = null, int $code = null)
     {
-        $error = "A Forex Differences Account is required for Assignment Transactions with different exchange rates";
+        $error = "A Forex Differences Account of type '". Account::getType(Account::NON_OPERATING_REVENUE). "' is required for Assignment Transactions with different exchange rates";
 
         Log::notice(
             $error.$message,

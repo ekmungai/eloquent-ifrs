@@ -141,15 +141,14 @@ class Assignment extends Model implements Segregatable
 
     /**
      * Assignment Validation.
+     * 
+     * @param float $transactionRate
+     * @param float $clearedRate
+     * @param string $transactionType
+     * @param string $clearedType
      */
-    private function validate(): void
+    private function validate(float $transactionRate, float $clearedRate, string $transactionType, string $clearedType): void
     {
-        $transactionType = $this->transaction->transaction_type;
-        $clearedType = $this->cleared->transaction_type;
-
-        $transactionRate = $this->transaction->exchangeRate->rate;
-        $clearedRate = $this->cleared->exchangeRate->rate;
-
         if (!in_array($transactionType, Assignment::ASSIGNABLES)) {
             throw new UnassignableTransaction($transactionType, Assignment::ASSIGNABLES);
         }
@@ -183,7 +182,7 @@ class Assignment extends Model implements Segregatable
             throw new InvalidClearanceEntry();
         }
 
-        if ($this->transaction->balance < $this->amount) {
+        if (round($this->transaction->balance, config('ifrs.forex_scale')) < round($this->amount, config('ifrs.forex_scale'))) {
             throw new InsufficientBalance($transactionType, $this->amount, $clearedType);
         }
 
@@ -191,7 +190,7 @@ class Assignment extends Model implements Segregatable
             throw new OverClearance($clearedType, $this->amount);
         }
 
-        if ($transactionRate !== $clearedRate && is_null($this->forexAccount)) {
+        if (!bccomp($transactionRate, $clearedRate, config('ifrs.forex_scale'))==0 && !isset($this->forex_account_id)) {
             throw new MissingForexAccount();
         }
 
@@ -261,8 +260,18 @@ class Assignment extends Model implements Segregatable
      */
     public function save(array $options = []): bool
     {
-        $this->validate();
+        $transactionType = $this->transaction->transaction_type;
+        $clearedType = $this->cleared->transaction_type;
 
+        $transactionRate = $this->transaction->exchangeRate->rate;
+        $clearedRate = $this->cleared->exchangeRate->rate;
+
+        $this->validate($transactionRate, $clearedRate, $transactionType, $clearedType);
+
+        // Realize Forex differences
+        if(!bccomp($transactionRate, $clearedRate, config('ifrs.forex_scale'))==0){
+            Ledger::postForex($this, $transactionRate, $clearedRate);
+        }
         return parent::save();
     }
 }

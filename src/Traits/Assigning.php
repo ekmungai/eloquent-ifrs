@@ -22,6 +22,6 @@ trait Assigning
         foreach ($this->assignments as $assignment) {
             $balance += $assignment->amount;
         }
-        return $this->amount / $this->exchangeRate->rate - $balance;
+        return $this->amount - $balance;
     }
 }

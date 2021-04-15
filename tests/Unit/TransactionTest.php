@@ -58,6 +58,7 @@ class TransactionTest extends TestCase
         $transaction->addLineItem(
             factory(LineItem::class)->create([
                 "amount" => 100,
+                "quantity" => 1,
             ])
         );
         $transaction->post();
@@ -372,6 +373,53 @@ class TransactionTest extends TestCase
 
         $lineItem = LineItem::find($lineItem->id);
         $transaction->removeLineItem($lineItem);
+    }
+
+    /**
+     * Test Transaction Vat
+     *
+     * @return void
+     */
+    public function testVat()
+    {
+        $account = factory(Account::class)->create([
+            'account_type' => Account::RECEIVABLE,
+            'category_id' => null
+        ]);
+        $currency = factory(Currency::class)->create();
+
+        $transaction = new JournalEntry([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $currency->id
+        ]);
+
+        $transaction->addLineItem(
+            factory(LineItem::class)->create([
+                "amount" => 20,
+                "quantity" => 1,
+                'vat_id' => factory(Vat::class)->create([
+                    'rate' => 10,
+                    'code' => 'E',
+                    'name' => 'Export 10%'
+                ])->id
+            ])
+        );
+        $transaction->addLineItem(
+            factory(LineItem::class)->create([
+                "amount" => 100,
+                "quantity" => 1,
+                'vat_id' => factory(Vat::class)->create([
+                    'rate' => 5,
+                    'code' => 'L',
+                    'name' => 'Local 5%'
+                ])->id
+            ])
+        );
+        $transaction->post();
+
+        $this->assertEquals($transaction->vat, ['total' => 7.0,'E' => 2.0, 'L' => 5.0]);
     }
 
     /**
