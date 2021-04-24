@@ -10,11 +10,6 @@
 
 namespace IFRS\Exceptions;
 
-use Carbon\Carbon;
-
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-
 class ClosedReportingPeriod extends IFRSException
 {
     /**
@@ -28,13 +23,6 @@ class ClosedReportingPeriod extends IFRSException
     {
         $error = "Transaction cannot be saved because the Reporting Period for " . $year . " is closed ";
 
-        Log::notice(
-            $error . $message,
-            [
-                'user_id' => Auth::user()->id,
-                'time' => Carbon::now(),
-            ]
-        );
         parent::__construct($error . $message, $code);
     }
 }

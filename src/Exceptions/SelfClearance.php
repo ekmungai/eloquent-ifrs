@@ -10,11 +10,6 @@
 
 namespace IFRS\Exceptions;
 
-use Carbon\Carbon;
-
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-
 class SelfClearance extends IFRSException
 {
     /**
@@ -26,14 +21,6 @@ class SelfClearance extends IFRSException
     public function __construct(string $message = null, int $code = null)
     {
         $error = "Transaction cannot be used to clear itself ";
-
-        Log::notice(
-            $error . $message,
-            [
-                'user_id' => Auth::user()->id,
-                'time' => Carbon::now(),
-            ]
-        );
 
         parent::__construct($error . $message, $code);
     }

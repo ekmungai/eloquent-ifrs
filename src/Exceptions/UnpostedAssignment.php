@@ -10,11 +10,6 @@
 
 namespace IFRS\Exceptions;
 
-use Carbon\Carbon;
-
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-
 class UnpostedAssignment extends IFRSException
 {
     /**
@@ -26,14 +21,6 @@ class UnpostedAssignment extends IFRSException
     public function __construct(string $message = null, int $code = null)
     {
         $error = "An Unposted Transaction cannot be Assigned or Cleared";
-
-        Log::notice(
-            $error . $message,
-            [
-                'user_id' => Auth::user()->id,
-                'time' => Carbon::now(),
-            ]
-        );
 
         parent::__construct($error . $message, $code);
     }

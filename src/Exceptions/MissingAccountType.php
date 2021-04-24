@@ -10,11 +10,6 @@
 
 namespace IFRS\Exceptions;
 
-use Carbon\Carbon;
-
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-
 class MissingAccountType extends IFRSException
 {
     /**
@@ -26,14 +21,6 @@ class MissingAccountType extends IFRSException
     public function __construct(string $message = null, int $code = null)
     {
         $error = "Account type is Required ";
-
-        Log::notice(
-            $error . $message,
-            [
-                'user_id' => Auth::user()->id,
-                'time' => Carbon::now(),
-            ]
-        );
 
         parent::__construct($error . $message, $code);
     }

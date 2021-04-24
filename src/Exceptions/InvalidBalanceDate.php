@@ -10,11 +10,6 @@
 
 namespace IFRS\Exceptions;
 
-use Carbon\Carbon;
-
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-
 class InvalidBalanceDate extends IFRSException
 {
 
@@ -27,14 +22,6 @@ class InvalidBalanceDate extends IFRSException
     public function __construct(string $message = null, int $code = null)
     {
         $error = "Transaction date must be earlier than the first day of the Balance's Reporting Period ";
-
-        Log::notice(
-            $error . $message,
-            [
-                'user_id' => Auth::user()->id,
-                'time' => Carbon::now(),
-            ]
-        );
 
         parent::__construct($error . ' ' . $message, $code);
     }

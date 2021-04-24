@@ -10,11 +10,6 @@
 
 namespace IFRS\Exceptions;
 
-use Carbon\Carbon;
-
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-
 use IFRS\Models\Transaction;
 
 class OverClearance extends IFRSException
@@ -33,13 +28,6 @@ class OverClearance extends IFRSException
 
         $error = $assignedType . " Transaction amount remaining to be cleared is less than " . $amount;
 
-        Log::notice(
-            $error . ' ' . $message,
-            [
-                'user_id' => Auth::user()->id,
-                'time' => Carbon::now(),
-            ]
-        );
         parent::__construct($error . ' ' . $message, $code);
     }
 }

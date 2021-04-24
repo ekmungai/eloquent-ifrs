@@ -10,11 +10,6 @@
 
 namespace IFRS\Exceptions;
 
-use Carbon\Carbon;
-
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-
 use IFRS\Models\Transaction;
 
 class UnclearableTransaction extends IFRSException
@@ -34,14 +29,6 @@ class UnclearableTransaction extends IFRSException
 
         $error = $transactionType . " Transaction cannot be cleared. Transaction to be cleared must be one of: ";
         $error .= implode(", ", $transactionTypes) . ' ';
-
-        Log::notice(
-            $error . $message,
-            [
-                'user_id' => Auth::user()->id,
-                'time' => Carbon::now(),
-            ]
-        );
 
         parent::__construct($error . $message, $code);
     }

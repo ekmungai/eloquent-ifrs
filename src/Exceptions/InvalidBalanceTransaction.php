@@ -10,11 +10,6 @@
 
 namespace IFRS\Exceptions;
 
-use Carbon\Carbon;
-
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-
 use IFRS\Models\Transaction;
 
 class InvalidBalanceTransaction extends IFRSException
@@ -32,14 +27,6 @@ class InvalidBalanceTransaction extends IFRSException
         $transactionTypes = Transaction::getTypes($transactionTypes);
 
         $error = "Opening Balance Transaction must be one of: " . implode(", ", $transactionTypes);
-
-        Log::notice(
-            $error . $message,
-            [
-                'user_id' => Auth::user()->id,
-                'time' => Carbon::now(),
-            ]
-        );
 
         parent::__construct($error . ' ' . $message, $code);
     }

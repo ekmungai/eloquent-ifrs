@@ -9,15 +9,8 @@
  */
 
 namespace IFRS\Exceptions;
-
-use Carbon\Carbon;
-
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-
 class InvalidClearanceEntry extends IFRSException
 {
-
     /**
      * Invalid Clearance Entry Exception
      *
@@ -27,14 +20,6 @@ class InvalidClearanceEntry extends IFRSException
     public function __construct(string $message = null, int $code = null)
     {
         $error = "Transaction Entry increases the Main Account outstanding balance instead of reducing it ";
-
-        Log::notice(
-            $error . $message,
-            [
-                'user_id' => Auth::user()->id,
-                'time' => Carbon::now(),
-            ]
-        );
 
         parent::__construct($error . $message, $code);
     }

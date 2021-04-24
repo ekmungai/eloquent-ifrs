@@ -10,11 +10,6 @@
 
 namespace IFRS\Exceptions;
 
-use Carbon\Carbon;
-
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-
 class InvalidAccountClassBalance extends IFRSException
 {
     /**
@@ -26,14 +21,6 @@ class InvalidAccountClassBalance extends IFRSException
     public function __construct(string $message = null, int $code = null)
     {
         $error = "Income Statement Accounts cannot have Opening Balances ";
-
-        Log::notice(
-            $error . $message,
-            [
-                'user_id' => Auth::user()->id,
-                'time' => Carbon::now(),
-            ]
-        );
 
         parent::__construct($error . $message, $code);
     }

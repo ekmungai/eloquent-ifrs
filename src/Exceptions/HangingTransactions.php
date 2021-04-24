@@ -10,11 +10,6 @@
 
 namespace IFRS\Exceptions;
 
-use Carbon\Carbon;
-
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-
 class HangingTransactions extends IFRSException
 {
     /**
@@ -26,14 +21,6 @@ class HangingTransactions extends IFRSException
     public function __construct(string $message = null, int $code = null)
     {
         $error = "Account cannot be deleted because it has existing Transactions/Balances in the current Reporting Period ";
-
-        Log::notice(
-            $error . $message,
-            [
-                'user_id' => Auth::user()->id,
-                'time' => Carbon::now(),
-            ]
-        );
 
         parent::__construct($error . $message, $code);
     }

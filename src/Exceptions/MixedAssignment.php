@@ -10,11 +10,6 @@
 
 namespace IFRS\Exceptions;
 
-use Carbon\Carbon;
-
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-
 class MixedAssignment extends IFRSException
 {
     /**
@@ -28,14 +23,6 @@ class MixedAssignment extends IFRSException
     public function __construct(string $previous, string $current, string $message = null, int $code = null)
     {
         $error = "A Transaction that has been " . $previous . " cannot be " . $current;
-
-        Log::notice(
-            $error . $message,
-            [
-                'user_id' => Auth::user()->id,
-                'time' => Carbon::now(),
-            ]
-        );
 
         parent::__construct($error . $message, $code);
     }

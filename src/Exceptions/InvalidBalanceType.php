@@ -10,11 +10,6 @@
 
 namespace IFRS\Exceptions;
 
-use Carbon\Carbon;
-
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-
 use IFRS\Models\Balance;
 
 class InvalidBalanceType extends IFRSException
@@ -33,13 +28,6 @@ class InvalidBalanceType extends IFRSException
 
         $error = "Opening Balance Type must be one of: " . implode(", ", $balanceTypes);
 
-        Log::notice(
-            $error . $message,
-            [
-                'user_id' => Auth::user()->id,
-                'time' => Carbon::now(),
-            ]
-        );
         parent::__construct($error . ' ' . $message, $code);
     }
 }

@@ -10,11 +10,6 @@
 
 namespace IFRS\Exceptions;
 
-use Carbon\Carbon;
-
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-
 use IFRS\Models\Account;
 
 class InvalidAccountType extends IFRSException
@@ -37,13 +32,6 @@ class InvalidAccountType extends IFRSException
             $error = "Vat Account must be of Type " . $accountTypes;
         }
 
-        Log::notice(
-            $error . ' ' . $message,
-            [
-                'user_id' => Auth::user()->id,
-                'time' => Carbon::now(),
-            ]
-        );
         parent::__construct($error . ' ' . $message, $code);
     }
 }

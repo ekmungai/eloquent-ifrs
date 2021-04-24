@@ -10,11 +10,6 @@
 
 namespace IFRS\Exceptions;
 
-use Carbon\Carbon;
-
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-
 class MissingAccount extends IFRSException
 {
     /**
@@ -28,13 +23,6 @@ class MissingAccount extends IFRSException
     {
         $error = $statementType . " Transactions require an Account ";
 
-        Log::notice(
-            $error . $message,
-            [
-                'user_id' => Auth::user()->id,
-                'time' => Carbon::now(),
-            ]
-        );
         parent::__construct($error . $message, $code);
     }
 }
