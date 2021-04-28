@@ -8,6 +8,7 @@
  */
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;
 
 class CreateIfrsRecycledObjectsTable extends Migration
@@ -29,7 +30,9 @@ class CreateIfrsRecycledObjectsTable extends Migration
                 $table->unsignedBigInteger('user_id');
 
                 // constraints
-                $userModel = is_array(config('ifrs.user_model')) ? config('ifrs.user_model')[intval(App::version())] : config('ifrs.user_model');
+                $versionString = App::version();
+                $version = strpos($versionString, "Components") > 0 ? substr($versionString, 7, 1) : $versionString;
+                $userModel = is_array(config('ifrs.user_model')) ? config('ifrs.user_model')[intval($version)] : config('ifrs.user_model');
                 $table->foreign('entity_id')->references('id')->on(config('ifrs.table_prefix').'entities');
                 $table->foreign('user_id')->references('id')->on((new $userModel())->getTable());
 
