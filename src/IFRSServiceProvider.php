@@ -32,7 +32,7 @@ class IFRSServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../config/ifrs.php' => config_path('ifrs.php'),
+            __DIR__ . '/../config/ifrs.php' => app()->configPath('ifrs.php'),
         ]);
 
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');

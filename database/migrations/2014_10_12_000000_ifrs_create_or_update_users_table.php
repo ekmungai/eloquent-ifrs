@@ -82,7 +82,9 @@ class IfrsCreateOrUpdateUsersTable extends Migration
 
     private function getTableName()
     {
-        $userModel = is_array(config('ifrs.user_model')) ? config('ifrs.user_model')[intval(App::version())] : config('ifrs.user_model');
+        $versionString = App::version();
+        $version = strpos($versionString, "Components") > 0 ? substr($versionString, 7, 1) : $versionString;
+        $userModel = is_array(config('ifrs.user_model')) ? config('ifrs.user_model')[intval($version)] : config('ifrs.user_model');
         return (new $userModel())->getTable();
     }
 }
