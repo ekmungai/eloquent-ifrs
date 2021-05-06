@@ -54,7 +54,7 @@ class TrialBalanceTest extends TestCase
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1
             ])->id,
-            "amount" => 100
+            "balance" => 100
         ]);
 
         //transaction
@@ -85,7 +85,7 @@ class TrialBalanceTest extends TestCase
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1
             ])->id,
-            "amount" => 100
+            "balance" => 100
         ]);
 
         //transaction
@@ -111,7 +111,7 @@ class TrialBalanceTest extends TestCase
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1
             ])->id,
-            "amount" => 100
+            "balance" => 100
         ]);
 
         //transaction
@@ -136,12 +136,13 @@ class TrialBalanceTest extends TestCase
         //balance
         factory(Balance::class)->create([
 
-            "account_id" => $bank,
+            "account_id" => $bank->id,
             "balance_type" => Balance::DEBIT,
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1
             ])->id,
-            "amount" => 100
+            "currency_id" => $bank->currency_id,
+            "balance" => 100
         ]);
 
         //transaction
@@ -178,7 +179,7 @@ class TrialBalanceTest extends TestCase
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1
             ])->id,
-            "amount" => 100
+            "balance" => 100
         ]);
 
         //transaction
@@ -204,7 +205,7 @@ class TrialBalanceTest extends TestCase
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1
             ])->id,
-            "amount" => 100
+            "balance" => 100
         ]);
 
         //transaction
@@ -242,7 +243,7 @@ class TrialBalanceTest extends TestCase
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1
             ])->id,
-            "amount" => 100
+            "balance" => 100
         ]);
 
         //transaction
@@ -268,7 +269,7 @@ class TrialBalanceTest extends TestCase
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1
             ])->id,
-            "amount" => 100
+            "balance" => 100
         ]);
 
         //transaction
@@ -295,7 +296,7 @@ class TrialBalanceTest extends TestCase
                 "exchange_rate_id" => factory(ExchangeRate::class)->create([
                     "rate" => 1
                 ])->id,
-                "amount" => 100
+                "balance" => 100
             ]
         );
 
@@ -322,7 +323,7 @@ class TrialBalanceTest extends TestCase
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1
             ])->id,
-            "amount" => 100
+            "balance" => 100
         ]);
 
         //transaction
@@ -348,7 +349,7 @@ class TrialBalanceTest extends TestCase
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1
             ])->id,
-            "amount" => 100
+            "balance" => 100
         ]);
 
         //transaction
@@ -379,7 +380,7 @@ class TrialBalanceTest extends TestCase
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1
             ])->id,
-            "amount" => 100
+            "balance" => 100
         ]);
 
         //transaction

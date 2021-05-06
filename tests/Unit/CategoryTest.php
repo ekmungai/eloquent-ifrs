@@ -171,7 +171,7 @@ class CategoryTest extends TestCase
                 "rate" => 1
             ])->id,
             'reporting_period_id' => $this->period->id,
-            "amount" => 50
+            "balance" => 50
         ]);
 
         factory(Balance::class, 2)->create([
@@ -181,7 +181,7 @@ class CategoryTest extends TestCase
                 "rate" => 1
             ])->id,
             'reporting_period_id' => $this->period->id,
-            "amount" => 40
+            "balance" => 40
         ]);
 
         //Client Invoice Transaction

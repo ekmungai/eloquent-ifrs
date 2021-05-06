@@ -290,24 +290,36 @@ class Account extends Model implements Recyclable, Segregatable
      * Get Account's Opening Balance for the Reporting Period.
      *
      * @param int $year
+     * @param int $currencyId
      *
      * @return float
      */
-    public function openingBalance(int $year = null): float
+    public function openingBalance(int $year = null, int $currencyId = null): float
     {
+        $entity = Auth::user()->entity;
+        
         if (!is_null($year)) {
             $period = ReportingPeriod::getPeriod($year."-01-01");
         } else {
-            $period = Auth::user()->entity->current_reporting_period;
+            $period = $entity->current_reporting_period;
         }
-        
-        $balance = 0;
 
-        foreach ($this->balances->where('reporting_period_id', $period->id) as $record) {
-            $amount = $record->amount / $record->exchangeRate->rate;
-            $record->balance_type == Balance::DEBIT ? $balance += $amount : $balance -= $amount;
+        $balances = $this->balances->where('reporting_period_id', $period->id);
+
+        if (!is_null($currencyId)) {
+            $balances->where('currency_id', $currencyId);
         }
-        return $balance;
+
+        $totalBalance = 0;
+        foreach ($balances as $each) {
+            $amount = $each->balance; 
+            
+            if (!is_null($currencyId)) {
+                $amount /= $each->exchangeRate->rate;
+            }
+            $each->balance_type == Balance::DEBIT ? $totalBalance += $amount : $totalBalance -= $amount;
+        }
+        return $totalBalance;
     }
 
     /**
@@ -315,31 +327,33 @@ class Account extends Model implements Recyclable, Segregatable
      *
      * @param Carbon $startDate
      * @param Carbon $endDate
+     * @param int $currencyId
      *
      * @return float
      */
-    public function currentBalance(Carbon $startDate = null, Carbon $endDate = null): float
+    public function currentBalance(Carbon $startDate = null, Carbon $endDate = null, int $currencyId = null): float
     {
 
         $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate) : $startDate;
         $endDate = is_null($endDate) ? Carbon::now() : $endDate;
-        return Ledger::balance($this, $startDate, $endDate);
+        return Ledger::balance($this, $startDate, $endDate, $currencyId);
     }
 
     /**
      * Get Account's Closing Balance for the Reporting Period.
      *
      * @param string $endDate
+     * @param int $currencyId
      *
      * @return float
      */
-    public function closingBalance(string $endDate = null): float
+    public function closingBalance(string $endDate = null, int $currencyId = null): float
     {
         $endDate = is_null($endDate) ? ReportingPeriod::periodEnd() : Carbon::parse($endDate);
         $startDate = ReportingPeriod::periodStart($endDate);
         $year = ReportingPeriod::year($endDate);
 
-        return $this->openingBalance($year) + $this->currentBalance($startDate, $endDate);
+        return $this->openingBalance($year, $currencyId) + $this->currentBalance($startDate, $endDate, $currencyId);
     }
 
     /**
@@ -347,10 +361,11 @@ class Account extends Model implements Recyclable, Segregatable
      *
      * @param Carbon $startDate
      * @param Carbon $endDate
+     * @param int $currencyId
      *
      * @return Builder
      */
-    public function transactionsQuery(Carbon $startDate, Carbon $endDate)
+    public function transactionsQuery(Carbon $startDate, Carbon $endDate, int $currencyId = null)
     {
         $transactionTable = config('ifrs.table_prefix') . 'transactions';
         $ledgerTable = config('ifrs.table_prefix') . 'ledgers';
@@ -373,6 +388,10 @@ class Account extends Model implements Recyclable, Segregatable
                 $transactionTable . '.credited',
                 $transactionTable . '.narration'
             )->distinct();
+
+            if (!is_null($currencyId)) {
+                $query->where($transactionTable . '.currency_id', $currencyId);
+            }
 
         $query->where(
             function ($query) use ($ledgerTable) {
@@ -442,6 +461,10 @@ class Account extends Model implements Recyclable, Segregatable
      */
     private function getAccountCode(): int
     {
+        if (!isset($this->currency_id) && Auth::user()->entity) {
+            $this->currency_id = Auth::user()->entity->currency_id;
+        }
+
         $query = Account::withTrashed()
         ->where('account_type', $this->account_type);
 

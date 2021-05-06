@@ -58,6 +58,19 @@ return [
 
     /*
      |--------------------------------------------------------------------------
+     | Single Currency account types
+     |--------------------------------------------------------------------------
+     |
+     | Accounts of the types defined here will reject balances and transactions of a currency  
+     | different from the theirs
+     |
+     */
+    'single_currency' => [
+        Account::BANK
+    ],
+
+    /*
+     |--------------------------------------------------------------------------
      | DB table prefix
      |--------------------------------------------------------------------------
      |

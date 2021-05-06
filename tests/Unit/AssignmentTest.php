@@ -312,7 +312,7 @@ class AssignmentTest extends TestCase
             'year' => date("Y"),
             'transaction_no' => "JN01/0001",
             'transaction_date' => Carbon::now()->subYears(1.5),
-            'amount' => 80,
+            'balance' => 80,
         ]);
         $balance->save();
 
@@ -882,7 +882,8 @@ class AssignmentTest extends TestCase
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                "currency_id" => $currency->id,
             ])->id,
             'amount' => 100,
         ]);
@@ -1016,7 +1017,8 @@ class AssignmentTest extends TestCase
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                "currency_id" => $currency->id,
             ])->id,
             'amount' => 100,
         ]);
@@ -1081,7 +1083,8 @@ class AssignmentTest extends TestCase
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                "currency_id" => $currency2->id,
             ])->id,
             'amount' => 100,
         ]);

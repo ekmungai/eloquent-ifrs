@@ -41,7 +41,7 @@ class BalanceSheetTest extends TestCase
                 "rate" => 1
             ])->id,
             'reporting_period_id' => $this->period->id,
-            "amount" => 100
+            "balance" => 100
         ]);
 
         factory(Balance::class)->create([
@@ -54,7 +54,7 @@ class BalanceSheetTest extends TestCase
                 "rate" => 1
             ])->id,
             'reporting_period_id' => $this->period->id,
-            "amount" => 100
+            "balance" => 100
         ]);
 
         $bill = new SupplierBill([

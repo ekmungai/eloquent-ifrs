@@ -48,7 +48,8 @@ class CashFlowStatementTest extends TestCase
                 "rate" => 1
             ])->id,
             'reporting_period_id' => $this->period->id,
-            "amount" => 100
+            "currency_id" => $bank->currency_id,
+            "balance" => 100
         ]);
 
 
@@ -380,6 +381,7 @@ class CashFlowStatementTest extends TestCase
                 'account_type' => Account::EQUITY,
                 'category_id' => null
             ])->id,
+            "currency_id" => $bank->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
         ]);

@@ -19,6 +19,7 @@ use IFRS\Exceptions\InvalidAccountClassBalance;
 use IFRS\Exceptions\NegativeAmount;
 use IFRS\Exceptions\InvalidBalanceType;
 use IFRS\Exceptions\InvalidBalanceDate;
+use IFRS\Exceptions\InvalidCurrency;
 use IFRS\Models\Entity;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,21 +32,19 @@ class AccountBalanceTest extends TestCase
      */
     public function testBalanceRelationships()
     {
-        $currency = factory(Currency::class)->create([
-            'currency_code' => 'KES'
-        ]);
-
         $account = factory(Account::class)->create([
             'account_type' => Account::INVENTORY,
-            'category_id' => null
+            'category_id' => null,
         ]);
 
         $exchangeRate = factory(ExchangeRate::class)->create();
-
+        $currency = factory(Currency::class)->create([
+            'currency_code' => 'EUR'
+        ]);
         $balance = new Balance([
             'exchange_rate_id' => $exchangeRate->id,
-            'currency_id' => $currency->id,
             'account_id' => $account->id,
+            'currency_id' => $currency->id,
             'transaction_type' => Transaction::JN,
             'transaction_date' => Carbon::now()->subYears(1.5),
             'reference' => $this->faker->word,
@@ -54,11 +53,10 @@ class AccountBalanceTest extends TestCase
         ]);
         $balance->save();
 
-        $this->assertEquals($balance->currency->name, $currency->name);
         $this->assertEquals($balance->account->name, $account->name);
         $this->assertEquals($balance->exchangeRate->rate, $exchangeRate->rate);
         $this->assertEquals($balance->reportingPeriod->calendar_year, date("Y"));
-        $this->assertEquals($balance->transaction_no, $account->id . 'KES' . date("Y"));
+        $this->assertEquals($balance->transaction_no, $account->id . 'EUR' . date("Y"));
         $this->assertEquals(
             $balance->toString(true),
             'Debit Balance: ' . $balance->account->toString() . ' for year ' . Carbon::now()->year
@@ -68,6 +66,40 @@ class AccountBalanceTest extends TestCase
             $balance->account->toString() . ' for year ' . Carbon::now()->year
         );
         $this->assertEquals($balance->type, Balance::getType(Balance::DEBIT));
+    }
+
+    /**
+     * Balance Model Account Currency test.
+     *
+     * @return void
+     */
+    public function testBalanceAccountCurrency()
+    {
+        $account = factory(Account::class)->create([
+            'account_type' => Account::RECEIVABLE,
+            'category_id' => null,
+        ]);
+
+        $exchangeRate = factory(ExchangeRate::class)->create([
+            'rate' => 105
+        ]);
+
+        $balance = new Balance([
+            'exchange_rate_id' => $exchangeRate->id,
+            'account_id' => $account->id,
+            'transaction_type' => Transaction::JN,
+            'transaction_date' => Carbon::now()->subYears(1.5),
+            'reference' => $this->faker->word,
+            'currency_id' => factory(Currency::class)->create([
+                'currency_code' => 'USD'
+            ])->id,
+            'balance_type' =>  Balance::DEBIT,
+            'balance' => 50,
+        ]);
+        $balance->save();
+
+        $this->assertEquals($balance->transaction_no, $account->id . 'USD' . date("Y"));
+        $this->assertEquals($balance->amount, 50);
     }
 
     /**
@@ -175,7 +207,7 @@ class AccountBalanceTest extends TestCase
         $this->expectExceptionMessage('Balance Amount cannot be negative');
 
         factory(Balance::class)->create([
-            "amount" => -100
+            "balance" => -100
         ]);
     }
 
@@ -204,5 +236,28 @@ class AccountBalanceTest extends TestCase
         $this->expectExceptionMessage('Transaction date must be earlier than the first day of the Balance\'s Reporting Period ');
 
         $balance->save();
+    }
+
+    /**
+     * Test Invalid Balance Currency.
+     *
+     * @return void
+     */
+    public function testInvalidBalanceCurrency()
+    {
+        $account = factory(Account::class)->create([
+            'account_type' => Account::BANK,
+            'category_id' => null,
+            'currency_id' => factory(Currency::class)->create([
+                'currency_code' => 'EUR'
+            ])->id
+        ]);
+
+        $this->expectException(InvalidCurrency::class);
+        $this->expectExceptionMessage('Balance Currency must be the same as the Bank Account Currency ');
+
+        factory(Balance::class)->create([
+            "account_id" => $account->id
+        ]);
     }
 }

@@ -30,6 +30,7 @@ use IFRS\Exceptions\InvalidBalanceType;
 use IFRS\Exceptions\InvalidBalanceDate;
 use IFRS\Exceptions\InvalidBalanceTransaction;
 use IFRS\Exceptions\InvalidAccountClassBalance;
+use IFRS\Exceptions\InvalidCurrency;
 
 /**
  * Class Balance
@@ -45,7 +46,8 @@ use IFRS\Exceptions\InvalidAccountClassBalance;
  * @property string $transaction_no
  * @property string $transaction_type
  * @property string $balance_type
- * @property float $amount
+ * @property float $total_amount
+ * @property float $balance
  * @property Carbon $destroyed_at
  * @property Carbon $deleted_at
  */
@@ -90,7 +92,7 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
         'entity_id',
         'transaction_type',
         'transaction_date',
-        'amount'
+        'balance'
     ];
 
     /**
@@ -103,21 +105,12 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
         if (!is_null($entity)) {
             $reportingPeriod = $entity->current_reporting_period;
 
-            if (!isset($attributes['currency_id'])) {
-                $attributes['currency_id'] = $entity->currency_id;
-            }
-
             if (!isset($attributes['reporting_period_id'])) {
                 $attributes['reporting_period_id'] = $reportingPeriod->id;
             }
 
             if (!isset($attributes['exchange_rate_id'])) {
                 $attributes['exchange_rate_id'] = $entity->default_rate->id;
-            }
-
-            if (!isset($attributes['transaction_no']) && isset($attributes['currency_id']) && isset($attributes['account_id'])) {
-                $currency = Currency::find($attributes['currency_id'])->currency_code;
-                $attributes['transaction_no'] = $attributes['account_id'] . $currency . $reportingPeriod->calendar_year;
             }
         }
 
@@ -222,13 +215,13 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
     }
 
     /**
-     * getAmount() analog for Assignment model.
+     * amount analog for Assignment model.
      *
      * @return float
      */
-    public function getAmount(): float
+    public function getAmountAttribute(): float
     {
-        return $this->amount;
+        return $this->balance / $this->exchangeRate->rate;
     }
 
     /**
@@ -303,11 +296,27 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
             throw new InvalidAccountClassBalance();
         }
 
+        if (in_array($this->account->account_type, config('ifrs.single_currency')) && $this->account->currency_id != $this->currency_id) {
+            throw new InvalidCurrency("Balance", $this->account->account_type);
+        }
+
         $entity = Auth::user()->entity;
 
         if (ReportingPeriod::periodStart()->lt($this->transaction_date) && !$entity->mid_year_balances) {
             throw new InvalidBalanceDate();
         }
+
+        if(!isset($this->currency_id)){
+            $this->currency_id = $this->account->currency_id;
+        }
+        
+        if (!isset($this->transaction_no)) {
+            $currency = $this->currency->currency_code;
+            $year = ReportingPeriod::find($this->reporting_period_id)->calendar_year;
+            $this->transaction_no = $this->account_id . $currency . $year;
+        }
+
+        $this->balance *= $this->exchangeRate->rate;
 
         return parent::save();
     }

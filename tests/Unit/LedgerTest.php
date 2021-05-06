@@ -9,6 +9,7 @@ use Carbon\Carbon;
 
 use IFRS\Models\Account;
 use IFRS\Models\Balance;
+use IFRS\Models\ExchangeRate;
 use IFRS\Models\Ledger;
 use IFRS\Models\LineItem;
 use IFRS\Models\Vat;
@@ -56,7 +57,7 @@ class LedgerTest extends TestCase
     }
 
     /**
-     * Ledger Model Account Contribution test.
+     * Test Ledger Model Account Contribution.
      *
      * @return void
      */
@@ -112,7 +113,8 @@ class LedgerTest extends TestCase
     public function testLedgerAccountBalance()
     {
         $account = factory(Account::class)->create([
-            'category_id' => null
+            'category_id' => null,
+            "account_type" => Account::INVENTORY
         ]);
 
         factory(Ledger::class, 3)->create([
@@ -130,5 +132,61 @@ class LedgerTest extends TestCase
         ]);
 
         $this->assertEquals(Ledger::balance($account, Carbon::now()->startOfYear(), Carbon::now()), -40);
+    }
+
+    /**
+     * Test Ledger Model Account Contribution.
+     *
+     * @return void
+     */
+    public function testLedgerForeignCurrency()
+    {
+        $account = factory(Account::class)->create([
+            'category_id' => null
+        ]);
+        $lineAccount1 = factory(Account::class)->create([
+            'category_id' => null
+        ]);
+        $lineAccount2 = factory(Account::class)->create([
+            'category_id' => null
+        ]);
+        $vat = factory(Vat::class)->create(["rate" => 10]);
+        $rate = factory(ExchangeRate::class)->create([
+            'rate' => 105
+        ]);
+        $transaction = new JournalEntry([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "exchange_rate_id" => $rate->id
+        ]);
+
+        $lineItem1 = factory(LineItem::class)->create([
+            "account_id" => $lineAccount1->id,
+            "amount" => 75,
+            "vat_id" => $vat->id,
+            "quantity" => 1,
+        ]);
+
+        $transaction->addLineItem($lineItem1);
+
+        $lineItem2 = factory(LineItem::class)->create([
+            "account_id" => $lineAccount2->id,
+            "amount" => 120,
+            "vat_id" => $vat->id,
+            "quantity" => 1,
+        ]);
+
+        $transaction->addLineItem($lineItem2);
+
+        $transaction->post();
+        $this->assertEquals($transaction->amount, 214.50);
+        $this->assertEquals(Ledger::contribution($lineAccount1, $transaction->id), 7875);
+        $this->assertEquals(Ledger::contribution($lineAccount2, $transaction->id), 12600);
+        $this->assertEquals(Ledger::contribution($lineAccount1, $transaction->id, $rate->currency_id), 75);
+        $this->assertEquals(Ledger::contribution($lineAccount2, $transaction->id, $rate->currency_id), 120);
+
+        $this->assertEquals($account->currentBalance(), -22522.50);
+        $this->assertEquals($account->currentBalance(null, null, $rate->currency_id), -214.50);
     }
 }

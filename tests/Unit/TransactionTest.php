@@ -8,6 +8,7 @@ use IFRS\User;
 use IFRS\Exceptions\AdjustingReportingPeriod;
 use IFRS\Exceptions\ClosedReportingPeriod;
 use IFRS\Exceptions\HangingClearances;
+use IFRS\Exceptions\InvalidCurrency;
 use IFRS\Exceptions\MissingLineItem;
 use IFRS\Exceptions\PostedTransaction;
 use IFRS\Exceptions\RedundantTransaction;
@@ -1065,12 +1066,36 @@ class TransactionTest extends TestCase
      */
     public function testInvalidTransactionDate()
     {
-        
         $this->expectException(InvalidTransactionDate::class);
         $this->expectExceptionMessage('Transaction date cannot be at the beginning of the first day of the Reporting Period. Use a Balance object instead');
         
         Transaction::create([
             'transaction_date' => Carbon::parse(date('Y').'-01-01'),
+        ]);
+    }
+
+    /**
+     * Test Invalid Transaction Currency.
+     *
+     * @return void
+     */
+    public function testInvalidTransactionCurrency()
+    {
+        $account = factory(Account::class)->create([
+            'account_type' => Account::BANK,
+            'category_id' => null,
+            'currency_id' => factory(Currency::class)->create([
+                'currency_code' => 'EUR'
+            ])->id
+        ]);
+
+        $this->expectException(InvalidCurrency::class);
+        $this->expectExceptionMessage('Transaction Currency must be the same as the Bank Account Currency ');
+
+        JournalEntry::create([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
         ]);
     }
 }

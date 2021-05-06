@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Expression;
 
 use IFRS\Interfaces\Segregatable;
 
@@ -62,6 +63,7 @@ class Ledger extends Model implements Segregatable
     private static function postVat(LineItem $lineItem, Transaction $transaction): void
     {
         $amount = $lineItem->vat_inclusive ?  $lineItem->amount - ($lineItem->amount / (1 + ($lineItem->vat->rate / 100))) : $lineItem->amount * $lineItem->vat->rate / 100;
+        $rate = $transaction->exchangeRate->rate;
 
         $post = new Ledger();
         $folio = new Ledger();
@@ -80,7 +82,8 @@ class Ledger extends Model implements Segregatable
         $post->posting_date = $folio->posting_date = $transaction->transaction_date;
         $post->line_item_id = $folio->line_item_id = $lineItem->id;
         $post->vat_id = $folio->vat_id = $lineItem->vat_id;
-        $post->amount = $folio->amount = $amount * $transaction->exchangeRate->rate * $lineItem->quantity;
+        $post->amount = $folio->amount = $amount * $rate * $lineItem->quantity;
+        $post->rate = $folio->rate = $rate;
 
         // different double entry data
         $post->post_account = $folio->folio_account = $lineItem->vat_inclusive ? $lineItem->account_id : $transaction->account_id;
@@ -101,6 +104,8 @@ class Ledger extends Model implements Segregatable
         $transaction->ledgers()->delete();
 
         foreach ($transaction->getLineItems() as $lineItem) {
+            $rate = $transaction->exchangeRate->rate;
+            
             $post = new Ledger();
             $folio = new Ledger();
 
@@ -118,7 +123,8 @@ class Ledger extends Model implements Segregatable
             $post->posting_date = $folio->posting_date = $transaction->transaction_date;
             $post->line_item_id = $folio->line_item_id = $lineItem->id;
             $post->vat_id = $folio->vat_id = $lineItem->vat_id;
-            $post->amount = $folio->amount = $lineItem->amount * $transaction->exchangeRate->rate * $lineItem->quantity;
+            $post->amount = $folio->amount = $lineItem->amount * $rate * $lineItem->quantity;
+            $post->rate = $folio->rate = $rate;
 
             // different double entry data
             $post->post_account = $folio->folio_account = $transaction->account_id;
@@ -161,7 +167,7 @@ class Ledger extends Model implements Segregatable
 
         // identical double entry data
         $post->transaction_id = $folio->transaction_id = $transaction->id;
-        $post->currency_id = $folio->currency_id = Auth::user()->entity->currency_id;
+        $post->currency_id = $folio->currency_id = Auth::user()->entity->reporting_currency;
         $post->posting_date = $folio->posting_date = $assignment->assignment_date;
         $post->amount = $folio->amount = abs($rateDifference) * $assignment->amount;
 
@@ -271,25 +277,29 @@ class Ledger extends Model implements Segregatable
      * Get Account's contribution to the Transaction total amount.
      *
      * @param Account $account
-     * @param int     $transactionId
+     * @param int $transactionId
+     * @param int $currencyId
      *
      * @return float
      */
-    public static function contribution(Account $account, int $transactionId): float
+    public static function contribution(Account $account, int $transactionId, int $currencyId = null): float
     {
-        $debits = Ledger::where([
-            "post_account" => $account->id,
-            "entry_type" => Balance::DEBIT,
-            "transaction_id" => $transactionId,
-        ])->sum('amount');
+        $ledger = new Ledger();
 
-        $credits = Ledger::where([
-            "post_account" => $account->id,
-            "entry_type" => Balance::CREDIT,
-            "transaction_id" => $transactionId,
-        ])->sum('amount');
+        $baseQuery = is_null($currencyId) ? $ledger->newQuery()->selectRaw("SUM(amount) AS amount")
+        : $ledger->newQuery()->selectRaw("SUM(amount/rate) AS amount");
 
-        return $debits - $credits;
+        $baseQuery->from($ledger->getTable())->where([
+            "post_account" => $account->id,
+            "transaction_id" => $transactionId,
+        ]);
+
+        $cloneQuery = clone $baseQuery;
+
+        $debits = $baseQuery->where("entry_type", Balance::DEBIT);
+        $credits = $cloneQuery->where("entry_type", Balance::CREDIT);
+
+        return $debits->get()[0]->amount - $credits->get()[0]->amount;
     }
 
     /**
@@ -298,23 +308,26 @@ class Ledger extends Model implements Segregatable
      * @param Account $account
      * @param Carbon  $startDate
      * @param Carbon  $endDate
+     * @param int $currencyId
      *
      * @return float
      */
-    public static function balance(Account $account, Carbon $startDate, Carbon $endDate): float
+    public static function balance(Account $account, Carbon $startDate, Carbon $endDate, int $currencyId = null): float
     {
-        $baseQuery = Ledger::where("post_account", $account->id)
+        $ledger = new Ledger();
+
+        $baseQuery = is_null($currencyId) ? $ledger->newQuery()->selectRaw("SUM(amount) AS amount")
+        : $ledger->newQuery()->selectRaw("SUM(amount/rate) AS amount");
+
+        $baseQuery->from($ledger->getTable())->where("post_account", $account->id)
         ->where("posting_date", ">=", $startDate)
             ->where("posting_date", "<=", $endDate);
+            
+        $cloneQuery = clone $baseQuery;
         
-            $cloneQuery = clone $baseQuery;
-        
-        $debits = $baseQuery->where("entry_type", Balance::DEBIT)
-        ->sum('amount');
+        $debits = $baseQuery->where("entry_type", Balance::DEBIT);
+        $credits = $cloneQuery->where("entry_type", Balance::CREDIT);
 
-        $credits = $cloneQuery->where("entry_type", Balance::CREDIT)
-        ->sum('amount');
-        
-        return $debits - $credits;
+        return $debits->get()[0]->amount - $credits->get()[0]->amount;   
     }
 }

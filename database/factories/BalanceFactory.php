@@ -34,7 +34,7 @@ $factory->define(
                 Balance::DEBIT,
                 Balance::CREDIT
             ]),
-            'amount' => $faker->randomFloat(2),
+            'balance' => $faker->randomFloat(2),
         ];
     }
 );

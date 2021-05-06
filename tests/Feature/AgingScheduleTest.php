@@ -41,7 +41,7 @@ class AgingScheduleTest extends TestCase
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1,
             ])->id,
-            "amount" => 25,
+            "balance" => 25,
             'reporting_period_id' => $this->period->id,
         ]);
 

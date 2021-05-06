@@ -32,6 +32,7 @@ $factory->define(
                 Balance::CREDIT
             ]),
             'amount' => $faker->randomFloat(2),
+            'rate' => $faker->randomFloat(2),
         ];
     }
 );

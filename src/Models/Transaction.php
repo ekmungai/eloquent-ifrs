@@ -35,6 +35,7 @@ use IFRS\Exceptions\RedundantTransaction;
 use IFRS\Exceptions\ClosedReportingPeriod;
 use IFRS\Exceptions\InvalidTransactionDate;
 use IFRS\Exceptions\AdjustingReportingPeriod;
+use IFRS\Exceptions\InvalidCurrency;
 
 /**
  * Class Transaction
@@ -507,6 +508,10 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
      */
     public function addLineItem(LineItem $lineItem): void
     {
+        if (in_array($lineItem->account->account_type, config('ifrs.single_currency')) && $lineItem->account->currency_id != $this->currency_id) {
+            throw new InvalidCurrency("Transaction", $lineItem->account->account_type);
+        }
+
         if (count($lineItem->ledgers) > 0) {
             throw new PostedTransaction("add LineItem to");
         }
@@ -620,6 +625,10 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
             throw new AdjustingReportingPeriod();
         }
 
+        if (in_array($this->account->account_type, config('ifrs.single_currency')) && $this->account->currency_id != $this->currency_id) {
+            throw new InvalidCurrency("Transaction", $this->account->account_type);
+        }
+
         if (is_null($this->transaction_no)) {
             $this->transaction_no = Transaction::transactionNo(
                 $this->transaction_type,
@@ -644,7 +653,6 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         if (empty($this->getLineItems())) {
             throw new MissingLineItem();
         }
-
         $this->save();
 
         Ledger::post($this);
