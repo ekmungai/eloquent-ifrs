@@ -47,7 +47,7 @@ class TrialBalance extends FinancialStatement
     /**
      * Get Trial Balance Sections.
      */
-    public function getSections($startDate = null, $endDate = null, $fullbalance = true): void
+    public function getSections($startDate = null, $endDate = null, $fullbalance = true): array
     {
         foreach (Account::all() as $account) {
             $balance = $account->closingBalance($this->endDate);
@@ -63,6 +63,11 @@ class TrialBalance extends FinancialStatement
                 $this->getBalanceSheetSections($account, $balance);
             }
         }
+
+        return [
+            "accounts" => $this->accounts,
+            "results" => $this->results
+        ];
     }
 
     /**

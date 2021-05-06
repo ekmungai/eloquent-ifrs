@@ -70,9 +70,8 @@ class IncomeStatement extends FinancialStatement
      *
      * @param int month
      * @param int year
-     * @return array
      */
-    private static function getBalance( array $accountTypes, Carbon $startDate, Carbon $endDate)
+    private static function getBalance( array $accountTypes, Carbon $startDate, Carbon $endDate) : float
     {
         $accountTable = config('ifrs.table_prefix') . 'accounts';
         $ledgerTable = config('ifrs.table_prefix') . 'ledgers';
@@ -182,7 +181,7 @@ class IncomeStatement extends FinancialStatement
     /**
      * Get Cash Flow Statement Sections and Results.
      */
-    public function getSections($startDate = null, $endDate = null, $fullbalance = true): void
+    public function getSections($startDate = null, $endDate = null, $fullbalance = true): array
     {
         
         parent::getSections($this->period['startDate'], $this->period['endDate'], false);
@@ -195,6 +194,13 @@ class IncomeStatement extends FinancialStatement
 
         // Net Profit
         $this->results[self::NET_PROFIT] = $this->results[self::TOTAL_REVENUE] - $this->totals[self::NON_OPERATING_EXPENSES];
+
+        return [
+            "accounts" => $this->accounts,
+            "balances" => $this->balances,
+            "results" => $this->results,
+            "totals" => $this->totals,
+        ];
     }
 
     /**

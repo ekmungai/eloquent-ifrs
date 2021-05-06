@@ -133,14 +133,23 @@ class BalanceSheetTest extends TestCase
         $startDate = ReportingPeriod::periodStart();
         $endDate = ReportingPeriod::periodEnd();
 
-        // dd(Account::sectionBalances([Account::INVENTORY], $startDate, $endDate));
-        $balanceSheet->getSections($startDate, $endDate);
+        $sections = $balanceSheet->getSections($startDate, $endDate);
         $balanceSheet->toString();
 
         $assets = BalanceSheet::ASSETS;
         $liabilities = BalanceSheet::LIABILITIES;
         $reconciliation = BalanceSheet::RECONCILIATION;
         $equity = BalanceSheet::EQUITY;
+
+        $this->assertEquals(
+            $sections,
+            [
+                "accounts" => $balanceSheet->accounts,
+                "balances" => $balanceSheet->balances,
+                "results" => $balanceSheet->results,
+                "totals" => $balanceSheet->totals,
+            ]
+        );
 
         $this->assertEquals(
             $balanceSheet->balances[$assets][Account::INVENTORY],

@@ -88,7 +88,7 @@ abstract class FinancialStatement
         $period = in_array(
             'startDate',
             array_keys($this->period)
-        ) ? "For the Period:" . $this->period['startDate']->format(
+        ) ? "For the Period: " . $this->period['startDate']->format(
             $dateFormat
         ) . " to " . $this->period['endDate']->format(
             $dateFormat
@@ -202,7 +202,7 @@ abstract class FinancialStatement
      *
      * Get Statement Sections.
      */
-    public function getSections($startDate = null, $endDate = null, $fullbalance = true): void
+    public function getSections($startDate = null, $endDate = null, $fullbalance = true): array
     {
         foreach (array_keys($this->accounts) as $section) {
             foreach (config('ifrs')[$section] as $accountType) {
@@ -222,5 +222,7 @@ abstract class FinancialStatement
                 }
             }
         }
+
+        return [];
     }
 }

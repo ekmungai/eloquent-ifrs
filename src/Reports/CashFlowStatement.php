@@ -119,7 +119,7 @@ class CashFlowStatement extends FinancialStatement
     /**
      * Get Cash Flow Statement Sections and Results.
      */
-    public function getSections($startDate = null, $endDate = null, $fullbalance = true): void
+    public function getSections($startDate = null, $endDate = null, $fullbalance = true): array
     {
         // Accounts movements for the Period
         foreach (array_keys($this->balances) as $section) {
@@ -160,6 +160,11 @@ class CashFlowStatement extends FinancialStatement
             $this->period['startDate'],
             $this->period['endDate']
         )["sectionClosingBalance"];
+
+        return [
+            "balances" => $this->balances,
+            "results" => $this->results
+        ];
     }
 
     /**

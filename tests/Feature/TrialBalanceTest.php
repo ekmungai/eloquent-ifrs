@@ -509,7 +509,16 @@ class TrialBalanceTest extends TestCase
         $endDate = ReportingPeriod::periodEnd();
 
         $trialBalance = new TrialBalance();
-        $trialBalance->getSections($startDate, $endDate);
+        $sections = $trialBalance->getSections($startDate, $endDate);
+
+        $this->assertEquals(
+            $sections,
+            [
+                "accounts" => $trialBalance->accounts,
+                "results" => $trialBalance->results,
+            ]
+        );
+
 
         /*
          | ------------------------------

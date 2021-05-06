@@ -113,7 +113,7 @@ class BalanceSheet extends FinancialStatement
     /**
      * Get Balance Sheet Sections.
      */
-    public function getSections($startDate = null, $endDate = null, $fullbalance = true): void
+    public function getSections($startDate = null, $endDate = null, $fullbalance = true): array
     {
         parent::getSections($this->period['startDate'], $this->period['endDate']);
 
@@ -136,6 +136,13 @@ class BalanceSheet extends FinancialStatement
 
         // Total Equity
         $this->results[self::TOTAL_EQUITY] = abs($this->totals[self::EQUITY] + $netProfit);
+
+        return [
+            "accounts" => $this->accounts,
+            "balances" => $this->balances,
+            "results" => $this->results,
+            "totals" => $this->totals,
+        ];
     }
 
     /**

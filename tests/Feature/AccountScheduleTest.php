@@ -38,7 +38,6 @@ use IFRS\Models\Vat;
 
 class AccountScheduleTest extends TestCase
 {
-
     /**
      * Test Account Schedule Missing Accoount
      *
@@ -96,7 +95,7 @@ class AccountScheduleTest extends TestCase
             ])->id,
             "currency_id" => $currency->id,
             'reporting_period_id' => $this->period->id,
-            "amount" => 50
+            "balance" => 50
         ]);
 
         //Client Receipt Transaction
@@ -111,7 +110,8 @@ class AccountScheduleTest extends TestCase
             "amount" => 100,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                'currency_id' => $currency->id,
             ])->id,
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 0
@@ -282,7 +282,7 @@ class AccountScheduleTest extends TestCase
             ])->id,
             "currency_id" => $currency->id,
             'reporting_period_id' => $this->period->id,
-            "amount" => 60
+            "balance" => 60
         ]);
 
         //Supplier Payment Transaction
@@ -297,7 +297,8 @@ class AccountScheduleTest extends TestCase
             "amount" => 100,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                'currency_id' => $currency->id,
             ])->id,
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 0

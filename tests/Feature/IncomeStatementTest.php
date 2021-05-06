@@ -290,14 +290,24 @@ class IncomeStatementTest extends TestCase
         $startDate = ReportingPeriod::periodStart();
         $endDate = ReportingPeriod::periodEnd();
 
-        $incomeStatement->getSections($startDate, $endDate, false);
-
+        $sections = $incomeStatement->getSections($startDate, $endDate, false);
         $incomeStatement->toString();
 
         $operatingRevenues = IncomeStatement::OPERATING_REVENUES;
         $operatingExpenses = IncomeStatement::OPERATING_EXPENSES;
         $nonOperatingRevenues = IncomeStatement::NON_OPERATING_REVENUES;
         $nonOperatingExpenses = IncomeStatement::NON_OPERATING_EXPENSES;
+
+        $this->assertEquals(
+            $sections,
+            [
+                "accounts" => $incomeStatement->accounts,
+                "balances" => $incomeStatement->balances,
+                "results" => $incomeStatement->results,
+                "totals" => $incomeStatement->totals,
+            ]
+        );
+
 
         $this->assertEquals(
             $incomeStatement->balances[$operatingRevenues][Account::OPERATING_REVENUE],

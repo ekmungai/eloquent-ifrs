@@ -401,7 +401,7 @@ class CashFlowStatementTest extends TestCase
         $startDate = ReportingPeriod::periodStart();
         $endDate = ReportingPeriod::periodEnd();
 
-        $cashFlowStatement->getSections($startDate, $endDate);
+        $sections = $cashFlowStatement->getSections($startDate, $endDate);
         $cashFlowStatement->toString();
 
         $provisions = CashFlowStatement::PROVISIONS;
@@ -422,6 +422,15 @@ class CashFlowStatementTest extends TestCase
         $investmentCashFlow = CashFlowStatement::INVESTMENT_CASH_FLOW;
         $financingCashFlow = CashFlowStatement::FINANCING_CASH_FLOW;
         $netCashFlow = CashFlowStatement::NET_CASH_FLOW;
+
+        $this->assertEquals(
+            $sections,
+            [
+                "balances" => $cashFlowStatement->balances,
+                "results" => $cashFlowStatement->results,
+            ]
+        );
+
 
         // Statement balances
         $this->assertEquals(
