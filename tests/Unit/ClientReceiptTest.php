@@ -54,6 +54,7 @@ class ClientReceiptTest extends TestCase
      */
     public function testPostClientReceiptTransaction()
     {
+        $currency = factory(Currency::class)->create();
         $clientReceipt = new ClientReceipt(
             [
                 "account_id" => factory(Account::class)->create([
@@ -62,6 +63,7 @@ class ClientReceiptTest extends TestCase
                 ])->id,
                 "transaction_date" => Carbon::now(),
                 "narration" => $this->faker->word,
+                'currency_id' => $currency->id,
             ]
         );
 
@@ -72,7 +74,8 @@ class ClientReceiptTest extends TestCase
             ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                'currency_id' => $currency->id,
             ])->id,
             "quantity" => 1,
         ]);
@@ -133,12 +136,14 @@ class ClientReceiptTest extends TestCase
      */
     public function testClientReceiptMainAccount()
     {
+        $currency = factory(Currency::class)->create();
         $clientReceipt = new ClientReceipt([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::RECONCILIATION,
-                'category_id' => null
+                'category_id' => null,
             ])->id,
             "transaction_date" => Carbon::now(),
+            'currency_id' => $currency->id,
             "narration" => $this->faker->word,
         ]);
         $this->expectException(MainAccount::class);
@@ -151,7 +156,8 @@ class ClientReceiptTest extends TestCase
             ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                'currency_id' => $currency->id,
             ])->id,
         ]);
         $clientReceipt->addLineItem($lineItem);

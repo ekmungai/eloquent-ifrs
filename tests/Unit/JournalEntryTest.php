@@ -158,6 +158,7 @@ class JournalEntryTest extends TestCase
             "account_id" => $account->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $account->currency_id,
         ]);
         $transaction->save();
 

@@ -20,7 +20,7 @@ class InvalidClearanceCurrency extends IFRSException
      */
     public function __construct(string $message = null, int $code = null)
     {
-        $error = "Assignment and Clearance Currency must be the same";
+        $error = "Assignment Transaction and Clearance Currency must be the same";
 
         parent::__construct($error . $message, $code);
     }

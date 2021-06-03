@@ -8,6 +8,7 @@ use IFRS\Tests\TestCase;
 
 use IFRS\Models\Account;
 use IFRS\Models\Balance;
+use IFRS\Models\Currency;
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\LineItem;
 use IFRS\Models\ReportingPeriod;
@@ -115,12 +116,15 @@ class TrialBalanceTest extends TestCase
         ]);
 
         //transaction
+        $currency = factory(Currency::class)->create();
         $cashPurchase = new CashPurchase([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                'currency_id' => $currency->id,
             ])->id,
             "date" => Carbon::now(),
+            'currency_id' => $currency->id,
             "narration" => $this->faker->word,
         ]);
 
@@ -130,7 +134,8 @@ class TrialBalanceTest extends TestCase
 
         $bank = factory(Account::class)->create([
             'account_type' => Account::BANK,
-            'category_id' => null
+            'category_id' => null,
+            'currency_id' => $currency->id,
         ]);
 
         //balance
@@ -149,10 +154,12 @@ class TrialBalanceTest extends TestCase
         $contraEntry = new ContraEntry([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                'currency_id' => $bank->currency_id,
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $bank->currency_id,
         ]);
 
         $contraEntry->addLineItem(
@@ -424,13 +431,16 @@ class TrialBalanceTest extends TestCase
         ]);
 
         //transaction
+        $currency = factory(Currency::class)->create();
         $cashPurchase = new CashPurchase([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                'currency_id' => $currency->id,
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $currency->id,
         ]);
 
         $cashPurchase->addLineItem(factory(LineItem::class)->create(["account_id" => $operatingExpenses]));
@@ -481,10 +491,12 @@ class TrialBalanceTest extends TestCase
         $cashPurchase = new CashPurchase([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                'currency_id' => $currency->id,
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $currency->id,
         ]);
 
         $cashPurchase->addLineItem(factory(LineItem::class)->create(["account_id" => $overheadExpense]));

@@ -35,6 +35,7 @@ use IFRS\Exceptions\MissingAccount;
 use IFRS\Exceptions\InvalidAccountType;
 use IFRS\Models\Transaction;
 use IFRS\Models\Vat;
+use Illuminate\Support\Facades\Auth;
 
 class AccountScheduleTest extends TestCase
 {
@@ -252,7 +253,7 @@ class AccountScheduleTest extends TestCase
         $this->assertEquals($schedule->transactions[2]->unclearedAmount, 45);
 
         $this->assertEquals($schedule->balances["originalAmount"], 241);
-        $this->assertEquals($schedule->balances["clearedAmount"], 95);
+        $this->assertEquals($schedule->balances["amountCleared"], 95);
         $this->assertEquals($schedule->balances["unclearedAmount"], 146);
         $this->assertEquals($schedule->balances["totalAge"], 365);
         $this->assertEquals($schedule->balances["averageAge"], 122);
@@ -265,7 +266,6 @@ class AccountScheduleTest extends TestCase
      */
     public function testSupplierAccountAccountSchedule()
     {
-
         $currency = factory(Currency::class)->create();
         $account = factory(Account::class)->create([
             'account_type' => Account::PAYABLE,
@@ -422,19 +422,312 @@ class AccountScheduleTest extends TestCase
         $this->assertEquals($schedule->transactions[0]->id, $balance->id);
         $this->assertEquals($schedule->transactions[0]->transactionType, Transaction::getType($balance->transaction_type));
         $this->assertEquals($schedule->transactions[0]->originalAmount, 60);
-        $this->assertEquals($schedule->transactions[0]->clearedAmount, 24);
+        $this->assertEquals($schedule->transactions[0]->amountCleared, 24);
         $this->assertEquals($schedule->transactions[0]->unclearedAmount, 36);
 
         $this->assertEquals($schedule->transactions[1]->id, $supplierBill->id);
         $this->assertEquals($schedule->transactions[1]->transactionType, "Supplier Bill");
         $this->assertEquals($schedule->transactions[1]->originalAmount, 348);
-        $this->assertEquals($schedule->transactions[1]->clearedAmount, 85);
+        $this->assertEquals($schedule->transactions[1]->amountCleared, 85);
         $this->assertEquals($schedule->transactions[1]->unclearedAmount, 263);
 
         $this->assertEquals($schedule->transactions[2]->id, $creditJournalEntry->id);
         $this->assertEquals($schedule->transactions[2]->transactionType, "Journal Entry");
         $this->assertEquals($schedule->transactions[2]->originalAmount, 278.4);
-        $this->assertEquals($schedule->transactions[2]->clearedAmount, 112.8);
+        $this->assertEquals($schedule->transactions[2]->amountCleared, 112.8);
         $this->assertEquals($schedule->transactions[2]->unclearedAmount, 165.6);
+
+        $this->assertEquals($schedule->balances['originalAmount'], 686.4);
+        $this->assertEquals($schedule->balances['amountCleared'], 221.8);
+        $this->assertEquals($schedule->balances['unclearedAmount'], 464.6);
+        $this->assertEquals($schedule->balances['totalAge'], 365);
+        $this->assertEquals($schedule->balances['averageAge'], 122.0);
+    }
+
+    /**
+     * Test AccountSchedule Currency filters
+     *
+     * @return void
+     */
+    public function testAccountScheduleCurrencyFilters()
+    {
+        $account = factory(Account::class)->create([
+            'account_type' => Account::PAYABLE,
+            'category_id' => null
+        ]);
+
+        $rate = factory(ExchangeRate::class)->create([
+            'rate' => 105
+        ]);
+
+        $baseCurrency = Auth::user()->entity->currency_id;
+
+        // Base currency opening balances
+        $balance1 = factory(Balance::class)->create([
+            "account_id" => $account->id,
+            "balance_type" => Balance::CREDIT,
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
+                "rate" => 1,
+            ])->id,
+            "currency_id" => $baseCurrency,
+            'reporting_period_id' => $this->period->id,
+            "balance" => 60
+        ]);
+
+        // Base currency Supplier Payment Transaction
+        $supplierPayment1 = new SupplierPayment([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $baseCurrency,
+        ]);
+
+        $lineItem = factory(LineItem::class)->create([
+            "amount" => 100,
+            "account_id" => factory(Account::class)->create([
+                "account_type" => Account::BANK,
+                'category_id' => null,
+                "currency_id" => $baseCurrency,
+            ])->id,
+            "vat_id" => factory(Vat::class)->create([
+                "rate" => 0
+            ])->id,
+            "quantity" => 1,
+        ]);
+        $supplierPayment1->addLineItem($lineItem);
+
+        $supplierPayment1->post();
+
+        factory(Assignment::class)->create([
+            'transaction_id' => $supplierPayment1->id,
+            'cleared_id' => $balance1->id,
+            'cleared_type' => "IFRS\Models\Balance",
+            "amount" => 24,
+        ]);
+        
+        // Foreign currency opening balances
+        $balance2 = factory(Balance::class)->create([
+            "account_id" => $account->id,
+            "balance_type" => Balance::CREDIT,
+            "exchange_rate_id" => $rate->id,
+            "currency_id" => $rate->currency->id,
+            'reporting_period_id' => $this->period->id,
+            "balance" => 60
+        ]);
+
+        // Foreign currency Supplier Payment Transaction
+        $supplierPayment2 = new SupplierPayment([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $rate->currency->id,
+            "exchange_rate_id" => $rate->id,
+        ]);
+
+        $lineItem = factory(LineItem::class)->create([
+            "amount" => 100,
+            "account_id" => factory(Account::class)->create([
+                "account_type" => Account::BANK,
+                'category_id' => null,
+                "currency_id" => $rate->currency->id,
+            ])->id,
+            "vat_id" => factory(Vat::class)->create([
+                "rate" => 0
+            ])->id,
+            "quantity" => 1,
+        ]);
+        $supplierPayment2->addLineItem($lineItem);
+
+        $supplierPayment2->post();
+
+        factory(Assignment::class)->create([
+            'transaction_id' => $supplierPayment2->id,
+            'cleared_id' => $balance2->id,
+            'cleared_type' => "IFRS\Models\Balance",
+            "amount" => 24,
+        ]);
+
+        // Base currency Supplier Bill Transaction
+        $supplierBill1 = new SupplierBill([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $baseCurrency,
+        ]);
+
+        $lineItem = factory(LineItem::class)->create([
+            "amount" => 300,
+            "vat_id" => factory(Vat::class)->create(["rate" => 16])->id,
+            "account_id" => factory(Account::class)->create([
+                "account_type" => Account::DIRECT_EXPENSE,
+                'category_id' => null
+            ])->id,
+            "quantity" => 1,
+        ]);
+        $supplierBill1->addLineItem($lineItem);
+
+        $supplierBill1->post();
+
+        // Base currency Debit Note Transaction
+        $debitNote1 = new DebitNote([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $baseCurrency,
+        ]);
+
+        $lineItem = factory(LineItem::class)->create([
+            "amount" => 175,
+            "account_id" => factory(Account::class)->create([
+                "account_type" => Account::OVERHEAD_EXPENSE,
+                'category_id' => null
+            ])->id,
+            "vat_id" => factory(Vat::class)->create([
+                "rate" => 16
+            ])->id,
+            "quantity" => 1,
+        ]);
+        $debitNote1->addLineItem($lineItem);
+
+        $debitNote1->post();
+
+        factory(Assignment::class)->create([
+            'transaction_id' => $debitNote1->id,
+            'cleared_id' => $supplierBill1->id,
+            "amount" => 85,
+        ]);
+
+        // Foreign currency Supplier Bill Transaction
+        $supplierBill2 = new SupplierBill([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "exchange_rate_id" => $rate->id,
+            "currency_id" => $rate->currency->id,
+        ]);
+
+        $lineItem = factory(LineItem::class)->create([
+            "amount" => 300,
+            "vat_id" => factory(Vat::class)->create(["rate" => 16])->id,
+            "account_id" => factory(Account::class)->create([
+                "account_type" => Account::DIRECT_EXPENSE,
+                'category_id' => null,
+                "currency_id" => $rate->currency->id,
+            ])->id,
+            "quantity" => 1,
+        ]);
+        $supplierBill2->addLineItem($lineItem);
+
+        $supplierBill2->post();
+
+        // Foreign currency Debit Note Transaction
+        $debitNote2 = new DebitNote([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "exchange_rate_id" => $rate->id,
+            "currency_id" => $rate->currency->id,
+        ]);
+
+        $lineItem = factory(LineItem::class)->create([
+            "amount" => 175,
+            "account_id" => factory(Account::class)->create([
+                "account_type" => Account::OVERHEAD_EXPENSE,
+                'category_id' => null,
+                "currency_id" => $rate->currency->id,
+            ])->id,
+            "vat_id" => factory(Vat::class)->create([
+                "rate" => 16
+            ])->id,
+            "quantity" => 1,
+        ]);
+        $debitNote2->addLineItem($lineItem);
+
+        $debitNote2->post();
+
+        factory(Assignment::class)->create([
+            'transaction_id' => $debitNote2->id,
+            'cleared_id' => $supplierBill2->id,
+            "amount" => 85,
+        ]);
+
+        // All transactions
+        $schedule = new AccountSchedule($account->id);
+        $transactions = $schedule->getTransactions();
+
+        $this->assertEquals($transactions[0]->id, $balance1->id);
+        $this->assertEquals($transactions[0]->transactionType, Transaction::getType($balance1->transaction_type));
+        $this->assertEquals($transactions[0]->originalAmount, 60);
+        $this->assertEquals($transactions[0]->amountCleared, 24);
+        $this->assertEquals($transactions[0]->unclearedAmount, 36);
+
+        $this->assertEquals($transactions[1]->id, $balance2->id);
+        $this->assertEquals($transactions[1]->transactionType, Transaction::getType($balance2->transaction_type));
+        $this->assertEquals($transactions[1]->originalAmount, 6300);
+        $this->assertEquals($transactions[1]->amountCleared, 2520);
+        $this->assertEquals($transactions[1]->unclearedAmount, 3780);
+
+        $this->assertEquals($schedule->transactions[2]->id, $supplierBill1->id);
+        $this->assertEquals($schedule->transactions[2]->transactionType, "Supplier Bill");
+        $this->assertEquals($schedule->transactions[2]->originalAmount, 348);
+        $this->assertEquals($schedule->transactions[2]->amountCleared, 85);
+        $this->assertEquals($schedule->transactions[2]->unclearedAmount, 263);
+
+        $this->assertEquals($schedule->transactions[3]->id, $supplierBill2->id);
+        $this->assertEquals($schedule->transactions[3]->transactionType, "Supplier Bill");
+        $this->assertEquals($schedule->transactions[3]->originalAmount, 36540);
+        $this->assertEquals($schedule->transactions[3]->amountCleared, 8925);
+        $this->assertEquals($schedule->transactions[3]->unclearedAmount, 27615);
+
+        $this->assertEquals($schedule->balances['originalAmount'], 43248.0);
+        $this->assertEquals($schedule->balances['amountCleared'], 11554);
+        $this->assertEquals($schedule->balances['unclearedAmount'], 31694.0);
+        $this->assertEquals($schedule->balances['totalAge'], 730);
+        $this->assertEquals($schedule->balances['averageAge'], 183.0);
+
+        // Base Currency transactions
+        $schedule = new AccountSchedule($account->id, $baseCurrency);
+        $transactions = $schedule->getTransactions();
+
+        $this->assertEquals($transactions[0]->id, $balance1->id);
+        $this->assertEquals($transactions[0]->transactionType, Transaction::getType($balance1->transaction_type));
+        $this->assertEquals($transactions[0]->originalAmount, 60);
+        $this->assertEquals($transactions[0]->amountCleared, 24);
+        $this->assertEquals($transactions[0]->unclearedAmount, 36);
+
+        $this->assertEquals($schedule->transactions[1]->id, $supplierBill1->id);
+        $this->assertEquals($schedule->transactions[1]->transactionType, "Supplier Bill");
+        $this->assertEquals($schedule->transactions[1]->originalAmount, 348);
+        $this->assertEquals($schedule->transactions[1]->amountCleared, 85);
+        $this->assertEquals($schedule->transactions[1]->unclearedAmount, 263);
+
+        $this->assertEquals($schedule->balances['originalAmount'], 408.0);
+        $this->assertEquals($schedule->balances['amountCleared'], 109);
+        $this->assertEquals($schedule->balances['unclearedAmount'], 299.0);
+        $this->assertEquals($schedule->balances['totalAge'], 365);
+        $this->assertEquals($schedule->balances['averageAge'], 183.0);
+
+        // Foreign Currency transactions
+        $schedule = new AccountSchedule($account->id, $rate->currency_id);
+        $transactions = $schedule->getTransactions();
+
+        $this->assertEquals($transactions[0]->id, $balance2->id);
+        $this->assertEquals($transactions[0]->transactionType, Transaction::getType($balance2->transaction_type));
+        $this->assertEquals($transactions[0]->originalAmount, 60);
+        $this->assertEquals($transactions[0]->amountCleared, 24);
+        $this->assertEquals($transactions[0]->unclearedAmount, 36);
+
+        $this->assertEquals($schedule->transactions[1]->id, $supplierBill2->id);
+        $this->assertEquals($schedule->transactions[1]->transactionType, "Supplier Bill");
+        $this->assertEquals($schedule->transactions[1]->originalAmount, 348);
+        $this->assertEquals($schedule->transactions[1]->amountCleared, 85);
+        $this->assertEquals($schedule->transactions[1]->unclearedAmount, 263);
+
+        $this->assertEquals($schedule->balances['originalAmount'], 408.0);
+        $this->assertEquals($schedule->balances['amountCleared'], 109);
+        $this->assertEquals($schedule->balances['unclearedAmount'], 299.0);
+        $this->assertEquals($schedule->balances['totalAge'], 365);
+        $this->assertEquals($schedule->balances['averageAge'], 183.0);
+
     }
 }

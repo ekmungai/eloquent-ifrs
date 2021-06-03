@@ -344,20 +344,23 @@ class AssignmentTest extends TestCase
             'category_id' => null
         ]);
 
+        $currency = factory(Currency::class)->create();
         $transaction = new ClientReceipt([
             "account_id" => $account->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 110
-            ])->id
+            ])->id,
+            'currency_id' => $currency->id,
         ]);
         
         $line = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                'currency_id' => $currency->id,
             ])->id,
             'amount' => 100,
         ]);
@@ -371,7 +374,8 @@ class AssignmentTest extends TestCase
             "narration" => $this->faker->word,
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 100
-            ])->id
+            ])->id,
+            'currency_id' => $currency->id,
         ]);
 
         $line = new LineItem([
@@ -409,20 +413,23 @@ class AssignmentTest extends TestCase
             'category_id' => null
         ]);
 
+        $currency = factory(Currency::class)->create();
         $transaction = new SupplierPayment([
             "account_id" => $account->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 100
-            ])->id
+            ])->id,
+            'currency_id' => $currency->id,
         ]);
         
         $line = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                'currency_id' => $currency->id,
             ])->id,
             'amount' => 50,
         ]);
@@ -436,7 +443,8 @@ class AssignmentTest extends TestCase
             "narration" => $this->faker->word,
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 110
-            ])->id
+            ])->id,
+            'currency_id' => $currency->id,
         ]);
 
         $line = new LineItem([
@@ -488,7 +496,8 @@ class AssignmentTest extends TestCase
             "narration" => $this->faker->word,
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 100
-            ])->id
+            ])->id,
+            'currency_id' => $account->currency_id,
         ]);
         
         $line = new LineItem([
@@ -547,20 +556,23 @@ class AssignmentTest extends TestCase
             'category_id' => null
         ]);
 
+        $currency = factory(Currency::class)->create();
         $transaction = new SupplierPayment([
             "account_id" => $account->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 110
-            ])->id
+            ])->id,
+            'currency_id' => $currency->id,
         ]);
         
         $line = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                'currency_id' => $currency->id,
             ])->id,
             'amount' => 100,
         ]);
@@ -574,7 +586,8 @@ class AssignmentTest extends TestCase
             "narration" => $this->faker->word,
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 100
-            ])->id
+            ])->id,
+            'currency_id' => $currency->id,
         ]);
 
         $line = new LineItem([
@@ -1093,7 +1106,7 @@ class AssignmentTest extends TestCase
         $cleared->post();
 
         $this->expectException(InvalidClearanceCurrency::class);
-        $this->expectExceptionMessage('Assignment and Clearance Currency must be the same');
+        $this->expectExceptionMessage('Assignment Transaction and Clearance Currency must be the same');
 
         $assignment = new Assignment([
             'assignment_date' => Carbon::now(),

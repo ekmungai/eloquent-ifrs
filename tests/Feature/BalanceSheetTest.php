@@ -8,6 +8,7 @@ use IFRS\Tests\TestCase;
 
 use IFRS\Models\Account;
 use IFRS\Models\Balance;
+use IFRS\Models\Currency;
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\LineItem;
 use IFRS\Models\ReportingPeriod;
@@ -80,13 +81,16 @@ class BalanceSheetTest extends TestCase
 
         $bill->addLineItem($lineItem);
         $bill->post();
-
+        
+        $currency = factory(Currency::class)->create();
         $cashSale = new CashSale([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                'currency_id' => $currency->id,
             ])->id,
             "date" => Carbon::now(),
+            'currency_id' => $currency->id,
             "narration" => $this->faker->word,
         ]);
 

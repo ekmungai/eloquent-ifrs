@@ -38,7 +38,7 @@ class CashFlowStatementTest extends TestCase
         $bank = factory(Account::class)->create([
             'name' => 'Bank Account',
             'account_type' => Account::BANK,
-            'category_id' => null
+            'category_id' => null,
         ]);
 
         factory(Balance::class)->create([
@@ -119,6 +119,7 @@ class CashFlowStatementTest extends TestCase
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
             "credited" => false,
+            'currency_id' => $bank->currency_id,
         ]);
 
         $lineItem =  factory(LineItem::class)->create([
@@ -220,6 +221,7 @@ class CashFlowStatementTest extends TestCase
             "account_id" => $bank->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $bank->currency_id,
         ]);
 
         $lineItem = factory(LineItem::class)->create([
@@ -302,6 +304,7 @@ class CashFlowStatementTest extends TestCase
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $bank->currency_id,
         ]);
 
         $lineItem = factory(LineItem::class)->create([
@@ -326,6 +329,7 @@ class CashFlowStatementTest extends TestCase
             "account_id" => $bank->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $bank->currency_id,
         ]);
 
         $lineItem = factory(LineItem::class)->create([
@@ -356,6 +360,7 @@ class CashFlowStatementTest extends TestCase
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $bank->currency_id,
         ]);
 
         $lineItem = factory(LineItem::class)->create([

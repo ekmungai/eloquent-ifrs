@@ -53,6 +53,7 @@ class SupplierPaymentTest extends TestCase
      */
     public function testPostSupplierPaymentTransaction()
     {
+        $currency = factory(Currency::class)->create();
         $supplierPayment = new SupplierPayment([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::PAYABLE,
@@ -60,6 +61,7 @@ class SupplierPaymentTest extends TestCase
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $currency->id,
         ]);
 
         $lineItem = factory(LineItem::class)->create([
@@ -69,7 +71,8 @@ class SupplierPaymentTest extends TestCase
             ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                'currency_id' => $currency->id,
             ])->id,
             "quantity" => 1,
         ]);
@@ -130,6 +133,7 @@ class SupplierPaymentTest extends TestCase
      */
     public function testSupplierPaymentMainAccount()
     {
+        $currency = factory(Currency::class)->create();
         $supplierPayment = new SupplierPayment([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::RECONCILIATION,
@@ -137,6 +141,7 @@ class SupplierPaymentTest extends TestCase
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $currency->id,
         ]);
         $this->expectException(MainAccount::class);
         $this->expectExceptionMessage('Supplier Payment Main Account must be of type Payable');
@@ -148,7 +153,8 @@ class SupplierPaymentTest extends TestCase
             ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                'currency_id' => $currency->id,
             ])->id,
         ]);
         $supplierPayment->addLineItem($lineItem);

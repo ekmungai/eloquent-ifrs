@@ -38,6 +38,7 @@ class CashPurchaseTest extends TestCase
             "account_id" => $bankAccount->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $bankAccount->currency_id,
         ]);
         $cashPurchase->save();
 
@@ -53,13 +54,16 @@ class CashPurchaseTest extends TestCase
      */
     public function testPostCashPurchaseTransaction()
     {
+        $currency = factory(Currency::class)->create();
         $cashPurchase = new CashPurchase([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                'currency_id' => $currency->id,
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $currency->id,
         ]);
 
         $lineItem = factory(LineItem::class)->create([
@@ -186,6 +190,7 @@ class CashPurchaseTest extends TestCase
             "account_id" => $account->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $account->currency->id,
         ]);
         $transaction->save();
 
@@ -210,6 +215,7 @@ class CashPurchaseTest extends TestCase
             "account_id" => $account->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $account->currency_id,
         ]);
         $transaction->save();
 
@@ -221,6 +227,7 @@ class CashPurchaseTest extends TestCase
             "account_id" => $account2->id,
             "transaction_date" => Carbon::now()->addWeeks(2),
             "narration" => $this->faker->word,
+            'currency_id' => $account->currency_id,
         ]);
         $transaction2->save();
 

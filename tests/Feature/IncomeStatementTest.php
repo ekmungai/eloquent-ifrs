@@ -12,7 +12,7 @@ use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Vat;
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\Assignment;
-
+use IFRS\Models\Currency;
 use IFRS\Reports\IncomeStatement;
 
 use IFRS\Transactions\CashSale;
@@ -40,13 +40,15 @@ class IncomeStatementTest extends TestCase
          | Operating Revenue Transactions
          | ------------------------------
          */
-
+        $currency = factory(Currency::class)->create();
         $cashSale = new CashSale([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                'currency_id' => $currency->id,
             ])->id,
             "date" => Carbon::now(),
+            'currency_id' => $currency->id,
             "narration" => $this->faker->word,
         ]);
 
@@ -135,15 +137,17 @@ class IncomeStatementTest extends TestCase
          | Non Operating Revenue Transactions
          | ------------------------------
          */
-
+        $currency = factory(Currency::class)->create();
         $journalEntry = new JournalEntry([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                'currency_id' => $currency->id,
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
             "credited" => false,
+            'currency_id' => $currency->id,
         ]);
 
         $lineItem =  factory(LineItem::class)->create([
@@ -240,13 +244,16 @@ class IncomeStatementTest extends TestCase
         $journalEntry->addLineItem($lineItem);
         $journalEntry->post();
 
+        $currency = factory(Currency::class)->create();
         $cashPurchase = new CashPurchase([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                'currency_id' => $currency->id,
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $currency->id,
         ]);
 
         $lineItem = factory(LineItem::class)->create([

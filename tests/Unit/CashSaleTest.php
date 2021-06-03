@@ -38,6 +38,7 @@ class CashSaleTest extends TestCase
             "account_id" => $bankAccount->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $bankAccount->currency_id,
         ]);
         $cashSale->save();
 
@@ -53,13 +54,16 @@ class CashSaleTest extends TestCase
      */
     public function testPostCashSaleTransaction()
     {
+        $currency = factory(Currency::class)->create();
         $cashSale = new CashSale([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                'currency_id' => $currency->id,
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $currency->id,
         ]);
 
         $lineItem = factory(LineItem::class)->create([
@@ -175,13 +179,16 @@ class CashSaleTest extends TestCase
      */
     public function testCashSaleFind()
     {
+        $currency = factory(Currency::class)->create();
         $transaction = new CashSale([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                'currency_id' => $currency->id,
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $currency->id,
         ]);
         $transaction->save();
 
@@ -204,6 +211,7 @@ class CashSaleTest extends TestCase
             "account_id" => $account->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $account->currency_id,
         ]);
         $transaction->save();
 
@@ -215,6 +223,7 @@ class CashSaleTest extends TestCase
             "account_id" => $account2->id,
             "transaction_date" => Carbon::now()->addWeeks(2),
             "narration" => $this->faker->word,
+            'currency_id' => $account2->currency_id,
         ]);
 
         $transaction2->save();

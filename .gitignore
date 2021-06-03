@@ -54,3 +54,4 @@ clover.*
 
 # PHPSTORM
 .idea
+src/Models/Account.php

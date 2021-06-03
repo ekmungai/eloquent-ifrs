@@ -120,10 +120,6 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         $entity = Auth::user()->entity;
         $this->table = config('ifrs.table_prefix') . 'transactions';
 
-        if (!isset($attributes['currency_id']) && !is_null($entity)) {
-            $attributes['currency_id'] = $entity->currency_id;
-        }
-
         if (!isset($attributes['exchange_rate_id']) && !is_null($entity)) {
             $attributes['exchange_rate_id'] = $entity->default_rate->id;
         }
@@ -627,6 +623,10 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
 
         if (in_array($this->account->account_type, config('ifrs.single_currency')) && $this->account->currency_id != $this->currency_id) {
             throw new InvalidCurrency("Transaction", $this->account->account_type);
+        }
+
+        if(!isset($this->currency_id)){
+            $this->currency_id = $this->account->currency_id;
         }
 
         if (is_null($this->transaction_no)) {

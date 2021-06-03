@@ -38,6 +38,7 @@ class ContraEntryTest extends TestCase
             "account_id" => $bankAccount->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $bankAccount->currency_id,
         ]);
         $contraEntry->save();
 
@@ -53,13 +54,16 @@ class ContraEntryTest extends TestCase
      */
     public function testPostContraEntryTransaction()
     {
+        $currency = factory(Currency::class)->create();
         $contraEntry = new ContraEntry([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                'currency_id' => $currency->id,
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $currency->id,
         ]);
 
         $lineItem = factory(LineItem::class)->create([
@@ -69,7 +73,8 @@ class ContraEntryTest extends TestCase
             ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                'currency_id' => $currency->id,
             ])->id,
             "quantity" => 1,
         ]);
@@ -130,6 +135,7 @@ class ContraEntryTest extends TestCase
      */
     public function testContraEntryMainAccount()
     {
+        $currency = factory(Currency::class)->create();
         $contraEntry = new ContraEntry([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::RECONCILIATION,
@@ -137,6 +143,7 @@ class ContraEntryTest extends TestCase
             ])->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $currency->id,
         ]);
         $this->expectException(MainAccount::class);
         $this->expectExceptionMessage('Contra Entry Main Account must be of type Bank');
@@ -148,7 +155,8 @@ class ContraEntryTest extends TestCase
             ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                'currency_id' => $currency->id,
             ])->id,
         ]);
         $contraEntry->addLineItem($lineItem);
@@ -171,6 +179,7 @@ class ContraEntryTest extends TestCase
             "account_id" => $account->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $account->currency_id,
         ]);
         $transaction->save();
 
@@ -193,6 +202,7 @@ class ContraEntryTest extends TestCase
             "account_id" => $account->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $account->currency_id,
         ]);
         $transaction->save();
 
@@ -204,6 +214,7 @@ class ContraEntryTest extends TestCase
             "account_id" => $account2->id,
             "transaction_date" => Carbon::now()->addWeeks(2),
             "narration" => $this->faker->word,
+            'currency_id' => $account2->currency_id,
         ]);
         $transaction2->save();
 

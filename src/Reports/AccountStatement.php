@@ -114,15 +114,17 @@ class AccountStatement
         $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart() : Carbon::parse($startDate);
         $this->period['endDate'] = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
         $this->currency = is_null($currencyId) ? $this->entity->currency : Currency::find($currencyId);
+        $this->currencyId = $currencyId;
     }
 
     /**
      * Get Account Statement Transactions.
      */
-    public function getTransactions(): void
+    public function getTransactions(): array
     {
-        $query = $this->account->transactionsQuery($this->period['startDate'], $this->period['endDate']);
-        $this->balances['opening'] = $this->account->openingBalance(ReportingPeriod::year($this->period['startDate']));
+        $query = $this->account->transactionsQuery($this->period['startDate'], $this->period['endDate'], $this->currencyId);
+
+        $this->balances['opening'] = $this->account->openingBalance(ReportingPeriod::year($this->period['startDate']), $this->currencyId);
         $this->balances['closing'] += $this->balances['opening'];
 
         $balance = $this->balances['opening'];
@@ -130,7 +132,7 @@ class AccountStatement
         foreach ($query->get() as $transaction) {
             $transaction->debit = $transaction->credit = 0;
 
-            $contribution = Ledger::contribution($this->account, $transaction->id);
+            $contribution = Ledger::contribution($this->account, $transaction->id, $this->currencyId);
             $this->balances['closing'] += $contribution;
             $balance += $contribution;
             $transaction->balance = $balance;
@@ -142,5 +144,7 @@ class AccountStatement
 
             array_push($this->transactions, $transaction);
         }
+
+        return $this->transactions;
     }
 }

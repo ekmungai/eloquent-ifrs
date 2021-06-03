@@ -25,7 +25,9 @@ use IFRS\Transactions\SupplierBill;
 use IFRS\Transactions\DebitNote;
 
 use IFRS\Exceptions\MissingAccount;
+use IFRS\Models\Currency;
 use IFRS\Models\Vat;
+use Illuminate\Support\Facades\Auth;
 
 class AccountStatementTest extends TestCase
 {
@@ -64,7 +66,8 @@ class AccountStatementTest extends TestCase
                 "rate" => 1,
             ])->id,
             'reporting_period_id' => $this->period->id,
-            "amount" => 50
+            "currency_id" => $account->currency_id,
+            "balance" => 50
         ]);
 
         factory(Balance::class, 2)->create([
@@ -74,7 +77,8 @@ class AccountStatementTest extends TestCase
                 "rate" => 1,
             ])->id,
             'reporting_period_id' => $this->period->id,
-            "amount" => 40
+            "currency_id" => $account->currency_id,
+            "balance" => 40
         ]);
 
         //Cash Sale Transaction
@@ -82,6 +86,7 @@ class AccountStatementTest extends TestCase
             "account_id" => $account->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $account->currency_id,
         ]);
         $cashSale->save();
 
@@ -104,10 +109,12 @@ class AccountStatementTest extends TestCase
         $creditContraEntry = new ContraEntry([
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                'currency_id' => $account->currency_id,
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $account->currency_id,
         ]);
 
         $lineItem = factory(LineItem::class)->create([
@@ -127,13 +134,15 @@ class AccountStatementTest extends TestCase
             "account_id" => $account->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $account->currency_id,
         ]);
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                'currency_id' => $account->currency_id,
             ])->id,
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 0
@@ -152,6 +161,7 @@ class AccountStatementTest extends TestCase
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $account->currency_id,
         ]);
 
         $lineItem = factory(LineItem::class)->create([
@@ -171,6 +181,7 @@ class AccountStatementTest extends TestCase
             "account_id" => $account->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $account->currency_id,
         ]);
 
         $lineItem = factory(LineItem::class)->create([
@@ -192,6 +203,7 @@ class AccountStatementTest extends TestCase
                 'account_type' => Account::PAYABLE,
                 'category_id' => null
             ])->id,
+            'currency_id' => $account->currency_id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
         ]);
@@ -213,6 +225,7 @@ class AccountStatementTest extends TestCase
             "account_id" => $account->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $account->currency_id,
         ]);
 
         $lineItem = factory(LineItem::class)->create([
@@ -233,6 +246,7 @@ class AccountStatementTest extends TestCase
             ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $account->currency_id,
         ]);
 
         $lineItem = factory(LineItem::class)->create([
@@ -248,41 +262,41 @@ class AccountStatementTest extends TestCase
         $debitJournalEntry->post();
 
         $statement = new AccountStatement($account->id);
-        $statement->getTransactions();
+        $transactions = $statement->getTransactions();
 
         $this->assertEquals($statement->balances['opening'], 70);
 
-        $this->assertEquals($statement->transactions[0]->id, $cashSale->id);
-        $this->assertEquals($statement->transactions[0]->debit, $cashSale->amount);
-        $this->assertEquals($statement->transactions[0]->balance, 186);
+        $this->assertEquals($transactions[0]->id, $cashSale->id);
+        $this->assertEquals($transactions[0]->debit, $cashSale->amount);
+        $this->assertEquals($transactions[0]->balance, 186);
 
-        $this->assertEquals($statement->transactions[1]->id, $creditContraEntry->id);
-        $this->assertEquals($statement->transactions[1]->credit, $creditContraEntry->amount);
-        $this->assertEquals($statement->transactions[1]->balance, 136);
+        $this->assertEquals($transactions[1]->id, $creditContraEntry->id);
+        $this->assertEquals($transactions[1]->credit, $creditContraEntry->amount);
+        $this->assertEquals($transactions[1]->balance, 136);
 
-        $this->assertEquals($statement->transactions[2]->id, $debitContraEntry->id);
-        $this->assertEquals($statement->transactions[2]->debit, $debitContraEntry->amount);
-        $this->assertEquals($statement->transactions[2]->balance, 186);
+        $this->assertEquals($transactions[2]->id, $debitContraEntry->id);
+        $this->assertEquals($transactions[2]->debit, $debitContraEntry->amount);
+        $this->assertEquals($transactions[2]->balance, 186);
 
-        $this->assertEquals($statement->transactions[3]->id, $clientReceipt->id);
-        $this->assertEquals($statement->transactions[3]->debit, $clientReceipt->amount);
-        $this->assertEquals($statement->transactions[3]->balance, 286);
+        $this->assertEquals($transactions[3]->id, $clientReceipt->id);
+        $this->assertEquals($transactions[3]->debit, $clientReceipt->amount);
+        $this->assertEquals($transactions[3]->balance, 286);
 
-        $this->assertEquals($statement->transactions[4]->id, $cashPurchase->id);
-        $this->assertEquals($statement->transactions[4]->credit, $cashPurchase->amount);
-        $this->assertEquals($statement->transactions[4]->balance, 199);
+        $this->assertEquals($transactions[4]->id, $cashPurchase->id);
+        $this->assertEquals($transactions[4]->credit, $cashPurchase->amount);
+        $this->assertEquals($transactions[4]->balance, 199);
 
-        $this->assertEquals($statement->transactions[5]->id, $supplierPayment->id);
-        $this->assertEquals($statement->transactions[5]->credit, $supplierPayment->amount);
-        $this->assertEquals($statement->transactions[5]->balance, 149);
+        $this->assertEquals($transactions[5]->id, $supplierPayment->id);
+        $this->assertEquals($transactions[5]->credit, $supplierPayment->amount);
+        $this->assertEquals($transactions[5]->balance, 149);
 
-        $this->assertEquals($statement->transactions[6]->id, $creditJournalEntry->id);
-        $this->assertEquals($statement->transactions[6]->credit, $creditJournalEntry->amount);
-        $this->assertEquals($statement->transactions[6]->balance, 99);
+        $this->assertEquals($transactions[6]->id, $creditJournalEntry->id);
+        $this->assertEquals($transactions[6]->credit, $creditJournalEntry->amount);
+        $this->assertEquals($transactions[6]->balance, 99);
 
-        $this->assertEquals($statement->transactions[7]->id, $debitJournalEntry->id);
-        $this->assertEquals($statement->transactions[7]->debit, $debitJournalEntry->amount);
-        $this->assertEquals($statement->transactions[7]->balance, 149);
+        $this->assertEquals($transactions[7]->id, $debitJournalEntry->id);
+        $this->assertEquals($transactions[7]->debit, $debitJournalEntry->amount);
+        $this->assertEquals($transactions[7]->balance, 149);
 
         $this->assertEquals($statement->balances['closing'], 149);
     }
@@ -307,7 +321,7 @@ class AccountStatementTest extends TestCase
                 "rate" => 1,
             ])->id,
             'reporting_period_id' => $this->period->id,
-            "amount" => 50
+            "balance" => 50
         ]);
 
         factory(Balance::class, 2)->create([
@@ -317,7 +331,7 @@ class AccountStatementTest extends TestCase
                 "rate" => 1,
             ])->id,
             'reporting_period_id' => $this->period->id,
-            "amount" => 40,
+            "balance" => 40,
         ]);
 
         //Client Invoice Transaction
@@ -363,10 +377,12 @@ class AccountStatementTest extends TestCase
         $creditNote->post();
 
         //Client Receipt Transaction
+        $currency = factory(Currency::class)->create();
         $clientReceipt = new ClientReceipt([
             "account_id" => $account->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $currency->id,
         ]);
 
         $lineItem = factory(LineItem::class)->create(
@@ -374,7 +390,8 @@ class AccountStatementTest extends TestCase
                 "amount" => 100,
                 "account_id" => factory(Account::class)->create([
                     "account_type" => Account::BANK,
-                    'category_id' => null
+                    'category_id' => null,
+                    'currency_id' => $currency->id,
                 ])->id,
                 "vat_id" => factory(Vat::class)->create([
                     "rate" => 0
@@ -428,29 +445,29 @@ class AccountStatementTest extends TestCase
         $debitJournalEntry->post();
 
         $statement = new AccountStatement($account->id);
-        $statement->getTransactions();
+        $transactions = $statement->getTransactions();
 
         $this->assertEquals($statement->balances['opening'], 70);
 
-        $this->assertEquals($statement->transactions[0]->id, $clientInvoice->id);
-        $this->assertEquals($statement->transactions[0]->debit, $clientInvoice->amount);
-        $this->assertEquals($statement->transactions[0]->balance, 186);
+        $this->assertEquals($transactions[0]->id, $clientInvoice->id);
+        $this->assertEquals($transactions[0]->debit, $clientInvoice->amount);
+        $this->assertEquals($transactions[0]->balance, 186);
 
-        $this->assertEquals($statement->transactions[1]->id, $creditNote->id);
-        $this->assertEquals($statement->transactions[1]->credit, $creditNote->amount);
-        $this->assertEquals($statement->transactions[1]->balance, 128);
+        $this->assertEquals($transactions[1]->id, $creditNote->id);
+        $this->assertEquals($transactions[1]->credit, $creditNote->amount);
+        $this->assertEquals($transactions[1]->balance, 128);
 
-        $this->assertEquals($statement->transactions[2]->id, $clientReceipt->id);
-        $this->assertEquals($statement->transactions[2]->credit, $clientReceipt->amount);
-        $this->assertEquals($statement->transactions[2]->balance, 28);
+        $this->assertEquals($transactions[2]->id, $clientReceipt->id);
+        $this->assertEquals($transactions[2]->credit, $clientReceipt->amount);
+        $this->assertEquals($transactions[2]->balance, 28);
 
-        $this->assertEquals($statement->transactions[3]->id, $creditJournalEntry->id);
-        $this->assertEquals($statement->transactions[3]->credit, $creditJournalEntry->amount);
-        $this->assertEquals($statement->transactions[3]->balance, -22);
+        $this->assertEquals($transactions[3]->id, $creditJournalEntry->id);
+        $this->assertEquals($transactions[3]->credit, $creditJournalEntry->amount);
+        $this->assertEquals($transactions[3]->balance, -22);
 
-        $this->assertEquals($statement->transactions[4]->id, $debitJournalEntry->id);
-        $this->assertEquals($statement->transactions[4]->debit, $debitJournalEntry->amount);
-        $this->assertEquals($statement->transactions[4]->balance, 28);
+        $this->assertEquals($transactions[4]->id, $debitJournalEntry->id);
+        $this->assertEquals($transactions[4]->debit, $debitJournalEntry->amount);
+        $this->assertEquals($transactions[4]->balance, 28);
 
         $this->assertEquals($statement->balances['closing'], 28);
     }
@@ -475,7 +492,7 @@ class AccountStatementTest extends TestCase
                 "rate" => 1,
             ])->id,
             'reporting_period_id' => $this->period->id,
-            "amount" => 50
+            "balance" => 50
         ]);
 
         factory(Balance::class, 2)->create([
@@ -485,7 +502,7 @@ class AccountStatementTest extends TestCase
                 "rate" => 1,
             ])->id,
             'reporting_period_id' => $this->period->id,
-            "amount" => 40
+            "balance" => 40
         ]);
 
         //Supplier Bill Transaction
@@ -531,17 +548,20 @@ class AccountStatementTest extends TestCase
         $debitNote->post();
 
         //Supplier Payment Transaction
+        $currency = factory(Currency::class)->create();
         $supplierPayment = new SupplierPayment([
             "account_id" => $account->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' => $currency->id,
         ]);
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::BANK,
-                'category_id' => null
+                'category_id' => null,
+                'currency_id' => $currency->id,
             ])->id,
             "vat_id" => factory(Vat::class)->create([
                 "rate" => 0
@@ -592,30 +612,242 @@ class AccountStatementTest extends TestCase
         $debitJournalEntry->post();
 
         $statement = new AccountStatement($account->id);
-        $statement->getTransactions();
+        $transactions = $statement->getTransactions();
 
         $this->assertEquals($statement->balances['opening'], -70);
 
-        $this->assertEquals($statement->transactions[0]->id, $supplierBill->id);
-        $this->assertEquals($statement->transactions[0]->credit, $supplierBill->amount);
-        $this->assertEquals($statement->transactions[0]->balance, -186);
+        $this->assertEquals($transactions[0]->id, $supplierBill->id);
+        $this->assertEquals($transactions[0]->credit, $supplierBill->amount);
+        $this->assertEquals($transactions[0]->balance, -186);
 
-        $this->assertEquals($statement->transactions[1]->id, $debitNote->id);
-        $this->assertEquals($statement->transactions[1]->debit, $debitNote->amount);
-        $this->assertEquals($statement->transactions[1]->balance, -128);
+        $this->assertEquals($transactions[1]->id, $debitNote->id);
+        $this->assertEquals($transactions[1]->debit, $debitNote->amount);
+        $this->assertEquals($transactions[1]->balance, -128);
 
-        $this->assertEquals($statement->transactions[2]->id, $supplierPayment->id);
-        $this->assertEquals($statement->transactions[2]->debit, $supplierPayment->amount);
-        $this->assertEquals($statement->transactions[2]->balance, -28);
+        $this->assertEquals($transactions[2]->id, $supplierPayment->id);
+        $this->assertEquals($transactions[2]->debit, $supplierPayment->amount);
+        $this->assertEquals($transactions[2]->balance, -28);
 
-        $this->assertEquals($statement->transactions[3]->id, $creditJournalEntry->id);
-        $this->assertEquals($statement->transactions[3]->credit, $creditJournalEntry->amount);
-        $this->assertEquals($statement->transactions[3]->balance, -78);
+        $this->assertEquals($transactions[3]->id, $creditJournalEntry->id);
+        $this->assertEquals($transactions[3]->credit, $creditJournalEntry->amount);
+        $this->assertEquals($transactions[3]->balance, -78);
 
-        $this->assertEquals($statement->transactions[4]->id, $debitJournalEntry->id);
-        $this->assertEquals($statement->transactions[4]->debit, $debitJournalEntry->amount);
-        $this->assertEquals($statement->transactions[4]->balance, -28);
+        $this->assertEquals($transactions[4]->id, $debitJournalEntry->id);
+        $this->assertEquals($transactions[4]->debit, $debitJournalEntry->amount);
+        $this->assertEquals($transactions[4]->balance, -28);
 
         $this->assertEquals($statement->balances['closing'], -28);
+    }
+
+    /**
+     * Test AccountStatement Currency filters
+     *
+     * @return void
+     */
+    public function testAccountStatementCurrencyFilters()
+    {
+        $account = factory(Account::class)->create([
+            'account_type' => Account::RECEIVABLE,
+            'category_id' => null
+        ]);
+
+        $rate = factory(ExchangeRate::class)->create([
+            'rate' => 105
+        ]);
+
+        $baseCurrency = Auth::user()->entity->currency_id;
+
+        // base currency opening balances
+        factory(Balance::class)->create([
+            "account_id" => $account->id,
+            "balance_type" => Balance::DEBIT,
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
+                "rate" => 1,
+            ])->id,
+            'reporting_period_id' => $this->period->id,
+            "currency_id" => $baseCurrency,
+            "balance" => 50
+        ]);
+
+        factory(Balance::class)->create([
+            "account_id" => $account->id,
+            "balance_type" => Balance::CREDIT,
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
+                "rate" => 1,
+            ])->id,
+            'reporting_period_id' => $this->period->id,
+            "currency_id" => $baseCurrency,
+            "balance" => 40,
+        ]);
+
+        // Foreign currency opening balances
+        factory(Balance::class)->create([
+            "account_id" => $account->id,
+            "balance_type" => Balance::DEBIT,
+            "exchange_rate_id" => $rate->id,
+            "currency_id" => $rate->currency_id,
+            'reporting_period_id' => $this->period->id,
+            "balance" => 40
+        ]);
+
+        factory(Balance::class)->create([
+            "account_id" => $account->id,
+            "balance_type" => Balance::CREDIT,
+            "exchange_rate_id" => $rate->id,
+            "currency_id" => $rate->currency_id,
+            'reporting_period_id' => $this->period->id,
+            "balance" => 50,
+        ]);
+
+        // Base currency debit transaction
+        $clientInvoice1 = new ClientInvoice([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
+
+        $lineItem = factory(LineItem::class)->create([
+            "amount" => 100,
+            "vat_id" => factory(Vat::class)->create(["rate" => 16])->id,
+            "account_id" => factory(Account::class)->create([
+                "account_type" => Account::OPERATING_REVENUE,
+                'category_id' => null
+            ])->id,
+            "quantity" => 1,
+        ]);
+        $clientInvoice1->addLineItem($lineItem);
+
+        $clientInvoice1->post();     
+
+        // Foreign currency debit transaction
+        $clientInvoice2 = new ClientInvoice([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $rate->currency_id,
+            "exchange_rate_id" => $rate->id,
+        ]);
+
+        $lineItem = factory(LineItem::class)->create([
+            "amount" => 100,
+            "vat_id" => factory(Vat::class)->create(["rate" => 16])->id,
+            "account_id" => factory(Account::class)->create([
+                "account_type" => Account::OPERATING_REVENUE,
+                'category_id' => null
+            ])->id,
+            "quantity" => 1,
+        ]);
+        $clientInvoice2->addLineItem($lineItem);
+
+        $clientInvoice2->post();
+
+        // Base currency credit transaction
+        $clientReceipt1 = new ClientReceipt([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $baseCurrency,
+        ]);
+
+        $lineItem = factory(LineItem::class)->create(
+            [
+                "amount" => 100,
+                "account_id" => factory(Account::class)->create([
+                    "account_type" => Account::BANK,
+                    'category_id' => null,
+                    "currency_id" => $baseCurrency,
+                ])->id,
+                "vat_id" => factory(Vat::class)->create([
+                    "rate" => 0
+                ])->id,
+                "quantity" => 1,
+            ]
+        );
+        $clientReceipt1->addLineItem($lineItem);
+
+        $clientReceipt1->post();
+
+        // Foreign currency credit transaction
+        $clientReceipt2 = new ClientReceipt([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $rate->currency_id,
+            "exchange_rate_id" => $rate->id,
+        ]);
+
+        $lineItem = factory(LineItem::class)->create(
+            [
+                "amount" => 100,
+                "account_id" => factory(Account::class)->create([
+                    "account_type" => Account::BANK,
+                    'category_id' => null,
+                    "currency_id" => $rate->currency_id,
+                ])->id,
+                "vat_id" => factory(Vat::class)->create([
+                    "rate" => 0
+                ])->id,
+                "quantity" => 1,
+            ]
+        );
+        $clientReceipt2->addLineItem($lineItem);
+
+        $clientReceipt2->post();
+
+        // All transactions
+        $statement = new AccountStatement($account->id);
+        $transactions = $statement->getTransactions();
+
+        $this->assertEquals($statement->balances['opening'], -1040);
+
+        $this->assertEquals($transactions[0]->id, $clientInvoice1->id);
+        $this->assertEquals($transactions[0]->debit, $clientInvoice1->amount);
+        $this->assertEquals($transactions[0]->balance, -924);
+
+        $this->assertEquals($transactions[1]->id, $clientInvoice2->id);
+        $this->assertEquals($transactions[1]->debit, $clientInvoice2->amount * $rate->rate);
+        $this->assertEquals($transactions[1]->balance, 11256);
+
+        $this->assertEquals($transactions[2]->id, $clientReceipt1->id);
+        $this->assertEquals($transactions[2]->credit, $clientReceipt1->amount);
+        $this->assertEquals($transactions[2]->balance, 11156);
+
+        $this->assertEquals($transactions[3]->id, $clientReceipt2->id);
+        $this->assertEquals($transactions[3]->credit, $clientReceipt2->amount * $rate->rate);
+        $this->assertEquals($transactions[3]->balance, 656);
+
+        $this->assertEquals($statement->balances['closing'], 656.0);
+
+        // Base Currency transactions
+        $statement = new AccountStatement($account->id, $baseCurrency);
+        $transactions = $statement->getTransactions();
+
+        $this->assertEquals($statement->balances['opening'], 10);
+
+        $this->assertEquals($transactions[0]->id, $clientInvoice1->id);
+        $this->assertEquals($transactions[0]->debit, $clientInvoice1->amount);
+        $this->assertEquals($transactions[0]->balance, 126);
+
+        $this->assertEquals($transactions[1]->id, $clientReceipt1->id);
+        $this->assertEquals($transactions[1]->credit, $clientReceipt1->amount);
+        $this->assertEquals($transactions[1]->balance, 26);
+
+        $this->assertEquals($statement->balances['closing'], 26);
+
+        // Foreign Currency transactions
+        $statement = new AccountStatement($account->id, $rate->currency_id);
+        $transactions = $statement->getTransactions();
+
+        $this->assertEquals($statement->balances['opening'], -10);
+
+        $this->assertEquals($transactions[0]->id, $clientInvoice2->id);
+        $this->assertEquals($transactions[0]->debit, $clientInvoice2->amount);
+        $this->assertEquals($transactions[0]->balance, 106);
+
+        $this->assertEquals($transactions[1]->id, $clientReceipt2->id);
+        $this->assertEquals($transactions[1]->credit, $clientReceipt2->amount);
+        $this->assertEquals($transactions[1]->balance, 6);
+
+        $this->assertEquals($statement->balances['closing'], 6);
     }
 }

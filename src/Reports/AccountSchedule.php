@@ -31,7 +31,7 @@ class AccountSchedule extends AccountStatement
      */
     public $balances = [
         "originalAmount" => 0,
-        "clearedAmount" => 0,
+        "amountCleared" => 0,
         "unclearedAmount" => 0,
         "totalAge" => 0,
     ];
@@ -44,9 +44,11 @@ class AccountSchedule extends AccountStatement
      */
     private function getAmounts($transaction): void
     {
-        $transaction->originalAmount = $transaction->amount;
-        $transaction->clearedAmount = $transaction->cleared_amount;
-        $unclearedAmount = $transaction->originalAmount - $transaction->clearedAmount;
+        $rate = is_null($this->currencyId) ? $transaction->exchangeRate->rate : 1;
+
+        $transaction->originalAmount = $transaction->amount * $rate;
+        $transaction->amountCleared= $transaction->clearedAmount * $rate;
+        $unclearedAmount = $transaction->originalAmount - $transaction->clearedAmount * $rate;
 
         if ($unclearedAmount > 0) {
 
@@ -61,7 +63,7 @@ class AccountSchedule extends AccountStatement
             $transaction->transactionDate = Carbon::parse($transaction->transaction_date)->toFormattedDateString();
 
             $this->balances["originalAmount"] += $transaction->originalAmount;
-            $this->balances['clearedAmount'] += $transaction->clearedAmount;
+            $this->balances['amountCleared'] += $transaction->amountCleared;
             $this->balances['unclearedAmount'] += $unclearedAmount;
             $this->balances['totalAge'] += $transaction->age;
 
@@ -95,20 +97,31 @@ class AccountSchedule extends AccountStatement
     /**
      * Get Account Schedule Transactions.
      */
-    public function getTransactions(): void
+    public function getTransactions(): array
     {
+        $periodId = ReportingPeriod::getPeriod($this->period['endDate'])->id;
+        $currencyId = $this->currencyId;
+
         // Opening Balances
-        foreach ($this->account->balances->where(
-            "reporting_period_id",
-            ReportingPeriod::getPeriod($this->period['endDate'])->id
-        ) as $balance) {
+        $balances = $this->account->balances->filter(function ($balance, $key) use ($periodId) {
+            return $balance->reporting_period_id == $periodId;
+        });
+
+        if (!is_null($currencyId)) {
+            $balances = $this->account->balances->filter(function ($balance, $key) use ($currencyId) {
+                return $balance->currency_id == $currencyId;
+            });
+        }
+
+        foreach ($balances as $balance) {
             $this->getAmounts($balance, _("Opening Balance"));
         }
 
         // Clearable Transactions
         $transactions = $this->account->transactionsQuery(
             $this->period['startDate'],
-            $this->period['endDate']
+            $this->period['endDate'], 
+            $this->currencyId
         )->whereIn(
             'transaction_type',
             Assignment::CLEARABLES
@@ -130,5 +143,7 @@ class AccountSchedule extends AccountStatement
         if ($totaltransactions > 0) {
             $this->balances['averageAge'] = round($this->balances['totalAge'] / $totaltransactions, 0);
         }
+        
+        return $this->transactions;
     }
 }

@@ -304,10 +304,14 @@ class Account extends Model implements Recyclable, Segregatable
             $period = $entity->current_reporting_period;
         }
 
-        $balances = $this->balances->where('reporting_period_id', $period->id);
+        $balances = $this->balances->filter(function ($balance, $key) use ($period) {
+            return $balance->reporting_period_id == $period->id;
+        });
 
         if (!is_null($currencyId)) {
-            $balances->where('currency_id', $currencyId);
+            $balances = $this->balances->filter(function ($balance, $key) use ($currencyId) {
+                return $balance->currency_id == $currencyId;
+            });
         }
 
         $totalBalance = 0;
@@ -378,7 +382,6 @@ class Account extends Model implements Recyclable, Segregatable
             ->where($transactionTable . '.entity_id', $this->entity_id)
             ->where($transactionTable . '.transaction_date', '>=', $startDate)
             ->where($transactionTable . '.transaction_date', '<=', $endDate->endOfDay())
-            ->where($transactionTable . '.currency_id', $this->currency_id)
             ->select(
                 $transactionTable . '.id',
                 $transactionTable . '.transaction_date',
@@ -386,13 +389,13 @@ class Account extends Model implements Recyclable, Segregatable
                 $transactionTable . '.reference',
                 $transactionTable . '.transaction_type',
                 $transactionTable . '.credited',
-                $transactionTable . '.narration'
+                $transactionTable . '.narration',
+                $ledgerTable . '.rate'
             )->distinct();
 
             if (!is_null($currencyId)) {
                 $query->where($transactionTable . '.currency_id', $currencyId);
             }
-
         $query->where(
             function ($query) use ($ledgerTable) {
                 $query->where($ledgerTable . '.post_account', $this->id)
