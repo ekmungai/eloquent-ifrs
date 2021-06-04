@@ -150,7 +150,7 @@ $currency = Currency::create([
 ]);
 
 // Set the currency as the Entity's Reporting Currency 
-$entity->currency_id = $currency;
+$entity->currency_id = $currency->id;
 $entity->save();
 ```
 We also need the VAT Rates that apply to the Entity:
