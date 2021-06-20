@@ -154,9 +154,9 @@ class LineItemTest extends TestCase
         $clientInvoice->post();
 
         $this->assertEquals($clientInvoice->amount, 116);
-        $this->assertEquals($clientInvoice->account->closingBalance(), 116);
-        $this->assertEquals($revenueAccount->closingBalance(), -100);
-        $this->assertEquals($vat->account->closingBalance(), -16);
+        $this->assertEquals($clientInvoice->account->closingBalance(), [$this->reportingCurrencyId => 116]);
+        $this->assertEquals($revenueAccount->closingBalance(), [$this->reportingCurrencyId => -100]);
+        $this->assertEquals($vat->account->closingBalance(), [$this->reportingCurrencyId => -16]);
 
         $revenueAccount2 = factory(Account::class)->create([
             "account_type" => Account::OPERATING_REVENUE,
@@ -187,8 +187,8 @@ class LineItemTest extends TestCase
         $clientInvoice2->post();
 
         $this->assertEquals($clientInvoice2->amount, 100);
-        $this->assertEquals($clientInvoice2->account->closingBalance(), 100);
-        $this->assertEquals(round($revenueAccount2->closingBalance(), 2), -86.21);
-        $this->assertEquals(round($vat2->account->closingBalance(), 2), -13.79);
+        $this->assertEquals($clientInvoice2->account->closingBalance()[$this->reportingCurrencyId], 100);
+        $this->assertEquals(round($revenueAccount2->closingBalance()[$this->reportingCurrencyId], 2), -86.21);
+        $this->assertEquals(round($vat2->account->closingBalance()[$this->reportingCurrencyId], 2), -13.79);
     }
 }

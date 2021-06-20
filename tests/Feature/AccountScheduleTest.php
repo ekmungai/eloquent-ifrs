@@ -93,6 +93,7 @@ class AccountScheduleTest extends TestCase
             "balance_type" => Balance::DEBIT,
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1,
+                'currency_id' => $currency->id,
             ])->id,
             "currency_id" => $currency->id,
             'reporting_period_id' => $this->period->id,
@@ -279,6 +280,7 @@ class AccountScheduleTest extends TestCase
             "balance_type" => Balance::CREDIT,
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 1,
+                'currency_id' => $currency->id,
             ])->id,
             "currency_id" => $currency->id,
             'reporting_period_id' => $this->period->id,

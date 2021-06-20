@@ -34,6 +34,8 @@ abstract class TestCase extends Orchestra
         $entity->currency_id = $currency->id;
         $entity->save();
 
+        $this->reportingCurrencyId = $currency->id;
+
         $this->period = factory(ReportingPeriod::class)->create([
             "calendar_year" => date("Y"),
             "entity_id" => $user->entity->id,

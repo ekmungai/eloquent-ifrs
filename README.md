@@ -459,18 +459,18 @@ In the above example:
 use IFRS\Reports\AccountStatement;
 use IFRS\Reports\AccountSchedule;
 
-$statement = new AccountStatement($clientAccount)->getTransactions();
+$transactions = new AccountStatement($clientAccount)->getTransactions();
 
-dd($statement->transactions);
+dd($transactions);
 
 array:2[
   ["transaction" => ClientInvoice, "debit" => 120, "credit" => 0, "balance" => 120],
   ["transaction" => ClientReceipt, "debit" => 0, "credit" => 50, "balance" => 70]
 ]
 
-$schedule = new AccountSchedule($clientAccount, $currency)->getTransactions();
+$transactions = new AccountSchedule($clientAccount, $currency)->getTransactions();
 
-dd($schedule->transactions);
+dd($transactions);
 
 array:1[
   ["transaction" => ClientInvoice, "amount" => 120, "cleared" => 50, "balance" => 70],

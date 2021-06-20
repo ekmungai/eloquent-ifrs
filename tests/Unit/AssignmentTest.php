@@ -405,7 +405,7 @@ class AssignmentTest extends TestCase
         ]);
         $assignment->save();
 
-        $this->assertEquals($forex->Closingbalance(), -1000);
+        $this->assertEquals($forex->Closingbalance(), [$this->reportingCurrencyId => -1000]);
 
         // Payables
         $account = factory(Account::class)->create([
@@ -474,7 +474,7 @@ class AssignmentTest extends TestCase
         ]);
         $assignment->save();
 
-        $this->assertEquals($forex->Closingbalance(), -500);
+        $this->assertEquals($forex->Closingbalance(), [$this->reportingCurrencyId => -500]);
     }
 
     /**
@@ -518,7 +518,8 @@ class AssignmentTest extends TestCase
             "narration" => $this->faker->word,
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
                 "rate" => 110
-            ])->id
+            ])->id,
+            'currency_id' => $account->currency_id,
         ]);
 
         $line = new LineItem([
@@ -548,7 +549,7 @@ class AssignmentTest extends TestCase
         ]);
         $assignment->save();
 
-        $this->assertEquals($forex->Closingbalance(), 500);
+        $this->assertEquals($forex->Closingbalance(), [$this->reportingCurrencyId => 500]);
 
         // Payables
         $account = factory(Account::class)->create([
@@ -617,7 +618,7 @@ class AssignmentTest extends TestCase
         ]);
         $assignment->save();
 
-        $this->assertEquals($forex->Closingbalance(), 1000);
+        $this->assertEquals($forex->Closingbalance(), [$this->reportingCurrencyId => 1000]);
     }
 
     /**
@@ -1327,7 +1328,8 @@ class AssignmentTest extends TestCase
             "account_id" => $account->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
-            "credited" => false
+            "credited" => false,
+            'currency_id' => $currency->id,
         ]);
 
         $line = new LineItem([

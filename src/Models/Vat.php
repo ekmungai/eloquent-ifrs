@@ -104,7 +104,7 @@ class Vat extends Model implements Segregatable, Recyclable
         }
 
         if ($this->rate > 0 && $this->account->account_type != Account::CONTROL) {
-            throw new InvalidAccountType(Account::CONTROL);
+            throw new InvalidAccountType('Vat', Account::CONTROL);
         }
 
         return parent::save();

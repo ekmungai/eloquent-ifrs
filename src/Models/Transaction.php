@@ -607,6 +607,10 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
      */
     public function save(array $options = []): bool
     {
+        if(isset($this->exchange_rate_id) && !isset($this->currency_id)){
+            $this->currency_id = $this->exchangeRate->currency_id;
+        }
+
         $period = ReportingPeriod::getPeriod(Carbon::parse($this->transaction_date));
 
         if (ReportingPeriod::periodStart($this->transaction_date)->eq(Carbon::parse($this->transaction_date))) {
@@ -620,8 +624,10 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         if ($period->status == ReportingPeriod::ADJUSTING && $this->transaction_type != Transaction::JN) {
             throw new AdjustingReportingPeriod();
         }
-
-        if (in_array($this->account->account_type, config('ifrs.single_currency')) && $this->account->currency_id != $this->currency_id) {
+        
+        if (in_array($this->account->account_type, config('ifrs.single_currency')) && 
+            $this->account->currency_id != $this->currency_id && 
+            $this->currency_id != Auth::user()->entity->currency_id) {
             throw new InvalidCurrency("Transaction", $this->account->account_type);
         }
 

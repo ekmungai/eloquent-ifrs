@@ -167,7 +167,7 @@ class Ledger extends Model implements Segregatable
 
         // identical double entry data
         $post->transaction_id = $folio->transaction_id = $transaction->id;
-        $post->currency_id = $folio->currency_id = Auth::user()->entity->reporting_currency;
+        $post->currency_id = $folio->currency_id = Auth::user()->entity->reporting_currency->id;
         $post->posting_date = $folio->posting_date = $assignment->assignment_date;
         $post->amount = $folio->amount = abs($rateDifference) * $assignment->amount;
 
@@ -310,24 +310,36 @@ class Ledger extends Model implements Segregatable
      * @param Carbon  $endDate
      * @param int $currencyId
      *
-     * @return float
+     * @return array
      */
-    public static function balance(Account $account, Carbon $startDate, Carbon $endDate, int $currencyId = null): float
+    public static function balance(Account $account, Carbon $startDate, Carbon $endDate, int $currencyId = null): array
     {
         $ledger = new Ledger();
+        $entity = Auth::user()->entity;
+        
+        $balances = [$entity->currency_id => 0];
 
-        $baseQuery = is_null($currencyId) ? $ledger->newQuery()->selectRaw("SUM(amount) AS amount")
-        : $ledger->newQuery()->selectRaw("SUM(amount/rate) AS amount");
+        $baseQuery = $ledger->newQuery()->selectRaw("SUM(amount) AS local_amount, SUM(amount/rate) AS amount");
 
-        $baseQuery->from($ledger->getTable())->where("post_account", $account->id)
+        $baseQuery->where("post_account", $account->id)
         ->where("posting_date", ">=", $startDate)
             ->where("posting_date", "<=", $endDate);
+
+        if(!is_null($currencyId)){
+            $baseQuery->where("currency_id", $currencyId);
+            $balances[$currencyId] = 0;
+        }
             
         $cloneQuery = clone $baseQuery;
         
         $debits = $baseQuery->where("entry_type", Balance::DEBIT);
         $credits = $cloneQuery->where("entry_type", Balance::CREDIT);
 
-        return $debits->get()[0]->amount - $credits->get()[0]->amount;   
+        $balances[$entity->currency_id] = $debits->get()[0]->local_amount - $credits->get()[0]->local_amount;
+        if(!is_null($currencyId)){
+            $baseQuery->where("currency_id", $currencyId);
+            $balances[$currencyId] = $debits->get()[0]->amount - $credits->get()[0]->amount;
+        }
+        return $balances;   
     }
 }

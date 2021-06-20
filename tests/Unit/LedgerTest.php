@@ -9,6 +9,7 @@ use Carbon\Carbon;
 
 use IFRS\Models\Account;
 use IFRS\Models\Balance;
+use IFRS\Models\Currency;
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\Ledger;
 use IFRS\Models\LineItem;
@@ -130,8 +131,9 @@ class LedgerTest extends TestCase
             "posting_date" => Carbon::now(),
             "amount" => 95
         ]);
-
-        $this->assertEquals(Ledger::balance($account, Carbon::now()->startOfYear(), Carbon::now()), -40);
+        
+        $localBalance = Ledger::balance($account, Carbon::now()->startOfYear(), Carbon::now());
+        $this->assertEquals($localBalance[$this->reportingCurrencyId], -40);
     }
 
     /**
@@ -144,16 +146,21 @@ class LedgerTest extends TestCase
         $account = factory(Account::class)->create([
             'category_id' => null
         ]);
+
         $lineAccount1 = factory(Account::class)->create([
             'category_id' => null
         ]);
+
         $lineAccount2 = factory(Account::class)->create([
             'category_id' => null
         ]);
+
         $vat = factory(Vat::class)->create(["rate" => 10]);
+
         $rate = factory(ExchangeRate::class)->create([
             'rate' => 105
         ]);
+        
         $transaction = new JournalEntry([
             "account_id" => $account->id,
             "date" => Carbon::now(),
@@ -180,13 +187,46 @@ class LedgerTest extends TestCase
         $transaction->addLineItem($lineItem2);
 
         $transaction->post();
+
         $this->assertEquals($transaction->amount, 214.50);
         $this->assertEquals(Ledger::contribution($lineAccount1, $transaction->id), 7875);
         $this->assertEquals(Ledger::contribution($lineAccount2, $transaction->id), 12600);
         $this->assertEquals(Ledger::contribution($lineAccount1, $transaction->id, $rate->currency_id), 75);
         $this->assertEquals(Ledger::contribution($lineAccount2, $transaction->id, $rate->currency_id), 120);
 
-        $this->assertEquals($account->currentBalance(), -22522.50);
-        $this->assertEquals($account->currentBalance(null, null, $rate->currency_id), -214.50);
+        $this->assertEquals($account->currentBalance(), [$this->reportingCurrencyId => -22522.50]);
+        $this->assertEquals(
+            $account->currentBalance(null, null, $rate->currency_id),
+            [$this->reportingCurrencyId => -22522.50, $rate->currency_id => -214.50] 
+        );
+
+        $rate1 = factory(ExchangeRate::class)->create([
+            'rate' => 10,
+            'currency_id' => factory(Currency::class)->create()->id
+        ]);
+        
+        $transaction = new JournalEntry([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "exchange_rate_id" => $rate1->id
+        ]);
+
+        $lineItem1 = factory(LineItem::class)->create([
+            "account_id" => $lineAccount1->id,
+            "amount" => 75,
+            "vat_id" => factory(Vat::class)->create(["rate" => 0])->id,
+            "quantity" => 1,
+        ]);
+
+        $transaction->addLineItem($lineItem1);
+
+        $transaction->post();
+
+        $this->assertEquals($account->currentBalance(), [$this->reportingCurrencyId => -23272.50]);
+        $this->assertEquals(
+            $account->currentBalance(null, null, $rate1->currency_id),
+            [$this->reportingCurrencyId => -750, $rate1->currency_id => -75] 
+        );
     }
 }

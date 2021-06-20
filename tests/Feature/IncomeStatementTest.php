@@ -67,9 +67,11 @@ class IncomeStatementTest extends TestCase
         $cashSale->addLineItem($lineItem);
         $cashSale->post();
 
+        $clientCurrency = factory(Currency::class)->create();
         $client = factory(Account::class)->create([
             'account_type' => Account::RECEIVABLE,
-            'category_id' => null
+            'category_id' => null,
+            'currency_id' => $clientCurrency->id
         ]);
 
         $creditNote = new CreditNote([
@@ -77,7 +79,8 @@ class IncomeStatementTest extends TestCase
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
-                "rate" => 1.1
+                "rate" => 1.1,
+                'currency_id' => $clientCurrency->id
             ])->id
         ]);
 
@@ -101,7 +104,8 @@ class IncomeStatementTest extends TestCase
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             "exchange_rate_id" => factory(ExchangeRate::class)->create([
-                "rate" => 1
+                "rate" => 1,
+                'currency_id' => $clientCurrency->id
             ])->id
         ]);
 

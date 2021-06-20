@@ -111,6 +111,47 @@ class Account extends Model implements Recyclable, Segregatable
     ];
 
     /**
+     * Account Closing Transactions Query
+     *
+     * @param int $year
+     *
+     * @return Builder
+     */
+    private function closingTransactionsQuery(int $year)
+    {
+        $transactionsTable = config('ifrs.table_prefix') . 'transactions';
+        $closingTransactionsTable = config('ifrs.table_prefix') . 'closing_transactions';
+        
+        return DB::table($transactionsTable)
+            ->join($closingTransactionsTable, $closingTransactionsTable . '.transaction_id', '=', $transactionsTable . '.id')
+            ->where($transactionsTable . '.account_id', '=', $this->id)
+            ->whereYear($transactionsTable . '.transaction_date', '=', $year)
+            ->selectRaw('transaction_id AS id, account_id, ' . $transactionsTable . '.currency_id, reporting_period_id, credited, transaction_type, transaction_date, narration');
+    }
+
+    /**
+     * Process the Transactions returned by a query.
+     *
+     * @param QueryBuilder $query
+     *
+     * @return array
+     */
+    private function processTransactions($query): array
+    {
+        $transactions = ['total' => 0, 'transactions' => []];
+
+        foreach ($query->get() as $transaction) {
+            $transaction->amount = abs(Ledger::contribution($this, $transaction->id));
+            $transaction->contribution = $transaction->credited ? $transaction->amount * -1 : $transaction->amount;
+            $transaction->type = Transaction::getType($transaction->transaction_type);
+            $transaction->date = Carbon::parse($transaction->transaction_date)->toFormattedDateString();
+            $transactions['transactions'][] = $transaction;
+            $transactions['total'] += $transaction->contribution;
+        }
+        return $transactions;
+    }
+
+    /**
      * Get Human Readable Account Type.
      *
      * @param string $type
@@ -152,7 +193,7 @@ class Account extends Model implements Recyclable, Segregatable
         $balances = ['debit' => 0, 'credit' => 0];
 
         foreach (Account::all() as $account) {
-            $account->openingBalance = $account->openingBalance($year);
+            $account->openingBalance = $account->openingBalance($year)[Auth::user()->entity->currency_id];
             if ($account->openingBalance != 0) {
                 $accounts->push($account);
             }
@@ -189,9 +230,11 @@ class Account extends Model implements Recyclable, Segregatable
         $year = ReportingPeriod::year($endDate);
 
         foreach (Account::whereIn('account_type', $accountTypes)->get() as $account) {
+            
+            $reportingCurrencyId = Auth::user()->entity->currency_id;
 
-            $account->openingBalance = $account->openingBalance($year) + $account->currentBalance($periodStart, $startDate);
-            $account->balanceMovement = $account->currentBalance($startDate, $endDate);
+            $account->openingBalance = $account->openingBalance($year)[$reportingCurrencyId] + $account->currentBalance($periodStart, $startDate)[$reportingCurrencyId];
+            $account->balanceMovement = $account->currentBalance($startDate, $endDate)[$reportingCurrencyId];
             
             $account->closingBalance = $fullBalance ? $account->openingBalance + $account->balanceMovement : $account->balanceMovement;
 
@@ -287,77 +330,113 @@ class Account extends Model implements Recyclable, Segregatable
     }
 
     /**
-     * Get Account's Opening Balance for the Reporting Period.
+     * Check if the account has closing transactions.
+     * 
+     * @param int $year
+     * 
+     */
+    public function isClosed(int $year = null): bool
+    {
+        if(is_null($year)){
+            $year = Auth::user()->entity->current_reporting_period->calendar_year;
+        }   
+        return $this->closingTransactionsQuery($year)->count() > 0;
+    }
+
+    /**
+     * Get the account's has closing transactions.
+     * 
+     * @param int $year
+     * 
+     */
+    public function closingTransactions(int $year = null): array
+    {
+        if(is_null($year)){
+            $year = Auth::user()->entity->current_reporting_period->calendar_year;
+        }  
+        return $this->processTransactions($this->closingTransactionsQuery($year));
+    }
+
+    /**
+     * Get Account's Opening Balances for the Reporting Period.
      *
      * @param int $year
      * @param int $currencyId
      *
-     * @return float
+     * @return array
      */
-    public function openingBalance(int $year = null, int $currencyId = null): float
+    public function openingBalance(int $year = null, int $currencyId = null): array
     {
         $entity = Auth::user()->entity;
         
+        $balances = [$entity->currency_id => 0];
+
         if (!is_null($year)) {
             $period = ReportingPeriod::getPeriod($year."-01-01");
         } else {
             $period = $entity->current_reporting_period;
         }
 
-        $balances = $this->balances->filter(function ($balance, $key) use ($period) {
+        $openingBalances = $this->balances->filter(function ($balance, $key) use ($period) {
             return $balance->reporting_period_id == $period->id;
         });
 
         if (!is_null($currencyId)) {
-            $balances = $this->balances->filter(function ($balance, $key) use ($currencyId) {
+            $openingBalances = $this->balances->filter(function ($balance, $key) use ($currencyId) {
                 return $balance->currency_id == $currencyId;
             });
+            $balances[$currencyId] = 0;
         }
 
-        $totalBalance = 0;
-        foreach ($balances as $each) {
-            $amount = $each->balance; 
+        foreach ($openingBalances as $each) {
             
-            if (!is_null($currencyId)) {
-                $amount /= $each->exchangeRate->rate;
+            if (!is_null($currencyId) && $entity->currency_id != $currencyId) {
+                $each->balance_type == Balance::DEBIT ? 
+                    $balances[$currencyId] += $each->balance / $each->exchangeRate->rate : 
+                    $balances[$currencyId] -= $each->balance / $each->exchangeRate->rate;
             }
-            $each->balance_type == Balance::DEBIT ? $totalBalance += $amount : $totalBalance -= $amount;
+            $each->balance_type == Balance::DEBIT ? 
+                $balances[$entity->currency_id] += $each->balance : 
+                $balances[$entity->currency_id] -= $each->balance;
         }
-        return $totalBalance;
+        return $balances;
     }
 
     /**
-     * Get Account's Current Balance for the Period given.
+     * Get Account's Current Balances for the Period given.
      *
      * @param Carbon $startDate
      * @param Carbon $endDate
      * @param int $currencyId
      *
-     * @return float
+     * @return array
      */
-    public function currentBalance(Carbon $startDate = null, Carbon $endDate = null, int $currencyId = null): float
+    public function currentBalance(Carbon $startDate = null, Carbon $endDate = null, int $currencyId = null): array
     {
-
         $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate) : $startDate;
         $endDate = is_null($endDate) ? Carbon::now() : $endDate;
         return Ledger::balance($this, $startDate, $endDate, $currencyId);
     }
 
     /**
-     * Get Account's Closing Balance for the Reporting Period.
+     * Get Account's Closing Balances for the Reporting Period.
      *
      * @param string $endDate
      * @param int $currencyId
      *
-     * @return float
+     * @return array
      */
-    public function closingBalance(string $endDate = null, int $currencyId = null): float
+    public function closingBalance(string $endDate = null, int $currencyId = null): array
     {
         $endDate = is_null($endDate) ? ReportingPeriod::periodEnd() : Carbon::parse($endDate);
         $startDate = ReportingPeriod::periodStart($endDate);
         $year = ReportingPeriod::year($endDate);
-
-        return $this->openingBalance($year, $currencyId) + $this->currentBalance($startDate, $endDate, $currencyId);
+        $balances =  $this->openingBalance($year, $currencyId);
+        $transactions = $this->currentBalance($startDate, $endDate, $currencyId);
+        foreach(array_keys($balances) as $currency){
+            $balances[$currency] += $transactions[$currency];
+        }
+        return $balances;
     }
 
     /**
@@ -371,30 +450,30 @@ class Account extends Model implements Recyclable, Segregatable
      */
     public function transactionsQuery(Carbon $startDate, Carbon $endDate, int $currencyId = null)
     {
-        $transactionTable = config('ifrs.table_prefix') . 'transactions';
+        $transactionsTable = config('ifrs.table_prefix') . 'transactions';
         $ledgerTable = config('ifrs.table_prefix') . 'ledgers';
 
         $query = DB::table(
-            $transactionTable
+            $transactionsTable
         )
-            ->leftJoin($ledgerTable, $transactionTable . '.id', '=', $ledgerTable . '.transaction_id')
-            ->where($transactionTable . '.deleted_at', null)
-            ->where($transactionTable . '.entity_id', $this->entity_id)
-            ->where($transactionTable . '.transaction_date', '>=', $startDate)
-            ->where($transactionTable . '.transaction_date', '<=', $endDate->endOfDay())
+            ->leftJoin($ledgerTable, $transactionsTable . '.id', '=', $ledgerTable . '.transaction_id')
+            ->where($transactionsTable . '.deleted_at', null)
+            ->where($transactionsTable . '.entity_id', $this->entity_id)
+            ->where($transactionsTable . '.transaction_date', '>=', $startDate)
+            ->where($transactionsTable . '.transaction_date', '<=', $endDate->endOfDay())
             ->select(
-                $transactionTable . '.id',
-                $transactionTable . '.transaction_date',
-                $transactionTable . '.transaction_no',
-                $transactionTable . '.reference',
-                $transactionTable . '.transaction_type',
-                $transactionTable . '.credited',
-                $transactionTable . '.narration',
+                $transactionsTable . '.id',
+                $transactionsTable . '.transaction_date',
+                $transactionsTable . '.transaction_no',
+                $transactionsTable . '.reference',
+                $transactionsTable . '.transaction_type',
+                $transactionsTable . '.credited',
+                $transactionsTable . '.narration',
                 $ledgerTable . '.rate'
             )->distinct();
 
             if (!is_null($currencyId)) {
-                $query->where($transactionTable . '.currency_id', $currencyId);
+                $query->where($transactionsTable . '.currency_id', $currencyId);
             }
         $query->where(
             function ($query) use ($ledgerTable) {
@@ -421,15 +500,7 @@ class Account extends Model implements Recyclable, Segregatable
         $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate) : Carbon::parse($startDate);
         $endDate = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
 
-        foreach ($this->transactionsQuery($startDate, $endDate)->get() as $transaction) {
-            $transaction->amount = abs(Ledger::contribution($this, $transaction->id));
-            $transaction->contribution = $transaction->credited ? $transaction->amount * -1 : $transaction->amount;
-            $transaction->type = Transaction::getType($transaction->transaction_type);
-            $transaction->date = Carbon::parse($transaction->transaction_date)->toFormattedDateString();
-            $transactions['transactions'][] = $transaction;
-            $transactions['total'] += $transaction->contribution;
-        }
-        return $transactions;
+        return $this->processTransactions($this->transactionsQuery($startDate, $endDate));
     }
 
     /**
@@ -482,7 +553,7 @@ class Account extends Model implements Recyclable, Segregatable
      */
     public function delete(): bool
     {
-        if ($this->closingBalance() != 0) {
+        if ($this->closingBalance()[Auth::user()->entity->currency_id] != 0) {
             throw new HangingTransactions();
         }
 

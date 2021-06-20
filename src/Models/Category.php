@@ -21,6 +21,7 @@ use IFRS\Interfaces\Segregatable;
 use IFRS\Traits\Recycling;
 use IFRS\Traits\Segregating;
 use IFRS\Traits\ModelTablePrefix;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Category
@@ -104,14 +105,16 @@ class Category extends Model implements Segregatable, Recyclable
     {
         $balances = ["total" => 0, "accounts" => []];
 
+        $reportingCurrency = Auth::user()->entity->currency_id;
+
         $periodStart = ReportingPeriod::periodStart($endDate);
         $year = ReportingPeriod::year($endDate);
 
         foreach ($this->accounts as $account) {
 
-            $closingBalance = $account->currentBalance($startDate, $endDate);
+            $closingBalance = $account->currentBalance($startDate, $endDate)[$reportingCurrency];
             if ($startDate == $periodStart) {
-                $closingBalance += $account->openingBalance($year);
+                $closingBalance += $account->openingBalance($year)[$reportingCurrency];
             }
 
             if ($closingBalance != 0) {

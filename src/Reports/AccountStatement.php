@@ -124,7 +124,7 @@ class AccountStatement
     {
         $query = $this->account->transactionsQuery($this->period['startDate'], $this->period['endDate'], $this->currencyId);
 
-        $this->balances['opening'] = $this->account->openingBalance(ReportingPeriod::year($this->period['startDate']), $this->currencyId);
+        $this->balances['opening'] = $this->account->openingBalance(ReportingPeriod::year($this->period['startDate']), $this->currencyId)[$this->currency->id];
         $this->balances['closing'] += $this->balances['opening'];
 
         $balance = $this->balances['opening'];

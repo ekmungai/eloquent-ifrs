@@ -25,8 +25,12 @@ use IFRS\Transactions\SupplierBill;
 use IFRS\Exceptions\HangingTransactions;
 use IFRS\Exceptions\InvalidCategoryType;
 use IFRS\Exceptions\MissingAccountType;
+use IFRS\Models\ClosingRate;
+use IFRS\Models\ClosingTransaction;
 use IFRS\Models\Entity;
+use IFRS\Transactions\ClientReceipt;
 use IFRS\Transactions\JournalEntry;
+use Illuminate\Support\Facades\Auth;
 
 class AccountTest extends TestCase
 {
@@ -258,7 +262,7 @@ class AccountTest extends TestCase
             "balance" => 40
         ]);
 
-        $this->assertEquals($account->openingBalance(), 70);
+        $this->assertEquals($account->openingBalance(), [$this->reportingCurrencyId => 70]);
 
         $account = new Account([
             'name' => $this->faker->name,
@@ -293,8 +297,14 @@ class AccountTest extends TestCase
             "balance" => 80
         ]);
 
-        // $this->assertEquals(3500, $account->openingBalance(Carbon::now()->addYear()->year));
-        $this->assertEquals(140, $account->openingBalance(Carbon::now()->addYear()->year, $rate->currency_id));
+        $this->assertEquals(
+            $account->openingBalance(Carbon::now()->addYear()->year), 
+            [$this->reportingCurrencyId => 3500]
+        );
+        $this->assertEquals($account->openingBalance(
+            Carbon::now()->addYear()->year, $rate->currency_id), 
+            [$this->reportingCurrencyId => 3500, $rate->currency_id => 140]
+        );
 
     }
 
@@ -326,7 +336,7 @@ class AccountTest extends TestCase
             "amount" => 40
         ]);
 
-        $this->assertEquals($account->closingBalance(), 70);
+        $this->assertEquals($account->closingBalance(), [$this->reportingCurrencyId => 70]);
 
         factory(Balance::class)->create([
             "account_id" => $account->id,
@@ -339,7 +349,7 @@ class AccountTest extends TestCase
         ]);
 
         $account = Account::find($account->id);
-        $this->assertEquals($account->closingBalance(), 170);
+        $this->assertEquals($account->closingBalance(), [$this->reportingCurrencyId => 170]);
 
         $rate = factory(ExchangeRate::class)->create([
             "rate" => 105,
@@ -390,8 +400,11 @@ class AccountTest extends TestCase
 
         $account = Account::find($account->id);
         
-        $this->assertEquals($account->closingBalance(), 22680);
-        $this->assertEquals($account->closingBalance(Carbon::now(), $rate->currency_id), 216);
+        $this->assertEquals($account->closingBalance(), [$this->reportingCurrencyId => 22680]);
+        $this->assertEquals(
+            $account->closingBalance(Carbon::now(), $rate->currency_id), 
+            [$this->reportingCurrencyId => 22680, $rate->currency_id => 216]
+        );
     }
 
     /**
@@ -1044,8 +1057,6 @@ class AccountTest extends TestCase
         $clientInvoice->addLineItem($line);
         $clientInvoice->post();
 
-
-
         //Client2 Invoice Transaction
         $clientInvoice = new ClientInvoice([
             "account_id" => $client2->id,
@@ -1075,5 +1086,177 @@ class AccountTest extends TestCase
 
         $this->assertEquals(count($sectionAccounts), 2);
         $this->assertEquals($section['sectionClosingBalance'], $sectionAccountsTotalBalance);
+    }
+
+    /**
+     * Test Account Closing.
+     *
+     * @return void
+     */
+    public function testAccountClosing()
+    {
+        $forex = factory(Account::class)->create([
+            'account_type' => Account::EQUITY,
+            'category_id' => null
+        ]);
+        $vatId = factory(Vat::class)->create(["rate" => 0])->id;
+
+        $currency1 = factory(Currency::class)->create();
+        ClosingRate::create([
+            'exchange_rate_id' => factory(ExchangeRate::class)->create([
+                'currency_id' => $currency1->id,
+            ])->id,
+            'reporting_period_id' => $this->period->id,
+        ]);
+
+        // Receivables
+        $account1 = factory(Account::class)->create([
+            'account_type' => Account::RECEIVABLE,
+            'category_id' => null,
+            'currency_id' => $currency1->id,
+        ]);
+
+        $transaction = new ClientReceipt([
+            "account_id" => $account1->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
+                "rate" => 110,
+                'currency_id' => $currency1->id,
+            ])->id,
+            'currency_id' => $currency1->id,
+        ]);
+        
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create([
+                'account_type' => Account::BANK,
+                'category_id' => null,
+                'currency_id' => $currency1->id,
+            ])->id,
+            'amount' => 100,
+        ]);
+        
+        $transaction->addLineItem($line);
+        $transaction->post();
+
+        $this->assertFalse($account1->isClosed());
+
+        $this->period->status = ReportingPeriod::ADJUSTING;
+        $this->period->prepareBalancesTranslation($forex->id, $vatId);
+
+        $this->assertTrue($account1->isClosed());
+
+        $differentYear = factory(ReportingPeriod::class)->create()->calendar_year;
+
+        $this->assertFalse($account1->isClosed($differentYear));
+    }
+
+    /**
+     * Test Account Closing Transactions
+     *
+     * @return void
+     */
+    public function testAccountClosingTransactions()
+    {
+        $forex = factory(Account::class)->create([
+            'account_type' => Account::EQUITY,
+            'category_id' => null
+        ]);
+        $vatId = factory(Vat::class)->create(["rate" => 0])->id;
+
+        $currency1 = factory(Currency::class)->create();
+        $currency2 = factory(Currency::class)->create();
+
+        ClosingRate::create([
+            'exchange_rate_id' => factory(ExchangeRate::class)->create([
+                'currency_id' => $currency1->id,
+                "rate" => 100,
+            ])->id,
+            'reporting_period_id' => $this->period->id,
+        ]);
+        ClosingRate::create([
+            'exchange_rate_id' => factory(ExchangeRate::class)->create([
+                'currency_id' => $currency2->id,
+                "rate" => 100,
+            ])->id,
+            'reporting_period_id' => $this->period->id,
+        ]);
+
+        // Receivables
+        $account = factory(Account::class)->create([
+            'account_type' => Account::RECEIVABLE,
+            'category_id' => null,
+            'currency_id' => $currency1->id,
+        ]);
+
+        $transaction = new ClientReceipt([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
+                "rate" => 110,
+                'currency_id' => $currency1->id,
+            ])->id,
+            'currency_id' => $currency1->id,
+        ]);
+        
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create([
+                'account_type' => Account::BANK,
+                'category_id' => null,
+                'currency_id' => $currency1->id,
+            ])->id,
+            'amount' => 100,
+        ]);
+        
+        $transaction->addLineItem($line);
+        $transaction->post();
+
+        $transaction = new ClientReceipt([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
+                "rate" => 90,
+                'currency_id' => $currency2->id,
+            ])->id,
+            'currency_id' => $currency2->id,
+        ]);
+        
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create([
+                'account_type' => Account::BANK,
+                'category_id' => null,
+                'currency_id' => $currency2->id,
+            ])->id,
+            'amount' => 100,
+        ]);
+        
+        $transaction->addLineItem($line);
+        $transaction->post();
+
+        $this->assertFalse($account->isClosed());
+        
+        $this->period->status = ReportingPeriod::ADJUSTING;
+
+        $this->period->prepareBalancesTranslation($forex->id, $vatId);
+
+        $transactions = $account->closingTransactions()['transactions'];
+
+        $this->assertTrue($account->isClosed());
+
+        $this->assertEquals($transactions[0]->account_id, $account->id);
+        $this->assertTrue(boolval($transactions[0]->credited));
+        $this->assertEquals($transactions[0]->narration, $currency1->currency_code . " ". $this->period->calendar_year . " Forex Balance Translation");
+        $this->assertEquals($transactions[0]->amount, 0);
+
+        $this->assertEquals($transactions[1]->account_id, $account->id);
+        $this->assertFalse(boolval($transactions[1]->credited));
+        $this->assertEquals($transactions[1]->narration, $currency2->currency_code . " ". $this->period->calendar_year . " Forex Balance Translation");
+        $this->assertEquals($transactions[1]->amount, 0);
+
     }
 }

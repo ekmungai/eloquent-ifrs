@@ -1096,6 +1096,7 @@ class TransactionTest extends TestCase
             "account_id" => $account->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
+            'currency_id' =>factory(ExchangeRate::class)->create()->currency_id
         ]);
     }
 }
