@@ -10,7 +10,7 @@
 
 This Package enables any Laravel application to generate [International Financial Reporting Standards](https://www.ifrs.org/issued-standards/list-of-standards/conceptual-framework/) compatible Financial Statements by providing a fully featured and configurable Double Entry accounting subsystem.
 
-The package supports multiple Entities (Companies), Account Categorization, Transaction assignment, Start of Year Opening Balances and accounting for VAT Transactions. Transactions are also protected against tampering via direct database changes ensuring the integrity of the Ledger. Outstanding amounts for clients and suppliers can also be displayed according to how long they have been outstanding using configurable time periods (Current, 31 - 60 days, 61 - 90 days etc).
+The package supports multiple Entities (Companies), Account Categorization, Transaction assignment, Start of Year Opening Balances and accounting for VAT Transactions. Transactions are also protected against tampering via direct database changes ensuring the integrity of the Ledger. Outstanding amounts for clients and suppliers can also be displayed according to how long they have been outstanding using configurable time periods (Current, 31 - 60 days, 61 - 90 days etc). Finally, the package supports the automated posting of forex difference transactions both within the reporting period as well as translating foreign denominated account balances at a set closing rate.
 
 The motivation for this package can be found in detail on my blog post [here](https://karanjamungai.com/posts/accounting_software/)
 ## Table of contents
@@ -499,7 +499,7 @@ I am acutely aware that as a professionally trained Accountant I may have used s
 
 - [x] Add Cashflow Statement
 - [x] Laravel 8 Compatibility
-- [ ] Add Multicurrency support
+- [x] Add Multicurrency support
 
 ## License
 This software is distributed for free under the MIT License
@@ -507,4 +507,4 @@ This software is distributed for free under the MIT License
 
 ## References
 * This package is heavily influenced by [chippyash/simple-accounts-3](https://github.com/chippyash/simple-accounts-3) and [scottlaurent/accounting](https://github.com/scottlaurent/accounting).
-* Special thanks to [paschaldev](https://github.com/paschaldev) for his brilliant work in preventing collisions  with already existing db tables.
+* Special thanks to [paschaldev](https://github.com/paschaldev) for his brilliant work in preventing collisions with already existing db tables.
