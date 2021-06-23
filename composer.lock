@@ -1950,12 +1950,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "a41315acd97c15f296092d9fde11a30103ae6c26"
+                "reference": "4411daa706a497da39b56619c0b2dbbe42b1fba3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/a41315acd97c15f296092d9fde11a30103ae6c26",
-                "reference": "a41315acd97c15f296092d9fde11a30103ae6c26",
+                "url": "https://api.github.com/repos/symfony/console/zipball/4411daa706a497da39b56619c0b2dbbe42b1fba3",
+                "reference": "4411daa706a497da39b56619c0b2dbbe42b1fba3",
                 "shasum": ""
             },
             "require": {
@@ -2040,7 +2040,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-06-03T14:00:26+00:00"
+            "time": "2021-06-12T10:16:15+00:00"
         },
         {
             "name": "symfony/css-selector",
@@ -2114,12 +2114,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "5f38c8804a9e97d23e0c8d63341088cd8a22d627"
+                "reference": "36b691b0bdbc963fb610da193a48b4c009d03a62"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/5f38c8804a9e97d23e0c8d63341088cd8a22d627",
-                "reference": "5f38c8804a9e97d23e0c8d63341088cd8a22d627",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/36b691b0bdbc963fb610da193a48b4c009d03a62",
+                "reference": "36b691b0bdbc963fb610da193a48b4c009d03a62",
                 "shasum": ""
             },
             "require": {
@@ -2129,7 +2129,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "2.4-dev"
+                    "dev-main": "2.5-dev"
                 },
                 "thanks": {
                     "name": "symfony/contracts",
@@ -2158,7 +2158,7 @@
             "description": "A generic function and convention to trigger deprecation notices",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/v2.4.0"
+                "source": "https://github.com/symfony/deprecation-contracts/tree/main"
             },
             "funding": [
                 {
@@ -2174,7 +2174,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-03-23T23:28:01+00:00"
+            "time": "2021-06-09T13:36:38+00:00"
         },
         {
             "name": "symfony/error-handler",
@@ -2334,7 +2334,7 @@
         },
         {
             "name": "symfony/event-dispatcher-contracts",
-            "version": "dev-main",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher-contracts.git",
@@ -2353,7 +2353,6 @@
             "suggest": {
                 "symfony/event-dispatcher-implementation": ""
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -2476,7 +2475,7 @@
         },
         {
             "name": "symfony/http-client-contracts",
-            "version": "dev-main",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-client-contracts.git",
@@ -2494,7 +2493,6 @@
             "suggest": {
                 "symfony/http-client-implementation": ""
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -3716,7 +3714,7 @@
         },
         {
             "name": "symfony/service-contracts",
-            "version": "dev-main",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/service-contracts.git",
@@ -3735,7 +3733,6 @@
             "suggest": {
                 "symfony/service-implementation": ""
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -3800,12 +3797,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/string.git",
-                "reference": "07417941ec86fa429b4b108e1217a656816483d5"
+                "reference": "92855c727d7edabe004605f451ef0b274fa24490"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/string/zipball/07417941ec86fa429b4b108e1217a656816483d5",
-                "reference": "07417941ec86fa429b4b108e1217a656816483d5",
+                "url": "https://api.github.com/repos/symfony/string/zipball/92855c727d7edabe004605f451ef0b274fa24490",
+                "reference": "92855c727d7edabe004605f451ef0b274fa24490",
                 "shasum": ""
             },
             "require": {
@@ -3822,7 +3819,6 @@
                 "symfony/translation-contracts": "^1.1|^2",
                 "symfony/var-exporter": "^4.4|^5.0|^6.0"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -3876,7 +3872,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-05-26T17:43:50+00:00"
+            "time": "2021-06-06T09:52:30+00:00"
         },
         {
             "name": "symfony/translation",
@@ -3975,7 +3971,7 @@
         },
         {
             "name": "symfony/translation-contracts",
-            "version": "dev-main",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation-contracts.git",
@@ -3993,7 +3989,6 @@
             "suggest": {
                 "symfony/translation-implementation": ""
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -5161,16 +5156,16 @@
         },
         {
             "name": "filp/whoops",
-            "version": "2.12.1",
+            "version": "2.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
-                "reference": "c13c0be93cff50f88bbd70827d993026821914dd"
+                "reference": "2edbc73a4687d9085c8f20f398eebade844e8424"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filp/whoops/zipball/c13c0be93cff50f88bbd70827d993026821914dd",
-                "reference": "c13c0be93cff50f88bbd70827d993026821914dd",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/2edbc73a4687d9085c8f20f398eebade844e8424",
+                "reference": "2edbc73a4687d9085c8f20f398eebade844e8424",
                 "shasum": ""
             },
             "require": {
@@ -5220,7 +5215,7 @@
             ],
             "support": {
                 "issues": "https://github.com/filp/whoops/issues",
-                "source": "https://github.com/filp/whoops/tree/2.12.1"
+                "source": "https://github.com/filp/whoops/tree/2.13.0"
             },
             "funding": [
                 {
@@ -5228,7 +5223,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-04-25T12:00:00+00:00"
+            "time": "2021-06-04T12:00:00+00:00"
         },
         {
             "name": "friendsofphp/php-cs-fixer",
@@ -5707,16 +5702,16 @@
         },
         {
             "name": "nunomaduro/collision",
-            "version": "v5.4.0",
+            "version": "v5.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nunomaduro/collision.git",
-                "reference": "41b7e9999133d5082700d31a1d0977161df8322a"
+                "reference": "b5cb36122f1c142c3c3ee20a0ae778439ef0244b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nunomaduro/collision/zipball/41b7e9999133d5082700d31a1d0977161df8322a",
-                "reference": "41b7e9999133d5082700d31a1d0977161df8322a",
+                "url": "https://api.github.com/repos/nunomaduro/collision/zipball/b5cb36122f1c142c3c3ee20a0ae778439ef0244b",
+                "reference": "b5cb36122f1c142c3c3ee20a0ae778439ef0244b",
                 "shasum": ""
             },
             "require": {
@@ -5791,7 +5786,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2021-04-09T13:38:32+00:00"
+            "time": "2021-06-22T20:47:22+00:00"
         },
         {
             "name": "nunomaduro/larastan",
@@ -9010,5 +9005,5 @@
         "php": "^7.3.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.1.0"
 }
