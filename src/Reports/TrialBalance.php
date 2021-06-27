@@ -12,7 +12,9 @@ namespace IFRS\Reports;
 
 use Carbon\Carbon;
 use IFRS\Models\Account;
+use IFRS\Models\Entity;
 use IFRS\Models\ReportingPeriod;
+use Illuminate\Support\Facades\Auth;
 
 class TrialBalance extends FinancialStatement
 {
@@ -28,14 +30,18 @@ class TrialBalance extends FinancialStatement
      *
      * @param string $year
      */
-    public function __construct(string $year = null)
+    public function __construct(string $year = null,Entity $entity = null)
     {
+        if(is_null($entity)){
+            $entity = Auth::user()->entity;
+        }
+
         $startDate = $year."-01-01";
-        $period = ReportingPeriod::getPeriod(Carbon::parse($startDate));
+        $period = ReportingPeriod::getPeriod(Carbon::parse($startDate),$entity);
         
-        parent::__construct($period);
+        parent::__construct($period,$entity);
         
-        $this->endDate = ReportingPeriod::periodEnd($startDate);
+        $this->endDate = ReportingPeriod::periodEnd($startDate,$entity);
 
         $this->accounts[IncomeStatement::TITLE] = [];
         $this->accounts[BalanceSheet::TITLE] = [];
@@ -49,8 +55,9 @@ class TrialBalance extends FinancialStatement
      */
     public function getSections($startDate = null, $endDate = null, $fullbalance = true): array
     {
-        foreach (Account::all() as $account) {
-            $balance = $account->closingBalance($this->endDate);
+        foreach (Account::where('entity_id','=',$this->entity->id)->get() as $account) {
+
+            $balance = $account->closingBalance($this->endDate,null,$account->entity_id);
             
             if ($balance <> 0) {
                 if ($balance > 0) {

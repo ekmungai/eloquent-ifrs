@@ -393,12 +393,13 @@ class Account extends Model implements Recyclable, Segregatable
      */
     public function openingBalance(int $year = null, int $currencyId = null,$entity_id = null): array
     {
+
         if(Auth::user()){
           $entity = Auth::user()->entity;
         }else{
             $entity = Entity::where('id','=',$entity_id)->first();
         }
-        
+
         $balances = [$entity->currency_id => 0];
 
         if (!is_null($year)) {

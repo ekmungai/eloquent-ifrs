@@ -159,6 +159,7 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
      */
     public static function getPeriod($date = null,$entity = null)
     {
+
         if(Auth::user()){
             $entity = Auth::user()->entity;
         }
@@ -187,7 +188,7 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
             $entity = Auth::user()->entity;
         }
 
-        if(is_null(Auth::user() && is_null($entity))){
+        if(!Auth::user() && is_null($entity)){
             return date("Y");
         }
 
