@@ -38,11 +38,10 @@ class TrialBalance extends FinancialStatement
 
         $startDate = $year."-01-01";
         $period = ReportingPeriod::getPeriod(Carbon::parse($startDate),$entity);
-        
-        parent::__construct($period,$entity);
-        
-        $this->endDate = ReportingPeriod::periodEnd($startDate,$entity);
 
+        parent::__construct($period,$entity);
+
+        $this->endDate = ReportingPeriod::periodEnd($startDate);
         $this->accounts[IncomeStatement::TITLE] = [];
         $this->accounts[BalanceSheet::TITLE] = [];
 

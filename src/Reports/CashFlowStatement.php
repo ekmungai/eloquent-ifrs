@@ -85,7 +85,7 @@ class CashFlowStatement extends FinancialStatement
 
         $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart(null,$entity) : Carbon::parse($startDate);
         $this->period['endDate'] = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
-        if($this->period['endDate'] != ReportingPeriod::periodEnd($endDate,$entity)){
+        if($this->period['endDate'] != ReportingPeriod::periodEnd($endDate)){
             $this->period['endDate']->addDay();
         }
 
