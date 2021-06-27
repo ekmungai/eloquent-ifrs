@@ -105,16 +105,18 @@ class Category extends Model implements Segregatable, Recyclable
     {
         $balances = ["total" => 0, "accounts" => []];
 
-        $reportingCurrency = Auth::user()->entity->currency_id;
+        $entity = Entity::where('id','=',$this->entity_id)->first();
 
-        $periodStart = ReportingPeriod::periodStart($endDate);
-        $year = ReportingPeriod::year($endDate);
+        $reportingCurrency = $entity->currency_id;
+
+        $periodStart = ReportingPeriod::periodStart($endDate,$entity);
+        $year = ReportingPeriod::year($endDate,$entity);
 
         foreach ($this->accounts as $account) {
 
-            $closingBalance = $account->currentBalance($startDate, $endDate)[$reportingCurrency];
+            $closingBalance = $account->currentBalance($startDate, $endDate,null,$entity->id)[$reportingCurrency];
             if ($startDate == $periodStart) {
-                $closingBalance += $account->openingBalance($year)[$reportingCurrency];
+                $closingBalance += $account->openingBalance($year,null,$entity->id)[$reportingCurrency];
             }
 
             if ($closingBalance != 0) {

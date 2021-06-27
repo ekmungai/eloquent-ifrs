@@ -198,7 +198,7 @@ class Account extends Model implements Recyclable, Segregatable
         $accounts = collect([]);
         $balances = ['debit' => 0, 'credit' => 0];
 
-        foreach (Account::all() as $account) {
+        foreach (Account::where('entity_id','=',$entity->id)->get() as $account) {
             $account->openingBalance = $account->openingBalance($year)[$entity->currency_id];
             if ($account->openingBalance != 0) {
                 $accounts->push($account);

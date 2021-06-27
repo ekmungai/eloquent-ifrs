@@ -149,6 +149,8 @@ class CashFlowStatement extends FinancialStatement
                 $this->entity->id
         )["sectionClosingBalance"] * -1;
 
+
+
         // Operations Cash Flow
         $this->results[self::OPERATIONS_CASH_FLOW] = $this->balances[self::PROFIT] + array_sum(array_slice($this->balances, 0, 6));
 
@@ -161,6 +163,8 @@ class CashFlowStatement extends FinancialStatement
         // Net Cash Flow
         $this->balances[self::NET_CASH_FLOW] = $this->results[self::OPERATIONS_CASH_FLOW] + $this->results[self::INVESTMENT_CASH_FLOW] + $this->results[self::FINANCING_CASH_FLOW];
 
+
+
         // Cash at start of the Period
         $periodStart = ReportingPeriod::periodStart($this->period['endDate'],$this->entity);
         $this->balances[self::START_CASH_BALANCE] = Account::sectionBalances(
@@ -170,6 +174,8 @@ class CashFlowStatement extends FinancialStatement
             true,
             $this->entity->id
         )["sectionClosingBalance"];
+
+
 
         // Cash at end of the Period
         $this->results[self::END_CASH_BALANCE] =  $this->balances[self::START_CASH_BALANCE] + $this->balances[self::NET_CASH_FLOW];
@@ -182,6 +188,7 @@ class CashFlowStatement extends FinancialStatement
             true,
             $this->entity->id
         )["sectionClosingBalance"];
+
 
         return [
             "balances" => $this->balances,
