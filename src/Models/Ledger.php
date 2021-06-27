@@ -320,7 +320,7 @@ class Ledger extends Model implements Segregatable
      *
      * @return array
      */
-    public static function balance(Account $account, Carbon $startDate, Carbon $endDate, int $currencyId = null,Entity $entity): array
+    public static function balance(Account $account, Carbon $startDate, Carbon $endDate, int $currencyId = null,Entity $entity = null): array
     {
         $ledger = new Ledger();
 

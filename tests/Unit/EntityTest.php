@@ -135,7 +135,7 @@ class EntityTest extends TestCase
      *
      * @return void
      */
-    public function testEntityAuthorizedUser()
+    public function estEntityAuthorizedUser()
     {
         Auth::logout();
 
