@@ -165,7 +165,8 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
 
         $year = ReportingPeriod::year($date,$entity);
         
-        $period = ReportingPeriod::where("calendar_year", $year)->first();
+        $period = ReportingPeriod::where("calendar_year", $year)
+                ->where('entity_id','=',$entity->id)->first();
         if (is_null($period)) {
             throw new MissingReportingPeriod($entity->name, $year);
         }

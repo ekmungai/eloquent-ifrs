@@ -12,6 +12,7 @@ namespace IFRS\Reports;
 
 use Carbon\Carbon;
 use IFRS\Models\Balance;
+use IFRS\Models\Entity;
 use IFRS\Models\ReportingPeriod;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -136,13 +137,18 @@ class IncomeStatement extends FinancialStatement
      * @param string $startDate
      * @param string $endDate
      */
-    public function __construct(string $startDate = null, string $endDate = null)
+    public function __construct(string $startDate = null, string $endDate = null,Entity $entity = null)
     {
-        $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart() : $startDate;
-        $this->period['endDate'] = is_null($endDate) ? ReportingPeriod::periodEnd() : Carbon::parse($endDate);
 
-        $reportingPeriod = ReportingPeriod::getPeriod($endDate);
-        parent::__construct($reportingPeriod);
+        if(is_null($entity)){
+            $entity = Auth::user()->entity;
+        }
+
+        $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart(null,$entity) : Carbon::parse($startDate);
+        $this->period['endDate'] = is_null($endDate) ? ReportingPeriod::periodEnd(null,$entity) : Carbon::parse($endDate);
+
+        $reportingPeriod = ReportingPeriod::getPeriod($endDate,$entity);
+        parent::__construct($reportingPeriod,$entity);
 
         // Section Accounts
         $this->accounts[self::OPERATING_REVENUES] = [];
