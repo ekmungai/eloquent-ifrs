@@ -13,7 +13,10 @@ namespace IFRS\Reports;
 use Carbon\Carbon;
 
 use IFRS\Models\Account;
+use IFRS\Models\Entity;
 use IFRS\Models\ReportingPeriod;
+use Illuminate\Support\Facades\Auth;
+use function Webmozart\Assert\Tests\StaticAnalysis\null;
 
 class CashFlowStatement extends FinancialStatement
 {
@@ -74,16 +77,20 @@ class CashFlowStatement extends FinancialStatement
      * @param string $startDate
      * @param string $endDate
      */
-    public function __construct(string $startDate = null, string $endDate = null)
+    public function __construct(string $startDate = null, string $endDate = null,Entity $entity = null)
     {
-        $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart() : Carbon::parse($startDate);
+        if(is_null($entity)){
+            $entity = Auth::user()->entity;
+        }
+
+        $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart(null,$entity) : Carbon::parse($startDate);
         $this->period['endDate'] = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
-        if($this->period['endDate'] != ReportingPeriod::periodEnd($endDate)){
+        if($this->period['endDate'] != ReportingPeriod::periodEnd($endDate,$entity)){
             $this->period['endDate']->addDay();
         }
 
-        $period = ReportingPeriod::getPeriod($endDate);
-        parent::__construct($period);
+        $period = ReportingPeriod::getPeriod($endDate,$entity);
+        parent::__construct($period,$entity);
 
         $this->result_indents = 1;
 
@@ -121,14 +128,25 @@ class CashFlowStatement extends FinancialStatement
      */
     public function getSections($startDate = null, $endDate = null, $fullbalance = true): array
     {
+
         // Accounts movements for the Period
         foreach (array_keys($this->balances) as $section) {
-            $this->balances[$section] = Account::sectionBalances(config('ifrs')[$section])['sectionMovement'];
+            $this->balances[$section] = Account::sectionBalances(
+                config('ifrs')[$section],
+                null,
+                null,
+                true,
+                $this->entity->id
+            )['sectionMovement'];
         }
 
         // Profit for the Period
         $this->balances[self::PROFIT] = Account::sectionBalances(
-            IncomeStatement::getAccountTypes()
+            IncomeStatement::getAccountTypes(),
+                null,
+                null,
+                true,
+                $this->entity->id
         )["sectionClosingBalance"] * -1;
 
         // Operations Cash Flow
@@ -144,11 +162,13 @@ class CashFlowStatement extends FinancialStatement
         $this->balances[self::NET_CASH_FLOW] = $this->results[self::OPERATIONS_CASH_FLOW] + $this->results[self::INVESTMENT_CASH_FLOW] + $this->results[self::FINANCING_CASH_FLOW];
 
         // Cash at start of the Period
-        $periodStart = ReportingPeriod::periodStart($this->period['endDate']);
+        $periodStart = ReportingPeriod::periodStart($this->period['endDate'],$this->entity);
         $this->balances[self::START_CASH_BALANCE] = Account::sectionBalances(
             [Account::BANK],
             $periodStart,
-            $this->period['startDate']
+            $this->period['startDate'],
+            true,
+            $this->entity->id
         )["sectionClosingBalance"];
 
         // Cash at end of the Period
@@ -158,7 +178,9 @@ class CashFlowStatement extends FinancialStatement
         $this->results[self::CASHBOOK_BALANCE] =  Account::sectionBalances(
             [Account::BANK],
             $this->period['startDate'],
-            $this->period['endDate']
+            $this->period['endDate'],
+            true,
+            $this->entity->id
         )["sectionClosingBalance"];
 
         return [

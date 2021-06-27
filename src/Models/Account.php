@@ -243,6 +243,7 @@ class Account extends Model implements Recyclable, Segregatable
 
         $year = ReportingPeriod::year($endDate,$entity);
 
+
         foreach (Account::whereIn('account_type', $accountTypes)->where('entity_id','=',$entity->id)->get() as $account) {
             
             $reportingCurrencyId = $entity->currency_id;
@@ -598,7 +599,7 @@ class Account extends Model implements Recyclable, Segregatable
         }
 
         $query = Account::withTrashed()
-        ->where('account_type', $this->account_type);
+        ->where('account_type', $this->account_type)->where('entity_id','=',$entity->id);
 
         if(!is_null($this->entity_id)){
             $query->withoutGlobalScopes()->where('entity_id', $this->entity_id);
