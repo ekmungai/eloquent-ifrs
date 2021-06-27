@@ -181,7 +181,7 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
      *
      * @return string
      */
-    public function getTTypeAttribute()
+    public function getTransactionAttribute()
     {
         return Transaction::getType($this->transaction_type);
     }

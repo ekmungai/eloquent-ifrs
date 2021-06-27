@@ -66,7 +66,7 @@ class IncomeStatement extends FinancialStatement
     }
 
     /**
-     * Get Income Statement Account Types.
+     * Get Income Statement Account Type balance total.
      *
      * @param int month
      * @param int year
@@ -107,8 +107,7 @@ class IncomeStatement extends FinancialStatement
      * @return array
      */
     public static function getResults($month, $year)
-    {
-        
+    {  
         $startDate = Carbon::parse($year.'-'.$month.'-01')->startOfDay();
         $endDate = Carbon::parse($year.'-'.$month.'-01')->endOfMonth();
         

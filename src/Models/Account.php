@@ -42,9 +42,6 @@ use IFRS\Exceptions\InvalidCategoryType;
  * @property string $account_type
  * @property Carbon $destroyed_at
  * @property Carbon $deleted_at
- * @property float $openingBalance
- * @property float $currentBalance
- * @property float $closingBalance
  */
 class Account extends Model implements Recyclable, Segregatable
 {
@@ -496,7 +493,6 @@ class Account extends Model implements Recyclable, Segregatable
     public function getTransactions(string $startDate = null, string $endDate = null): array
     {
 
-        $transactions = ['total' => 0, 'transactions' => []];
         $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate) : Carbon::parse($startDate);
         $endDate = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
 
@@ -518,7 +514,7 @@ class Account extends Model implements Recyclable, Segregatable
 
         $typeChanged = $this->isDirty('account_type') && $this->account_type != $this->getOriginal('account_type') && !is_null($this->id);
         
-        if (is_null($this->code) ||  $typeChanged) {
+        if (is_null($this->code) || $typeChanged) {
             $this->code = $this->getAccountCode();
         }
 
@@ -535,10 +531,6 @@ class Account extends Model implements Recyclable, Segregatable
      */
     private function getAccountCode(): int
     {
-        if (!isset($this->currency_id) && Auth::user()->entity) {
-            $this->currency_id = Auth::user()->entity->currency_id;
-        }
-
         $query = Account::withTrashed()
         ->where('account_type', $this->account_type);
 

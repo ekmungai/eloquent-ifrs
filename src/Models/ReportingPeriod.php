@@ -28,6 +28,7 @@ use IFRS\Exceptions\MissingReportingPeriod;
 use IFRS\Exceptions\InvalidAccountType;
 use IFRS\Exceptions\InvalidPeriodStatus;
 use IFRS\Exceptions\MissingClosingRate;
+
 use IFRS\Reports\BalanceSheet;
 use IFRS\Transactions\JournalEntry;
 

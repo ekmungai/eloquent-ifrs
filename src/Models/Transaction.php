@@ -395,20 +395,22 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
      */
     public function getAmountAttribute(): float
     {
+        $ledger = new Ledger();
         $amount = 0;
 
         if ($this->is_posted) {
 
             $entry_type = $this->credited ? Balance::CREDIT : Balance::DEBIT;
 
-            foreach (Ledger::where([
+            $amount = $ledger->newQuery()
+            ->selectRaw("SUM(amount/rate) as amount")
+            ->where([
                 "transaction_id" => $this->id,
                 "entry_type" => $entry_type,
                 "post_account" => $this->account_id,
                 "currency_id" => $this->currency_id
-            ])->get() as $ledger) {
-                $amount += $ledger->amount / $this->exchangeRate->rate;
-            }
+            ])->get()[0]->amount;
+
         } else {
             foreach ($this->getLineItems() as $lineItem) {
                 $amount += $lineItem->amount * $lineItem->quantity;

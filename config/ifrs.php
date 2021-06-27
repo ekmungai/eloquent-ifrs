@@ -62,7 +62,7 @@ return [
      |--------------------------------------------------------------------------
      |
      | Accounts of the types defined here will reject balances and transactions of a currency  
-     | different from the theirs
+     | different from the their own
      |
      */
     'single_currency' => [
@@ -84,9 +84,9 @@ return [
      | User model
      |--------------------------------------------------------------------------
      |
-     | Eloquent model for the users. This assumes you already have a working
+     | Eloquent model for users. This assumes you already have a working
      | user model. If not, create one and reference it here. During initial
-     | migration, columns are added to the table. Your users model should
+     | migration, columns are added to the table. Your Users model should
      | also use the IFRSUser trait to provide access to the entity scope.
      | Make sure to place your model under the right eloquent version key
      | otherwise the migrations may not work

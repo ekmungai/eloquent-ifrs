@@ -15,7 +15,6 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Query\Expression;
 
 use IFRS\Interfaces\Segregatable;
 
@@ -33,6 +32,7 @@ use IFRS\Traits\ModelTablePrefix;
  * @property Account $postAccount
  * @property Account $folioAccount
  * @property LineItem $lineItem
+ * @property Currency $currency
  * @property Carbon $postingDate
  * @property string $entryType
  * @property float $amount
@@ -217,6 +217,16 @@ class Ledger extends Model implements Segregatable
     public function folioAccount()
     {
         return $this->hasOne(Account::class, 'id', 'folio_account');
+    }
+
+    /**
+     * Ledger Folio Account.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function currency()
+    {
+        return $this->hasOne(currency::class, 'id', 'currency_id');
     }
 
     /**

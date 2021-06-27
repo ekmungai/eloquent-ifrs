@@ -13,6 +13,7 @@ namespace IFRS\Reports;
 use Carbon\Carbon;
 use IFRS\Models\Account;
 use IFRS\Models\ReportingPeriod;
+use Illuminate\Support\Facades\Auth;
 
 class TrialBalance extends FinancialStatement
 {
@@ -50,7 +51,7 @@ class TrialBalance extends FinancialStatement
     public function getSections($startDate = null, $endDate = null, $fullbalance = true): array
     {
         foreach (Account::all() as $account) {
-            $balance = $account->closingBalance($this->endDate);
+            $balance = $account->closingBalance($this->endDate)[Auth::user()->entity->currency_id];
             
             if ($balance <> 0) {
                 if ($balance > 0) {
