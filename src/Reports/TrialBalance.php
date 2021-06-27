@@ -57,7 +57,7 @@ class TrialBalance extends FinancialStatement
     {
         foreach (Account::where('entity_id','=',$this->entity->id)->get() as $account) {
 
-            $balance = $account->closingBalance($this->endDate,null,$account->entity_id);
+            $balance = $account->closingBalance($this->endDate,null,$this->entity->id);
             
             if ($balance <> 0) {
                 if ($balance > 0) {

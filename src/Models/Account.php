@@ -199,7 +199,7 @@ class Account extends Model implements Recyclable, Segregatable
         $balances = ['debit' => 0, 'credit' => 0];
 
         foreach (Account::where('entity_id','=',$entity->id)->get() as $account) {
-            $account->openingBalance = $account->openingBalance($year)[$entity->currency_id];
+            $account->openingBalance = $account->openingBalance($year,null,$entity->id)[$entity->currency_id];
             if ($account->openingBalance != 0) {
                 $accounts->push($account);
             }
@@ -340,7 +340,7 @@ class Account extends Model implements Recyclable, Segregatable
      */
     public function attributes()
     {
-        $this->attributes['closingBalance'] = $this->closingBalance();
+        $this->attributes['closingBalance'] = $this->closingBalance(null,null,$this->entity_id);
         return (object) $this->attributes;
     }
 
@@ -392,7 +392,7 @@ class Account extends Model implements Recyclable, Segregatable
      *
      * @return array
      */
-    public function openingBalance(int $year = null, int $currencyId = null,$entity_id = null): array
+    public function openingBalance(int $year = null, int $currencyId = null, $entity_id = null): array
     {
 
         if(Auth::user()){
@@ -409,12 +409,12 @@ class Account extends Model implements Recyclable, Segregatable
             $period = $entity->current_reporting_period;
         }
 
-        $openingBalances = $this->balances->filter(function ($balance, $key) use ($period) {
+        $openingBalances = $this->balances->where('entity_id','=',$entity->id)->filter(function ($balance, $key) use ($period) {
             return $balance->reporting_period_id == $period->id;
         });
 
         if (!is_null($currencyId)) {
-            $openingBalances = $this->balances->filter(function ($balance, $key) use ($currencyId) {
+            $openingBalances = $this->balances->where('entity_id','=',$entity->id)->filter(function ($balance, $key) use ($currencyId) {
                 return $balance->currency_id == $currencyId;
             });
             $balances[$currencyId] = 0;
@@ -477,8 +477,8 @@ class Account extends Model implements Recyclable, Segregatable
         $endDate = is_null($endDate) ? ReportingPeriod::periodEnd(null,$entity) : Carbon::parse($endDate);
         $startDate = ReportingPeriod::periodStart($endDate,$entity);
         $year = ReportingPeriod::year($endDate,$entity);
-        $balances =  $this->openingBalance($year, $currencyId,$entity_id);
-        $transactions = $this->currentBalance($startDate, $endDate, $currencyId,$entity_id);
+        $balances =  $this->openingBalance($year, $currencyId,$entity->id);
+        $transactions = $this->currentBalance($startDate, $endDate, $currencyId,$entity->id);
         foreach(array_keys($balances) as $currency){
             $balances[$currency] += $transactions[$currency];
         }

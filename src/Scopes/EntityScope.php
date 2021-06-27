@@ -31,5 +31,7 @@ class EntityScope implements Scope
         if (!is_null($user)) {
             $builder->where('entity_id', Auth::user()->entity->id);
         }
+
+
     }
 }
