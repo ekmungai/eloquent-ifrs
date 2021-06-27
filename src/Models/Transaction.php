@@ -117,12 +117,15 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
      */
     public function __construct($attributes = [])
     {
-        $entity = Auth::user()->entity;
+//       if(Auth::user()){
+//           $entity = Auth::user()->entity;
+//       }
+//
         $this->table = config('ifrs.table_prefix') . 'transactions';
-
-        if (!isset($attributes['exchange_rate_id']) && !is_null($entity)) {
-            $attributes['exchange_rate_id'] = $entity->default_rate->id;
-        }
+//
+//        if (!isset($attributes['exchange_rate_id']) && !is_null($entity)) {
+//            $attributes['exchange_rate_id'] = $entity->default_rate->id;
+//        }
         $attributes['transaction_date'] = !isset($attributes['transaction_date']) ? Carbon::now() : Carbon::parse($attributes['transaction_date']);
 
         return parent::__construct($attributes);
@@ -264,10 +267,14 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
      *
      * @return string
      */
-    public static function transactionNo(string $type, Carbon $transaction_date = null)
+    public static function transactionNo(string $type, Carbon $transaction_date = null,$entity = null)
     {
-        $period_count = ReportingPeriod::getPeriod($transaction_date)->period_count;
-        $period_start = ReportingPeriod::periodStart($transaction_date);
+        if(Auth::user()){
+            $entity = Auth::user()->entity;
+        }
+
+        $period_count = ReportingPeriod::getPeriod($transaction_date,$entity)->period_count;
+        $period_start = ReportingPeriod::periodStart($transaction_date,$entity);
 
         $next_id =  Transaction::withTrashed()
             ->where("transaction_type", $type)
@@ -607,13 +614,25 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
      */
     public function save(array $options = []): bool
     {
+        if(Auth::user()){
+            $entity = Auth::user()->entity;
+        }else{
+            $entity = Entity::where('id','=',$this->entity_id)->first();
+        }
+
+        if(!isset($this->exchange_rate_id) && !is_null($entity)){
+            $this->exchange_rate_id = $entity->default_rate->id;
+        }
+
+        $this->transaction_date = !isset($this->transaction_date) ? Carbon::now() : Carbon::parse($this->transaction_date);
+
         if(isset($this->exchange_rate_id) && !isset($this->currency_id)){
             $this->currency_id = $this->exchangeRate->currency_id;
         }
 
-        $period = ReportingPeriod::getPeriod(Carbon::parse($this->transaction_date));
+        $period = ReportingPeriod::getPeriod(Carbon::parse($this->transaction_date),$entity);
 
-        if (ReportingPeriod::periodStart($this->transaction_date)->eq(Carbon::parse($this->transaction_date))) {
+        if (ReportingPeriod::periodStart($this->transaction_date,$entity)->eq(Carbon::parse($this->transaction_date))) {
             throw new InvalidTransactionDate();
         }
 
@@ -627,7 +646,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         
         if (in_array($this->account->account_type, config('ifrs.single_currency')) && 
             $this->account->currency_id != $this->currency_id && 
-            $this->currency_id != Auth::user()->entity->currency_id) {
+            $this->currency_id != $entity->currency_id) {
             throw new InvalidCurrency("Transaction", $this->account->account_type);
         }
 
@@ -638,7 +657,8 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         if (is_null($this->transaction_no)) {
             $this->transaction_no = Transaction::transactionNo(
                 $this->transaction_type,
-                Carbon::parse($this->transaction_date)
+                Carbon::parse($this->transaction_date),
+                $entity,
             );
         }
 
@@ -661,7 +681,14 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         }
         $this->save();
 
-        Ledger::post($this);
+        //pass the entity id if user not logged in
+        if(Auth::user()){
+            $entity = Auth::user()->entity;
+        }else{
+            $entity = Entity::where('id','=',$this->entity_id)->first();
+        }
+
+        Ledger::post($this,$entity);
     }
 
     /**

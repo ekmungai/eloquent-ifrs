@@ -367,12 +367,16 @@ class Account extends Model implements Recyclable, Segregatable
      */
     public function openingBalance(int $year = null, int $currencyId = null): array
     {
-        $entity = Auth::user()->entity;
+        if(Auth::user()){
+          $entity = Auth::user()->entity;
+        }else{
+            $entity = Entity::where('id','=',$this->entity_id)->first();
+        }
         
         $balances = [$entity->currency_id => 0];
 
         if (!is_null($year)) {
-            $period = ReportingPeriod::getPeriod($year."-01-01");
+            $period = ReportingPeriod::getPeriod($year."-01-01",$entity);
         } else {
             $period = $entity->current_reporting_period;
         }
@@ -413,9 +417,15 @@ class Account extends Model implements Recyclable, Segregatable
      */
     public function currentBalance(Carbon $startDate = null, Carbon $endDate = null, int $currencyId = null): array
     {
-        $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate) : $startDate;
+        if(Auth::user()){
+            $entity = Auth::user()->entity;
+        }else{
+            $entity = Entity::where('id','=',$this->entity_id)->first();
+        }
+
+        $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate,$entity) : $startDate;
         $endDate = is_null($endDate) ? Carbon::now() : $endDate;
-        return Ledger::balance($this, $startDate, $endDate, $currencyId);
+        return Ledger::balance($this, $startDate, $endDate, $currencyId,$entity);
     }
 
     /**
@@ -428,9 +438,17 @@ class Account extends Model implements Recyclable, Segregatable
      */
     public function closingBalance(string $endDate = null, int $currencyId = null): array
     {
-        $endDate = is_null($endDate) ? ReportingPeriod::periodEnd() : Carbon::parse($endDate);
-        $startDate = ReportingPeriod::periodStart($endDate);
-        $year = ReportingPeriod::year($endDate);
+
+        if(Auth::user()){
+            $entity = Auth::user()->entity;
+        }else{
+            $entity = Entity::where('id','=',$this->entity_id)->first();
+        }
+
+
+        $endDate = is_null($endDate) ? ReportingPeriod::periodEnd(null,$entity) : Carbon::parse($endDate);
+        $startDate = ReportingPeriod::periodStart($endDate,$entity);
+        $year = ReportingPeriod::year($endDate,$entity);
         $balances =  $this->openingBalance($year, $currencyId);
         $transactions = $this->currentBalance($startDate, $endDate, $currencyId);
         foreach(array_keys($balances) as $currency){
@@ -508,8 +526,15 @@ class Account extends Model implements Recyclable, Segregatable
      */
     public function save(array $options = []): bool
     {
-        if (!isset($this->currency_id) && Auth::user()->entity) {
-            $this->currency_id = Auth::user()->entity->currency_id;
+
+        if(Auth::user()){
+            $entity = Auth::user()->entity;
+        }else{
+            $entity = Entity::where('id','=',$this->entity_id)->first();
+        }
+
+        if (!isset($this->currency_id)) {
+            $this->currency_id = $entity->currency_id;
         }
 
         if (is_null($this->account_type)) {

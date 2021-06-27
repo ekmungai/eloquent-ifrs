@@ -266,6 +266,10 @@ class Assignment extends Model implements Segregatable
         $transactionRate = $this->transaction->exchangeRate->rate;
         $clearedRate = $this->cleared->exchangeRate->rate;
 
+        if(is_null($this->assignment_date)){
+            $this->assignment_date = Carbon::now();
+        }
+
         $this->validate($transactionRate, $clearedRate, $transactionType, $clearedType);
 
         // Realize Forex differences

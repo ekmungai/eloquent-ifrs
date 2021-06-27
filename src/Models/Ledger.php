@@ -60,13 +60,17 @@ class Ledger extends Model implements Segregatable
      *
      * @return void
      */
-    private static function postVat(LineItem $lineItem, Transaction $transaction): void
+    private static function postVat(LineItem $lineItem, Transaction $transaction,Entity $entity = null): void
     {
         $amount = $lineItem->vat_inclusive ?  $lineItem->amount - ($lineItem->amount / (1 + ($lineItem->vat->rate / 100))) : $lineItem->amount * $lineItem->vat->rate / 100;
         $rate = $transaction->exchangeRate->rate;
 
         $post = new Ledger();
         $folio = new Ledger();
+
+        // assign entity ids
+        $post->entity_id = $entity->id;
+        $folio->entity_id = $entity->id;
 
         if ($transaction->is_credited) {
             $post->entry_type = Balance::CREDIT;
@@ -98,7 +102,7 @@ class Ledger extends Model implements Segregatable
      *
      * @param Transaction $transaction
      */
-    public static function post(Transaction $transaction): void
+    public static function post(Transaction $transaction, Entity $entity = null): void
     {
         //Remove current ledgers if any prior to creating new ones (prevents bypassing Posted Transaction Exception)
         $transaction->ledgers()->delete();
@@ -108,6 +112,10 @@ class Ledger extends Model implements Segregatable
             
             $post = new Ledger();
             $folio = new Ledger();
+
+            // assign entity ids
+            $post->entity_id = $entity->id;
+            $folio->entity_id = $entity->id;
 
             if ($transaction->is_credited) {
                 $post->entry_type = Balance::CREDIT;
@@ -134,7 +142,7 @@ class Ledger extends Model implements Segregatable
             $folio->save();
 
             if ($lineItem->vat->rate > 0) {
-                Ledger::postVat($lineItem, $transaction);
+                Ledger::postVat($lineItem, $transaction,$entity);
             }
 
             // reload ledgers to reflect changes
@@ -312,10 +320,13 @@ class Ledger extends Model implements Segregatable
      *
      * @return array
      */
-    public static function balance(Account $account, Carbon $startDate, Carbon $endDate, int $currencyId = null): array
+    public static function balance(Account $account, Carbon $startDate, Carbon $endDate, int $currencyId = null,Entity $entity): array
     {
         $ledger = new Ledger();
-        $entity = Auth::user()->entity;
+
+        if(Auth::user()){
+            $entity = Auth::user()->entity;
+        }
         
         $balances = [$entity->currency_id => 0];
 

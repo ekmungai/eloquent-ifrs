@@ -100,19 +100,6 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
      */
     public function __construct($attributes = [])
     {
-        $entity = Auth::user()->entity;
-
-        if (!is_null($entity)) {
-            $reportingPeriod = $entity->current_reporting_period;
-
-            if (!isset($attributes['reporting_period_id'])) {
-                $attributes['reporting_period_id'] = $reportingPeriod->id;
-            }
-
-            if (!isset($attributes['exchange_rate_id'])) {
-                $attributes['exchange_rate_id'] = $entity->default_rate->id;
-            }
-        }
 
         if (!isset($attributes['transaction_type'])) {
             $attributes['transaction_type'] = Transaction::JN;
@@ -280,6 +267,23 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
     public function save(array $options = []): bool
     {
 
+        if(Auth::user()){
+            $entity  = Auth::user()->entity;
+        }
+
+        if (!is_null($entity)) {
+            $reportingPeriod = $entity->current_reporting_period;
+
+            if (!isset($this->reporting_period_id)) {
+                $this->reporting_period_id = $reportingPeriod->id;
+            }
+
+            if (!isset($this->exchange_rate_id)) {
+                $this->exchange_rate_id = $entity->default_rate->id;
+            }
+        }
+
+
         if ($this->amount < 0) {
             throw new NegativeAmount("Balance");
         }
@@ -300,7 +304,6 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
             throw new InvalidCurrency("Balance", $this->account->account_type);
         }
 
-        $entity = Auth::user()->entity;
 
         if (ReportingPeriod::periodStart()->lt($this->transaction_date) && !$entity->mid_year_balances) {
             throw new InvalidBalanceDate();

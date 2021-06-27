@@ -157,13 +157,17 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
      * @param string|Carbon $date
      * @return ReportingPeriod
      */
-    public static function getPeriod($date = null)
+    public static function getPeriod($date = null,$entity = null)
     {
-        $year = ReportingPeriod::year($date);
+        if(Auth::user()){
+            $entity = Auth::user()->entity;
+        }
+
+        $year = ReportingPeriod::year($date,$entity);
         
         $period = ReportingPeriod::where("calendar_year", $year)->first();
         if (is_null($period)) {
-            throw new MissingReportingPeriod(Auth::user()->entity->name, $year);
+            throw new MissingReportingPeriod($entity->name, $year);
         }
         return $period;
     }
@@ -175,16 +179,21 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
      *
      * @return int
      */
-    public static function year($date = null)
+    public static function year($date = null,$entity = null)
     {
-        if (is_null(Auth::user()->entity)) {
+
+        if(Auth::user()){
+            $entity = Auth::user()->entity;
+        }
+
+        if(is_null(Auth::user() && is_null($entity))){
             return date("Y");
         }
 
         $year = is_null($date) ? date("Y") : date("Y", strtotime($date));
         $month = is_null($date) ? date("m") : date("m", strtotime($date));
 
-        $year  = intval($month) < Auth::user()->entity->year_start ? intval($year) - 1 : $year;
+        $year  = intval($month) < $entity->year_start ? intval($year) - 1 : $year;
 
         return intval($year);
     }
@@ -194,13 +203,23 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
      *
      * @return Carbon $date
      */
-    public static function periodStart($date = null)
+    public static function periodStart($date = null,$entity = null)
     {
-        return is_null(Auth::user()->entity) ? Carbon::parse(date("Y")."-01-01")->startOfDay() : Carbon::create(
-            ReportingPeriod::year($date),
-            Auth::user()->entity->year_start,
+
+        if(Auth::user()){
+            $entity = Auth::user()->entity;
+        }
+
+        if(!$entity){
+          return  Carbon::parse(date("Y")."-01-01")->startOfDay();
+        }
+
+        return Carbon::create(
+            ReportingPeriod::year($date,$entity),
+            $entity->year_start,
             1
         )->startOfDay();
+
     }
 
     /**
@@ -208,9 +227,9 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
      *
      * @return Carbon
      */
-    public static function periodEnd($date = null)
+    public static function periodEnd($date = null,$entity = null)
     {
-        return ReportingPeriod::periodStart($date)
+        return ReportingPeriod::periodStart($date,$entity)
             ->addYear()
             ->subDay();
     }
