@@ -15,11 +15,13 @@ use Carbon\Carbon;
 use IFRS\Models\Balance;
 use IFRS\Models\Account;
 use IFRS\Models\Assignment;
+use IFRS\Models\Entity;
 use IFRS\Models\Transaction;
 use IFRS\Models\ReportingPeriod;
 
 use IFRS\Exceptions\MissingAccount;
 use IFRS\Exceptions\InvalidAccountType;
+use Illuminate\Support\Facades\Auth;
 
 class AccountSchedule extends AccountStatement
 {
@@ -80,8 +82,12 @@ class AccountSchedule extends AccountStatement
      * @param int    $currencyId
      * @param string $endDate
      */
-    public function __construct(int $accountId = null, int $currencyId = null, string $endDate = null)
+    public function __construct(int $accountId = null, int $currencyId = null, string $endDate = null,Entity $entity = null)
     {
+        if(is_null($entity)){
+            $entity = Auth::user()->entity;
+        }
+
         if (is_null($accountId)) {
             throw new MissingAccount("Account Schedule");
         }
@@ -91,7 +97,7 @@ class AccountSchedule extends AccountStatement
         if (!in_array(Account::find($accountId)->account_type, $accountTypes)) {
             throw new InvalidAccountType('Schedule', $accountTypes);
         }
-        parent::__construct($accountId, $currencyId, null, $endDate);
+        parent::__construct($accountId, $currencyId, null, $endDate,$entity);
     }
 
     /**
@@ -99,7 +105,7 @@ class AccountSchedule extends AccountStatement
      */
     public function getTransactions(): array
     {
-        $periodId = ReportingPeriod::getPeriod($this->period['endDate'])->id;
+        $periodId = ReportingPeriod::getPeriod($this->period['endDate'],$this->entity)->id;
         $currencyId = $this->currencyId;
 
         // Opening Balances

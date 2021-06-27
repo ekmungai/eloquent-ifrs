@@ -101,7 +101,8 @@ class AccountStatement
         int $accountId = null,
         int $currencyId = null,
         string $startDate = null,
-        string $endDate = null
+        string $endDate = null,
+        Entity $entity = null
     ) {
         if (is_null($accountId)) {
             throw new MissingAccount("Account Statement");
@@ -109,9 +110,14 @@ class AccountStatement
             $this->account = Account::find($accountId);
         }
 
-        $this->entity = Auth::user()->entity;
+        if(is_null($entity)){
+            $this->entity = Auth::user()->entity;
+        }else{
+            $this->entity = $entity;
+        }
 
-        $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart() : Carbon::parse($startDate);
+
+        $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart(null,$entity) : Carbon::parse($startDate);
         $this->period['endDate'] = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
         $this->currency = is_null($currencyId) ? $this->entity->currency : Currency::find($currencyId);
         $this->currencyId = $currencyId;
@@ -124,7 +130,7 @@ class AccountStatement
     {
         $query = $this->account->transactionsQuery($this->period['startDate'], $this->period['endDate'], $this->currencyId);
 
-        $this->balances['opening'] = $this->account->openingBalance(ReportingPeriod::year($this->period['startDate']), $this->currencyId)[$this->currency->id];
+        $this->balances['opening'] = $this->account->openingBalance(ReportingPeriod::year($this->period['startDate'],$this->entity), $this->currencyId,$this->entity->id)[$this->currency->id];
         $this->balances['closing'] += $this->balances['opening'];
 
         $balance = $this->balances['opening'];

@@ -324,7 +324,7 @@ class Ledger extends Model implements Segregatable
     {
         $ledger = new Ledger();
 
-        if(Auth::user()){
+        if(is_null($entity)){
             $entity = Auth::user()->entity;
         }
         
