@@ -117,17 +117,17 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
      */
     public function __construct($attributes = [])
     {
-        if(is_null($this->entity_id)){
-            $entity = Auth::user()->entity;
-        }else{
-            $entity = Entity::where('id','=',$this->entity_id)->first();
-        }
+//        if(!isset($attributes['entity_id'])){
+//            $entity = Auth::user()->entity;
+//        }else{
+//            $entity = Entity::where('id','=',$attributes['entity_id'])->first();
+//        }
 //
         $this->table = config('ifrs.table_prefix') . 'transactions';
 //
-        if (!isset($attributes['exchange_rate_id']) && !is_null($entity)) {
-            $attributes['exchange_rate_id'] = $entity->default_rate->id;
-        }
+//        if (!isset($attributes['exchange_rate_id']) && !is_null($entity)) {
+//            $attributes['exchange_rate_id'] = $entity->default_rate->id;
+//        }
         $attributes['transaction_date'] = !isset($attributes['transaction_date']) ? Carbon::now() : Carbon::parse($attributes['transaction_date']);
 
         return parent::__construct($attributes);
