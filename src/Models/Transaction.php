@@ -117,15 +117,17 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
      */
     public function __construct($attributes = [])
     {
-//       if(Auth::user()){
-//           $entity = Auth::user()->entity;
-//       }
+        if(is_null($this->entity_id)){
+            $entity = Auth::user()->entity;
+        }else{
+            $entity = Entity::where('id','=',$this->entity_id)->first();
+        }
 //
         $this->table = config('ifrs.table_prefix') . 'transactions';
 //
-//        if (!isset($attributes['exchange_rate_id']) && !is_null($entity)) {
-//            $attributes['exchange_rate_id'] = $entity->default_rate->id;
-//        }
+        if (!isset($attributes['exchange_rate_id']) && !is_null($entity)) {
+            $attributes['exchange_rate_id'] = $entity->default_rate->id;
+        }
         $attributes['transaction_date'] = !isset($attributes['transaction_date']) ? Carbon::now() : Carbon::parse($attributes['transaction_date']);
 
         return parent::__construct($attributes);
@@ -269,7 +271,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
      */
     public static function transactionNo(string $type, Carbon $transaction_date = null,$entity = null)
     {
-        if(Auth::user()){
+        if(is_null($entity)){
             $entity = Auth::user()->entity;
         }
 
@@ -279,6 +281,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         $next_id =  Transaction::withTrashed()
             ->where("transaction_type", $type)
             ->where("transaction_date", ">=", $period_start)
+            ->where('entity_id','=',$entity->id)
             ->count() + 1;
 
         return $type . str_pad((string) $period_count, 2, "0", STR_PAD_LEFT)
@@ -682,7 +685,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         $this->save();
 
         //pass the entity id if user not logged in
-        if(Auth::user()){
+        if(is_null($this->entity_id)){
             $entity = Auth::user()->entity;
         }else{
             $entity = Entity::where('id','=',$this->entity_id)->first();
