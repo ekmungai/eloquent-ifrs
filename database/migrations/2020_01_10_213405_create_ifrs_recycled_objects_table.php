@@ -20,14 +20,26 @@ class CreateIfrsRecycledObjectsTable extends Migration
      */
     public function up()
     {
+        // check for already existing user id column type before relating it via bigInteger or integer
+        // old laravel apps used integer for increments.
+
+        $versionString = App::version();
+        $version = strpos($versionString, "Components") > 0 ? substr($versionString, 7, 1) : $versionString;
+        $userModel = is_array(config('ifrs.user_model')) ? config('ifrs.user_model')[intval($version)] : config('ifrs.user_model');
+        $type = Schema::getColumnType((new $userModel())->getTable(),'id');
+
         Schema::create(
             config('ifrs.table_prefix').'recycled_objects',
-            function (Blueprint $table) {
+            function (Blueprint $table) use($type) {
                 $table->bigIncrements('id');
 
                 // relationships
                 $table->unsignedBigInteger('entity_id');
-                $table->unsignedBigInteger('user_id');
+                if($type == "integer"){
+                    $table->unsignedInteger('user_id');
+                }else{
+                    $table->unsignedBigInteger('user_id');
+                }
 
                 // constraints
                 $versionString = App::version();
