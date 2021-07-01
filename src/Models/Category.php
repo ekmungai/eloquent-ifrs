@@ -14,7 +14,6 @@ use Carbon\Carbon;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Auth;
 
 use IFRS\Interfaces\Recyclable;
 use IFRS\Interfaces\Segregatable;
@@ -105,7 +104,7 @@ class Category extends Model implements Segregatable, Recyclable
     {
         $balances = ["total" => 0, "accounts" => []];
 
-        $reportingCurrency = Auth::user()->entity->currency_id;
+        $reportingCurrency = $this->entity->currency_id;
 
         $periodStart = ReportingPeriod::periodStart($endDate);
         $year = ReportingPeriod::year($endDate);

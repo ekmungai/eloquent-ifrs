@@ -13,9 +13,9 @@ namespace IFRS\Models;
 use Carbon\Carbon;
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 use IFRS\Interfaces\Recyclable;
 use IFRS\Interfaces\Segregatable;
@@ -190,7 +190,7 @@ class Account extends Model implements Recyclable, Segregatable
         $balances = ['debit' => 0, 'credit' => 0];
 
         foreach (Account::all() as $account) {
-            $account->openingBalance = $account->openingBalance($year)[Auth::user()->entity->currency_id];
+            $account->openingBalance = $account->openingBalance($year)[$account->entity->currency_id];
             if ($account->openingBalance != 0) {
                 $accounts->push($account);
             }
@@ -228,7 +228,7 @@ class Account extends Model implements Recyclable, Segregatable
 
         foreach (Account::whereIn('account_type', $accountTypes)->get() as $account) {
             
-            $reportingCurrencyId = Auth::user()->entity->currency_id;
+            $reportingCurrencyId = $account->entity->currency_id;
 
             $account->openingBalance = $account->openingBalance($year)[$reportingCurrencyId] + $account->currentBalance($periodStart, $startDate)[$reportingCurrencyId];
             $account->balanceMovement = $account->currentBalance($startDate, $endDate)[$reportingCurrencyId];
@@ -264,6 +264,7 @@ class Account extends Model implements Recyclable, Segregatable
 
         return $balances;
     }
+    
 
     /**
      * Instance Type.
@@ -335,7 +336,7 @@ class Account extends Model implements Recyclable, Segregatable
     public function isClosed(int $year = null): bool
     {
         if(is_null($year)){
-            $year = Auth::user()->entity->current_reporting_period->calendar_year;
+            $year = $this->entity->current_reporting_period->calendar_year;
         }   
         return $this->closingTransactionsQuery($year)->count() > 0;
     }
@@ -349,7 +350,7 @@ class Account extends Model implements Recyclable, Segregatable
     public function closingTransactions(int $year = null): array
     {
         if(is_null($year)){
-            $year = Auth::user()->entity->current_reporting_period->calendar_year;
+            $year = $this->entity->current_reporting_period->calendar_year;
         }  
         return $this->processTransactions($this->closingTransactionsQuery($year));
     }
@@ -364,7 +365,7 @@ class Account extends Model implements Recyclable, Segregatable
      */
     public function openingBalance(int $year = null, int $currencyId = null): array
     {
-        $entity = Auth::user()->entity;
+        $entity = $this->entity;
         
         $balances = [$entity->currency_id => 0];
 
@@ -504,7 +505,7 @@ class Account extends Model implements Recyclable, Segregatable
      */
     public function save(array $options = []): bool
     {
-        if (!isset($this->currency_id) && Auth::user()->entity) {
+        if (!isset($this->currency_id)) {
             $this->currency_id = Auth::user()->entity->currency_id;
         }
 
@@ -537,6 +538,7 @@ class Account extends Model implements Recyclable, Segregatable
         if(!is_null($this->entity_id)){
             $query->withoutGlobalScopes()->where('entity_id', $this->entity_id);
         }
+
         return config('ifrs')['account_codes'][$this->account_type] + $query->count() + 1;
     }
 
@@ -545,7 +547,7 @@ class Account extends Model implements Recyclable, Segregatable
      */
     public function delete(): bool
     {
-        if ($this->closingBalance()[Auth::user()->entity->currency_id] != 0) {
+        if ($this->closingBalance()[$this->entity->currency_id] != 0) {
             throw new HangingTransactions();
         }
 

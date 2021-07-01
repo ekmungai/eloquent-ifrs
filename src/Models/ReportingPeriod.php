@@ -255,7 +255,7 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
      */
     public function transactionCurrencies($accountId = null)
     {
-        $reportingCurrency = Auth::user()->entity->currency_id;
+        $reportingCurrency = $this->entity->currency_id;
         $transactionTable = config('ifrs.table_prefix') . 'transactions';
         $currenciesTable = config('ifrs.table_prefix') . 'currencies';
         $query = DB::table($transactionTable)
@@ -350,7 +350,7 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
             $rates[$currency->currency_id] = $closingRate->get()->first()->exchangerate->rate;
         }
         
-        $reportingCurrency = Auth::user()->entity->currency_id;
+        $reportingCurrency = $this->entity->currency_id;
         $periodEnd = ReportingPeriod::periodEnd($this->calendar_year.'01-01');
 
         $accounts = Account::whereNotIn('currency_id', [$reportingCurrency]);

@@ -232,6 +232,8 @@ class AccountBalanceTest extends TestCase
         $entity->mid_year_balances = false;
         $entity->save();
 
+        $balance->load('entity');
+        
         $this->expectException(InvalidBalanceDate::class);
         $this->expectExceptionMessage('Transaction date must be earlier than the first day of the Balance\'s Reporting Period ');
 

@@ -2,13 +2,14 @@
 
 namespace Tests\Unit;
 
+use Illuminate\Support\Facades\Auth;
+
 use IFRS\User;
 use IFRS\Tests\TestCase;
 
 use IFRS\Models\Account;
 use IFRS\Models\Currency;
 use IFRS\Models\RecycledObject;
-use Illuminate\Support\Facades\Auth;
 
 class RecycledObjectTest extends TestCase
 {

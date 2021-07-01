@@ -3,9 +3,12 @@
 namespace Tests\Unit;
 
 use Carbon\Carbon;
-use IFRS\User;
 
 use Illuminate\Support\Facades\DB;
+
+use IFRS\User;
+
+use IFRS\Tests\TestCase;
 
 use IFRS\Exceptions\AdjustingReportingPeriod;
 use IFRS\Exceptions\ClosedReportingPeriod;
@@ -28,7 +31,6 @@ use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Transaction;
 use IFRS\Models\Vat;
 
-use IFRS\Tests\TestCase;
 use IFRS\Transactions\ClientInvoice;
 use IFRS\Transactions\JournalEntry;
 

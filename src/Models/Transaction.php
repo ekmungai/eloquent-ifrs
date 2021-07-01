@@ -120,7 +120,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         $entity = Auth::user()->entity;
         $this->table = config('ifrs.table_prefix') . 'transactions';
 
-        if (!isset($attributes['exchange_rate_id']) && !is_null($entity)) {
+        if (!isset($attributes['exchange_rate_id'])) {
             $attributes['exchange_rate_id'] = $entity->default_rate->id;
         }
         $attributes['transaction_date'] = !isset($attributes['transaction_date']) ? Carbon::now() : Carbon::parse($attributes['transaction_date']);

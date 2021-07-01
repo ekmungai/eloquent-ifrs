@@ -157,7 +157,7 @@ class Entity extends Model implements Recyclable
         }
 
         $new = new ExchangeRate([
-            'valid_from' => Carbon::now(),
+            'valid_from' => $now,
             'currency_id' => $this->reportingCurrency->id,
             "rate" => 1
         ]);

@@ -12,7 +12,6 @@ namespace IFRS\Models;
 
 use Carbon\Carbon;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -167,7 +166,7 @@ class Ledger extends Model implements Segregatable
 
         // identical double entry data
         $post->transaction_id = $folio->transaction_id = $transaction->id;
-        $post->currency_id = $folio->currency_id = Auth::user()->entity->reporting_currency->id;
+        $post->currency_id = $folio->currency_id = $assignment->transaction->entity->reporting_currency->id;
         $post->posting_date = $folio->posting_date = $assignment->assignment_date;
         $post->amount = $folio->amount = abs($rateDifference) * $assignment->amount;
 
@@ -325,7 +324,7 @@ class Ledger extends Model implements Segregatable
     public static function balance(Account $account, Carbon $startDate, Carbon $endDate, int $currencyId = null): array
     {
         $ledger = new Ledger();
-        $entity = Auth::user()->entity;
+        $entity = $account->entity;
         
         $balances = [$entity->currency_id => 0];
 

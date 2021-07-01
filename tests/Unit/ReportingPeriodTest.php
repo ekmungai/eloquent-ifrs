@@ -2,13 +2,15 @@
 
 namespace Tests\Unit;
 
+
+use Illuminate\Support\Facades\Auth;
+
 use IFRS\Tests\TestCase;
 
 use Carbon\Carbon;
 use IFRS\Exceptions\InvalidAccountType;
 use IFRS\Exceptions\InvalidPeriodStatus;
 use IFRS\Exceptions\MissingClosingRate;
-use Illuminate\Support\Facades\Auth;
 
 use IFRS\Models\RecycledObject;
 use IFRS\Models\ReportingPeriod;
@@ -21,8 +23,8 @@ use IFRS\Models\ClosingRate;
 use IFRS\Models\Currency;
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\LineItem;
-use IFRS\Models\Transaction;
 use IFRS\Models\Vat;
+
 use IFRS\Transactions\ClientInvoice;
 use IFRS\Transactions\ClientReceipt;
 use IFRS\Transactions\SupplierBill;

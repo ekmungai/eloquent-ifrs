@@ -51,10 +51,10 @@ trait Segregating
     /**
      * Model's Parent Entity.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function entity()
     {
-        return $this->hasOne(Entity::class);
+        return $this->BelongsTo(Entity::class);
     }
 }
