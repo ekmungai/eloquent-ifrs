@@ -33,7 +33,7 @@
 		"fzaninotto/faker" : "^1.4",
 		"mockery/mockery" : "^1.0",
 		"nunomaduro/collision" : "^5.0",
-		"nunomaduro/larastan" : "^0.5.0",
+		"nunomaduro/larastan" : "^0.5.0 || ^0.7.0",
 		"phpmd/phpmd" : "^2.8",
 		"phpunit/phpunit" : "9.4.3",
 		"squizlabs/php_codesniffer" : "*",
