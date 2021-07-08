@@ -213,13 +213,11 @@ class Entity extends Model implements Recyclable
      * @return string
      */
     public function localizeAmount(float $amount, string $currencyCode = null, $locale = null){
-        $entity = Auth::user()->entity;
-        
         if(is_null($locale)){
-            $locale = $entity->locale;
+            $locale = $this->locale;
         }
         if(is_null($currencyCode)){
-            $currencyCode = $entity->reportingCurrency->currency_code;
+            $currencyCode = $this->reportingCurrency->currency_code;
         }
 
         $format = \NumberFormatter::create($locale, \NumberFormatter::CURRENCY );
