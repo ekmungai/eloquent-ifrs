@@ -265,8 +265,10 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
      */
     public function save(array $options = []): bool
     {
-        if(Auth::user()){
-            $entity  = Auth::user()->entity;
+        if(is_null($this->entity_id)){
+            $entity = Auth::user()->entity;
+        }else{
+            $entity = Entity::where('id', '=', $this->entity_id)->first();
         }
 
         if (!is_null($entity)) {
@@ -301,7 +303,7 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
             throw new InvalidCurrency("Balance", $this->account->account_type);
         }
 
-        if (ReportingPeriod::periodStart(null)->lt($this->transaction_date) && !$entity->mid_year_balances) {
+        if (ReportingPeriod::periodStart(null,$entity)->lt($this->transaction_date) && !$entity->mid_year_balances) {
             throw new InvalidBalanceDate();
         }
 
