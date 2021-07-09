@@ -272,7 +272,7 @@ class Assignment extends Model implements Segregatable
 
         // Realize Forex differences
         if(!bccomp($transactionRate, $clearedRate, config('ifrs.forex_scale'))==0){
-            Ledger::postForex($this, $transactionRate, $clearedRate, $entity);
+            Ledger::postForex($this, $transactionRate, $clearedRate);
         }
         return parent::save();
     }
