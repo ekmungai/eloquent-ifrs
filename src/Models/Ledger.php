@@ -61,11 +61,17 @@ class Ledger extends Model implements Segregatable
      */
     private static function postVat(LineItem $lineItem, Transaction $transaction): void
     {
+        //get entity from transaction object
+        $entity = $transaction->entity;
+
         $amount = $lineItem->vat_inclusive ?  $lineItem->amount - ($lineItem->amount / (1 + ($lineItem->vat->rate / 100))) : $lineItem->amount * $lineItem->vat->rate / 100;
         $rate = $transaction->exchangeRate->rate;
 
         $post = new Ledger();
         $folio = new Ledger();
+
+        $post->entity_id = $entity->id;
+        $folio->entity_id = $entity->id;
 
         if ($transaction->is_credited) {
             $post->entry_type = Balance::CREDIT;
@@ -102,11 +108,17 @@ class Ledger extends Model implements Segregatable
         //Remove current ledgers if any prior to creating new ones (prevents bypassing Posted Transaction Exception)
         $transaction->ledgers()->delete();
 
+        //get entity from transaction object
+        $entity = $transaction->entity;
+
         foreach ($transaction->getLineItems() as $lineItem) {
             $rate = $transaction->exchangeRate->rate;
             
             $post = new Ledger();
             $folio = new Ledger();
+
+            $post->entity_id = $entity->id;
+            $folio->entity_id = $entity->id;
 
             if ($transaction->is_credited) {
                 $post->entry_type = Balance::CREDIT;
@@ -153,8 +165,14 @@ class Ledger extends Model implements Segregatable
         $rateDifference = round($transactionRate - $clearedRate, config('ifrs.forex_scale'));
         $transaction = $assignment->transaction;
 
+        //get entity from transaction object
+        $entity = $transaction->entity;
+
         $post = new Ledger();
         $folio = new Ledger();
+
+        $post->entity_id = $entity->id;
+        $folio->entity_id = $entity->id;
         
         if ($transaction->is_credited && $rateDifference < 0 || !$transaction->is_credited && $rateDifference > 0) {
             $post->entry_type = Balance::CREDIT;

@@ -184,13 +184,17 @@ class Account extends Model implements Recyclable, Segregatable
      *
      * @return array
      */
-    public static function openingBalances(int $year)
+    public static function openingBalances(int $year, Entity $entity = null)
     {
+        if(is_null($entity)){
+            $entity = Auth::user()->entity;
+        }
+
         $accounts = collect([]);
         $balances = ['debit' => 0, 'credit' => 0];
 
-        foreach (Account::all() as $account) {
-            $account->openingBalance = $account->openingBalance($year)[$account->entity->currency_id];
+        foreach (Account::where('entity_id','=',$entity->id)->get() as $account) {
+            $account->openingBalance = $account->openingBalance($year, null, $entity)[$account->entity->currency_id];
             if ($account->openingBalance != 0) {
                 $accounts->push($account);
             }
@@ -216,17 +220,23 @@ class Account extends Model implements Recyclable, Segregatable
         array $accountTypes,
         $startDate = null,
         $endDate = null,
-        $fullBalance = true
+        $fullBalance = true,
+        Entity $entity = null
     ): array {
+
+        if(is_null($entity)){
+            $entity = Auth::user()->entity;
+        }
+
         $balances = ['sectionOpeningBalance' => 0, 'sectionClosingBalance' => 0, 'sectionMovement' => 0, 'sectionCategories' => []];
 
-        $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate) : Carbon::parse($startDate);
+        $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate, $entity) : Carbon::parse($startDate);
         $endDate = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
-        $periodStart = ReportingPeriod::periodStart($endDate);
+        $periodStart = ReportingPeriod::periodStart($endDate, $entity);
 
-        $year = ReportingPeriod::year($endDate);
+        $year = ReportingPeriod::year($endDate, $entity);
 
-        foreach (Account::whereIn('account_type', $accountTypes)->get() as $account) {
+        foreach (Account::whereIn('account_type', $accountTypes)->where('entity_id','=',$entity->id)->get() as $account) {
             
             $reportingCurrencyId = $account->entity->currency_id;
 
@@ -370,17 +380,17 @@ class Account extends Model implements Recyclable, Segregatable
         $balances = [$entity->currency_id => 0];
 
         if (!is_null($year)) {
-            $period = ReportingPeriod::getPeriod($year."-01-01");
+            $period = ReportingPeriod::getPeriod($year."-01-01", $entity);
         } else {
             $period = $entity->current_reporting_period;
         }
 
-        $openingBalances = $this->balances->filter(function ($balance, $key) use ($period) {
+        $openingBalances = $this->balances->where('entity_id','=',$entity->id)->filter(function ($balance, $key) use ($period) {
             return $balance->reporting_period_id == $period->id;
         });
 
         if (!is_null($currencyId)) {
-            $openingBalances = $this->balances->filter(function ($balance, $key) use ($currencyId) {
+            $openingBalances = $this->balances->where('entity_id','=',$entity->id)->filter(function ($balance, $key) use ($currencyId) {
                 return $balance->currency_id == $currencyId;
             });
             $balances[$currencyId] = 0;
@@ -411,7 +421,9 @@ class Account extends Model implements Recyclable, Segregatable
      */
     public function currentBalance(Carbon $startDate = null, Carbon $endDate = null, int $currencyId = null): array
     {
-        $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate) : $startDate;
+        $entity = $this->entity;
+
+        $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate, $entity) : $startDate;
         $endDate = is_null($endDate) ? Carbon::now() : $endDate;
         return Ledger::balance($this, $startDate, $endDate, $currencyId);
     }
@@ -426,9 +438,11 @@ class Account extends Model implements Recyclable, Segregatable
      */
     public function closingBalance(string $endDate = null, int $currencyId = null): array
     {
-        $endDate = is_null($endDate) ? ReportingPeriod::periodEnd() : Carbon::parse($endDate);
-        $startDate = ReportingPeriod::periodStart($endDate);
-        $year = ReportingPeriod::year($endDate);
+        $entity = $this->entity;
+
+        $endDate = is_null($endDate) ? ReportingPeriod::periodEnd(null, $entity) : Carbon::parse($endDate);
+        $startDate = ReportingPeriod::periodStart($endDate, $entity);
+        $year = ReportingPeriod::year($endDate, $entity);
         $balances =  $this->openingBalance($year, $currencyId);
         $transactions = $this->currentBalance($startDate, $endDate, $currencyId);
         foreach(array_keys($balances) as $currency){
@@ -494,7 +508,7 @@ class Account extends Model implements Recyclable, Segregatable
     public function getTransactions(string $startDate = null, string $endDate = null): array
     {
 
-        $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate) : Carbon::parse($startDate);
+        $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate, $this->entity) : Carbon::parse($startDate);
         $endDate = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
 
         return $this->processTransactions($this->transactionsQuery($startDate, $endDate));
@@ -505,8 +519,15 @@ class Account extends Model implements Recyclable, Segregatable
      */
     public function save(array $options = []): bool
     {
+
+        if(Auth::user()){
+            $entity = Auth::user()->entity;
+        }else{
+            $entity = Entity::where('id','=',$this->entity_id)->first();
+        }
+
         if (!isset($this->currency_id)) {
-            $this->currency_id = Auth::user()->entity->currency_id;
+            $this->currency_id = $entity->currency_id;
         }
 
         if (is_null($this->account_type)) {
@@ -532,6 +553,11 @@ class Account extends Model implements Recyclable, Segregatable
      */
     private function getAccountCode(): int
     {
+
+        if (!isset($this->currency_id) && $this->entity) {
+            $this->currency_id = $this->entity->currency_id;
+        }
+
         $query = Account::withTrashed()
         ->where('account_type', $this->account_type);
 

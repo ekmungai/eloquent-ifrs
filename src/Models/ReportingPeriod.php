@@ -106,18 +106,22 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
             $credited = false;
         }
 
+        $entity = $account->entity;
+
         $balanceTransaction = JournalEntry::create([
             "account_id" => $account->id,
             "transaction_date" => $closingDate,
             "narration" => $currency->currency_code . " ". $this->calendar_year . " Forex Balance Translation",
             "reference" => $currency->currency_code,
-            "credited" => $credited
+            "credited" => $credited,
+            "entity_id" => $entity->id
         ]);
 
         $balanceTransaction->addLineItem(LineItem::create([
             'vat_id' => $vatId,
             'account_id' => $forexAccountId,
             'amount' => abs($difference),
+            'entity_id' => $entity->id
         ]));
 
         $balanceTransaction->save();
@@ -125,7 +129,8 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
         ClosingTransaction::create([
             "reporting_period_id" => $this->id,
             "transaction_id" => $balanceTransaction->id,
-            "currency_id" => $currency->currency_id
+            "currency_id" => $currency->currency_id,
+            "entity_id" => $entity->id
         ]);
         return $balanceTransaction;
     }
@@ -158,13 +163,18 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
      * @param string|Carbon $date
      * @return ReportingPeriod
      */
-    public static function getPeriod($date = null)
+    public static function getPeriod($date = null, Entity $entity = null)
     {
-        $year = ReportingPeriod::year($date);
+        if(is_null($entity)){
+            $entity = Auth::user()->entity;
+        }
+
+        $year = ReportingPeriod::year($date, $entity);
         
-        $period = ReportingPeriod::where("calendar_year", $year)->first();
+        $period = ReportingPeriod::where("calendar_year", $year)
+            ->where('entity_id', '=', $entity->id)->first();
         if (is_null($period)) {
-            throw new MissingReportingPeriod(Auth::user()->entity->name, $year);
+            throw new MissingReportingPeriod($entity->name, $year);
         }
         return $period;
     }
@@ -176,16 +186,20 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
      *
      * @return int
      */
-    public static function year($date = null)
+    public static function year($date = null, Entity $entity = null)
     {
-        if (is_null(Auth::user()->entity)) {
+        if(is_null($entity)){
+            $entity = Auth::user()->entity;
+        }
+
+        if (is_null($entity)) {
             return date("Y");
         }
 
         $year = is_null($date) ? date("Y") : date("Y", strtotime($date));
         $month = is_null($date) ? date("m") : date("m", strtotime($date));
 
-        $year  = intval($month) < Auth::user()->entity->year_start ? intval($year) - 1 : $year;
+        $year  = intval($month) < $entity->year_start ? intval($year) - 1 : $year;
 
         return intval($year);
     }
@@ -195,11 +209,14 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
      *
      * @return Carbon $date
      */
-    public static function periodStart($date = null)
+    public static function periodStart($date = null, Entity $entity = null)
     {
-        return is_null(Auth::user()->entity) ? Carbon::parse(date("Y")."-01-01")->startOfDay() : Carbon::create(
-            ReportingPeriod::year($date),
-            Auth::user()->entity->year_start,
+        if(is_null($entity)){
+            $entity = Auth::user()->entity;
+        }
+        return is_null($entity) ? Carbon::parse(date("Y")."-01-01")->startOfDay() : Carbon::create(
+            ReportingPeriod::year($date, $entity),
+            $entity->year_start,
             1
         )->startOfDay();
     }
@@ -209,9 +226,9 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
      *
      * @return Carbon
      */
-    public static function periodEnd($date = null)
+    public static function periodEnd($date = null, Entity $entity = null)
     {
-        return ReportingPeriod::periodStart($date)
+        return ReportingPeriod::periodStart($date, $entity)
             ->addYear()
             ->subDay();
     }
@@ -351,13 +368,13 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
         }
         
         $reportingCurrency = $this->entity->currency_id;
-        $periodEnd = ReportingPeriod::periodEnd($this->calendar_year.'01-01');
+        $periodEnd = ReportingPeriod::periodEnd($this->calendar_year.'01-01', $this->entity);
 
         $accounts = Account::whereNotIn('currency_id', [$reportingCurrency]);
         if(!is_null($accountId)){
             $accounts->where('id', $accountId);
         }
-        foreach ($accounts->get() as $account){
+        foreach ($accounts->where('entity_id','=',$this->entity->id)->get() as $account){
             if(!$account->isClosed($this->calendar_year)){
                 $balances = $account->closingBalance($periodEnd);
                 if(array_sum($balances) <> 0 ){

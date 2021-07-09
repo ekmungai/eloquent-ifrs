@@ -171,9 +171,12 @@ abstract class FinancialStatement
      *
      * @param ReportingPeriod $period
      */
-    public function __construct(ReportingPeriod $period = null)
+    public function __construct(ReportingPeriod $period = null, Entity $entity = null)
     {
-        $this->entity = Auth::user()->entity;
+        $this->entity = $entity;
+        if(is_null($entity)){
+            $this->entity = Auth::user()->entity;
+        }
         $this->reportingPeriod = is_null($period) ? $this->entity->currentReportingPeriod : $period;
 
         $this->statement = "";
@@ -206,7 +209,7 @@ abstract class FinancialStatement
     {
         foreach (array_keys($this->accounts) as $section) {
             foreach (config('ifrs')[$section] as $accountType) {
-                $sectionBalances = Account::sectionBalances([$accountType], $startDate, $endDate, $fullbalance);
+                $sectionBalances = Account::sectionBalances([$accountType], $startDate, $endDate, $fullbalance,$this->entity);
 
                 if ($sectionBalances["sectionClosingBalance"] <> 0) {
 

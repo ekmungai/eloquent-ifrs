@@ -117,12 +117,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
      */
     public function __construct($attributes = [])
     {
-        $entity = Auth::user()->entity;
         $this->table = config('ifrs.table_prefix') . 'transactions';
-
-        if (!isset($attributes['exchange_rate_id'])) {
-            $attributes['exchange_rate_id'] = $entity->default_rate->id;
-        }
         $attributes['transaction_date'] = !isset($attributes['transaction_date']) ? Carbon::now() : Carbon::parse($attributes['transaction_date']);
 
         return parent::__construct($attributes);
@@ -264,14 +259,19 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
      *
      * @return string
      */
-    public static function transactionNo(string $type, Carbon $transaction_date = null)
+    public static function transactionNo(string $type, Carbon $transaction_date = null, Entity $entity = null)
     {
-        $period_count = ReportingPeriod::getPeriod($transaction_date)->period_count;
-        $period_start = ReportingPeriod::periodStart($transaction_date);
+        if(is_null($entity)){
+            $entity = Auth::user()->entity;
+        }
+
+        $period_count = ReportingPeriod::getPeriod($transaction_date, $entity)->period_count;
+        $period_start = ReportingPeriod::periodStart($transaction_date, $entity);
 
         $next_id =  Transaction::withTrashed()
             ->where("transaction_type", $type)
             ->where("transaction_date", ">=", $period_start)
+            ->where("entity_id",'=',$entity->id)
             ->count() + 1;
 
         return $type . str_pad((string) $period_count, 2, "0", STR_PAD_LEFT)
@@ -609,13 +609,29 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
      */
     public function save(array $options = []): bool
     {
+
+
+        if(is_null($this->entity_id)){
+            $entity = Auth::user()->entity;
+        }else{
+            $entity = $this->entity;
+        }
+
+
+        if(!isset($this->exchange_rate_id) && !is_null($entity)){
+            $this->exchange_rate_id = $entity->default_rate->id;
+        }
+
         if(isset($this->exchange_rate_id) && !isset($this->currency_id)){
             $this->currency_id = $this->exchangeRate->currency_id;
         }
 
-        $period = ReportingPeriod::getPeriod(Carbon::parse($this->transaction_date));
+        $this->transaction_date = !isset($this->transaction_date) ? Carbon::now() : Carbon::parse($this->transaction_date);
 
-        if (ReportingPeriod::periodStart($this->transaction_date)->eq(Carbon::parse($this->transaction_date))) {
+
+        $period = ReportingPeriod::getPeriod(Carbon::parse($this->transaction_date), $entity);
+
+        if (ReportingPeriod::periodStart($this->transaction_date, $entity)->eq(Carbon::parse($this->transaction_date))) {
             throw new InvalidTransactionDate();
         }
 
@@ -629,7 +645,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         
         if (in_array($this->account->account_type, config('ifrs.single_currency')) && 
             $this->account->currency_id != $this->currency_id && 
-            $this->currency_id != Auth::user()->entity->currency_id) {
+            $this->currency_id != $entity->currency_id) {
             throw new InvalidCurrency("Transaction", $this->account->account_type);
         }
 
@@ -640,7 +656,8 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         if (is_null($this->transaction_no)) {
             $this->transaction_no = Transaction::transactionNo(
                 $this->transaction_type,
-                Carbon::parse($this->transaction_date)
+                Carbon::parse($this->transaction_date),
+                $entity
             );
         }
 

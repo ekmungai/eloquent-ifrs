@@ -99,7 +99,9 @@ class AccountSchedule extends AccountStatement
      */
     public function getTransactions(): array
     {
-        $periodId = ReportingPeriod::getPeriod($this->period['endDate'])->id;
+        $entity = $this->account->entity;
+
+        $periodId = ReportingPeriod::getPeriod($this->period['endDate'], $entity)->id;
         $currencyId = $this->currencyId;
 
         // Opening Balances

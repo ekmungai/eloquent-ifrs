@@ -12,6 +12,7 @@ namespace IFRS\Reports;
 
 use Carbon\Carbon;
 use IFRS\Models\Account;
+use IFRS\Models\Entity;
 use IFRS\Models\ReportingPeriod;
 use Illuminate\Support\Facades\Auth;
 
@@ -29,12 +30,16 @@ class TrialBalance extends FinancialStatement
      *
      * @param string $year
      */
-    public function __construct(string $year = null)
+    public function __construct(string $year = null, Entity $entity = null)
     {
+        if(is_null($entity)){
+            $entity = Auth::user()->entity;
+        }
+
         $startDate = $year."-01-01";
-        $period = ReportingPeriod::getPeriod(Carbon::parse($startDate));
+        $period = ReportingPeriod::getPeriod(Carbon::parse($startDate), $entity);
         
-        parent::__construct($period);
+        parent::__construct($period, $entity);
         
         $this->endDate = ReportingPeriod::periodEnd($startDate);
 

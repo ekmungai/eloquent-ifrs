@@ -109,9 +109,9 @@ class AccountStatement
             $this->account = Account::find($accountId);
         }
 
-        $this->entity = Auth::user()->entity;
+        $this->entity = $this->account->entity;
 
-        $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart() : Carbon::parse($startDate);
+        $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart(null, $this->entity) : Carbon::parse($startDate);
         $this->period['endDate'] = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
         $this->currency = is_null($currencyId) ? $this->entity->currency : Currency::find($currencyId);
         $this->currencyId = $currencyId;
@@ -122,9 +122,11 @@ class AccountStatement
      */
     public function getTransactions(): array
     {
+        $entity = $this->account->entity;
+
         $query = $this->account->transactionsQuery($this->period['startDate'], $this->period['endDate'], $this->currencyId);
 
-        $this->balances['opening'] = $this->account->openingBalance(ReportingPeriod::year($this->period['startDate']), $this->currencyId)[$this->currency->id];
+        $this->balances['opening'] = $this->account->openingBalance(ReportingPeriod::year($this->period['startDate'], $entity), $this->currencyId)[$this->currency->id];
         $this->balances['closing'] += $this->balances['opening'];
 
         $balance = $this->balances['opening'];

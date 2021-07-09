@@ -260,6 +260,8 @@ class Assignment extends Model implements Segregatable
      */
     public function save(array $options = []): bool
     {
+        $entity = $this->entity;
+
         $transactionType = $this->transaction->transaction_type;
         $clearedType = $this->cleared->transaction_type;
 
@@ -270,7 +272,7 @@ class Assignment extends Model implements Segregatable
 
         // Realize Forex differences
         if(!bccomp($transactionRate, $clearedRate, config('ifrs.forex_scale'))==0){
-            Ledger::postForex($this, $transactionRate, $clearedRate);
+            Ledger::postForex($this, $transactionRate, $clearedRate, $entity);
         }
         return parent::save();
     }

@@ -104,10 +104,12 @@ class Category extends Model implements Segregatable, Recyclable
     {
         $balances = ["total" => 0, "accounts" => []];
 
-        $reportingCurrency = $this->entity->currency_id;
+        $entity = $this->entity;
 
-        $periodStart = ReportingPeriod::periodStart($endDate);
-        $year = ReportingPeriod::year($endDate);
+        $reportingCurrency = $entity->currency_id;
+
+        $periodStart = ReportingPeriod::periodStart($endDate, $entity);
+        $year = ReportingPeriod::year($endDate, $entity);
 
         foreach ($this->accounts as $account) {
 
