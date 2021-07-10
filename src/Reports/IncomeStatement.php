@@ -72,8 +72,12 @@ class IncomeStatement extends FinancialStatement
      * @param int month
      * @param int year
      */
-    private static function getBalance( array $accountTypes, Carbon $startDate, Carbon $endDate) : float
+    private static function  getBalance( array $accountTypes, Carbon $startDate, Carbon $endDate, Entity $entity = null) : float
     {
+        if(is_null($entity)){
+            $entity = Auth::user()->entity;
+        }
+
         $accountTable = config('ifrs.table_prefix') . 'accounts';
         $ledgerTable = config('ifrs.table_prefix') . 'ledgers';
 
@@ -83,7 +87,7 @@ class IncomeStatement extends FinancialStatement
             ->leftJoin($ledgerTable, $accountTable . '.id', '=', $ledgerTable . '.post_account')
             ->whereIn('account_type', $accountTypes)
             ->where($ledgerTable . '.deleted_at', null)
-            ->where($accountTable . '.entity_id', Auth::user()->entity_id)
+            ->where($accountTable . '.entity_id', $entity->id)
             ->where($ledgerTable . '.posting_date', '>=', $startDate)
             ->where($ledgerTable . '.posting_date', '<=', $endDate->endOfDay());
             
@@ -107,18 +111,22 @@ class IncomeStatement extends FinancialStatement
      * @param int|string year
      * @return array
      */
-    public static function getResults($month, $year)
-    {  
+    public static function getResults($month, $year, Entity $entity = null)
+    {
+        if(is_null($entity)){
+            $entity = Auth::user()->entity;
+        }
+
         $startDate = Carbon::parse($year.'-'.$month.'-01')->startOfDay();
         $endDate = Carbon::parse($year.'-'.$month.'-01')->endOfMonth();
         
-        $revenues = self::getBalance(config('ifrs')[self::OPERATING_REVENUES], $startDate, $endDate);
+        $revenues = self::getBalance(config('ifrs')[self::OPERATING_REVENUES], $startDate, $endDate, $entity);
 
-        $otherRevenues = self::getBalance(config('ifrs')[self::NON_OPERATING_REVENUES], $startDate, $endDate);
+        $otherRevenues = self::getBalance(config('ifrs')[self::NON_OPERATING_REVENUES], $startDate, $endDate, $entity);
 
-        $cogs = self::getBalance(config('ifrs')[self::OPERATING_EXPENSES], $startDate, $endDate);
+        $cogs = self::getBalance(config('ifrs')[self::OPERATING_EXPENSES], $startDate, $endDate, $entity);
 
-        $expenses = self::getBalance(config('ifrs')[self::NON_OPERATING_EXPENSES], $startDate, $endDate);
+        $expenses = self::getBalance(config('ifrs')[self::NON_OPERATING_EXPENSES], $startDate, $endDate, $entity);
         
         return [
             self::OPERATING_REVENUES => abs($revenues),
