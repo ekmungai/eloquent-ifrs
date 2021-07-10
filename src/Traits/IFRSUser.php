@@ -31,6 +31,6 @@ trait IFRSUser
      */
     public function attributes()
     {
-        return (object) $this->attributes;
+        return (object)$this->attributes;
     }
 }

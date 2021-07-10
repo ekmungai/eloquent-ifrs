@@ -10,11 +10,10 @@
 
 namespace IFRS\Traits;
 
+use IFRS\Exceptions\LineItemAccount;
+use IFRS\Exceptions\MainAccount;
 use IFRS\Models\Account;
 use IFRS\Models\LineItem;
-
-use IFRS\Exceptions\MainAccount;
-use IFRS\Exceptions\LineItemAccount;
 
 trait Buying
 {

@@ -3,22 +3,17 @@
 namespace Tests\Unit;
 
 use Carbon\Carbon;
-
-use Illuminate\Support\Facades\Auth;
-
-use IFRS\Tests\TestCase;
-
+use IFRS\Exceptions\LineItemAccount;
+use IFRS\Exceptions\MainAccount;
 use IFRS\Models\Account;
 use IFRS\Models\Balance;
 use IFRS\Models\Currency;
-use IFRS\Models\LineItem;
 use IFRS\Models\Ledger;
-
-use IFRS\Transactions\CashSale;
-
-use IFRS\Exceptions\LineItemAccount;
-use IFRS\Exceptions\MainAccount;
+use IFRS\Models\LineItem;
 use IFRS\Models\Vat;
+use IFRS\Tests\TestCase;
+use IFRS\Transactions\CashSale;
+use Illuminate\Support\Facades\Auth;
 
 class CashSaleTest extends TestCase
 {

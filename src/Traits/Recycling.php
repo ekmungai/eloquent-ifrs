@@ -11,10 +11,8 @@
 namespace IFRS\Traits;
 
 use Carbon\Carbon;
-
-use Illuminate\Support\Facades\Auth;
-
 use IFRS\Models\RecycledObject;
+use Illuminate\Support\Facades\Auth;
 
 trait Recycling
 {

@@ -17,7 +17,7 @@ class MissingReportingCurrency extends IFRSException
      *
      * @param string $entity
      * @param string $message
-     * @param int    $code
+     * @param int $code
      */
     public function __construct(string $entity, string $message = null, int $code = null)
     {

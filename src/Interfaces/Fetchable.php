@@ -11,11 +11,9 @@
 namespace IFRS\Interfaces;
 
 use Carbon\Carbon;
-
-use Illuminate\Support\Collection;
-
 use IFRS\Models\Account;
 use IFRS\Models\Currency;
+use Illuminate\Support\Collection;
 
 /**
  *

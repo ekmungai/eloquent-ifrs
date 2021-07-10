@@ -11,14 +11,12 @@
 namespace IFRS\Transactions;
 
 use IFRS\Interfaces\Buys;
-use IFRS\Interfaces\Fetchable;
 use IFRS\Interfaces\Clearable;
-
-use IFRS\Traits\Buying;
-use IFRS\Traits\Fetching;
-use IFRS\Traits\Clearing;
-
+use IFRS\Interfaces\Fetchable;
 use IFRS\Models\Transaction;
+use IFRS\Traits\Buying;
+use IFRS\Traits\Clearing;
+use IFRS\Traits\Fetching;
 
 class SupplierBill extends Transaction implements Buys, Fetchable, Clearable
 {

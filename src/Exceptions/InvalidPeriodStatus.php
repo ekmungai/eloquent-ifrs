@@ -18,12 +18,12 @@ class InvalidPeriodStatus extends IFRSException
      * Invalid Period Status Exception
      *
      * @param string $message
-     * @param int    $code
+     * @param int $code
      */
     public function __construct(string $message = null, int $code = null)
     {
         $error = "Reporting Period must have " . config('ifrs')['reporting_period_status'][ReportingPeriod::ADJUSTING] . " status to translate foreign balances";
-        
+
         parent::__construct($error . $message, $code);
     }
 }

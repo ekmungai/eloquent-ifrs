@@ -20,13 +20,13 @@ class InvalidCurrency extends IFRSException
      * @param string $changeType
      * @param string $accountType
      * @param string $message
-     * @param int    $code
+     * @param int $code
      */
     public function __construct(string $changeType, string $accountType, string $message = null, int $code = null)
     {
         $accountType = Account::getType($accountType);
-        $error = $changeType. " Currency must be the same as the ".$accountType." Account Currency ";
-        
+        $error = $changeType . " Currency must be the same as the " . $accountType . " Account Currency ";
+
         parent::__construct($error . $message, $code);
     }
 }

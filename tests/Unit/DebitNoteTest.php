@@ -3,22 +3,17 @@
 namespace Tests\Unit;
 
 use Carbon\Carbon;
-
-use Illuminate\Support\Facades\Auth;
-
-use IFRS\Tests\TestCase;
-
+use IFRS\Exceptions\LineItemAccount;
+use IFRS\Exceptions\MainAccount;
 use IFRS\Models\Account;
 use IFRS\Models\Balance;
 use IFRS\Models\Currency;
 use IFRS\Models\Ledger;
 use IFRS\Models\LineItem;
-
-use IFRS\Transactions\DebitNote;
-
-use IFRS\Exceptions\LineItemAccount;
-use IFRS\Exceptions\MainAccount;
 use IFRS\Models\Vat;
+use IFRS\Tests\TestCase;
+use IFRS\Transactions\DebitNote;
+use Illuminate\Support\Facades\Auth;
 
 class DebitNoteTest extends TestCase
 {
@@ -118,8 +113,8 @@ class DebitNoteTest extends TestCase
         $this->expectException(LineItemAccount::class);
         $this->expectExceptionMessage(
             "Debit Note LineItem Account must be of type "
-                . "Operating Expense, Direct Expense, Overhead Expense, "
-                . "Other Expense, Non Current Asset, Current Asset, Inventory"
+            . "Operating Expense, Direct Expense, Overhead Expense, "
+            . "Other Expense, Non Current Asset, Current Asset, Inventory"
         );
 
         $lineItem = factory(LineItem::class)->create([

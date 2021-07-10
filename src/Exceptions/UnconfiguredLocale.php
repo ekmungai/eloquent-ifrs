@@ -17,11 +17,11 @@ class UnconfiguredLocale extends IFRSException
      *
      * @param $locale
      * @param string $message
-     * @param int    $code
+     * @param int $code
      */
     public function __construct(string $locale, string $message = null, int $code = null)
     {
-        $error = "Locale ".$locale." is not configured";
+        $error = "Locale " . $locale . " is not configured";
 
         parent::__construct($error . $message, $code);
     }

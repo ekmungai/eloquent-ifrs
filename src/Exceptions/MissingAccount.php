@@ -17,7 +17,7 @@ class MissingAccount extends IFRSException
      *
      * @param $statementType
      * @param string $message
-     * @param int    $code
+     * @param int $code
      */
     public function __construct(string $statementType, string $message = null, int $code = null)
     {

@@ -10,27 +10,23 @@
 
 namespace IFRS\Models;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
-use IFRS\Reports\IncomeStatement;
-
+use IFRS\Exceptions\InvalidAccountClassBalance;
+use IFRS\Exceptions\InvalidBalanceDate;
+use IFRS\Exceptions\InvalidBalanceTransaction;
+use IFRS\Exceptions\InvalidBalanceType;
+use IFRS\Exceptions\InvalidCurrency;
+use IFRS\Exceptions\NegativeAmount;
 use IFRS\Interfaces\Clearable;
 use IFRS\Interfaces\Recyclable;
 use IFRS\Interfaces\Segregatable;
-
+use IFRS\Reports\IncomeStatement;
 use IFRS\Traits\Clearing;
+use IFRS\Traits\ModelTablePrefix;
 use IFRS\Traits\Recycling;
 use IFRS\Traits\Segregating;
-use IFRS\Traits\ModelTablePrefix;
-
-use IFRS\Exceptions\NegativeAmount;
-use IFRS\Exceptions\InvalidBalanceType;
-use IFRS\Exceptions\InvalidBalanceDate;
-use IFRS\Exceptions\InvalidBalanceTransaction;
-use IFRS\Exceptions\InvalidAccountClassBalance;
-use IFRS\Exceptions\InvalidCurrency;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Balance
@@ -100,16 +96,6 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
      */
     public function __construct($attributes = [])
     {
-        $entity = Auth::user()->entity;
-
-        if (!isset($attributes['reporting_period_id'])) {
-            $attributes['reporting_period_id'] = $entity->current_reporting_period->id;
-        }
-
-        if (!isset($attributes['exchange_rate_id'])) {
-            $attributes['exchange_rate_id'] = $entity->default_rate->id;
-        }
-
         if (!isset($attributes['transaction_type'])) {
             $attributes['transaction_type'] = Transaction::JN;
         }
@@ -119,18 +105,6 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
         }
 
         return parent::__construct($attributes);
-    }
-
-    /**
-     * Get Human Readable Balance Type.
-     *
-     * @param string $type
-     *
-     * @return string
-     */
-    public static function getType($type)
-    {
-        return config('ifrs')['balances'][$type];
     }
 
     /**
@@ -148,6 +122,18 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
             $typeNames[] = Balance::getType($type);
         }
         return $typeNames;
+    }
+
+    /**
+     * Get Human Readable Balance Type.
+     *
+     * @param string $type
+     *
+     * @return string
+     */
+    public static function getType($type)
+    {
+        return config('ifrs')['balances'][$type];
     }
 
     /**
@@ -267,7 +253,7 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
      */
     public function attributes()
     {
-        return (object) $this->attributes;
+        return (object)$this->attributes;
     }
 
     /**
@@ -275,6 +261,23 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
      */
     public function save(array $options = []): bool
     {
+        if (is_null($this->entity_id)) {
+            $entity = Auth::user()->entity;
+        } else {
+            $entity = Entity::where('id', '=', $this->entity_id)->first();
+        }
+
+        if (!is_null($entity)) {
+            $reportingPeriod = $entity->current_reporting_period;
+
+            if (!isset($this->reporting_period_id)) {
+                $this->reporting_period_id = $reportingPeriod->id;
+            }
+
+            if (!isset($this->exchange_rate_id)) {
+                $this->exchange_rate_id = $entity->default_rate->id;
+            }
+        }
 
         if ($this->amount < 0) {
             throw new NegativeAmount("Balance");
@@ -296,14 +299,14 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
             throw new InvalidCurrency("Balance", $this->account->account_type);
         }
 
-        if (ReportingPeriod::periodStart()->lt($this->transaction_date) && !$this->entity->mid_year_balances) {
+        if (ReportingPeriod::periodStart(null, $entity)->lt($this->transaction_date) && !$entity->mid_year_balances) {
             throw new InvalidBalanceDate();
         }
 
-        if(!isset($this->currency_id)){
+        if (!isset($this->currency_id)) {
             $this->currency_id = $this->account->currency_id;
         }
-        
+
         if (!isset($this->transaction_no)) {
             $currency = $this->currency->currency_code;
             $year = ReportingPeriod::find($this->reporting_period_id)->calendar_year;

@@ -10,15 +10,13 @@
 
 namespace IFRS\Transactions;
 
-use IFRS\Interfaces\Sells;
-use IFRS\Interfaces\Fetchable;
 use IFRS\Interfaces\Assignable;
-
-use IFRS\Traits\Selling;
-use IFRS\Traits\Fetching;
-use IFRS\Traits\Assigning;
-
+use IFRS\Interfaces\Fetchable;
+use IFRS\Interfaces\Sells;
 use IFRS\Models\Transaction;
+use IFRS\Traits\Assigning;
+use IFRS\Traits\Fetching;
+use IFRS\Traits\Selling;
 
 class CreditNote extends Transaction implements Sells, Fetchable, Assignable
 {

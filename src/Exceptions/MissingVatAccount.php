@@ -15,9 +15,9 @@ class MissingVatAccount extends IFRSException
     /**
      * Missing Vat Account Exception
      *
-     * @param float  $vatRate
+     * @param float $vatRate
      * @param string $message
-     * @param int    $code
+     * @param int $code
      */
     public function __construct(float $vatRate, string $message = null, int $code = null)
     {

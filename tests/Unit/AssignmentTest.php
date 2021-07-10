@@ -3,41 +3,35 @@
 namespace Tests\Unit;
 
 use Carbon\Carbon;
-
-use IFRS\Tests\TestCase;
-
-use IFRS\User;
-
-use IFRS\Models\Account;
-use IFRS\Models\Assignment;
-use IFRS\Models\Currency;
-use IFRS\Models\ReportingPeriod;
-use IFRS\Models\Vat;
-use IFRS\Models\LineItem;
-use IFRS\Models\Balance;
-use IFRS\Models\Entity;
-use IFRS\Models\ExchangeRate;
-use IFRS\Models\Transaction;
-use IFRS\Models\Ledger;
-
-use IFRS\Transactions\JournalEntry;
-use IFRS\Transactions\ClientInvoice;
-use IFRS\Transactions\ClientReceipt;
-use IFRS\Transactions\SupplierPayment;
-use IFRS\Transactions\SupplierBill;
-
 use IFRS\Exceptions\InsufficientBalance;
-use IFRS\Exceptions\OverClearance;
-use IFRS\Exceptions\SelfClearance;
-use IFRS\Exceptions\UnpostedAssignment;
-use IFRS\Exceptions\UnassignableTransaction;
-use IFRS\Exceptions\UnclearableTransaction;
 use IFRS\Exceptions\InvalidClearanceAccount;
 use IFRS\Exceptions\InvalidClearanceCurrency;
 use IFRS\Exceptions\InvalidClearanceEntry;
-use IFRS\Exceptions\NegativeAmount;
 use IFRS\Exceptions\MissingForexAccount;
 use IFRS\Exceptions\MixedAssignment;
+use IFRS\Exceptions\NegativeAmount;
+use IFRS\Exceptions\OverClearance;
+use IFRS\Exceptions\SelfClearance;
+use IFRS\Exceptions\UnassignableTransaction;
+use IFRS\Exceptions\UnclearableTransaction;
+use IFRS\Exceptions\UnpostedAssignment;
+use IFRS\Models\Account;
+use IFRS\Models\Assignment;
+use IFRS\Models\Balance;
+use IFRS\Models\Currency;
+use IFRS\Models\Entity;
+use IFRS\Models\ExchangeRate;
+use IFRS\Models\LineItem;
+use IFRS\Models\ReportingPeriod;
+use IFRS\Models\Transaction;
+use IFRS\Models\Vat;
+use IFRS\Tests\TestCase;
+use IFRS\Transactions\ClientInvoice;
+use IFRS\Transactions\ClientReceipt;
+use IFRS\Transactions\JournalEntry;
+use IFRS\Transactions\SupplierBill;
+use IFRS\Transactions\SupplierPayment;
+use IFRS\User;
 
 class AssignmentTest extends TestCase
 {
@@ -126,7 +120,7 @@ class AssignmentTest extends TestCase
 
         $newEntity->currency()->associate(factory(Currency::class)->create());
         $newEntity->save();
-        
+
         $this->period = factory(ReportingPeriod::class)->create([
             "calendar_year" => date("Y"),
         ]);
@@ -261,7 +255,7 @@ class AssignmentTest extends TestCase
         $cleared2->addLineItem($line);
         $cleared2->post();
 
-        $assignment =  new Assignment([
+        $assignment = new Assignment([
             'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared2->id,
@@ -293,7 +287,7 @@ class AssignmentTest extends TestCase
         $transaction2->addLineItem($line);
         $transaction2->post();
 
-        $assignment =  new Assignment([
+        $assignment = new Assignment([
             'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction2->id,
             'cleared_id' => $cleared->id,
@@ -354,7 +348,7 @@ class AssignmentTest extends TestCase
             ])->id,
             'currency_id' => $currency->id,
         ]);
-        
+
         $line = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
@@ -364,7 +358,7 @@ class AssignmentTest extends TestCase
             ])->id,
             'amount' => 100,
         ]);
-        
+
         $transaction->addLineItem($line);
         $transaction->post();
 
@@ -389,7 +383,7 @@ class AssignmentTest extends TestCase
 
         $cleared->addLineItem($line);
         $cleared->post();
-        
+
         $forex = factory(Account::class)->create([
             'account_type' => Account::NON_OPERATING_REVENUE,
             'category_id' => null
@@ -423,7 +417,7 @@ class AssignmentTest extends TestCase
             ])->id,
             'currency_id' => $currency->id,
         ]);
-        
+
         $line = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
@@ -433,7 +427,7 @@ class AssignmentTest extends TestCase
             ])->id,
             'amount' => 50,
         ]);
-        
+
         $transaction->addLineItem($line);
         $transaction->post();
 
@@ -458,7 +452,7 @@ class AssignmentTest extends TestCase
 
         $cleared->addLineItem($line);
         $cleared->post();
-        
+
         $forex = factory(Account::class)->create([
             'account_type' => Account::NON_OPERATING_REVENUE,
             'category_id' => null
@@ -499,7 +493,7 @@ class AssignmentTest extends TestCase
             ])->id,
             'currency_id' => $account->currency_id,
         ]);
-        
+
         $line = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
@@ -508,7 +502,7 @@ class AssignmentTest extends TestCase
             ])->id,
             'amount' => 50,
         ]);
-        
+
         $transaction->addLineItem($line);
         $transaction->post();
 
@@ -533,7 +527,7 @@ class AssignmentTest extends TestCase
 
         $cleared->addLineItem($line);
         $cleared->post();
-        
+
         $forex = factory(Account::class)->create([
             'account_type' => Account::NON_OPERATING_REVENUE,
             'category_id' => null
@@ -567,7 +561,7 @@ class AssignmentTest extends TestCase
             ])->id,
             'currency_id' => $currency->id,
         ]);
-        
+
         $line = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
@@ -577,7 +571,7 @@ class AssignmentTest extends TestCase
             ])->id,
             'amount' => 100,
         ]);
-        
+
         $transaction->addLineItem($line);
         $transaction->post();
 
@@ -602,7 +596,7 @@ class AssignmentTest extends TestCase
 
         $cleared->addLineItem($line);
         $cleared->post();
-        
+
         $forex = factory(Account::class)->create([
             'account_type' => Account::NON_OPERATING_REVENUE,
             'category_id' => null
@@ -840,8 +834,8 @@ class AssignmentTest extends TestCase
         $this->expectException(UnassignableTransaction::class);
         $this->expectExceptionMessage(
             "Client Invoice Transaction cannot have assignments. "
-                . "Assignment Transaction must be one of: "
-                . "Client Receipt, Supplier Payment, Credit Note, Debit Note, Journal Entry"
+            . "Assignment Transaction must be one of: "
+            . "Client Receipt, Supplier Payment, Credit Note, Debit Note, Journal Entry"
         );
 
         $assignment = new Assignment([
@@ -908,8 +902,8 @@ class AssignmentTest extends TestCase
         $this->expectException(UnclearableTransaction::class);
         $this->expectExceptionMessage(
             "Client Receipt Transaction cannot be cleared. "
-                . "Transaction to be cleared must be one of: "
-                . "Client Invoice, Supplier Bill, Journal Entry"
+            . "Transaction to be cleared must be one of: "
+            . "Client Invoice, Supplier Bill, Journal Entry"
         );
 
         $assignment = new Assignment([
@@ -1172,7 +1166,7 @@ class AssignmentTest extends TestCase
             "Transaction Entry increases the Main Account outstanding balance instead of reducing it"
         );
 
-        $assignment =  new Assignment([
+        $assignment = new Assignment([
             'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
@@ -1230,7 +1224,7 @@ class AssignmentTest extends TestCase
         $this->expectException(NegativeAmount::class);
         $this->expectExceptionMessage('Assignment Amount cannot be negative');
 
-        $assignment =  new Assignment([
+        $assignment = new Assignment([
             'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,
@@ -1322,9 +1316,9 @@ class AssignmentTest extends TestCase
         $account = factory(Account::class)->create([
             'category_id' => null
         ]);
-        $currency  = factory(Currency::class)->create();
+        $currency = factory(Currency::class)->create();
 
-        $transaction  = new JournalEntry([
+        $transaction = new JournalEntry([
             "account_id" => $account->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
@@ -1366,7 +1360,7 @@ class AssignmentTest extends TestCase
         $this->expectException(MissingForexAccount::class);
         $this->expectExceptionMessage("A Forex Differences Account of type 'Non Operating Revenue' is required for Assignment Transactions with different exchange rates");
 
-        $assignment =  new Assignment([
+        $assignment = new Assignment([
             'assignment_date' => Carbon::now(),
             'transaction_id' => $transaction->id,
             'cleared_id' => $cleared->id,

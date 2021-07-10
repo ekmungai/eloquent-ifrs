@@ -2,23 +2,18 @@
 
 namespace Tests\Unit;
 
-use Illuminate\Support\Facades\Auth;
-
 use Carbon\Carbon;
-
-use IFRS\Tests\TestCase;
-
+use IFRS\Exceptions\LineItemAccount;
+use IFRS\Exceptions\MainAccount;
 use IFRS\Models\Account;
 use IFRS\Models\Balance;
 use IFRS\Models\Currency;
 use IFRS\Models\Ledger;
 use IFRS\Models\LineItem;
-
-use IFRS\Transactions\CreditNote;
-
-use IFRS\Exceptions\LineItemAccount;
-use IFRS\Exceptions\MainAccount;
 use IFRS\Models\Vat;
+use IFRS\Tests\TestCase;
+use IFRS\Transactions\CreditNote;
+use Illuminate\Support\Facades\Auth;
 
 class CreditNoteTest extends TestCase
 {

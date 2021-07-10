@@ -16,7 +16,7 @@ class InvalidClearanceCurrency extends IFRSException
      * Invalid Clearance Currency Exception
      *
      * @param string $message
-     * @param int    $code
+     * @param int $code
      */
     public function __construct(string $message = null, int $code = null)
     {

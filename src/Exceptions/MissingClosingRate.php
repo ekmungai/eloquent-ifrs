@@ -17,7 +17,7 @@ class MissingClosingRate extends IFRSException
      *
      * @param $currencyCode
      * @param string $message
-     * @param int    $code
+     * @param int $code
      */
     public function __construct(string $currencyCode, string $message = null, int $code = null)
     {

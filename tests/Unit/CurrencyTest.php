@@ -2,12 +2,11 @@
 
 namespace Tests\Unit;
 
-use IFRS\Tests\TestCase;
-
 use IFRS\Models\Currency;
 use IFRS\Models\Entity;
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\RecycledObject;
+use IFRS\Tests\TestCase;
 use IFRS\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -91,7 +90,7 @@ class CurrencyTest extends TestCase
         $recycled = RecycledObject::all()->first();
         $this->assertEquals($currency->recycled->first(), $recycled);
         $this->assertEquals($recycled->recyclable->id, $currency->id);
-        
+
         $currency->restore();
 
         $this->assertEquals(count($currency->recycled()->get()), 0);

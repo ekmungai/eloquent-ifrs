@@ -19,10 +19,10 @@ class InsufficientBalance extends IFRSException
      * Insufficient Balance Exception
      *
      * @param string $transactionType
-     * @param float  $amount
+     * @param float $amount
      * @param string $assignedType
      * @param string $message
-     * @param int    $code
+     * @param int $code
      */
     public function __construct(
         string $transactionType,
@@ -30,7 +30,8 @@ class InsufficientBalance extends IFRSException
         string $assignedType,
         string $message = null,
         int $code = 0
-    ) {
+    )
+    {
         $transactionType = Transaction::getType($transactionType);
         $assignedType = Transaction::getType($assignedType);
 

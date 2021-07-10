@@ -17,7 +17,7 @@ class NegativeAmount extends IFRSException
      *
      * @param string $modelType
      * @param string $message
-     * @param int    $code
+     * @param int $code
      */
     public function __construct(string $modelType, string $message = null, int $code = null)
     {

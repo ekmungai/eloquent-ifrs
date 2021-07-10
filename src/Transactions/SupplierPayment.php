@@ -10,19 +10,16 @@
 
 namespace IFRS\Transactions;
 
-use IFRS\Interfaces\Fetchable;
+use IFRS\Exceptions\LineItemAccount;
+use IFRS\Exceptions\MainAccount;
+use IFRS\Exceptions\VatCharge;
 use IFRS\Interfaces\Assignable;
-
-use IFRS\Traits\Fetching;
-use IFRS\Traits\Assigning;
-
+use IFRS\Interfaces\Fetchable;
 use IFRS\Models\Account;
 use IFRS\Models\LineItem;
 use IFRS\Models\Transaction;
-
-use IFRS\Exceptions\VatCharge;
-use IFRS\Exceptions\MainAccount;
-use IFRS\Exceptions\LineItemAccount;
+use IFRS\Traits\Assigning;
+use IFRS\Traits\Fetching;
 
 class SupplierPayment extends Transaction implements Fetchable, Assignable
 {

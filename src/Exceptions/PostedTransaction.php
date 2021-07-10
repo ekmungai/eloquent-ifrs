@@ -17,7 +17,7 @@ class PostedTransaction extends IFRSException
      *
      * @param string $action
      * @param string $message
-     * @param int    $code
+     * @param int $code
      */
     public function __construct(string $action, string $message = null, int $code = null)
     {

@@ -11,16 +11,13 @@
 namespace IFRS\Models;
 
 use Carbon\Carbon;
-
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
 use IFRS\Interfaces\Recyclable;
 use IFRS\Interfaces\Segregatable;
-
+use IFRS\Traits\ModelTablePrefix;
 use IFRS\Traits\Recycling;
 use IFRS\Traits\Segregating;
-use IFRS\Traits\ModelTablePrefix;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Category
@@ -89,7 +86,7 @@ class Category extends Model implements Segregatable, Recyclable
      */
     public function attributes()
     {
-        return (object) $this->attributes;
+        return (object)$this->attributes;
     }
 
     /**
@@ -97,17 +94,19 @@ class Category extends Model implements Segregatable, Recyclable
      *
      * @param Carbon|null $startDate
      * @param Carbon|null $endDate
-     *  
+     *
      * @return array
      */
     public function getAccountBalances(Carbon $startDate = null, Carbon $endDate = null)
     {
         $balances = ["total" => 0, "accounts" => []];
 
-        $reportingCurrency = $this->entity->currency_id;
+        $entity = $this->entity;
 
-        $periodStart = ReportingPeriod::periodStart($endDate);
-        $year = ReportingPeriod::year($endDate);
+        $reportingCurrency = $entity->currency_id;
+
+        $periodStart = ReportingPeriod::periodStart($endDate, $entity);
+        $year = ReportingPeriod::year($endDate, $entity);
 
         foreach ($this->accounts as $account) {
 
