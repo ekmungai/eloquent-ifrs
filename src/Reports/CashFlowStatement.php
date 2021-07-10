@@ -11,12 +11,10 @@
 namespace IFRS\Reports;
 
 use Carbon\Carbon;
-
 use IFRS\Models\Account;
 use IFRS\Models\Entity;
 use IFRS\Models\ReportingPeriod;
 use Illuminate\Support\Facades\Auth;
-use function Webmozart\Assert\Tests\StaticAnalysis\null;
 
 class CashFlowStatement extends FinancialStatement
 {
@@ -79,13 +77,13 @@ class CashFlowStatement extends FinancialStatement
      */
     public function __construct(string $startDate = null, string $endDate = null, Entity $entity = null)
     {
-        if(is_null($entity)){
+        if (is_null($entity)) {
             $entity = Auth::user()->entity;
         }
 
         $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart(null, $entity) : Carbon::parse($startDate);
         $this->period['endDate'] = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
-        if($this->period['endDate'] != ReportingPeriod::periodEnd($endDate, $entity)){
+        if ($this->period['endDate'] != ReportingPeriod::periodEnd($endDate, $entity)) {
             $this->period['endDate']->addDay();
         }
 
@@ -141,13 +139,13 @@ class CashFlowStatement extends FinancialStatement
 
         // Profit for the Period
         $this->balances[self::PROFIT] = Account::sectionBalances(
-            IncomeStatement::getAccountTypes(),
+                IncomeStatement::getAccountTypes(),
                 null,
                 null,
                 true,
                 $this->entity
 
-        )["sectionClosingBalance"] * -1;
+            )["sectionClosingBalance"] * -1;
 
         // Operations Cash Flow
         $this->results[self::OPERATIONS_CASH_FLOW] = $this->balances[self::PROFIT] + array_sum(array_slice($this->balances, 0, 6));
@@ -172,10 +170,10 @@ class CashFlowStatement extends FinancialStatement
         )["sectionClosingBalance"];
 
         // Cash at end of the Period
-        $this->results[self::END_CASH_BALANCE] =  $this->balances[self::START_CASH_BALANCE] + $this->balances[self::NET_CASH_FLOW];
+        $this->results[self::END_CASH_BALANCE] = $this->balances[self::START_CASH_BALANCE] + $this->balances[self::NET_CASH_FLOW];
 
         // Cashbook Balance
-        $this->results[self::CASHBOOK_BALANCE] =  Account::sectionBalances(
+        $this->results[self::CASHBOOK_BALANCE] = Account::sectionBalances(
             [Account::BANK],
             $this->period['startDate'],
             $this->period['endDate'],
@@ -203,7 +201,7 @@ class CashFlowStatement extends FinancialStatement
 
         // Operating Cash Flow
         $statement .= PHP_EOL;
-        $statement .= config('ifrs')['statements'][self::OPERATIONS_CASH_FLOW]  . PHP_EOL;
+        $statement .= config('ifrs')['statements'][self::OPERATIONS_CASH_FLOW] . PHP_EOL;
 
         $statement = $this->printSection(self::PROFIT, $statement, $this->indent);
         $statement = $this->printSection(self::PROVISIONS, $statement, $this->indent);
@@ -287,7 +285,7 @@ class CashFlowStatement extends FinancialStatement
         if ($heading) {
             $statement .= 'Total ';
         }
-        $statement .=  config('ifrs')['statements'][$result] . str_repeat($indent, $indentFactor);
+        $statement .= config('ifrs')['statements'][$result] . str_repeat($indent, $indentFactor);
 
         return $statement .= $this->results[$result] . PHP_EOL;
     }

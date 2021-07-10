@@ -10,16 +10,13 @@
 
 namespace IFRS\Transactions;
 
-use IFRS\Interfaces\Sells;
+use IFRS\Exceptions\MainAccount;
 use IFRS\Interfaces\Fetchable;
-
-use IFRS\Traits\Selling;
-use IFRS\Traits\Fetching;
-
+use IFRS\Interfaces\Sells;
 use IFRS\Models\Account;
 use IFRS\Models\Transaction;
-
-use IFRS\Exceptions\MainAccount;
+use IFRS\Traits\Fetching;
+use IFRS\Traits\Selling;
 
 class CashSale extends Transaction implements Sells, Fetchable
 {

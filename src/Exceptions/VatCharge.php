@@ -19,7 +19,7 @@ class VatCharge extends IFRSException
      *
      * @param string $transactionType
      * @param string $message
-     * @param int    $code
+     * @param int $code
      */
     public function __construct($transactionType, string $message = null, int $code = null)
     {

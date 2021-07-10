@@ -10,16 +10,13 @@
 
 namespace IFRS\Transactions;
 
+use IFRS\Exceptions\MainAccount;
 use IFRS\Interfaces\Buys;
 use IFRS\Interfaces\Fetchable;
-
-use IFRS\Traits\Buying;
-use IFRS\Traits\Fetching;
-
 use IFRS\Models\Account;
 use IFRS\Models\Transaction;
-
-use IFRS\Exceptions\MainAccount;
+use IFRS\Traits\Buying;
+use IFRS\Traits\Fetching;
 
 class CashPurchase extends Transaction implements Buys, Fetchable
 {

@@ -10,16 +10,14 @@
 
 namespace IFRS\Models;
 
+use IFRS\Interfaces\Recyclable;
+use IFRS\Interfaces\Segregatable;
+use IFRS\Traits\ModelTablePrefix;
+use IFRS\Traits\Recycling;
+use IFRS\Traits\Segregating;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
-
-use IFRS\Interfaces\Recyclable;
-use IFRS\Interfaces\Segregatable;
-
-use IFRS\Traits\Recycling;
-use IFRS\Traits\ModelTablePrefix;
-use IFRS\Traits\Segregating;
 
 /**
  * Class Currency
@@ -87,14 +85,14 @@ class Currency extends Model implements Recyclable, Segregatable
      */
     public function attributes()
     {
-        return (object) $this->attributes;
+        return (object)$this->attributes;
     }
 
     /**
      * Associate Entity.
      */
     public function save(array $options = []): bool
-    {        
+    {
         if (!isset($this->entity_id)) {
             $this->entity_id = Auth::user()->entity->id;
         }

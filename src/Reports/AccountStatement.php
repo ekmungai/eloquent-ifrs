@@ -11,40 +11,15 @@
 namespace IFRS\Reports;
 
 use Carbon\Carbon;
-
-use Illuminate\Support\Facades\Auth;
-
-use IFRS\Models\Entity;
-use IFRS\Models\Ledger;
+use IFRS\Exceptions\MissingAccount;
 use IFRS\Models\Account;
 use IFRS\Models\Currency;
+use IFRS\Models\Entity;
+use IFRS\Models\Ledger;
 use IFRS\Models\ReportingPeriod;
-
-use IFRS\Exceptions\MissingAccount;
 
 class AccountStatement
 {
-    /**
-     * Account Statement Currency.
-     *
-     * @var Currency
-     */
-    protected $currency;
-
-    /**
-     * Account Statement Account.
-     *
-     * @var Account
-     */
-    protected $account;
-
-    /**
-     * Account Statement Entity.
-     *
-     * @var Entity
-     */
-    protected $entity;
-
     /**
      * Account Statement balances.
      *
@@ -54,7 +29,6 @@ class AccountStatement
         "opening" => 0,
         "closing" => 0
     ];
-
     /**
      * Account Statement period.
      *
@@ -64,36 +38,36 @@ class AccountStatement
         "startDate" => null,
         "endDate" => null
     ];
-
     /**
      * Account Statement transactions.
      *
      * @var array
      */
     public $transactions = [];
-
     /**
-     * Print Account Statement attributes.
+     * Account Statement Currency.
      *
-     * @return object
+     * @var Currency
      */
-    public function attributes()
-    {
-        return (object) [
-            "Account" => $this->account->name,
-            "Currency" => $this->currency->name,
-            "Entity" => $this->entity->name,
-            "Period" => $this->period,
-            "Balances" => $this->balances,
-            "Transactions" => $this->transactions
-        ];
-    }
+    protected $currency;
+    /**
+     * Account Statement Account.
+     *
+     * @var Account
+     */
+    protected $account;
+    /**
+     * Account Statement Entity.
+     *
+     * @var Entity
+     */
+    protected $entity;
 
     /**
      * Construct Account Statement for the account for the period.
      *
-     * @param int    $accountId
-     * @param int    $currencyId
+     * @param int $accountId
+     * @param int $currencyId
      * @param string $startDate
      * @param string $endDate
      */
@@ -102,7 +76,8 @@ class AccountStatement
         int $currencyId = null,
         string $startDate = null,
         string $endDate = null
-    ) {
+    )
+    {
         if (is_null($accountId)) {
             throw new MissingAccount("Account Statement");
         } else {
@@ -115,6 +90,23 @@ class AccountStatement
         $this->period['endDate'] = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
         $this->currency = is_null($currencyId) ? $this->entity->currency : Currency::find($currencyId);
         $this->currencyId = $currencyId;
+    }
+
+    /**
+     * Print Account Statement attributes.
+     *
+     * @return object
+     */
+    public function attributes()
+    {
+        return (object)[
+            "Account" => $this->account->name,
+            "Currency" => $this->currency->name,
+            "Entity" => $this->entity->name,
+            "Period" => $this->period,
+            "Balances" => $this->balances,
+            "Transactions" => $this->transactions
+        ];
     }
 
     /**

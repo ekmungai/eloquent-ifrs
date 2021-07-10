@@ -11,30 +11,25 @@
 namespace IFRS\Models;
 
 use Carbon\Carbon;
-
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
-use IFRS\Reports\AccountSchedule;
-
-use IFRS\Interfaces\Assignable;
-use IFRS\Interfaces\Segregatable;
-
-use IFRS\Traits\Segregating;
-use IFRS\Traits\ModelTablePrefix;
-
+use IFRS\Exceptions\InsufficientBalance;
+use IFRS\Exceptions\InvalidClearanceAccount;
+use IFRS\Exceptions\InvalidClearanceCurrency;
+use IFRS\Exceptions\InvalidClearanceEntry;
+use IFRS\Exceptions\MissingForexAccount;
+use IFRS\Exceptions\MixedAssignment;
+use IFRS\Exceptions\NegativeAmount;
 use IFRS\Exceptions\OverClearance;
 use IFRS\Exceptions\SelfClearance;
-use IFRS\Exceptions\NegativeAmount;
-use IFRS\Exceptions\MixedAssignment;
-use IFRS\Exceptions\UnpostedAssignment;
-use IFRS\Exceptions\InsufficientBalance;
-use IFRS\Exceptions\MissingForexAccount;
-use IFRS\Exceptions\InvalidClearanceEntry;
-use IFRS\Exceptions\UnclearableTransaction;
-use IFRS\Exceptions\InvalidClearanceAccount;
 use IFRS\Exceptions\UnassignableTransaction;
-use IFRS\Exceptions\InvalidClearanceCurrency;
+use IFRS\Exceptions\UnclearableTransaction;
+use IFRS\Exceptions\UnpostedAssignment;
+use IFRS\Interfaces\Assignable;
+use IFRS\Interfaces\Segregatable;
+use IFRS\Reports\AccountSchedule;
+use IFRS\Traits\ModelTablePrefix;
+use IFRS\Traits\Segregating;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Assignment
@@ -141,7 +136,29 @@ class Assignment extends Model implements Segregatable
 
     /**
      * Assignment Validation.
-     * 
+     */
+    public function save(array $options = []): bool
+    {
+        $entity = $this->entity;
+
+        $transactionType = $this->transaction->transaction_type;
+        $clearedType = $this->cleared->transaction_type;
+
+        $transactionRate = $this->transaction->exchangeRate->rate;
+        $clearedRate = $this->cleared->exchangeRate->rate;
+
+        $this->validate($transactionRate, $clearedRate, $transactionType, $clearedType);
+
+        // Realize Forex differences
+        if (!bccomp($transactionRate, $clearedRate, config('ifrs.forex_scale')) == 0) {
+            Ledger::postForex($this, $transactionRate, $clearedRate);
+        }
+        return parent::save();
+    }
+
+    /**
+     * Assignment Validation.
+     *
      * @param float $transactionRate
      * @param float $clearedRate
      * @param string $transactionType
@@ -190,7 +207,7 @@ class Assignment extends Model implements Segregatable
             throw new OverClearance($clearedType, $this->amount);
         }
 
-        if (!bccomp($transactionRate, $clearedRate, config('ifrs.forex_scale'))==0 && !isset($this->forex_account_id)) {
+        if (!bccomp($transactionRate, $clearedRate, config('ifrs.forex_scale')) == 0 && !isset($this->forex_account_id)) {
             throw new MissingForexAccount();
         }
 
@@ -252,28 +269,6 @@ class Assignment extends Model implements Segregatable
      */
     public function attributes()
     {
-        return (object) $this->attributes;
-    }
-
-    /**
-     * Assignment Validation.
-     */
-    public function save(array $options = []): bool
-    {
-        $entity = $this->entity;
-
-        $transactionType = $this->transaction->transaction_type;
-        $clearedType = $this->cleared->transaction_type;
-
-        $transactionRate = $this->transaction->exchangeRate->rate;
-        $clearedRate = $this->cleared->exchangeRate->rate;
-
-        $this->validate($transactionRate, $clearedRate, $transactionType, $clearedType);
-
-        // Realize Forex differences
-        if(!bccomp($transactionRate, $clearedRate, config('ifrs.forex_scale'))==0){
-            Ledger::postForex($this, $transactionRate, $clearedRate);
-        }
-        return parent::save();
+        return (object)$this->attributes;
     }
 }

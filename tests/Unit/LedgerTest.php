@@ -2,11 +2,7 @@
 
 namespace Tests\Unit;
 
-use IFRS\Tests\TestCase;
-
-
 use Carbon\Carbon;
-
 use IFRS\Models\Account;
 use IFRS\Models\Balance;
 use IFRS\Models\Currency;
@@ -14,8 +10,9 @@ use IFRS\Models\ExchangeRate;
 use IFRS\Models\Ledger;
 use IFRS\Models\LineItem;
 use IFRS\Models\Vat;
-
+use IFRS\Tests\TestCase;
 use IFRS\Transactions\JournalEntry;
+
 
 class LedgerTest extends TestCase
 {
@@ -131,7 +128,7 @@ class LedgerTest extends TestCase
             "posting_date" => Carbon::now(),
             "amount" => 95
         ]);
-        
+
         $localBalance = Ledger::balance($account, Carbon::now()->startOfYear(), Carbon::now());
         $this->assertEquals($localBalance[$this->reportingCurrencyId], -40);
     }
@@ -160,7 +157,7 @@ class LedgerTest extends TestCase
         $rate = factory(ExchangeRate::class)->create([
             'rate' => 105
         ]);
-        
+
         $transaction = new JournalEntry([
             "account_id" => $account->id,
             "date" => Carbon::now(),
@@ -197,14 +194,14 @@ class LedgerTest extends TestCase
         $this->assertEquals($account->currentBalance(), [$this->reportingCurrencyId => -22522.50]);
         $this->assertEquals(
             $account->currentBalance(null, null, $rate->currency_id),
-            [$this->reportingCurrencyId => -22522.50, $rate->currency_id => -214.50] 
+            [$this->reportingCurrencyId => -22522.50, $rate->currency_id => -214.50]
         );
 
         $rate1 = factory(ExchangeRate::class)->create([
             'rate' => 10,
             'currency_id' => factory(Currency::class)->create()->id
         ]);
-        
+
         $transaction = new JournalEntry([
             "account_id" => $account->id,
             "date" => Carbon::now(),
@@ -226,7 +223,7 @@ class LedgerTest extends TestCase
         $this->assertEquals($account->currentBalance(), [$this->reportingCurrencyId => -23272.50]);
         $this->assertEquals(
             $account->currentBalance(null, null, $rate1->currency_id),
-            [$this->reportingCurrencyId => -750, $rate1->currency_id => -75] 
+            [$this->reportingCurrencyId => -750, $rate1->currency_id => -75]
         );
     }
 }

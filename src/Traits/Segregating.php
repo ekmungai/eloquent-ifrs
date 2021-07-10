@@ -10,13 +10,9 @@
 
 namespace IFRS\Traits;
 
-use Illuminate\Support\Facades\Auth;
-
 use IFRS\Models\Entity;
-
 use IFRS\Scopes\EntityScope;
-
-use IFRS\Exceptions\UnauthorizedUser;
+use Illuminate\Support\Facades\Auth;
 
 trait Segregating
 {

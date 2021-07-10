@@ -11,7 +11,6 @@
 namespace IFRS\Reports;
 
 use Carbon\Carbon;
-
 use IFRS\Models\Account;
 use IFRS\Models\Entity;
 use IFRS\Models\ReportingPeriod;
@@ -52,33 +51,18 @@ class BalanceSheet extends FinancialStatement
     ];
 
     /**
-     * Get Balance Sheet Account Types.
-     *
-     * @return array
-     */
-    public static function getAccountTypes()
-    {
-        return array_merge(
-            config('ifrs')[BalanceSheet::ASSETS],
-            config('ifrs')[BalanceSheet::LIABILITIES],
-            config('ifrs')[BalanceSheet::EQUITY],
-            config('ifrs')[BalanceSheet::RECONCILIATION]
-        );
-    }
-
-    /**
      * Construct Balance Sheet as at the given end date
      *
      * @param string $endDate
      */
     public function __construct(string $endDate = null, Entity $entity = null)
     {
-        if(is_null($entity)){
+        if (is_null($entity)) {
             $entity = Auth::user()->entity;
         }
 
-        $this->period['startDate'] = ReportingPeriod::periodStart($endDate,$entity);
-        $this->period['endDate'] = is_null($endDate) ? ReportingPeriod::periodEnd(null,$entity) : Carbon::parse($endDate);
+        $this->period['startDate'] = ReportingPeriod::periodStart($endDate, $entity);
+        $this->period['endDate'] = is_null($endDate) ? ReportingPeriod::periodEnd(null, $entity) : Carbon::parse($endDate);
 
         $period = ReportingPeriod::getPeriod($this->period['endDate'], $entity);
         parent::__construct($period, $entity);
@@ -107,6 +91,21 @@ class BalanceSheet extends FinancialStatement
     }
 
     /**
+     * Get Balance Sheet Account Types.
+     *
+     * @return array
+     */
+    public static function getAccountTypes()
+    {
+        return array_merge(
+            config('ifrs')[BalanceSheet::ASSETS],
+            config('ifrs')[BalanceSheet::LIABILITIES],
+            config('ifrs')[BalanceSheet::EQUITY],
+            config('ifrs')[BalanceSheet::RECONCILIATION]
+        );
+    }
+
+    /**
      * Print Income Statement attributes.
      *
      * @return array
@@ -129,7 +128,7 @@ class BalanceSheet extends FinancialStatement
         // Net Profit
         $netProfit = Account::sectionBalances(
             IncomeStatement::getAccountTypes(),
-            $this->period['startDate'], 
+            $this->period['startDate'],
             $this->period['endDate'],
             true,
             $this->entity

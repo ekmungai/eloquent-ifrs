@@ -11,14 +11,11 @@
 namespace IFRS\Models;
 
 use Carbon\Carbon;
-
+use IFRS\Interfaces\Segregatable;
+use IFRS\Traits\ModelTablePrefix;
+use IFRS\Traits\Segregating;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
-use IFRS\Interfaces\Segregatable;
-
-use IFRS\Traits\Segregating;
-use IFRS\Traits\ModelTablePrefix;
 
 /**
  * Class Ledger
@@ -52,53 +49,6 @@ class Ledger extends Model implements Segregatable
     protected $fillable = [];
 
     /**
-     * Create VAT Ledger entries for the Transaction LineItem.
-     *
-     * @param LineItem    $lineItem
-     * @param Transaction $transaction
-     *
-     * @return void
-     */
-    private static function postVat(LineItem $lineItem, Transaction $transaction): void
-    {
-        //get entity from transaction object
-        $entity = $transaction->entity;
-
-        $amount = $lineItem->vat_inclusive ?  $lineItem->amount - ($lineItem->amount / (1 + ($lineItem->vat->rate / 100))) : $lineItem->amount * $lineItem->vat->rate / 100;
-        $rate = $transaction->exchangeRate->rate;
-
-        $post = new Ledger();
-        $folio = new Ledger();
-
-        $post->entity_id = $entity->id;
-        $folio->entity_id = $entity->id;
-
-        if ($transaction->is_credited) {
-            $post->entry_type = Balance::CREDIT;
-            $folio->entry_type = Balance::DEBIT;
-        } else {
-            $post->entry_type = Balance::DEBIT;
-            $folio->entry_type = Balance::CREDIT;
-        }
-
-        // identical double entry data
-        $post->transaction_id = $folio->transaction_id = $transaction->id;
-        $post->currency_id = $folio->currency_id = $transaction->currency_id;
-        $post->posting_date = $folio->posting_date = $transaction->transaction_date;
-        $post->line_item_id = $folio->line_item_id = $lineItem->id;
-        $post->vat_id = $folio->vat_id = $lineItem->vat_id;
-        $post->amount = $folio->amount = $amount * $rate * $lineItem->quantity;
-        $post->rate = $folio->rate = $rate;
-
-        // different double entry data
-        $post->post_account = $folio->folio_account = $lineItem->vat_inclusive ? $lineItem->account_id : $transaction->account_id;
-        $post->folio_account = $folio->post_account = $lineItem->vat->account_id;
-
-        $post->save();
-        $folio->save();
-    }
-
-    /**
      * Create Ledger entries for the Transaction.
      *
      * @param Transaction $transaction
@@ -113,7 +63,7 @@ class Ledger extends Model implements Segregatable
 
         foreach ($transaction->getLineItems() as $lineItem) {
             $rate = $transaction->exchangeRate->rate;
-            
+
             $post = new Ledger();
             $folio = new Ledger();
 
@@ -153,11 +103,102 @@ class Ledger extends Model implements Segregatable
         }
     }
 
-     /**
+    /**
+     * Add Ledger hash.
+     */
+    public function save(array $options = []): bool
+    {
+        parent::save();
+
+        $this->hash = password_hash(
+            $this->hashed(),
+            config('ifrs')['hashing_algorithm']
+        );
+
+        return parent::save();
+    }
+
+    /**
+     * Hash Ledger contents
+     *
+     * @return string
+     */
+    public function hashed()
+    {
+        $ledger = [];
+
+        $ledger[] = $this->entity_id;
+        $ledger[] = $this->transaction_id;
+        $ledger[] = $this->currency_id;
+        $ledger[] = $this->vat_id;
+        $ledger[] = $this->post_account;
+        $ledger[] = $this->folio_account;
+        $ledger[] = $this->line_item_id;
+        $ledger[] = is_string($this->posting_date) ? $this->posting_date : $this->posting_date->format('Y-m-d H:i:s');
+        $ledger[] = $this->entry_type;
+        $ledger[] = $this->amount;
+        $ledger[] = $this->created_at;
+
+        $previousLedgerId = $this->id - 1;
+        $previousLedger = Ledger::find($previousLedgerId);
+        $previousHash = is_null($previousLedger) ? env('APP_KEY', 'test application key') : $previousLedger->hash;
+        $ledger[] = $previousHash;
+
+        return utf8_encode(implode($ledger));
+    }
+
+    /**
+     * Create VAT Ledger entries for the Transaction LineItem.
+     *
+     * @param LineItem $lineItem
+     * @param Transaction $transaction
+     *
+     * @return void
+     */
+    private static function postVat(LineItem $lineItem, Transaction $transaction): void
+    {
+        //get entity from transaction object
+        $entity = $transaction->entity;
+
+        $amount = $lineItem->vat_inclusive ? $lineItem->amount - ($lineItem->amount / (1 + ($lineItem->vat->rate / 100))) : $lineItem->amount * $lineItem->vat->rate / 100;
+        $rate = $transaction->exchangeRate->rate;
+
+        $post = new Ledger();
+        $folio = new Ledger();
+
+        $post->entity_id = $entity->id;
+        $folio->entity_id = $entity->id;
+
+        if ($transaction->is_credited) {
+            $post->entry_type = Balance::CREDIT;
+            $folio->entry_type = Balance::DEBIT;
+        } else {
+            $post->entry_type = Balance::DEBIT;
+            $folio->entry_type = Balance::CREDIT;
+        }
+
+        // identical double entry data
+        $post->transaction_id = $folio->transaction_id = $transaction->id;
+        $post->currency_id = $folio->currency_id = $transaction->currency_id;
+        $post->posting_date = $folio->posting_date = $transaction->transaction_date;
+        $post->line_item_id = $folio->line_item_id = $lineItem->id;
+        $post->vat_id = $folio->vat_id = $lineItem->vat_id;
+        $post->amount = $folio->amount = $amount * $rate * $lineItem->quantity;
+        $post->rate = $folio->rate = $rate;
+
+        // different double entry data
+        $post->post_account = $folio->folio_account = $lineItem->vat_inclusive ? $lineItem->account_id : $transaction->account_id;
+        $post->folio_account = $folio->post_account = $lineItem->vat->account_id;
+
+        $post->save();
+        $folio->save();
+    }
+
+    /**
      * Create Ledger entries for the Assignments' Forex differences.
      *
      * @param Assignment $assignment
-     * @param float $transactionRate 
+     * @param float $transactionRate
      * @param float $clearedRate
      */
     public static function postForex(Assignment $assignment, $transactionRate, $clearedRate): void
@@ -173,7 +214,7 @@ class Ledger extends Model implements Segregatable
 
         $post->entity_id = $entity->id;
         $folio->entity_id = $entity->id;
-        
+
         if ($transaction->is_credited && $rateDifference < 0 || !$transaction->is_credited && $rateDifference > 0) {
             $post->entry_type = Balance::CREDIT;
             $folio->entry_type = Balance::DEBIT;
@@ -197,13 +238,83 @@ class Ledger extends Model implements Segregatable
     }
 
     /**
+     * Get Account's contribution to the Transaction total amount.
+     *
+     * @param Account $account
+     * @param int $transactionId
+     * @param int $currencyId
+     *
+     * @return float
+     */
+    public static function contribution(Account $account, int $transactionId, int $currencyId = null): float
+    {
+        $ledger = new Ledger();
+
+        $baseQuery = is_null($currencyId) ? $ledger->newQuery()->selectRaw("SUM(amount) AS amount")
+            : $ledger->newQuery()->selectRaw("SUM(amount/rate) AS amount");
+
+        $baseQuery->from($ledger->getTable())->where([
+            "post_account" => $account->id,
+            "transaction_id" => $transactionId,
+        ]);
+
+        $cloneQuery = clone $baseQuery;
+
+        $debits = $baseQuery->where("entry_type", Balance::DEBIT);
+        $credits = $cloneQuery->where("entry_type", Balance::CREDIT);
+
+        return $debits->get()[0]->amount - $credits->get()[0]->amount;
+    }
+
+    /**
+     * Get Account's balance as at the given date.
+     *
+     * @param Account $account
+     * @param Carbon $startDate
+     * @param Carbon $endDate
+     * @param int $currencyId
+     *
+     * @return array
+     */
+    public static function balance(Account $account, Carbon $startDate, Carbon $endDate, int $currencyId = null): array
+    {
+        $ledger = new Ledger();
+        $entity = $account->entity;
+
+        $balances = [$entity->currency_id => 0];
+
+        $baseQuery = $ledger->newQuery()->selectRaw("SUM(amount) AS local_amount, SUM(amount/rate) AS amount");
+
+        $baseQuery->where("post_account", $account->id)
+            ->where("posting_date", ">=", $startDate)
+            ->where("posting_date", "<=", $endDate);
+
+        if (!is_null($currencyId)) {
+            $baseQuery->where("currency_id", $currencyId);
+            $balances[$currencyId] = 0;
+        }
+
+        $cloneQuery = clone $baseQuery;
+
+        $debits = $baseQuery->where("entry_type", Balance::DEBIT);
+        $credits = $cloneQuery->where("entry_type", Balance::CREDIT);
+
+        $balances[$entity->currency_id] = $debits->get()[0]->local_amount - $credits->get()[0]->local_amount;
+        if (!is_null($currencyId)) {
+            $baseQuery->where("currency_id", $currencyId);
+            $balances[$currencyId] = $debits->get()[0]->amount - $credits->get()[0]->amount;
+        }
+        return $balances;
+    }
+
+    /**
      * Ledger attributes.
      *
      * @return object
      */
     public function attributes()
     {
-        return (object) $this->attributes;
+        return (object)$this->attributes;
     }
 
     /**
@@ -254,119 +365,5 @@ class Ledger extends Model implements Segregatable
     public function lineItem()
     {
         return $this->belongsTo(LineItem::class, 'line_item_id', 'id');
-    }
-
-    /**
-     * Hash Ledger contents
-     *
-     * @return string
-     */
-    public function hashed()
-    {
-        $ledger = [];
-
-        $ledger[] = $this->entity_id;
-        $ledger[] = $this->transaction_id;
-        $ledger[] = $this->currency_id;
-        $ledger[] = $this->vat_id;
-        $ledger[] = $this->post_account;
-        $ledger[] = $this->folio_account;
-        $ledger[] = $this->line_item_id;
-        $ledger[] = is_string($this->posting_date) ? $this->posting_date : $this->posting_date->format('Y-m-d H:i:s');
-        $ledger[] = $this->entry_type;
-        $ledger[] = $this->amount;
-        $ledger[] = $this->created_at;
-
-        $previousLedgerId = $this->id - 1;
-        $previousLedger = Ledger::find($previousLedgerId);
-        $previousHash = is_null($previousLedger) ? env('APP_KEY', 'test application key') : $previousLedger->hash;
-        $ledger[] = $previousHash;
-
-        return utf8_encode(implode($ledger));
-    }
-
-    /**
-     * Add Ledger hash.
-     */
-    public function save(array $options = []): bool
-    {
-        parent::save();
-
-        $this->hash = password_hash(
-            $this->hashed(),
-            config('ifrs')['hashing_algorithm']
-        );
-
-        return parent::save();
-    }
-
-    /**
-     * Get Account's contribution to the Transaction total amount.
-     *
-     * @param Account $account
-     * @param int $transactionId
-     * @param int $currencyId
-     *
-     * @return float
-     */
-    public static function contribution(Account $account, int $transactionId, int $currencyId = null): float
-    {
-        $ledger = new Ledger();
-
-        $baseQuery = is_null($currencyId) ? $ledger->newQuery()->selectRaw("SUM(amount) AS amount")
-        : $ledger->newQuery()->selectRaw("SUM(amount/rate) AS amount");
-
-        $baseQuery->from($ledger->getTable())->where([
-            "post_account" => $account->id,
-            "transaction_id" => $transactionId,
-        ]);
-
-        $cloneQuery = clone $baseQuery;
-
-        $debits = $baseQuery->where("entry_type", Balance::DEBIT);
-        $credits = $cloneQuery->where("entry_type", Balance::CREDIT);
-
-        return $debits->get()[0]->amount - $credits->get()[0]->amount;
-    }
-
-    /**
-     * Get Account's balance as at the given date.
-     *
-     * @param Account $account
-     * @param Carbon  $startDate
-     * @param Carbon  $endDate
-     * @param int $currencyId
-     *
-     * @return array
-     */
-    public static function balance(Account $account, Carbon $startDate, Carbon $endDate, int $currencyId = null): array
-    {
-        $ledger = new Ledger();
-        $entity = $account->entity;
-        
-        $balances = [$entity->currency_id => 0];
-
-        $baseQuery = $ledger->newQuery()->selectRaw("SUM(amount) AS local_amount, SUM(amount/rate) AS amount");
-
-        $baseQuery->where("post_account", $account->id)
-        ->where("posting_date", ">=", $startDate)
-            ->where("posting_date", "<=", $endDate);
-
-        if(!is_null($currencyId)){
-            $baseQuery->where("currency_id", $currencyId);
-            $balances[$currencyId] = 0;
-        }
-            
-        $cloneQuery = clone $baseQuery;
-        
-        $debits = $baseQuery->where("entry_type", Balance::DEBIT);
-        $credits = $cloneQuery->where("entry_type", Balance::CREDIT);
-
-        $balances[$entity->currency_id] = $debits->get()[0]->local_amount - $credits->get()[0]->local_amount;
-        if(!is_null($currencyId)){
-            $baseQuery->where("currency_id", $currencyId);
-            $balances[$currencyId] = $debits->get()[0]->amount - $credits->get()[0]->amount;
-        }
-        return $balances;   
     }
 }

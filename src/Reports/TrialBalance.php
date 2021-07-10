@@ -32,15 +32,15 @@ class TrialBalance extends FinancialStatement
      */
     public function __construct(string $year = null, Entity $entity = null)
     {
-        if(is_null($entity)){
+        if (is_null($entity)) {
             $entity = Auth::user()->entity;
         }
 
-        $startDate = $year."-01-01";
+        $startDate = $year . "-01-01";
         $period = ReportingPeriod::getPeriod(Carbon::parse($startDate), $entity);
-        
+
         parent::__construct($period, $entity);
-        
+
         $this->endDate = ReportingPeriod::periodEnd($startDate, $entity);
 
         $this->accounts[IncomeStatement::TITLE] = [];
@@ -55,9 +55,9 @@ class TrialBalance extends FinancialStatement
      */
     public function getSections($startDate = null, $endDate = null, $fullbalance = true): array
     {
-        foreach (Account::where('entity_id','=',$this->entity->id)->get() as $account) {
+        foreach (Account::where('entity_id', '=', $this->entity->id)->get() as $account) {
             $balance = $account->closingBalance($this->endDate)[$this->entity->currency_id];
-            
+
             if ($balance <> 0) {
                 if ($balance > 0) {
                     $this->balances["debit"] += abs($balance);
@@ -80,7 +80,7 @@ class TrialBalance extends FinancialStatement
      * Get Income Statement Sections.
      *
      * @param Account $account
-     * @param float   $balance
+     * @param float $balance
      */
     private function getIncomeStatementSections(Account $account, $balance): void
     {
@@ -107,7 +107,7 @@ class TrialBalance extends FinancialStatement
      * Get Balance Sheet Sections.
      *
      * @param Account $account
-     * @param float   $balance
+     * @param float $balance
      */
     private function getBalanceSheetSections(Account $account, $balance): void
     {

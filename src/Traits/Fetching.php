@@ -11,23 +11,21 @@
 namespace IFRS\Traits;
 
 use Carbon\Carbon;
-
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
-
 use IFRS\Models\Account;
 use IFRS\Models\Currency;
-use IFRS\Models\Transaction;
 use IFRS\Models\ReportingPeriod;
+use IFRS\Models\Transaction;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 trait Fetching
 {
     /**
      * Fetch Transactions given the filters
      *
-     * @param Carbon   $startTime
-     * @param Carbon   $endTime
-     * @param Account  $account
+     * @param Carbon $startTime
+     * @param Carbon $endTime
+     * @param Account $account
      * @param Currency $currency
      *
      * @return Collection
@@ -37,7 +35,8 @@ trait Fetching
         Carbon $endTime = null,
         Account $account = null,
         Currency $currency = null
-    ): Collection {
+    ): Collection
+    {
         $query = Transaction::where("transaction_type", self::PREFIX);
 
         // Account filter
