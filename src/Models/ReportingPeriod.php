@@ -212,7 +212,9 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
     public static function periodStart($date = null, Entity $entity = null)
     {
         if(is_null($entity)){
-            $entity = Auth::user()->entity;
+            if(Auth::user()){
+                $entity = Auth::user()->entity;
+            }
         }
         return is_null($entity) ? Carbon::parse(date("Y")."-01-01")->startOfDay() : Carbon::create(
             ReportingPeriod::year($date, $entity),

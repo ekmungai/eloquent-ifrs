@@ -41,7 +41,7 @@ class TrialBalance extends FinancialStatement
         
         parent::__construct($period, $entity);
         
-        $this->endDate = ReportingPeriod::periodEnd($startDate);
+        $this->endDate = ReportingPeriod::periodEnd($startDate, $entity);
 
         $this->accounts[IncomeStatement::TITLE] = [];
         $this->accounts[BalanceSheet::TITLE] = [];
@@ -55,8 +55,8 @@ class TrialBalance extends FinancialStatement
      */
     public function getSections($startDate = null, $endDate = null, $fullbalance = true): array
     {
-        foreach (Account::all() as $account) {
-            $balance = $account->closingBalance($this->endDate)[Auth::user()->entity->currency_id];
+        foreach (Account::where('entity_id','=',$this->entity->id)->get() as $account) {
+            $balance = $account->closingBalance($this->endDate)[$this->entity->currency_id];
             
             if ($balance <> 0) {
                 if ($balance > 0) {
