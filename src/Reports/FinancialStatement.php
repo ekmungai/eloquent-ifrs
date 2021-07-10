@@ -209,7 +209,7 @@ abstract class FinancialStatement
     {
         foreach (array_keys($this->accounts) as $section) {
             foreach (config('ifrs')[$section] as $accountType) {
-                $sectionBalances = Account::sectionBalances([$accountType], $startDate, $endDate, $fullbalance,$this->entity);
+                $sectionBalances = Account::sectionBalances([$accountType], $startDate, $endDate, $fullbalance, $this->entity);
 
                 if ($sectionBalances["sectionClosingBalance"] <> 0) {
 

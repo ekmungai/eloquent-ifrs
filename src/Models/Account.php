@@ -236,7 +236,7 @@ class Account extends Model implements Recyclable, Segregatable
 
         $year = ReportingPeriod::year($endDate, $entity);
 
-        foreach (Account::whereIn('account_type', $accountTypes)->where('entity_id','=',$entity->id)->get() as $account) {
+        foreach (Account::whereIn('account_type', $accountTypes)->where('entity_id', '=', $entity->id)->get() as $account) {
             
             $reportingCurrencyId = $account->entity->currency_id;
 

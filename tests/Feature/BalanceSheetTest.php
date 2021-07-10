@@ -216,30 +216,24 @@ class BalanceSheetTest extends TestCase
         $balanceSheet = new BalanceSheet(null,$entity);
         $balanceSheet->attributes();
 
-        $account = Account::create([
-           'account_type' => Account::INVENTORY,
-           'category_id' => null ,
-            'entity_id' => $entity->id
-        ]);
-
-        $currency = Currency::create([
-            'name' => $faker->name,
-            'currency_code' => $faker->currencyCode,
-            'entity_id' => $entity->id
-        ]);
-
-        $exchangeRate = ExchangeRate::create([
-            'valid_from' => $faker->dateTimeThisMonth(),
-            'valid_to' => Carbon::now(),
-            'currency_id' => $currency->id,
-            'rate' => 1,
-            'entity_id' => $entity->id
-        ]);
-
         Balance::create([
-           'account_id' => $account->id,
+           'account_id' => Account::create([
+               'account_type' => Account::INVENTORY,
+               'category_id' => null ,
+               'entity_id' => $entity->id
+           ])->id,
             'balance_type' => Balance::DEBIT,
-            'exchange_rate_id' => $exchangeRate->id,
+            'exchange_rate_id' => ExchangeRate::create([
+                'valid_from' => $faker->dateTimeThisMonth(),
+                'valid_to' => Carbon::now(),
+                'currency_id' => Currency::create([
+                    'name' => $faker->name,
+                    'currency_code' => $faker->currencyCode,
+                    'entity_id' => $entity->id
+                ])->id,
+                'rate' => 1,
+                'entity_id' => $entity->id
+            ])->id,
             'reporting_period_id' => $this->period->id,
             'transaction_date' => Carbon::now()->subYears(1.5),
             'transaction_no' => $faker->word,
@@ -252,34 +246,26 @@ class BalanceSheetTest extends TestCase
             'balance' => 100,
             'entity_id' => $entity->id
 
-        ]);
-
-//
-
-        $account = Account::create([
-            'account_type' => Account::CURRENT_LIABILITY,
-            'category_id' => null ,
-            'entity_id' => $entity->id
-        ]);
-
-        $currency = Currency::create([
-            'name' => $faker->name,
-            'currency_code' => $faker->currencyCode,
-            'entity_id' => $entity->id
-        ]);
-
-        $exchangeRate = ExchangeRate::create([
-            'valid_from' => $faker->dateTimeThisMonth(),
-            'valid_to' => Carbon::now(),
-            'currency_id' => $currency->id,
-            'rate' => 1,
-            'entity_id' => $entity->id
         ]);
 
         Balance::create([
-            'account_id' => $account->id,
+            'account_id' => Account::create([
+                'account_type' => Account::CURRENT_LIABILITY,
+                'category_id' => null ,
+                'entity_id' => $entity->id
+            ])->id,
             'balance_type' => Balance::CREDIT,
-            'exchange_rate_id' => $exchangeRate->id,
+            'exchange_rate_id' => ExchangeRate::create([
+                'valid_from' => $faker->dateTimeThisMonth(),
+                'valid_to' => Carbon::now(),
+                'currency_id' => Currency::create([
+                    'name' => $faker->name,
+                    'currency_code' => $faker->currencyCode,
+                    'entity_id' => $entity->id
+                ])->id,
+                'rate' => 1,
+                'entity_id' => $entity->id
+            ])->id,
             'reporting_period_id' => $this->period->id,
             'transaction_date' => Carbon::now()->subYears(1.5),
             'transaction_no' => $faker->word,
@@ -294,25 +280,18 @@ class BalanceSheetTest extends TestCase
 
         ]);
 
-        $account = Account::create([
-            'account_type' => Account::PAYABLE,
-            'category_id' => null ,
-            'entity_id' => $entity->id
-        ]);
 
         $bill = new SupplierBill([
-            "account_id" => $account->id,
+            "account_id" => Account::create([
+                'account_type' => Account::PAYABLE,
+                'category_id' => null ,
+                'entity_id' => $entity->id
+            ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
             'entity_id' => $entity->id
         ]);
 
-
-        $account = Account::create([
-            'account_type' => Account::NON_CURRENT_ASSET,
-            'category_id' => null ,
-            'entity_id' => $entity->id
-        ]);
 
         $lineItem = LineItem::create([
             'amount' => 100,
@@ -327,7 +306,11 @@ class BalanceSheetTest extends TestCase
                     'entity_id' => $entity->id
                 ])->id,
             ])->id,
-            "account_id" => $account->id,
+            "account_id" => Account::create([
+                'account_type' => Account::NON_CURRENT_ASSET,
+                'category_id' => null ,
+                'entity_id' => $entity->id
+            ])->id,
             "quantity" => 1,
             "entity_id" => $entity->id
         ]);
@@ -340,25 +323,17 @@ class BalanceSheetTest extends TestCase
             "entity_id" => $entity->id
         ]);
 
-        $account = Account::create([
-            'account_type' => Account::BANK,
-            'category_id' => null ,
-            'entity_id' => $entity->id,
-            'currency_id' => $currency->id,
-        ]);
-
         $cashSale = new CashSale([
-            "account_id" => $account->id,
+            "account_id" => Account::create([
+                'account_type' => Account::BANK,
+                'category_id' => null ,
+                'entity_id' => $entity->id,
+                'currency_id' => $currency->id,
+            ])->id,
             "date" => Carbon::now(),
             'currency_id' => $currency->id,
             "narration" => $this->faker->word,
             "entity_id" => $entity->id
-        ]);
-
-        $account = Account::create([
-            'account_type' => Account::OPERATING_REVENUE,
-            'category_id' => null ,
-            'entity_id' => $entity->id,
         ]);
 
         $lineItem = LineItem::create([
@@ -374,7 +349,11 @@ class BalanceSheetTest extends TestCase
                     'entity_id' => $entity->id
                 ])->id,
             ])->id,
-            "account_id" => $account->id,
+            "account_id" => Account::create([
+                'account_type' => Account::OPERATING_REVENUE,
+                'category_id' => null ,
+                'entity_id' => $entity->id,
+            ])->id,
             "quantity" => 1,
             "entity_id" => $entity->id
         ]);
@@ -383,24 +362,16 @@ class BalanceSheetTest extends TestCase
 
         $cashSale->post();
 
-        $account = Account::create([
-            'account_type' => Account::EQUITY,
-            'category_id' => null ,
-            'entity_id' => $entity->id,
-        ]);
-
         $journalEntry = new JournalEntry([
-            "account_id" => $account->id,
+            "account_id" => Account::create([
+                'account_type' => Account::EQUITY,
+                'category_id' => null ,
+                'entity_id' => $entity->id,
+            ])->id,
             "date" => Carbon::now(),
             "narration" => $this->faker->word,
             "credited" => false,
             "entity_id" => $entity->id
-        ]);
-
-        $account = Account::create([
-            'account_type' => Account::RECONCILIATION,
-            'category_id' => null ,
-            'entity_id' => $entity->id,
         ]);
 
         $lineItem = LineItem::create([
@@ -416,7 +387,11 @@ class BalanceSheetTest extends TestCase
                     'entity_id' => $entity->id
                 ])->id,
             ])->id,
-            "account_id" => $account->id,
+            "account_id" =>  Account::create([
+                'account_type' => Account::RECONCILIATION,
+                'category_id' => null ,
+                'entity_id' => $entity->id,
+            ])->id,
             "quantity" => 1,
             "entity_id" => $entity->id
         ]);
