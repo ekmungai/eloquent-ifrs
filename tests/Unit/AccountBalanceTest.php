@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use Carbon\Carbon;
 
+use Faker\Factory;
 use IFRS\Tests\TestCase;
 
 use IFRS\Models\Account;
@@ -68,6 +69,64 @@ class AccountBalanceTest extends TestCase
         $this->assertEquals($balance->type, Balance::getType(Balance::DEBIT));
     }
 
+    public function testBalanceRelationshipsLoggedOut()
+    {
+        $faker = Factory::create();
+
+        $entity = Auth::user()->entity;
+        Auth::logout();
+
+        $account = Account::create([
+            'account_type' => Account::INVENTORY,
+            'category_id' => null,
+            'entity_id' => $entity->id
+        ]);
+
+        $exchangeRate = ExchangeRate::create([
+            'valid_from' => $faker->dateTimeThisMonth(),
+            'valid_to' => Carbon::now(),
+            'currency_id' => Currency::create([
+                'name' => $faker->name,
+                'currency_code' => $faker->currencyCode,
+                'entity_id' => $entity->id
+            ])->id,
+            'rate' => 1,
+            'entity_id' => $entity->id
+        ]);
+
+        $currency = factory(Currency::class)->create([
+            'currency_code' => 'EUR',
+            'entity_id' => $entity->id
+        ]);
+
+        $balance = new Balance([
+            'exchange_rate_id' => $exchangeRate->id,
+            'account_id' => $account->id,
+            'currency_id' => $currency->id,
+            'transaction_type' => Transaction::JN,
+            'transaction_date' => Carbon::now()->subYears(1.5),
+            'reference' => $faker->word,
+            'balance_type' =>  Balance::DEBIT,
+            'amount' => $faker->randomFloat(2),
+            'entity_id' => $entity->id
+        ]);
+        $balance->save();
+
+        $this->assertEquals($balance->account->name, $account->name);
+        $this->assertEquals($balance->exchangeRate->rate, $exchangeRate->rate);
+        $this->assertEquals($balance->reportingPeriod->calendar_year, date("Y"));
+        $this->assertEquals($balance->transaction_no, $account->id . 'EUR' . date("Y"));
+        $this->assertEquals(
+            $balance->toString(true),
+            'Debit Balance: ' . $balance->account->toString() . ' for year ' . Carbon::now()->year
+        );
+        $this->assertEquals(
+            $balance->toString(),
+            $balance->account->toString() . ' for year ' . Carbon::now()->year
+        );
+        $this->assertEquals($balance->type, Balance::getType(Balance::DEBIT));
+    }
+
     /**
      * Balance Model Account Currency test.
      *
@@ -95,6 +154,52 @@ class AccountBalanceTest extends TestCase
             ])->id,
             'balance_type' =>  Balance::DEBIT,
             'balance' => 50,
+        ]);
+        $balance->save();
+
+        $this->assertEquals($balance->transaction_no, $account->id . 'USD' . date("Y"));
+        $this->assertEquals($balance->amount, 50);
+    }
+
+    public function testBalanceAccountCurrencyLoggedOut()
+    {
+        $faker = Factory::create();
+
+        $entity = Auth::user()->entity;
+        Auth::logout();
+
+        $account = Account::create([
+            'account_type' => Account::RECEIVABLE,
+            'category_id' => null,
+            'entity_id' => $entity->id
+        ]);
+
+        $exchangeRate = ExchangeRate::create([
+            'valid_from' => $faker->dateTimeThisMonth(),
+            'valid_to' => Carbon::now(),
+            'currency_id' => Currency::create([
+                'name' => $faker->name,
+                'currency_code' => $faker->currencyCode,
+                'entity_id' => $entity->id
+            ])->id,
+            'rate' => 105,
+            'entity_id' => $entity->id
+        ]);
+
+        $balance = new Balance([
+            'exchange_rate_id' => $exchangeRate->id,
+            'account_id' => $account->id,
+            'transaction_type' => Transaction::JN,
+            'transaction_date' => Carbon::now()->subYears(1.5),
+            'reference' => $this->faker->word,
+            'currency_id' => Currency::create([
+                'name' => $faker->name,
+                'currency_code' => 'USD',
+                'entity_id' => $entity->id
+            ])->id,
+            'balance_type' =>  Balance::DEBIT,
+            'balance' => 50,
+            'entity_id' => $entity->id
         ]);
         $balance->save();
 
@@ -140,6 +245,49 @@ class AccountBalanceTest extends TestCase
     public function testBalanceRecycling()
     {
         $balance = factory(Balance::class)->create();
+        $balance->delete();
+
+        $recycled = RecycledObject::all()->first();
+        $this->assertEquals($balance->recycled->first(), $recycled);
+    }
+
+    public function testBalanceRecyclingLoggedOut()
+    {
+        $faker = Factory::create();
+
+        $entity = Auth::user()->entity;
+        Auth::logout();
+
+        $balance = new Balance([
+            'exchange_rate_id' => ExchangeRate::create([
+                'valid_from' => $faker->dateTimeThisMonth(),
+                'valid_to' => Carbon::now(),
+                'currency_id' => Currency::create([
+                    'name' => $faker->name,
+                    'currency_code' => $faker->currencyCode,
+                    'entity_id' => $entity->id
+                ])->id,
+                'rate' => 105,
+                'entity_id' => $entity->id
+            ])->id,
+            'account_id' =>   $account = Account::create([
+                'account_type' => Account::RECEIVABLE,
+                'category_id' => null,
+                'entity_id' => $entity->id
+            ])->id,
+            'transaction_type' => Transaction::JN,
+            'transaction_date' => Carbon::now()->subYears(1.5),
+            'reference' => $this->faker->word,
+            'currency_id' => Currency::create([
+                'name' => $faker->name,
+                'currency_code' => 'USD',
+                'entity_id' => $entity->id
+            ])->id,
+            'balance_type' =>  Balance::DEBIT,
+            'balance' => 50,
+            'entity_id' => $entity->id
+        ]);
+
         $balance->delete();
 
         $recycled = RecycledObject::all()->first();
