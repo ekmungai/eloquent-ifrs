@@ -312,6 +312,47 @@ class AccountBalanceTest extends TestCase
         ]);
     }
 
+    public function testInvalidAccountClassBalanceLoggedOut()
+    {
+        $entity = Auth::user()->entity;
+        Auth::logout();
+
+        $this->expectException(InvalidAccountClassBalance::class);
+        $this->expectExceptionMessage('Income Statement Accounts cannot have Opening Balances');
+
+        Balance::create([
+            'account_id' => Account::create([
+                'account_type' => Account::OPERATING_REVENUE,
+                'category_id' => null ,
+                'entity_id' => $entity->id
+            ])->id,
+            'balance_type' => Balance::CREDIT,
+            'exchange_rate_id' => ExchangeRate::create([
+                'valid_from' => $this->faker->dateTimeThisMonth(),
+                'valid_to' => Carbon::now(),
+                'currency_id' => Currency::create([
+                    'name' => $this->faker->name,
+                    'currency_code' => $this->faker->currencyCode,
+                    'entity_id' => $entity->id
+                ])->id,
+                'rate' => 1,
+                'entity_id' => $entity->id
+            ])->id,
+            'reporting_period_id' => $this->period->id,
+            'transaction_date' => Carbon::now()->subYears(1.5),
+            'transaction_no' => $this->faker->word,
+            'transaction_type' => $this->faker->randomElement([
+                Transaction::IN,
+                Transaction::BL,
+                Transaction::JN
+            ]),
+            'reference' => $this->faker->word,
+            'balance' => 100,
+            'entity_id' => $entity->id
+
+        ]);
+    }
+
     /**
      * Test Wrong Balance Transaction.
      *
@@ -326,6 +367,45 @@ class AccountBalanceTest extends TestCase
 
         factory(Balance::class)->create([
             'transaction_type' => Transaction::CN,
+        ]);
+    }
+
+    public function testInvalidBalanceTransactionLoggedOut()
+    {
+        $entity = Auth::user()->entity;
+        Auth::logout();
+
+        $this->expectException(InvalidBalanceTransaction::class);
+        $this->expectExceptionMessage(
+            'Opening Balance Transaction must be one of: Client Invoice, Supplier Bill, Journal Entry'
+        );
+
+        Balance::create([
+            'account_id' => Account::create([
+                'account_type' => Account::RECEIVABLE,
+                'category_id' => null ,
+                'entity_id' => $entity->id
+            ])->id,
+            'balance_type' => Balance::CREDIT,
+            'exchange_rate_id' => ExchangeRate::create([
+                'valid_from' => $this->faker->dateTimeThisMonth(),
+                'valid_to' => Carbon::now(),
+                'currency_id' => Currency::create([
+                    'name' => $this->faker->name,
+                    'currency_code' => $this->faker->currencyCode,
+                    'entity_id' => $entity->id
+                ])->id,
+                'rate' => 1,
+                'entity_id' => $entity->id
+            ])->id,
+            'reporting_period_id' => $this->period->id,
+            'transaction_date' => Carbon::now()->subYears(1.5),
+            'transaction_no' => $this->faker->word,
+            'transaction_type' => Transaction::CN,
+            'reference' => $this->faker->word,
+            'balance' => 100,
+            'entity_id' => $entity->id
+
         ]);
     }
 
@@ -344,6 +424,43 @@ class AccountBalanceTest extends TestCase
         ]);
     }
 
+    public function testInvalidBalanceTypeLoggedOut()
+    {
+        $entity = Auth::user()->entity;
+        Auth::logout();
+
+        $this->expectException(InvalidBalanceType::class);
+        $this->expectExceptionMessage('Opening Balance Type must be one of: Debit, Credit');
+
+        Balance::create([
+            'account_id' => Account::create([
+                'account_type' => Account::RECEIVABLE,
+                'category_id' => null ,
+                'entity_id' => $entity->id
+            ])->id,
+            'balance_type' => 'X',
+            'exchange_rate_id' => ExchangeRate::create([
+                'valid_from' => $this->faker->dateTimeThisMonth(),
+                'valid_to' => Carbon::now(),
+                'currency_id' => Currency::create([
+                    'name' => $this->faker->name,
+                    'currency_code' => $this->faker->currencyCode,
+                    'entity_id' => $entity->id
+                ])->id,
+                'rate' => 1,
+                'entity_id' => $entity->id
+            ])->id,
+            'reporting_period_id' => $this->period->id,
+            'transaction_date' => Carbon::now()->subYears(1.5),
+            'transaction_no' => $this->faker->word,
+            'transaction_type' => Transaction::IN,
+            'reference' => $this->faker->word,
+            'balance' => 100,
+            'entity_id' => $entity->id
+
+        ]);
+    }
+
     /**
      * Test Balance Negative Amount.
      *
@@ -356,6 +473,47 @@ class AccountBalanceTest extends TestCase
 
         factory(Balance::class)->create([
             "balance" => -100
+        ]);
+    }
+
+    public function testBalanceNegativeAmountLoggedOut()
+    {
+        $entity = Auth::user()->entity;
+        Auth::logout();
+
+        $this->expectException(NegativeAmount::class);
+        $this->expectExceptionMessage('Balance Amount cannot be negative');
+
+        Balance::create([
+            'account_id' => Account::create([
+                'account_type' => Account::RECEIVABLE,
+                'category_id' => null ,
+                'entity_id' => $entity->id
+            ])->id,
+            'balance_type' => Balance::CREDIT,
+            'exchange_rate_id' => ExchangeRate::create([
+                'valid_from' => $this->faker->dateTimeThisMonth(),
+                'valid_to' => Carbon::now(),
+                'currency_id' => Currency::create([
+                    'name' => $this->faker->name,
+                    'currency_code' => $this->faker->currencyCode,
+                    'entity_id' => $entity->id
+                ])->id,
+                'rate' => 1,
+                'entity_id' => $entity->id
+            ])->id,
+            'reporting_period_id' => $this->period->id,
+            'transaction_date' => Carbon::now()->subYears(1.5),
+            'transaction_no' => $this->faker->word,
+            'transaction_type' => $this->faker->randomElement([
+                Transaction::IN,
+                Transaction::BL,
+                Transaction::JN
+            ]),
+            'reference' => $this->faker->word,
+            'balance' => -100,
+            'entity_id' => $entity->id
+
         ]);
     }
 
