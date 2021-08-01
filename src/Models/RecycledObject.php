@@ -37,13 +37,6 @@ class RecycledObject extends Model implements Segregatable
     use ModelTablePrefix;
 
     /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'ifrs_recycled_objects';
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array

@@ -12,13 +12,13 @@ use IFRS\Models\Account;
 use IFRS\Models\Balance;
 use IFRS\Models\Currency;
 use IFRS\Models\Ledger;
+use IFRS\Models\Vat;
 use IFRS\Models\LineItem;
 
 use IFRS\Transactions\SupplierPayment;
 
 use IFRS\Exceptions\LineItemAccount;
 use IFRS\Exceptions\MainAccount;
-use IFRS\Models\Vat;
 
 class SupplierPaymentTest extends TestCase
 {

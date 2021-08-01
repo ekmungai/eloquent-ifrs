@@ -99,6 +99,8 @@ class Assignment extends Model implements Segregatable
      * Bulk assign a transaction to outstanding Transactions, under FIFO (First in first out) methodology
      *
      * @param Assignable $transaction
+     * 
+     * @return void
      */
 
     public static function bulkAssign(Assignable $transaction): void
@@ -146,6 +148,8 @@ class Assignment extends Model implements Segregatable
      * @param float $clearedRate
      * @param string $transactionType
      * @param string $clearedType
+     * 
+     * @return void
      */
     private function validate(float $transactionRate, float $clearedRate, string $transactionType, string $clearedType): void
     {
@@ -208,7 +212,7 @@ class Assignment extends Model implements Segregatable
      *
      * @return string
      */
-    public function toString($type = false)
+    public function toString($type = false): string
     {
         $classname = explode('\\', self::class);
         $description = 'Assigning ' . $this->transaction->transaction_no . ' on ' . $this->assignment_date;
@@ -250,13 +254,15 @@ class Assignment extends Model implements Segregatable
      *
      * @return object
      */
-    public function attributes()
+    public function attributes(): object
     {
         return (object) $this->attributes;
     }
 
     /**
      * Assignment Validation.
+     * 
+     * @return bool
      */
     public function save(array $options = []): bool
     {

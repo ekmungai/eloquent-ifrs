@@ -18,19 +18,17 @@ use IFRS\Models\Ledger;
 use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Vat;
 use IFRS\Models\LineItem;
+use IFRS\Models\ClosingRate;
+use IFRS\Models\Entity;
 
 use IFRS\Transactions\ClientInvoice;
 use IFRS\Transactions\SupplierBill;
+use IFRS\Transactions\ClientReceipt;
+use IFRS\Transactions\JournalEntry;
 
 use IFRS\Exceptions\HangingTransactions;
 use IFRS\Exceptions\InvalidCategoryType;
 use IFRS\Exceptions\MissingAccountType;
-use IFRS\Models\ClosingRate;
-use IFRS\Models\ClosingTransaction;
-use IFRS\Models\Entity;
-use IFRS\Transactions\ClientReceipt;
-use IFRS\Transactions\JournalEntry;
-use Illuminate\Support\Facades\Auth;
 
 class AccountTest extends TestCase
 {

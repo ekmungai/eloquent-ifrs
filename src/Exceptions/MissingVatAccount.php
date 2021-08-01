@@ -21,7 +21,7 @@ class MissingVatAccount extends IFRSException
      */
     public function __construct(float $vatRate, string $message = null, int $code = null)
     {
-        $error = $vatRate . "% VAT requires a Vat Account";
+        $error = $vatRate . "% VAT requires a Vat Account ";
 
         parent::__construct($error . $message, $code);
     }

@@ -128,7 +128,7 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
      *
      * @return string
      */
-    public static function getType($type)
+    public static function getType($type): string
     {
         return config('ifrs')['balances'][$type];
     }
@@ -140,7 +140,7 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
      *
      * @return array
      */
-    public static function getTypes($types)
+    public static function getTypes($types): array
     {
         $typeNames = [];
 
@@ -155,7 +155,7 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
      *
      * @return string
      */
-    public function toString($type = false)
+    public function toString($type = false): string
     {
         $classname = explode('\\', self::class);
         $description = $this->account->toString() . ' for year ' . $this->reportingPeriod->calendar_year;
@@ -167,7 +167,7 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
      *
      * @return string
      */
-    public function getTypeAttribute()
+    public function getTypeAttribute(): string
     {
         return Balance::getType($this->balance_type);
     }
@@ -177,7 +177,7 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
      *
      * @return string
      */
-    public function getTransactionAttribute()
+    public function getTransactionAttribute(): string
     {
         return Transaction::getType($this->transaction_type);
     }
@@ -265,13 +265,15 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
      *
      * @return object
      */
-    public function attributes()
+    public function attributes(): object
     {
         return (object) $this->attributes;
     }
 
     /**
      * Balance Validation.
+     * 
+     * @return bool
      */
     public function save(array $options = []): bool
     {

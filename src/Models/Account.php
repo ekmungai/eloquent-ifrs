@@ -149,6 +149,21 @@ class Account extends Model implements Recyclable, Segregatable
     }
 
     /**
+     * Calculate Account Code.
+     */
+    private function getAccountCode(): int
+    {
+        $query = Account::withTrashed()
+        ->where('account_type', $this->account_type);
+
+        if(!is_null($this->entity_id)){
+            $query->withoutGlobalScopes()->where('entity_id', $this->entity_id);
+        }
+
+        return config('ifrs')['account_codes'][$this->account_type] + $query->count() + 1;
+    }
+
+    /**
      * Get Human Readable Account Type.
      *
      * @param string $type
@@ -525,21 +540,6 @@ class Account extends Model implements Recyclable, Segregatable
 
         $this->name = ucfirst($this->name);
         return parent::save($options);
-    }
-
-    /**
-     * Calculate Account Code.
-     */
-    private function getAccountCode(): int
-    {
-        $query = Account::withTrashed()
-        ->where('account_type', $this->account_type);
-
-        if(!is_null($this->entity_id)){
-            $query->withoutGlobalScopes()->where('entity_id', $this->entity_id);
-        }
-
-        return config('ifrs')['account_codes'][$this->account_type] + $query->count() + 1;
     }
 
     /**

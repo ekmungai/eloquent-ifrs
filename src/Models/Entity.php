@@ -14,7 +14,6 @@ use Carbon\Carbon;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Auth;
 
 use IFRS\Exceptions\MissingReportingCurrency;
 use IFRS\Exceptions\UnconfiguredLocale;
