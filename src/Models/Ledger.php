@@ -52,6 +52,31 @@ class Ledger extends Model implements Segregatable
     protected $fillable = [];
 
     /**
+     * Get Ledger pairs and assign the proper entry types
+     *
+     * @param LineItem    $lineItem
+     * @param Transaction $transaction
+     *
+     * @return array
+     */
+    private static function getLedgers(LineItem $lineItem, Transaction $transaction): array
+    {
+
+        $post = new Ledger();
+        $folio = new Ledger();
+
+        if ($transaction->is_credited) {
+            $post->entry_type = Balance::CREDIT;
+            $folio->entry_type = Balance::DEBIT;
+        } else {
+            $post->entry_type = Balance::DEBIT;
+            $folio->entry_type = Balance::CREDIT;
+        }
+
+        return [$post, $folio];
+    }
+
+    /**
      * Create VAT Ledger entries for the Transaction LineItem.
      *
      * @param LineItem    $lineItem
@@ -64,16 +89,7 @@ class Ledger extends Model implements Segregatable
         $amount = $lineItem->vat_inclusive ?  $lineItem->amount - ($lineItem->amount / (1 + ($lineItem->vat->rate / 100))) : $lineItem->amount * $lineItem->vat->rate / 100;
         $rate = $transaction->exchangeRate->rate;
 
-        $post = new Ledger();
-        $folio = new Ledger();
-
-        if ($transaction->is_credited) {
-            $post->entry_type = Balance::CREDIT;
-            $folio->entry_type = Balance::DEBIT;
-        } else {
-            $post->entry_type = Balance::DEBIT;
-            $folio->entry_type = Balance::CREDIT;
-        }
+        list($post, $folio) = Ledger::getLedgers($lineItem, $transaction);
 
         // identical double entry data
         $post->transaction_id = $folio->transaction_id = $transaction->id;
@@ -105,16 +121,7 @@ class Ledger extends Model implements Segregatable
         foreach ($transaction->getLineItems() as $lineItem) {
             $rate = $transaction->exchangeRate->rate;
             
-            $post = new Ledger();
-            $folio = new Ledger();
-
-            if ($transaction->is_credited) {
-                $post->entry_type = Balance::CREDIT;
-                $folio->entry_type = Balance::DEBIT;
-            } else {
-                $post->entry_type = Balance::DEBIT;
-                $folio->entry_type = Balance::CREDIT;
-            }
+            list($post, $folio) = Ledger::getLedgers($lineItem, $transaction);
 
             // identical double entry data
             $post->transaction_id = $folio->transaction_id = $transaction->id;
@@ -254,16 +261,15 @@ class Ledger extends Model implements Segregatable
         $ledger[] = $this->post_account;
         $ledger[] = $this->folio_account;
         $ledger[] = $this->line_item_id;
-        $ledger[] = is_string($this->posting_date) ? $this->posting_date : $this->posting_date->format('Y-m-d H:i:s');
+        $ledger[] = Carbon::parse($this->posting_date);
         $ledger[] = $this->entry_type;
-        $ledger[] = $this->amount;
+        $ledger[] = floatval($this->amount);
         $ledger[] = $this->created_at;
 
         $previousLedgerId = $this->id - 1;
         $previousLedger = Ledger::find($previousLedgerId);
         $previousHash = is_null($previousLedger) ? env('APP_KEY', 'test application key') : $previousLedger->hash;
         $ledger[] = $previousHash;
-
         return utf8_encode(implode($ledger));
     }
 
