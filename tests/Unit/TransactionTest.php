@@ -19,7 +19,7 @@ use IFRS\Exceptions\PostedTransaction;
 use IFRS\Exceptions\RedundantTransaction;
 use IFRS\Exceptions\UnpostedAssignment;
 use IFRS\Exceptions\InvalidTransactionDate;
-
+use IFRS\Exceptions\InvalidTransactionType;
 use IFRS\Models\Account;
 use IFRS\Models\Assignment;
 use IFRS\Models\Currency;
@@ -1099,6 +1099,25 @@ class TransactionTest extends TestCase
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
             'currency_id' =>factory(ExchangeRate::class)->create()->currency_id
+        ]);
+    }
+
+    /**
+     * Test Invalid Transaction Typw.
+     *
+     * @return void
+     */
+    public function testInvalidTransactionType()
+    {
+        $journalEntry = factory(Transaction::class)->create([
+            'transaction_type' => Transaction::JN
+        ]);
+
+        $this->expectException(InvalidTransactionType::class);
+        $this->expectExceptionMessage('Transaction Type Cannot be edited ');
+
+        $journalEntry->update([
+            'transaction_type' => Transaction::IN
         ]);
     }
 }

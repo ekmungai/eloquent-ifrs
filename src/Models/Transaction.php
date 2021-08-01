@@ -36,6 +36,7 @@ use IFRS\Exceptions\ClosedReportingPeriod;
 use IFRS\Exceptions\InvalidTransactionDate;
 use IFRS\Exceptions\AdjustingReportingPeriod;
 use IFRS\Exceptions\InvalidCurrency;
+use IFRS\Exceptions\InvalidTransactionType;
 
 /**
  * Class Transaction
@@ -644,6 +645,10 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
             );
         }
 
+        if ($this->isDirty('transaction_type') && $this->transaction_type != $this->getOriginal('transaction_type') && !is_null($this->id)) {
+            throw new InvalidTransactionType();
+        }
+
         $save = parent::save();
         $this->saveLineItems();
 
@@ -700,6 +705,9 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         // verify transaction ledger hashes
         return $this->ledgers->every(
             function ($ledger, $key) {
+                // echo PHP_EOL;
+                // echo $ledger->hashed();
+                // echo PHP_EOL;
                 return password_verify($ledger->hashed(), $ledger->hash);
             }
         );
