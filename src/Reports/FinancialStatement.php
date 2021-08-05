@@ -69,7 +69,6 @@ abstract class FinancialStatement
      */
     public function __construct(ReportingPeriod $period = null, Entity $entity = null)
     {
-        $this->entity = $entity;
         if (is_null($entity)) {
             $this->entity = Auth::user()->entity;
         }

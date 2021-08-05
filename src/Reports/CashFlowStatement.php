@@ -74,13 +74,10 @@ class CashFlowStatement extends FinancialStatement
      *
      * @param string $startDate
      * @param string $endDate
+     * @param Entity $entity
      */
     public function __construct(string $startDate = null, string $endDate = null, Entity $entity = null)
     {
-        if (is_null($entity)) {
-            $entity = Auth::user()->entity;
-        }
-
         $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart(null, $entity) : Carbon::parse($startDate);
         $this->period['endDate'] = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
         if ($this->period['endDate'] != ReportingPeriod::periodEnd($endDate)) {
