@@ -1084,6 +1084,7 @@ class TransactionTest extends TestCase
     public function testInvalidTransactionCurrency()
     {
         $account = factory(Account::class)->create([
+            'name' => 'Test Savings and Loan',
             'account_type' => Account::BANK,
             'category_id' => null,
             'currency_id' => factory(Currency::class)->create([
@@ -1092,18 +1093,18 @@ class TransactionTest extends TestCase
         ]);
 
         $this->expectException(InvalidCurrency::class);
-        $this->expectExceptionMessage('Transaction Currency must be the same as the Bank Account Currency ');
+        $this->expectExceptionMessage('Transaction Currency must be the same as the Bank: Test Savings and Loan Account Currency ');
 
         JournalEntry::create([
             "account_id" => $account->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
-            'currency_id' =>factory(ExchangeRate::class)->create()->currency_id
+            'currency_id' => factory(ExchangeRate::class)->create()->currency_id
         ]);
     }
 
     /**
-     * Test Invalid Transaction Typw.
+     * Test Invalid Transaction Type.
      *
      * @return void
      */
@@ -1114,7 +1115,7 @@ class TransactionTest extends TestCase
         ]);
 
         $this->expectException(InvalidTransactionType::class);
-        $this->expectExceptionMessage('Transaction Type Cannot be edited ');
+        $this->expectExceptionMessage('Transaction Type cannot be edited ');
 
         $journalEntry->update([
             'transaction_type' => Transaction::IN

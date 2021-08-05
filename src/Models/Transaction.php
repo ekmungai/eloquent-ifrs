@@ -508,7 +508,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
     public function addLineItem(LineItem $lineItem): void
     {
         if (in_array($lineItem->account->account_type, config('ifrs.single_currency')) && $lineItem->account->currency_id != $this->currency_id) {
-            throw new InvalidCurrency("Transaction", $lineItem->account->account_type);
+            throw new InvalidCurrency("Transaction", $lineItem->account);
         }
 
         if (count($lineItem->ledgers) > 0) {
@@ -631,7 +631,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         if (in_array($this->account->account_type, config('ifrs.single_currency')) && 
             $this->account->currency_id != $this->currency_id && 
             $this->currency_id != Auth::user()->entity->currency_id) {
-            throw new InvalidCurrency("Transaction", $this->account->account_type);
+            throw new InvalidCurrency("Transaction", $this->account);
         }
 
         if(!isset($this->currency_id)){

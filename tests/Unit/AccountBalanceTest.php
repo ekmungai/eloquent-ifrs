@@ -248,6 +248,7 @@ class AccountBalanceTest extends TestCase
     public function testInvalidBalanceCurrency()
     {
         $account = factory(Account::class)->create([
+            'name' => 'Savings & Loan',
             'account_type' => Account::BANK,
             'category_id' => null,
             'currency_id' => factory(Currency::class)->create([
@@ -256,7 +257,7 @@ class AccountBalanceTest extends TestCase
         ]);
 
         $this->expectException(InvalidCurrency::class);
-        $this->expectExceptionMessage('Balance Currency must be the same as the Bank Account Currency ');
+        $this->expectExceptionMessage('Balance Currency must be the same as the Bank: Savings & Loan Account Currency ');
 
         factory(Balance::class)->create([
             "account_id" => $account->id

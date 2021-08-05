@@ -295,7 +295,7 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
         }
 
         if (in_array($this->account->account_type, config('ifrs.single_currency')) && $this->account->currency_id != $this->currency_id) {
-            throw new InvalidCurrency("Balance", $this->account->account_type);
+            throw new InvalidCurrency("Balance", $this->account);
         }
 
         if (ReportingPeriod::periodStart()->lt($this->transaction_date) && !$this->entity->mid_year_balances) {

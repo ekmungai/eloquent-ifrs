@@ -20,7 +20,7 @@ class InvalidTransactionType extends IFRSException
      */
     public function __construct(string $message = null, int $code = null)
     {
-        $error = "Transaction Type Cannot be edited ";
+        $error = "Transaction Type cannot be edited";
 
         parent::__construct($error . ' ' . $message, $code);
     }
