@@ -71,6 +71,8 @@ abstract class FinancialStatement
     {
         if (is_null($entity)) {
             $this->entity = Auth::user()->entity;
+        }else{
+            $this->entity = $entity;
         }
         $this->reportingPeriod = is_null($period) ? $this->entity->currentReportingPeriod : $period;
 
