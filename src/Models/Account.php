@@ -136,6 +136,7 @@ class Account extends Model implements Recyclable, Segregatable
      * Get all accounts with opening balances for the given year
      *
      * @param int $year
+     * @param Entity|null $entity
      *
      * @return array
      */
@@ -168,6 +169,7 @@ class Account extends Model implements Recyclable, Segregatable
      * @param string $accountType
      * @param string | Carbon $startDate
      * @param string | Carbon $endDate
+     * @param Entity|null $entity
      *
      * @return array
      */
