@@ -61,6 +61,8 @@ class AgingSchedule
     {
         if (is_null($entity)) {
             $this->entity = Auth::user()->entity;
+        }else{
+            $this->entity = $entity;
         }
         
         $this->period['endDate'] = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
