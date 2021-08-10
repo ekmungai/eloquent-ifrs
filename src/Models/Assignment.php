@@ -114,28 +114,22 @@ class Assignment extends Model implements Segregatable
         foreach ($schedule->transactions as $outstanding) {
 
             if ($outstanding->unclearedAmount > $balance) {
-                $assignment = new Assignment(
-                    [
-                        'assignment_date' => Carbon::now(),
-                        'transaction_id' => $transaction->id,
-                        'cleared_id' => $outstanding->id,
-                        'cleared_type' => $outstanding->cleared_type,
-                        'amount' => $balance,
-                    ]
-                );
-                $assignment->save();
+                Assignment::create([
+                    'assignment_date' => Carbon::now(),
+                    'transaction_id' => $transaction->id,
+                    'cleared_id' => $outstanding->id,
+                    'cleared_type' => $outstanding->cleared_type,
+                    'amount' => $balance,
+                ]);
                 break;
             } else {
-                $assignment = new Assignment(
-                    [
-                        'assignment_date' => Carbon::now(),
-                        'transaction_id' => $transaction->id,
-                        'cleared_id' => $outstanding->id,
-                        'cleared_type' => $outstanding->cleared_type,
-                        'amount' => $outstanding->unclearedAmount,
-                    ]
-                );
-                $assignment->save();
+                Assignment::create([
+                    'assignment_date' => Carbon::now(),
+                    'transaction_id' => $transaction->id,
+                    'cleared_id' => $outstanding->id,
+                    'cleared_type' => $outstanding->cleared_type,
+                    'amount' => $outstanding->unclearedAmount,
+                ]);
                 $balance -= $outstanding->unclearedAmount;
             }
         }

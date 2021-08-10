@@ -1041,7 +1041,7 @@ class AssignmentTest extends TestCase
         $cleared->post();
 
         $this->expectException(InvalidClearanceAccount::class);
-        $this->expectExceptionMessage('Assignment and Clearance Main Account must be the same');
+        $this->expectExceptionMessage('Assignment and Clearance Main Account must be the same ');
 
         $assignment = new Assignment([
             'assignment_date' => Carbon::now(),
@@ -1107,7 +1107,7 @@ class AssignmentTest extends TestCase
         $cleared->post();
 
         $this->expectException(InvalidClearanceCurrency::class);
-        $this->expectExceptionMessage('Assignment Transaction and Clearance Currency must be the same');
+        $this->expectExceptionMessage('Assignment and Clearance Currency must be the same ');
 
         $assignment = new Assignment([
             'assignment_date' => Carbon::now(),

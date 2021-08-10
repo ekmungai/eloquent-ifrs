@@ -24,6 +24,6 @@ class MixedAssignment extends IFRSException
     {
         $error = "A Transaction that has been " . $previous . " cannot be " . $current;
 
-        parent::__construct($error . $message, $code);
+        parent::__construct($error . $message. ' ', $code);
     }
 }
