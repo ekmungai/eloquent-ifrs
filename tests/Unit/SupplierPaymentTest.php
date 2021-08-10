@@ -6,8 +6,6 @@ use Carbon\Carbon;
 
 use IFRS\Tests\TestCase;
 
-use Illuminate\Support\Facades\Auth;
-
 use IFRS\Models\Account;
 use IFRS\Models\Balance;
 use IFRS\Models\Currency;
@@ -182,58 +180,5 @@ class SupplierPaymentTest extends TestCase
 
         $found = SupplierPayment::find($transaction->id);
         $this->assertEquals($found->transaction_no, $transaction->transaction_no);
-    }
-
-    /**
-     * Test Supplier Payment Fetch.
-     *
-     * @return void
-     */
-    public function testSupplierPaymentFetch()
-    {
-        $account = factory(Account::class)->create([
-            'account_type' => Account::PAYABLE,
-            'category_id' => null
-        ]);
-        $transaction = new SupplierPayment([
-            "account_id" => $account->id,
-            "transaction_date" => Carbon::now(),
-            "narration" => $this->faker->word,
-        ]);
-        $transaction->save();
-
-        $account2 = factory(Account::class)->create([
-            'account_type' => Account::PAYABLE,
-            'category_id' => null
-        ]);
-        $transaction2 = new SupplierPayment([
-            "account_id" => $account2->id,
-            "transaction_date" => Carbon::now()->addWeeks(2),
-            "narration" => $this->faker->word,
-        ]);
-        $transaction2->save();
-
-        // startTime Filter
-        $this->assertEquals(count(SupplierPayment::fetch()), 2);
-        $this->assertEquals(count(SupplierPayment::fetch(Carbon::now()->addWeek())), 1);
-        $this->assertEquals(count(SupplierPayment::fetch(Carbon::now()->addWeeks(3))), 0);
-
-        // endTime Filter
-        $this->assertEquals(count(SupplierPayment::fetch(null, Carbon::now())), 1);
-        $this->assertEquals(count(SupplierPayment::fetch(null, Carbon::now()->subDay())), 0);
-
-        // Account Filter
-        $account3 = factory(Account::class)->create([
-            'account_type' => Account::PAYABLE,
-            'category_id' => null
-        ]);
-        $this->assertEquals(count(SupplierPayment::fetch(null, null, $account)), 1);
-        $this->assertEquals(count(SupplierPayment::fetch(null, null, $account2)), 1);
-        $this->assertEquals(count(SupplierPayment::fetch(null, null, $account3)), 0);
-
-        // Currency Filter
-        $currency = factory(Currency::class)->create();
-        $this->assertEquals(count(SupplierPayment::fetch(null, null, null, Auth::user()->entity->currency)), 2);
-        $this->assertEquals(count(SupplierPayment::fetch(null, null, null, $currency)), 0);
     }
 }

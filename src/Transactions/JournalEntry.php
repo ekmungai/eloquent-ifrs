@@ -11,11 +11,9 @@
 namespace IFRS\Transactions;
 
 use IFRS\Interfaces\Clearable;
-use IFRS\Interfaces\Fetchable;
 use IFRS\Interfaces\Assignable;
 
 use IFRS\Traits\Clearing;
-use IFRS\Traits\Fetching;
 use IFRS\Traits\Assigning;
 
 use IFRS\Models\Transaction;
@@ -40,11 +38,10 @@ use IFRS\Models\Transaction;
  * @property Carbon $deleted_at
  */
 
-class JournalEntry extends Transaction implements Assignable, Clearable, Fetchable
+class JournalEntry extends Transaction implements Assignable, Clearable
 {
     use Assigning;
     use Clearing;
-    use Fetching;
 
     use \Parental\HasParent;
 

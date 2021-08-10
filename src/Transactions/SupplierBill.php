@@ -11,7 +11,6 @@
 namespace IFRS\Transactions;
 
 use IFRS\Interfaces\Buys;
-use IFRS\Interfaces\Fetchable;
 use IFRS\Interfaces\Clearable;
 
 use IFRS\Traits\Buying;
@@ -20,10 +19,9 @@ use IFRS\Traits\Clearing;
 
 use IFRS\Models\Transaction;
 
-class SupplierBill extends Transaction implements Buys, Fetchable, Clearable
+class SupplierBill extends Transaction implements Buys, Clearable
 {
     use Buying;
-    use Fetching;
     use Clearing;
 
     use \Parental\HasParent;

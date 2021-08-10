@@ -4,13 +4,10 @@ namespace Tests\Unit;
 
 use Carbon\Carbon;
 
-use Illuminate\Support\Facades\Auth;
-
 use IFRS\Tests\TestCase;
 
 use IFRS\Models\Account;
 use IFRS\Models\Balance;
-use IFRS\Models\Currency;
 use IFRS\Models\LineItem;
 use IFRS\Models\Ledger;
 use IFRS\Models\Vat;
@@ -185,59 +182,5 @@ class ClientInvoiceTest extends TestCase
 
         $found = ClientInvoice::find($transaction->id);
         $this->assertEquals($found->transaction_no, $transaction->transaction_no);
-    }
-
-    /**
-     * Test Client Invoice Fetch.
-     *
-     * @return void
-     */
-    public function testClientInvoiceFetch()
-    {
-        $account = factory(Account::class)->create([
-            'account_type' => Account::RECEIVABLE,
-            'category_id' => null
-        ]);
-        $transaction = new ClientInvoice([
-            "account_id" => $account->id,
-            "transaction_date" => Carbon::now(),
-            "narration" => $this->faker->word,
-        ]);
-        $transaction->save();
-
-        $account2 = factory(Account::class)->create([
-            'account_type' => Account::RECEIVABLE,
-            'category_id' => null
-        ]);
-
-        $transaction2 = new ClientInvoice([
-            "account_id" => $account2->id,
-            "transaction_date" => Carbon::now()->addWeeks(2),
-            "narration" => $this->faker->word,
-        ]);
-        $transaction2->save();
-
-        // startTime Filter
-        $this->assertEquals(count(ClientInvoice::fetch()), 2);
-        $this->assertEquals(count(ClientInvoice::fetch(Carbon::now()->addWeek())), 1);
-        $this->assertEquals(count(ClientInvoice::fetch(Carbon::now()->addWeeks(3))), 0);
-
-        // endTime Filter
-        $this->assertEquals(count(ClientInvoice::fetch(null, Carbon::now())), 1);
-        $this->assertEquals(count(ClientInvoice::fetch(null, Carbon::now()->subDay())), 0);
-
-        // Account Filter
-        $account3 = factory(Account::class)->create([
-            'account_type' => Account::RECEIVABLE,
-            'category_id' => null
-        ]);
-        $this->assertEquals(count(ClientInvoice::fetch(null, null, $account)), 1);
-        $this->assertEquals(count(ClientInvoice::fetch(null, null, $account2)), 1);
-        $this->assertEquals(count(ClientInvoice::fetch(null, null, $account3)), 0);
-
-        // Currency Filter
-        $currency = factory(Currency::class)->create();
-        $this->assertEquals(count(ClientInvoice::fetch(null, null, null, Auth::user()->entity->currency)), 2);
-        $this->assertEquals(count(ClientInvoice::fetch(null, null, null, $currency)), 0);
     }
 }

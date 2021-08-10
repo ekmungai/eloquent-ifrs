@@ -10,10 +10,8 @@
 
 namespace IFRS\Transactions;
 
-use IFRS\Interfaces\Fetchable;
 use IFRS\Interfaces\Assignable;
 
-use IFRS\Traits\Fetching;
 use IFRS\Traits\Assigning;
 
 use IFRS\Models\Account;
@@ -24,9 +22,8 @@ use IFRS\Exceptions\VatCharge;
 use IFRS\Exceptions\MainAccount;
 use IFRS\Exceptions\LineItemAccount;
 
-class ClientReceipt extends Transaction implements Fetchable, Assignable
+class ClientReceipt extends Transaction implements Assignable
 {
-    use Fetching;
     use Assigning;
 
     use \Parental\HasParent;
