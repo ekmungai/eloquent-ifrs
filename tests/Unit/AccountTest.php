@@ -24,6 +24,7 @@ use IFRS\Transactions\ClientReceipt;
 use IFRS\Transactions\JournalEntry;
 use IFRS\Transactions\SupplierBill;
 use IFRS\User;
+use Illuminate\Support\Facades\Auth;
 
 class AccountTest extends TestCase
 {
@@ -83,6 +84,34 @@ class AccountTest extends TestCase
 
         $this->be(User::withoutGlobalScopes()->find(1));
         $this->assertEquals(count(Account::all()), 0);
+    }
+
+    /**
+     * Test Account model Sessionless Entity Scope.
+     *
+     * @return void
+     */
+    public function testAccountSessionlessEntityScope()
+    {
+        $entity = factory(Entity::class)->create();
+
+        $type = $this->faker->randomElement(array_keys(config('ifrs')['accounts']));
+
+        Account::create([
+            'name' => $this->faker->name,
+            'currency_id' => factory(Currency::class)->create()->id,
+            'account_type' => $type,
+            'category_id' => null,
+            'entity_id' => $entity->id
+        ]);
+
+        // Scope applies to session user entity
+        $this->assertEquals(count(Account::all()), 0);
+
+        Auth::logout();
+
+        // Scope is bypassed 
+        $this->assertEquals(count((new Account(['entity_id' => $entity->id]))->get()), 1);
     }
 
     /**

@@ -26,10 +26,11 @@ class EntityScope implements Scope
      */
     public function apply(Builder $builder, Model $model)
     {
-        $model = null;
         $user = Auth::user();
-        if (!is_null($user)) {
-            $builder->where('entity_id', Auth::user()->entity->id);
+        if(!is_null($model->entity_id)){
+            $builder->where('entity_id', $model->entity_id);
+        }elseif(!is_null($user)){
+            $builder->where('entity_id', $user->entity_id);
         }
     }
 }
