@@ -511,7 +511,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
             throw new InvalidCurrency("Transaction", $lineItem->account);
         }
 
-        if (count($lineItem->ledgers) > 0) {
+        if (count($this->ledgers) > 0) {
             throw new PostedTransaction("add LineItem to");
         }
 
@@ -532,7 +532,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
     public function removeLineItem(LineItem $lineItem): void
     {
         if (count($lineItem->ledgers) > 0) {
-            throw new PostedTransaction("remove LineItem from");
+            throw new PostedTransaction("remove LineItems from");
         }
 
         $key = $this->lineItemExists($lineItem->id);
@@ -588,20 +588,24 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
 
     /**
      * Create assignments for the assigned transactions being staged.
+     *
+     * @param int $forexAccountId
+     *
+     * @return null
      */
-    public function processAssigned(): void
+    public function processAssigned(int $forexAccountId = null): void
     {
         foreach ($this->assigned as $outstanding) {
             $cleared = Transaction::find($outstanding['id']);
 
-            $assignment = new Assignment([
+            Assignment::create([
                 'assignment_date' => Carbon::now(),
                 'transaction_id' => $this->id,
+                'forex_account_id' => $forexAccountId,
                 'cleared_id' => $cleared->id,
                 'cleared_type' => $cleared->cleared_type,
                 'amount' => $outstanding['amount'],
             ]);
-            $assignment->save();
         }
     }
 

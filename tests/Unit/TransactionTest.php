@@ -757,7 +757,7 @@ class TransactionTest extends TestCase
 
         $lineItem = LineItem::find($lineItem->id);
         $this->expectException(PostedTransaction::class);
-        $this->expectExceptionMessage('Cannot remove LineItem from a posted Transaction');
+        $this->expectExceptionMessage('Cannot remove LineItems from a posted Transaction');
 
         $transaction->removeLineItem($lineItem);
 
