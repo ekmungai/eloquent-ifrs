@@ -10,23 +10,27 @@
 
 namespace IFRS\Models;
 
-use IFRS\Exceptions\InvalidAccountClassBalance;
-use IFRS\Exceptions\InvalidBalanceDate;
-use IFRS\Exceptions\InvalidBalanceTransaction;
-use IFRS\Exceptions\InvalidBalanceType;
-use IFRS\Exceptions\InvalidCurrency;
-use IFRS\Exceptions\NegativeAmount;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+use IFRS\Reports\IncomeStatement;
+
 use IFRS\Interfaces\Clearable;
 use IFRS\Interfaces\Recyclable;
 use IFRS\Interfaces\Segregatable;
-use IFRS\Reports\IncomeStatement;
+
 use IFRS\Traits\Clearing;
-use IFRS\Traits\ModelTablePrefix;
 use IFRS\Traits\Recycling;
 use IFRS\Traits\Segregating;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Auth;
+use IFRS\Traits\ModelTablePrefix;
+
+use IFRS\Exceptions\NegativeAmount;
+use IFRS\Exceptions\InvalidBalanceType;
+use IFRS\Exceptions\InvalidBalanceDate;
+use IFRS\Exceptions\InvalidBalanceTransaction;
+use IFRS\Exceptions\InvalidAccountClassBalance;
+use IFRS\Exceptions\InvalidCurrency;
 
 /**
  * Class Balance

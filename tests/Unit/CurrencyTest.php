@@ -2,13 +2,16 @@
 
 namespace Tests\Unit;
 
+use Illuminate\Support\Facades\Auth;
+
+use IFRS\Tests\TestCase;
+
+use IFRS\User;
+
 use IFRS\Models\Currency;
 use IFRS\Models\Entity;
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\RecycledObject;
-use IFRS\Tests\TestCase;
-use IFRS\User;
-use Illuminate\Support\Facades\Auth;
 
 class CurrencyTest extends TestCase
 {

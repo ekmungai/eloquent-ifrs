@@ -22,11 +22,13 @@ namespace IFRS\Models;
  * @property Carbon $deleted_at
  */
 
-use IFRS\Interfaces\Segregatable;
-use IFRS\Traits\ModelTablePrefix;
-use IFRS\Traits\Segregating;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
+use IFRS\Interfaces\Segregatable;
+
+use IFRS\Traits\Segregating;
+use IFRS\Traits\ModelTablePrefix;
 
 class RecycledObject extends Model implements Segregatable
 {

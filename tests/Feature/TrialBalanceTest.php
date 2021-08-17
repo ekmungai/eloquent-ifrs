@@ -4,7 +4,8 @@ namespace Tests\Feature;
 
 use Carbon\Carbon;
 
-use IFRS\Models\Transaction;
+use Illuminate\Support\Facades\Auth;
+
 use IFRS\Tests\TestCase;
 
 use IFRS\Models\Account;
@@ -14,6 +15,8 @@ use IFRS\Models\ExchangeRate;
 use IFRS\Models\LineItem;
 use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Vat;
+use IFRS\Models\Transaction;
+
 use IFRS\Reports\BalanceSheet;
 use IFRS\Reports\IncomeStatement;
 use IFRS\Reports\TrialBalance;
@@ -23,7 +26,6 @@ use IFRS\Transactions\SupplierBill;
 use IFRS\Transactions\CashPurchase;
 use IFRS\Transactions\ContraEntry;
 use IFRS\Transactions\ClientInvoice;
-use Illuminate\Support\Facades\Auth;
 
 class TrialBalanceTest extends TestCase
 {

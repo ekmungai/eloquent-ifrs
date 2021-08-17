@@ -12,6 +12,8 @@ namespace Tests\Feature;
 
 use Carbon\Carbon;
 
+use Illuminate\Support\Facades\Auth;
+
 use IFRS\Tests\TestCase;
 
 use IFRS\Models\Account;
@@ -19,6 +21,8 @@ use IFRS\Models\Assignment;
 use IFRS\Models\Balance;
 use IFRS\Models\Currency;
 use IFRS\Models\ExchangeRate;
+use IFRS\Models\Transaction;
+use IFRS\Models\Vat;
 use IFRS\Models\LineItem;
 
 use IFRS\Transactions\ClientInvoice;
@@ -33,9 +37,6 @@ use IFRS\Reports\AccountSchedule;
 
 use IFRS\Exceptions\MissingAccount;
 use IFRS\Exceptions\InvalidAccountType;
-use IFRS\Models\Transaction;
-use IFRS\Models\Vat;
-use Illuminate\Support\Facades\Auth;
 
 class AccountScheduleTest extends TestCase
 {

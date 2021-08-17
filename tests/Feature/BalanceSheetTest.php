@@ -5,10 +5,12 @@ namespace Tests\Feature;
 use Carbon\Carbon;
 
 use Faker\Factory;
-use IFRS\Models\Entity;
-use IFRS\Models\Transaction;
+
+use Illuminate\Support\Facades\Auth;
+
 use IFRS\Tests\TestCase;
 
+use IFRS\Models\Transaction;
 use IFRS\Models\Account;
 use IFRS\Models\Balance;
 use IFRS\Models\Currency;
@@ -16,12 +18,12 @@ use IFRS\Models\ExchangeRate;
 use IFRS\Models\LineItem;
 use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Vat;
+
 use IFRS\Reports\BalanceSheet;
 
 use IFRS\Transactions\SupplierBill;
 use IFRS\Transactions\CashSale;
 use IFRS\Transactions\JournalEntry;
-use Illuminate\Support\Facades\Auth;
 
 class BalanceSheetTest extends TestCase
 {

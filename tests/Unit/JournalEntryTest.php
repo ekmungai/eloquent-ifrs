@@ -14,6 +14,7 @@ use IFRS\Models\Currency;
 use IFRS\Models\LineItem;
 use IFRS\Models\Ledger;
 use IFRS\Models\Vat;
+
 use IFRS\Transactions\JournalEntry;
 
 class JournalEntryTest extends TestCase

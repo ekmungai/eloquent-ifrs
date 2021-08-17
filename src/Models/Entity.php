@@ -11,13 +11,17 @@
 namespace IFRS\Models;
 
 use Carbon\Carbon;
-use IFRS\Exceptions\MissingReportingCurrency;
-use IFRS\Exceptions\UnconfiguredLocale;
-use IFRS\Interfaces\Recyclable;
-use IFRS\Traits\ModelTablePrefix;
-use IFRS\Traits\Recycling;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
+use IFRS\Exceptions\MissingReportingCurrency;
+use IFRS\Exceptions\UnconfiguredLocale;
+
+use IFRS\Interfaces\Recyclable;
+
+use IFRS\Traits\Recycling;
+use IFRS\Traits\ModelTablePrefix;
 
 /**
  * Class Entity

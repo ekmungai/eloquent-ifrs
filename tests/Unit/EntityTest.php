@@ -2,17 +2,21 @@
 
 namespace Tests\Unit;
 
-use IFRS\Exceptions\MissingReportingCurrency;
-use IFRS\Exceptions\UnauthorizedUser;
-use IFRS\Exceptions\UnconfiguredLocale;
-use IFRS\Models\Account;
+use Illuminate\Support\Facades\Auth;
+
+use IFRS\Tests\TestCase;
+
+use IFRS\User;
+
 use IFRS\Models\Currency;
 use IFRS\Models\Entity;
 use IFRS\Models\RecycledObject;
 use IFRS\Models\ReportingPeriod;
-use IFRS\Tests\TestCase;
-use IFRS\User;
-use Illuminate\Support\Facades\Auth;
+use IFRS\Models\Account;
+
+use IFRS\Exceptions\UnauthorizedUser;
+use IFRS\Exceptions\UnconfiguredLocale;
+use IFRS\Exceptions\MissingReportingCurrency;
 
 class EntityTest extends TestCase
 {

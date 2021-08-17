@@ -15,11 +15,13 @@ use IFRS\Exceptions\MainAccount;
 use IFRS\Exceptions\VatCharge;
 use IFRS\Interfaces\Assignable;
 use IFRS\Interfaces\Fetchable;
+
+use IFRS\Traits\Assigning;
+use IFRS\Traits\Fetching;
+
 use IFRS\Models\Account;
 use IFRS\Models\LineItem;
 use IFRS\Models\Transaction;
-use IFRS\Traits\Assigning;
-use IFRS\Traits\Fetching;
 
 class ClientReceipt extends Transaction implements Fetchable, Assignable
 {

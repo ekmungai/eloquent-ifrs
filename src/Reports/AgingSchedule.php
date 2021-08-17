@@ -11,10 +11,12 @@
 namespace IFRS\Reports;
 
 use Carbon\Carbon;
+
+use Illuminate\Support\Facades\Auth;
+
+use IFRS\Models\Entity;
 use IFRS\Models\Account;
 use IFRS\Models\Currency;
-use IFRS\Models\Entity;
-use Illuminate\Support\Facades\Auth;
 
 class AgingSchedule
 {

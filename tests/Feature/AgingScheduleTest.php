@@ -4,16 +4,19 @@ namespace Tests\Feature;
 
 use Carbon\Carbon;
 
+use IFRS\Tests\TestCase;
+
 use IFRS\Models\Account;
 use IFRS\Models\Balance;
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\LineItem;
-use IFRS\Tests\TestCase;
-use IFRS\Transactions\ClientInvoice;
-use IFRS\Transactions\CreditNote;
 use IFRS\Models\Assignment;
 use IFRS\Models\Vat;
+
+use IFRS\Transactions\ClientInvoice;
+use IFRS\Transactions\CreditNote;
 use IFRS\Transactions\JournalEntry;
+
 use IFRS\Reports\AgingSchedule;
 
 class AgingScheduleTest extends TestCase

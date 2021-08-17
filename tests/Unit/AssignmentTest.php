@@ -3,6 +3,28 @@
 namespace Tests\Unit;
 
 use Carbon\Carbon;
+
+use IFRS\Tests\TestCase;
+
+use IFRS\User;
+
+use IFRS\Models\Account;
+use IFRS\Models\Assignment;
+use IFRS\Models\Balance;
+use IFRS\Models\Currency;
+use IFRS\Models\Entity;
+use IFRS\Models\ExchangeRate;
+use IFRS\Models\LineItem;
+use IFRS\Models\ReportingPeriod;
+use IFRS\Models\Transaction;
+use IFRS\Models\Vat;
+
+use IFRS\Transactions\ClientInvoice;
+use IFRS\Transactions\ClientReceipt;
+use IFRS\Transactions\JournalEntry;
+use IFRS\Transactions\SupplierPayment;
+use IFRS\Transactions\SupplierBill;
+
 use IFRS\Exceptions\InsufficientBalance;
 use IFRS\Exceptions\InvalidClearanceAccount;
 use IFRS\Exceptions\InvalidClearanceCurrency;
@@ -15,24 +37,6 @@ use IFRS\Exceptions\SelfClearance;
 use IFRS\Exceptions\UnassignableTransaction;
 use IFRS\Exceptions\UnclearableTransaction;
 use IFRS\Exceptions\UnpostedAssignment;
-use IFRS\Models\Account;
-use IFRS\Models\Assignment;
-use IFRS\Models\Balance;
-use IFRS\Models\Currency;
-use IFRS\Models\Entity;
-use IFRS\Models\ExchangeRate;
-use IFRS\Models\LineItem;
-use IFRS\Models\ReportingPeriod;
-use IFRS\Models\Transaction;
-use IFRS\Models\Vat;
-use IFRS\Tests\TestCase;
-use IFRS\Transactions\ClientInvoice;
-use IFRS\Transactions\ClientReceipt;
-use IFRS\Transactions\JournalEntry;
-use IFRS\Transactions\SupplierBill;
-use IFRS\Transactions\SupplierPayment;
-use IFRS\User;
-
 class AssignmentTest extends TestCase
 {
     /**

@@ -3,9 +3,13 @@
 namespace Tests\Unit;
 
 use Carbon\Carbon;
-use IFRS\Exceptions\HangingTransactions;
-use IFRS\Exceptions\InvalidCategoryType;
-use IFRS\Exceptions\MissingAccountType;
+
+use Illuminate\Support\Facades\Auth;
+
+use IFRS\Tests\TestCase;
+
+use IFRS\User;
+
 use IFRS\Models\Account;
 use IFRS\Models\Balance;
 use IFRS\Models\Category;
@@ -18,13 +22,15 @@ use IFRS\Models\LineItem;
 use IFRS\Models\RecycledObject;
 use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Vat;
-use IFRS\Tests\TestCase;
+
 use IFRS\Transactions\ClientInvoice;
 use IFRS\Transactions\ClientReceipt;
 use IFRS\Transactions\JournalEntry;
 use IFRS\Transactions\SupplierBill;
-use IFRS\User;
-use Illuminate\Support\Facades\Auth;
+
+use IFRS\Exceptions\HangingTransactions;
+use IFRS\Exceptions\InvalidCategoryType;
+use IFRS\Exceptions\MissingAccountType;
 
 class AccountTest extends TestCase
 {

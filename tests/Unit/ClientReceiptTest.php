@@ -12,6 +12,7 @@ use IFRS\Models\Account;
 use IFRS\Models\Balance;
 use IFRS\Models\Currency;
 use IFRS\Models\Ledger;
+use IFRS\Models\Vat;
 use IFRS\Models\LineItem;
 
 use IFRS\Transactions\ClientReceipt;
@@ -19,7 +20,6 @@ use IFRS\Transactions\ClientReceipt;
 use IFRS\Exceptions\LineItemAccount;
 use IFRS\Exceptions\MainAccount;
 use IFRS\Exceptions\VatCharge;
-use IFRS\Models\Vat;
 
 class ClientReceiptTest extends TestCase
 {

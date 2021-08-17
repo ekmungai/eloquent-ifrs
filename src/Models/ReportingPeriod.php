@@ -11,21 +11,26 @@
 namespace IFRS\Models;
 
 use Carbon\Carbon;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
+
+use IFRS\Interfaces\Recyclable;
+use IFRS\Interfaces\Segregatable;
+
+use IFRS\Traits\Recycling;
+use IFRS\Traits\Segregating;
+use IFRS\Traits\ModelTablePrefix;
+
+use IFRS\Exceptions\MissingReportingPeriod;
 use IFRS\Exceptions\InvalidAccountType;
 use IFRS\Exceptions\InvalidPeriodStatus;
 use IFRS\Exceptions\MissingClosingRate;
-use IFRS\Exceptions\MissingReportingPeriod;
-use IFRS\Interfaces\Recyclable;
-use IFRS\Interfaces\Segregatable;
+
 use IFRS\Reports\BalanceSheet;
-use IFRS\Traits\ModelTablePrefix;
-use IFRS\Traits\Recycling;
-use IFRS\Traits\Segregating;
 use IFRS\Transactions\JournalEntry;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Class ReportingPeriod

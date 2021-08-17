@@ -3,16 +3,21 @@
 namespace Tests\Unit;
 
 use Carbon\Carbon;
-use IFRS\Exceptions\NegativeAmount;
+
+use IFRS\Tests\TestCase;
+
+use IFRS\User;
+
 use IFRS\Models\Account;
 use IFRS\Models\Currency;
 use IFRS\Models\Entity;
 use IFRS\Models\LineItem;
 use IFRS\Models\Transaction;
 use IFRS\Models\Vat;
-use IFRS\Tests\TestCase;
+
 use IFRS\Transactions\ClientInvoice;
-use IFRS\User;
+
+use IFRS\Exceptions\NegativeAmount;
 
 class LineItemTest extends TestCase
 {

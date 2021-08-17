@@ -6,19 +6,10 @@ use Carbon\Carbon;
 
 use Illuminate\Support\Facades\DB;
 
-use IFRS\User;
 
 use IFRS\Tests\TestCase;
 
-use IFRS\Exceptions\AdjustingReportingPeriod;
-use IFRS\Exceptions\ClosedReportingPeriod;
-use IFRS\Exceptions\HangingClearances;
-use IFRS\Exceptions\InvalidCurrency;
-use IFRS\Exceptions\MissingLineItem;
-use IFRS\Exceptions\PostedTransaction;
-use IFRS\Exceptions\RedundantTransaction;
-use IFRS\Exceptions\UnpostedAssignment;
-use IFRS\Exceptions\InvalidTransactionDate;
+use IFRS\User;
 
 use IFRS\Models\Account;
 use IFRS\Models\Assignment;
@@ -33,6 +24,16 @@ use IFRS\Models\Vat;
 
 use IFRS\Transactions\ClientInvoice;
 use IFRS\Transactions\JournalEntry;
+
+use IFRS\Exceptions\AdjustingReportingPeriod;
+use IFRS\Exceptions\ClosedReportingPeriod;
+use IFRS\Exceptions\HangingClearances;
+use IFRS\Exceptions\InvalidCurrency;
+use IFRS\Exceptions\MissingLineItem;
+use IFRS\Exceptions\PostedTransaction;
+use IFRS\Exceptions\RedundantTransaction;
+use IFRS\Exceptions\UnpostedAssignment;
+use IFRS\Exceptions\InvalidTransactionDate;
 
 class TransactionTest extends TestCase
 {

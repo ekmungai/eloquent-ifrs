@@ -11,27 +11,32 @@
 namespace IFRS\Models;
 
 use Carbon\Carbon;
-use IFRS\Exceptions\AdjustingReportingPeriod;
-use IFRS\Exceptions\ClosedReportingPeriod;
-use IFRS\Exceptions\HangingClearances;
-use IFRS\Exceptions\InvalidCurrency;
-use IFRS\Exceptions\InvalidTransactionDate;
-use IFRS\Exceptions\MissingLineItem;
-use IFRS\Exceptions\PostedTransaction;
-use IFRS\Exceptions\RedundantTransaction;
-use IFRS\Exceptions\UnpostedAssignment;
-use IFRS\Interfaces\Assignable;
-use IFRS\Interfaces\Clearable;
-use IFRS\Interfaces\Recyclable;
-use IFRS\Interfaces\Segregatable;
-use IFRS\Traits\Assigning;
-use IFRS\Traits\Clearing;
-use IFRS\Traits\ModelTablePrefix;
-use IFRS\Traits\Recycling;
-use IFRS\Traits\Segregating;
+
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Auth;
+
+use IFRS\Interfaces\Clearable;
+use IFRS\Interfaces\Assignable;
+use IFRS\Interfaces\Recyclable;
+use IFRS\Interfaces\Segregatable;
+
+use IFRS\Traits\Clearing;
+use IFRS\Traits\Assigning;
+use IFRS\Traits\Recycling;
+use IFRS\Traits\Segregating;
+use IFRS\Traits\ModelTablePrefix;
+
+use IFRS\Exceptions\MissingLineItem;
+use IFRS\Exceptions\HangingClearances;
+use IFRS\Exceptions\PostedTransaction;
+use IFRS\Exceptions\UnpostedAssignment;
+use IFRS\Exceptions\RedundantTransaction;
+use IFRS\Exceptions\ClosedReportingPeriod;
+use IFRS\Exceptions\InvalidTransactionDate;
+use IFRS\Exceptions\AdjustingReportingPeriod;
+use IFRS\Exceptions\InvalidCurrency;
+use IFRS\Exceptions\InvalidTransactionType;
 
 /**
  * Class Transaction

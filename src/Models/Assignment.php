@@ -11,25 +11,30 @@
 namespace IFRS\Models;
 
 use Carbon\Carbon;
-use IFRS\Exceptions\InsufficientBalance;
-use IFRS\Exceptions\InvalidClearanceAccount;
-use IFRS\Exceptions\InvalidClearanceCurrency;
-use IFRS\Exceptions\InvalidClearanceEntry;
-use IFRS\Exceptions\MissingForexAccount;
-use IFRS\Exceptions\MixedAssignment;
-use IFRS\Exceptions\NegativeAmount;
-use IFRS\Exceptions\OverClearance;
-use IFRS\Exceptions\SelfClearance;
-use IFRS\Exceptions\UnassignableTransaction;
-use IFRS\Exceptions\UnclearableTransaction;
-use IFRS\Exceptions\UnpostedAssignment;
-use IFRS\Interfaces\Assignable;
-use IFRS\Interfaces\Segregatable;
-use IFRS\Reports\AccountSchedule;
-use IFRS\Traits\ModelTablePrefix;
-use IFRS\Traits\Segregating;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
+use IFRS\Reports\AccountSchedule;
+
+use IFRS\Interfaces\Assignable;
+use IFRS\Interfaces\Segregatable;
+
+use IFRS\Traits\Segregating;
+use IFRS\Traits\ModelTablePrefix;
+
+use IFRS\Exceptions\OverClearance;
+use IFRS\Exceptions\SelfClearance;
+use IFRS\Exceptions\NegativeAmount;
+use IFRS\Exceptions\MixedAssignment;
+use IFRS\Exceptions\UnpostedAssignment;
+use IFRS\Exceptions\InsufficientBalance;
+use IFRS\Exceptions\MissingForexAccount;
+use IFRS\Exceptions\InvalidClearanceEntry;
+use IFRS\Exceptions\UnclearableTransaction;
+use IFRS\Exceptions\InvalidClearanceAccount;
+use IFRS\Exceptions\UnassignableTransaction;
+use IFRS\Exceptions\InvalidClearanceCurrency;
 
 /**
  * Class Assignment

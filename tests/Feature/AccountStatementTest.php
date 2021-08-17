@@ -4,12 +4,16 @@ namespace Tests\Feature;
 
 use Carbon\Carbon;
 
+use Illuminate\Support\Facades\Auth;
+
 use IFRS\Tests\TestCase;
 
 use IFRS\Models\Account;
 use IFRS\Models\Balance;
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\LineItem;
+use IFRS\Models\Currency;
+use IFRS\Models\Vat;
 
 use IFRS\Reports\AccountStatement;
 
@@ -25,9 +29,6 @@ use IFRS\Transactions\SupplierBill;
 use IFRS\Transactions\DebitNote;
 
 use IFRS\Exceptions\MissingAccount;
-use IFRS\Models\Currency;
-use IFRS\Models\Vat;
-use Illuminate\Support\Facades\Auth;
 
 class AccountStatementTest extends TestCase
 {

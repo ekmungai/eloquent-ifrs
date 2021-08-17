@@ -4,8 +4,9 @@ namespace Tests\Unit;
 
 use Illuminate\Support\Facades\Auth;
 
-use IFRS\User;
 use IFRS\Tests\TestCase;
+
+use IFRS\User;
 
 use IFRS\Models\Account;
 use IFRS\Models\Currency;

@@ -13,11 +13,12 @@ namespace IFRS\Transactions;
 use IFRS\Interfaces\Assignable;
 use IFRS\Interfaces\Clearable;
 use IFRS\Interfaces\Fetchable;
-use IFRS\Models\Transaction;
+
 use IFRS\Traits\Assigning;
 use IFRS\Traits\Clearing;
 use IFRS\Traits\Fetching;
 
+use IFRS\Models\Transaction;
 /**
  * Class JournalEntry
  *

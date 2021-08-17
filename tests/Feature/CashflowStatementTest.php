@@ -4,9 +4,12 @@ namespace Tests\Feature;
 
 use Carbon\Carbon;
 
+use Illuminate\Support\Facades\Auth;
+
+use IFRS\Tests\TestCase;
+
 use IFRS\Models\Currency;
 use IFRS\Models\Transaction;
-use IFRS\Tests\TestCase;
 
 use IFRS\Models\Account;
 use IFRS\Models\Balance;
@@ -14,7 +17,6 @@ use IFRS\Models\ExchangeRate;
 use IFRS\Models\LineItem;
 use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Vat;
-use IFRS\Reports\CashFlowStatement;
 
 use IFRS\Transactions\CreditNote;
 use IFRS\Transactions\JournalEntry;
@@ -22,7 +24,8 @@ use IFRS\Transactions\SupplierBill;
 use IFRS\Transactions\CashPurchase;
 use IFRS\Transactions\ClientInvoice;
 use IFRS\Transactions\DebitNote;
-use Illuminate\Support\Facades\Auth;
+
+use IFRS\Reports\CashFlowStatement;
 
 class CashFlowStatementTest extends TestCase
 {

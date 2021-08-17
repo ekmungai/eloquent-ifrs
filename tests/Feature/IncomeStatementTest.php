@@ -6,6 +6,8 @@ use Carbon\Carbon;
 
 use IFRS\Tests\TestCase;
 
+use Illuminate\Support\Facades\Auth;
+
 use IFRS\Models\Account;
 use IFRS\Models\LineItem;
 use IFRS\Models\ReportingPeriod;
@@ -13,7 +15,6 @@ use IFRS\Models\Vat;
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\Assignment;
 use IFRS\Models\Currency;
-use IFRS\Reports\IncomeStatement;
 
 use IFRS\Transactions\CashSale;
 use IFRS\Transactions\CreditNote;
@@ -22,7 +23,8 @@ use IFRS\Transactions\SupplierBill;
 use IFRS\Transactions\CashPurchase;
 use IFRS\Transactions\DebitNote;
 use IFRS\Transactions\ClientInvoice;
-use Illuminate\Support\Facades\Auth;
+
+use IFRS\Reports\IncomeStatement;
 
 class IncomeStatementTest extends TestCase
 {

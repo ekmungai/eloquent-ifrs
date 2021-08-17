@@ -11,18 +11,22 @@
 namespace IFRS\Models;
 
 use Carbon\Carbon;
-use IFRS\Exceptions\HangingTransactions;
-use IFRS\Exceptions\InvalidCategoryType;
-use IFRS\Exceptions\MissingAccountType;
-use IFRS\Interfaces\Recyclable;
-use IFRS\Interfaces\Segregatable;
-use IFRS\Traits\ModelTablePrefix;
-use IFRS\Traits\Recycling;
-use IFRS\Traits\Segregating;
+
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+
+use IFRS\Interfaces\Recyclable;
+use IFRS\Interfaces\Segregatable;
+
+use IFRS\Traits\Recycling;
+use IFRS\Traits\Segregating;
+use IFRS\Traits\ModelTablePrefix;
+
+use IFRS\Exceptions\MissingAccountType;
+use IFRS\Exceptions\HangingTransactions;
+use IFRS\Exceptions\InvalidCategoryType;
 
 /**
  * Class Account

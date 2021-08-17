@@ -10,10 +10,11 @@
 
 namespace IFRS\Reports;
 
-use IFRS\Models\Account;
-use IFRS\Models\Entity;
-use IFRS\Models\ReportingPeriod;
 use Illuminate\Support\Facades\Auth;
+
+use IFRS\Models\Entity;
+use IFRS\Models\Account;
+use IFRS\Models\ReportingPeriod;
 
 /**
  *
