@@ -30,7 +30,7 @@ class EntityScope implements Scope
         if(!is_null($model->entity_id)){
             $builder->where('entity_id', $model->entity_id);
         }elseif(!is_null($user)){
-            $builder->where('entity_id', $user->entity_id);
+            $builder->where('entity_id', $user->entity->id);
         }
     }
 }
