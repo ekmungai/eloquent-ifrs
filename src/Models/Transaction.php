@@ -574,14 +574,11 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
      */
     public function save(array $options = []): bool
     {
-
-
         if (is_null($this->entity_id)) {
             $entity = Auth::user()->entity;
         } else {
             $entity = $this->entity;
         }
-
 
         if (!isset($this->exchange_rate_id) && !is_null($entity)) {
             $this->exchange_rate_id = $entity->default_rate->id;
@@ -610,7 +607,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         
         if (in_array($this->account->account_type, config('ifrs.single_currency')) && 
             $this->account->currency_id != $this->currency_id && 
-            $this->currency_id != Auth::user()->entity->currency_id) {
+            $this->currency_id != $entity->currency_id) {
             throw new InvalidCurrency("Transaction", $this->account);
         }
 
