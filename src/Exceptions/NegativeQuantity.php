@@ -10,17 +10,18 @@
 
 namespace IFRS\Exceptions;
 
-class InvalidClearanceCurrency extends IFRSException
+class NegativeQuantity extends IFRSException
 {
     /**
-     * Invalid Clearance Currency Exception
+     * Negative Quantity Exception
      *
+     * @param string $modelType
      * @param string $message
-     * @param int $code
+     * @param int    $code
      */
     public function __construct(string $message = null, int $code = null)
     {
-        $error = "Assignment and Clearance Currency must be the same ";
+        $error = "LineItem Quantity cannot be negative ";
 
         parent::__construct($error . $message, $code);
     }

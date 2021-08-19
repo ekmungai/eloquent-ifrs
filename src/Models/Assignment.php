@@ -99,6 +99,8 @@ class Assignment extends Model implements Segregatable
      * Bulk assign a transaction to outstanding Transactions, under FIFO (First in first out) methodology
      *
      * @param Assignable $transaction
+     * 
+     * @return void
      */
 
     public static function bulkAssign(Assignable $transaction): void
@@ -112,28 +114,22 @@ class Assignment extends Model implements Segregatable
         foreach ($schedule->transactions as $outstanding) {
 
             if ($outstanding->unclearedAmount > $balance) {
-                $assignment = new Assignment(
-                    [
-                        'assignment_date' => Carbon::now(),
-                        'transaction_id' => $transaction->id,
-                        'cleared_id' => $outstanding->id,
-                        'cleared_type' => $outstanding->cleared_type,
-                        'amount' => $balance,
-                    ]
-                );
-                $assignment->save();
+                Assignment::create([
+                    'assignment_date' => Carbon::now(),
+                    'transaction_id' => $transaction->id,
+                    'cleared_id' => $outstanding->id,
+                    'cleared_type' => $outstanding->cleared_type,
+                    'amount' => $balance,
+                ]);
                 break;
             } else {
-                $assignment = new Assignment(
-                    [
-                        'assignment_date' => Carbon::now(),
-                        'transaction_id' => $transaction->id,
-                        'cleared_id' => $outstanding->id,
-                        'cleared_type' => $outstanding->cleared_type,
-                        'amount' => $outstanding->unclearedAmount,
-                    ]
-                );
-                $assignment->save();
+                Assignment::create([
+                    'assignment_date' => Carbon::now(),
+                    'transaction_id' => $transaction->id,
+                    'cleared_id' => $outstanding->id,
+                    'cleared_type' => $outstanding->cleared_type,
+                    'amount' => $outstanding->unclearedAmount,
+                ]);
                 $balance -= $outstanding->unclearedAmount;
             }
         }
@@ -168,6 +164,8 @@ class Assignment extends Model implements Segregatable
      * @param float $clearedRate
      * @param string $transactionType
      * @param string $clearedType
+     * 
+     * @return void
      */
     private function validate(float $transactionRate, float $clearedRate, string $transactionType, string $clearedType): void
     {
@@ -230,7 +228,7 @@ class Assignment extends Model implements Segregatable
      *
      * @return string
      */
-    public function toString($type = false)
+    public function toString($type = false): string
     {
         $classname = explode('\\', self::class);
         $description = 'Assigning ' . $this->transaction->transaction_no . ' on ' . $this->assignment_date;
@@ -272,7 +270,7 @@ class Assignment extends Model implements Segregatable
      *
      * @return object
      */
-    public function attributes()
+    public function attributes(): object
     {
         return (object)$this->attributes;
     }

@@ -33,7 +33,6 @@ use IFRS\Exceptions\PostedTransaction;
  * @property Transaction $transaction
  * @property Vat $vat
  * @property Account $account
- * @property Carbon $date
  * @property int $quantity
  * @property float $amount
  * @property bool $vat_inclusive
@@ -130,9 +129,12 @@ class LineItem extends Model implements Recyclable, Segregatable
      */
     public function save(array $options = []): bool
     {
-
         if ($this->amount < 0) {
             throw new NegativeAmount("LineItem");
+        }
+        
+        if ($this->quantity < 0) {
+            throw new NegativeQuantity();
         }
 
         if (!is_null($this->transaction) && count($this->transaction->ledgers) > 0 && $this->isDirty()) {

@@ -99,6 +99,10 @@ class Vat extends Model implements Segregatable, Recyclable
             $this->rate = abs($this->rate);
         }
 
+        if ($this->rate == 0) {
+            $this->account_id = null;
+        }
+
         if ($this->rate > 0 && is_null($this->account_id)) {
             throw new MissingVatAccount($this->rate);
         }

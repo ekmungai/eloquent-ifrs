@@ -424,10 +424,10 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
     public function addLineItem(LineItem $lineItem): void
     {
         if (in_array($lineItem->account->account_type, config('ifrs.single_currency')) && $lineItem->account->currency_id != $this->currency_id) {
-            throw new InvalidCurrency("Transaction", $lineItem->account->account_type);
+            throw new InvalidCurrency("Transaction", $lineItem->account);
         }
 
-        if (count($lineItem->ledgers) > 0) {
+        if (count($this->ledgers) > 0) {
             throw new PostedTransaction("add LineItem to");
         }
 
@@ -448,7 +448,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
     public function removeLineItem(LineItem $lineItem): void
     {
         if (count($lineItem->ledgers) > 0) {
-            throw new PostedTransaction("remove LineItem from");
+            throw new PostedTransaction("remove LineItems from");
         }
 
         $key = $this->lineItemExists($lineItem->id);
@@ -535,20 +535,24 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
 
     /**
      * Create assignments for the assigned transactions being staged.
+     *
+     * @param int $forexAccountId
+     *
+     * @return null
      */
-    public function processAssigned(): void
+    public function processAssigned(int $forexAccountId = null): void
     {
         foreach ($this->assigned as $outstanding) {
             $cleared = Transaction::find($outstanding['id']);
 
-            $assignment = new Assignment([
+            Assignment::create([
                 'assignment_date' => Carbon::now(),
                 'transaction_id' => $this->id,
+                'forex_account_id' => $forexAccountId,
                 'cleared_id' => $cleared->id,
                 'cleared_type' => $cleared->cleared_type,
                 'amount' => $outstanding['amount'],
             ]);
-            $assignment->save();
         }
     }
 
@@ -603,11 +607,11 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         if ($period->status == ReportingPeriod::ADJUSTING && $this->transaction_type != Transaction::JN) {
             throw new AdjustingReportingPeriod();
         }
-
-        if (in_array($this->account->account_type, config('ifrs.single_currency')) &&
-            $this->account->currency_id != $this->currency_id &&
-            $this->currency_id != $entity->currency_id) {
-            throw new InvalidCurrency("Transaction", $this->account->account_type);
+        
+        if (in_array($this->account->account_type, config('ifrs.single_currency')) && 
+            $this->account->currency_id != $this->currency_id && 
+            $this->currency_id != Auth::user()->entity->currency_id) {
+            throw new InvalidCurrency("Transaction", $this->account);
         }
 
         if (!isset($this->currency_id)) {
@@ -620,6 +624,10 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
                 Carbon::parse($this->transaction_date),
                 $entity
             );
+        }
+
+        if ($this->isDirty('transaction_type') && $this->transaction_type != $this->getOriginal('transaction_type') && !is_null($this->id)) {
+            throw new InvalidTransactionType();
         }
 
         $save = parent::save();
@@ -716,6 +724,9 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         // verify transaction ledger hashes
         return $this->ledgers->every(
             function ($ledger, $key) {
+                // echo PHP_EOL;
+                // echo $ledger->hashed();
+                // echo PHP_EOL;
                 return password_verify($ledger->hashed(), $ledger->hash);
             }
         );

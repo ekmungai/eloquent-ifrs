@@ -11,19 +11,17 @@
 namespace IFRS\Transactions;
 
 use IFRS\Interfaces\Assignable;
-use IFRS\Interfaces\Fetchable;
+
 use IFRS\Interfaces\Sells;
 
 use IFRS\Traits\Assigning;
-use IFRS\Traits\Fetching;
 use IFRS\Traits\Selling;
 
 use IFRS\Models\Transaction;
 
-class CreditNote extends Transaction implements Sells, Fetchable, Assignable
+class CreditNote extends Transaction implements Sells, Assignable
 {
     use Selling;
-    use Fetching;
     use Assigning;
 
     use \Parental\HasParent;

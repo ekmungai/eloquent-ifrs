@@ -24,9 +24,8 @@ use IFRS\Exceptions\LineItemAccount;
 use IFRS\Exceptions\MainAccount;
 use IFRS\Exceptions\VatCharge;
 
-class SupplierPayment extends Transaction implements Fetchable, Assignable
+class SupplierPayment extends Transaction implements Assignable
 {
-    use Fetching;
     use Assigning;
 
     use \Parental\HasParent;

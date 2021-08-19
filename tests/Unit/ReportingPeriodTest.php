@@ -749,7 +749,6 @@ class ReportingPeriodTest extends TestCase
                 [
                     "currency" => $currency2->currency_code,
                     "closingRate" => $closingRate2->exchangeRate->rate,
-                    "closingRate" => "100",
                     "currencyBalance" => -100,
                     "localBalance" => -9000,
                     "foreignBalance" => -10000,
@@ -763,7 +762,6 @@ class ReportingPeriodTest extends TestCase
                 [
                     "currency" => $currency1->currency_code,
                     "closingRate" => $closingRate1->exchangeRate->rate,
-                    "closingRate" => "100",
                     "currencyBalance" => -100,
                     "localBalance" => -9000,
                     "foreignBalance" => -10000,
@@ -777,8 +775,6 @@ class ReportingPeriodTest extends TestCase
                 [
                     "currency" => $currency1->currency_code,
                     "closingRate" => $closingRate1->exchangeRate->rate,
-                    "closingRate" => "100",
-                    "closingRate" => "100",
                     "currencyBalance" => -100,
                     "localBalance" => -11000,
                     "foreignBalance" => -10000,
@@ -792,8 +788,6 @@ class ReportingPeriodTest extends TestCase
                 [
                     "currency" => $currency1->currency_code,
                     "closingRate" => $closingRate1->exchangeRate->rate,
-                    "closingRate" => "100",
-                    "closingRate" => "100",
                     "currencyBalance" => -100,
                     "localBalance" => -9000,
                     "foreignBalance" => -10000,
@@ -821,7 +815,6 @@ class ReportingPeriodTest extends TestCase
                 [
                     "currency" => $currency2->currency_code,
                     "closingRate" => $closingRate1->exchangeRate->rate,
-                    "closingRate" => "100",
                     "currencyBalance" => -100,
                     "localBalance" => -9000,
                     "foreignBalance" => -10000,
@@ -835,7 +828,6 @@ class ReportingPeriodTest extends TestCase
                 [
                     "currency" => $currency1->currency_code,
                     "closingRate" => $closingRate1->exchangeRate->rate,
-                    "closingRate" => "100",
                     "currencyBalance" => -100,
                     "localBalance" => -9000,
                     "foreignBalance" => -10000,
@@ -849,8 +841,6 @@ class ReportingPeriodTest extends TestCase
                 [
                     "currency" => $currency1->currency_code,
                     "closingRate" => $closingRate1->exchangeRate->rate,
-                    "closingRate" => "100",
-                    "closingRate" => "100",
                     "currencyBalance" => -100,
                     "localBalance" => -11000,
                     "foreignBalance" => -10000,
@@ -864,8 +854,6 @@ class ReportingPeriodTest extends TestCase
                 [
                     "currency" => $currency1->currency_code,
                     "closingRate" => $closingRate1->exchangeRate->rate,
-                    "closingRate" => "100",
-                    "closingRate" => "100",
                     "currencyBalance" => -100,
                     "localBalance" => -9000,
                     "foreignBalance" => -10000,

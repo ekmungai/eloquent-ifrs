@@ -10,18 +10,18 @@
 
 namespace IFRS\Exceptions;
 
-class InvalidClearanceCurrency extends IFRSException
+class InvalidTransactionType extends IFRSException
 {
     /**
-     * Invalid Clearance Currency Exception
+     * Invalid Transaction Type Exception
      *
      * @param string $message
-     * @param int $code
+     * @param int    $code
      */
     public function __construct(string $message = null, int $code = null)
     {
-        $error = "Assignment and Clearance Currency must be the same ";
+        $error = "Transaction Type cannot be edited";
 
-        parent::__construct($error . $message, $code);
+        parent::__construct($error . ' ' . $message, $code);
     }
 }

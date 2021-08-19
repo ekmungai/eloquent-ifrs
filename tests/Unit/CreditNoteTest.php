@@ -10,7 +10,6 @@ use IFRS\Tests\TestCase;
 
 use IFRS\Models\Account;
 use IFRS\Models\Balance;
-use IFRS\Models\Currency;
 use IFRS\Models\Ledger;
 use IFRS\Models\LineItem;
 use IFRS\Models\Vat;
@@ -19,6 +18,7 @@ use IFRS\Transactions\CreditNote;
 
 use IFRS\Exceptions\LineItemAccount;
 use IFRS\Exceptions\MainAccount;
+
 class CreditNoteTest extends TestCase
 {
     /**
@@ -185,58 +185,5 @@ class CreditNoteTest extends TestCase
 
         $found = CreditNote::find($transaction->id);
         $this->assertEquals($found->transaction_no, $transaction->transaction_no);
-    }
-
-    /**
-     * Test Credit Note Fetch.
-     *
-     * @return void
-     */
-    public function testCreditNoteFetch()
-    {
-        $account = factory(Account::class)->create([
-            'account_type' => Account::RECEIVABLE,
-            'category_id' => null
-        ]);
-        $transaction = new CreditNote([
-            "account_id" => $account->id,
-            "transaction_date" => Carbon::now(),
-            "narration" => $this->faker->word,
-        ]);
-        $transaction->save();
-
-        $account2 = factory(Account::class)->create([
-            'account_type' => Account::RECEIVABLE,
-            'category_id' => null
-        ]);
-        $transaction2 = new CreditNote([
-            "account_id" => $account2->id,
-            "transaction_date" => Carbon::now()->addWeeks(2),
-            "narration" => $this->faker->word,
-        ]);
-        $transaction2->save();
-
-        // startTime Filter
-        $this->assertEquals(count(CreditNote::fetch()), 2);
-        $this->assertEquals(count(CreditNote::fetch(Carbon::now()->addWeek())), 1);
-        $this->assertEquals(count(CreditNote::fetch(Carbon::now()->addWeeks(3))), 0);
-
-        // endTime Filter
-        $this->assertEquals(count(CreditNote::fetch(null, Carbon::now())), 1);
-        $this->assertEquals(count(CreditNote::fetch(null, Carbon::now()->subDay())), 0);
-
-        // Account Filter
-        $account3 = factory(Account::class)->create([
-            'account_type' => Account::RECEIVABLE,
-            'category_id' => null
-        ]);
-        $this->assertEquals(count(CreditNote::fetch(null, null, $account)), 1);
-        $this->assertEquals(count(CreditNote::fetch(null, null, $account2)), 1);
-        $this->assertEquals(count(CreditNote::fetch(null, null, $account3)), 0);
-
-        // Currency Filter
-        $currency = factory(Currency::class)->create();
-        $this->assertEquals(count(CreditNote::fetch(null, null, null, Auth::user()->entity->currency)), 2);
-        $this->assertEquals(count(CreditNote::fetch(null, null, null, $currency)), 0);
     }
 }

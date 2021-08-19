@@ -16,6 +16,9 @@ use IFRS\Models\ExchangeRate;
 use IFRS\Models\Assignment;
 use IFRS\Models\Currency;
 
+use IFRS\Reports\IncomeStatement;
+
+
 use IFRS\Transactions\CashSale;
 use IFRS\Transactions\CreditNote;
 use IFRS\Transactions\JournalEntry;
@@ -23,8 +26,6 @@ use IFRS\Transactions\SupplierBill;
 use IFRS\Transactions\CashPurchase;
 use IFRS\Transactions\DebitNote;
 use IFRS\Transactions\ClientInvoice;
-
-use IFRS\Reports\IncomeStatement;
 
 class IncomeStatementTest extends TestCase
 {

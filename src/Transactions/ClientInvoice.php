@@ -10,20 +10,18 @@
 
 namespace IFRS\Transactions;
 
+
 use IFRS\Interfaces\Clearable;
-use IFRS\Interfaces\Fetchable;
 use IFRS\Interfaces\Sells;
 
-use IFRS\Traits\Clearing;
-use IFRS\Traits\Fetching;
 use IFRS\Traits\Selling;
+use IFRS\Traits\Clearing;
 
 use IFRS\Models\Transaction;
 
-class ClientInvoice extends Transaction implements Sells, Fetchable, Clearable
+class ClientInvoice extends Transaction implements Sells, Clearable
 {
     use Selling;
-    use Fetching;
     use Clearing;
 
     use \Parental\HasParent;

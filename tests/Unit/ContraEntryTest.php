@@ -4,8 +4,6 @@ namespace Tests\Unit;
 
 use Carbon\Carbon;
 
-use Illuminate\Support\Facades\Auth;
-
 use IFRS\Tests\TestCase;
 
 use IFRS\Models\Account;
@@ -185,60 +183,5 @@ class ContraEntryTest extends TestCase
 
         $found = ContraEntry::find($transaction->id);
         $this->assertEquals($found->transaction_no, $transaction->transaction_no);
-    }
-
-    /**
-     * Test Contra Entry Fetch.
-     *
-     * @return void
-     */
-    public function testContraEntryFetch()
-    {
-        $account = factory(Account::class)->create([
-            'account_type' => Account::BANK,
-            'category_id' => null
-        ]);
-        $transaction = new ContraEntry([
-            "account_id" => $account->id,
-            "transaction_date" => Carbon::now(),
-            "narration" => $this->faker->word,
-            'currency_id' => $account->currency_id,
-        ]);
-        $transaction->save();
-
-        $account2 = factory(Account::class)->create([
-            'account_type' => Account::BANK,
-            'category_id' => null
-        ]);
-        $transaction2 = new ContraEntry([
-            "account_id" => $account2->id,
-            "transaction_date" => Carbon::now()->addWeeks(2),
-            "narration" => $this->faker->word,
-            'currency_id' => $account2->currency_id,
-        ]);
-        $transaction2->save();
-
-        // startTime Filter
-        $this->assertEquals(count(ContraEntry::fetch()), 2);
-        $this->assertEquals(count(ContraEntry::fetch(Carbon::now()->addWeek())), 1);
-        $this->assertEquals(count(ContraEntry::fetch(Carbon::now()->addWeeks(3))), 0);
-
-        // endTime Filter
-        $this->assertEquals(count(ContraEntry::fetch(null, Carbon::now())), 1);
-        $this->assertEquals(count(ContraEntry::fetch(null, Carbon::now()->subDay())), 0);
-
-        // Account Filter
-        $account3 = factory(Account::class)->create([
-            'account_type' => Account::BANK,
-            'category_id' => null
-        ]);
-        $this->assertEquals(count(ContraEntry::fetch(null, null, $account)), 1);
-        $this->assertEquals(count(ContraEntry::fetch(null, null, $account2)), 1);
-        $this->assertEquals(count(ContraEntry::fetch(null, null, $account3)), 0);
-
-        // Currency Filter
-        $currency = factory(Currency::class)->create();
-        $this->assertEquals(count(ContraEntry::fetch(null, null, null, Auth::user()->entity->currency)), 2);
-        $this->assertEquals(count(ContraEntry::fetch(null, null, null, $currency)), 0);
     }
 }

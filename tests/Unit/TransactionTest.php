@@ -11,6 +11,17 @@ use IFRS\Tests\TestCase;
 
 use IFRS\User;
 
+use IFRS\Exceptions\AdjustingReportingPeriod;
+use IFRS\Exceptions\ClosedReportingPeriod;
+use IFRS\Exceptions\HangingClearances;
+use IFRS\Exceptions\InvalidCurrency;
+use IFRS\Exceptions\MissingLineItem;
+use IFRS\Exceptions\PostedTransaction;
+use IFRS\Exceptions\RedundantTransaction;
+use IFRS\Exceptions\UnpostedAssignment;
+use IFRS\Exceptions\InvalidTransactionDate;
+use IFRS\Exceptions\InvalidTransactionType;
+
 use IFRS\Models\Account;
 use IFRS\Models\Assignment;
 use IFRS\Models\Currency;
@@ -24,16 +35,6 @@ use IFRS\Models\Vat;
 
 use IFRS\Transactions\ClientInvoice;
 use IFRS\Transactions\JournalEntry;
-
-use IFRS\Exceptions\AdjustingReportingPeriod;
-use IFRS\Exceptions\ClosedReportingPeriod;
-use IFRS\Exceptions\HangingClearances;
-use IFRS\Exceptions\InvalidCurrency;
-use IFRS\Exceptions\MissingLineItem;
-use IFRS\Exceptions\PostedTransaction;
-use IFRS\Exceptions\RedundantTransaction;
-use IFRS\Exceptions\UnpostedAssignment;
-use IFRS\Exceptions\InvalidTransactionDate;
 
 class TransactionTest extends TestCase
 {
@@ -758,7 +759,7 @@ class TransactionTest extends TestCase
 
         $lineItem = LineItem::find($lineItem->id);
         $this->expectException(PostedTransaction::class);
-        $this->expectExceptionMessage('Cannot remove LineItem from a posted Transaction');
+        $this->expectExceptionMessage('Cannot remove LineItems from a posted Transaction');
 
         $transaction->removeLineItem($lineItem);
 
@@ -1085,6 +1086,7 @@ class TransactionTest extends TestCase
     public function testInvalidTransactionCurrency()
     {
         $account = factory(Account::class)->create([
+            'name' => 'Test Savings and Loan',
             'account_type' => Account::BANK,
             'category_id' => null,
             'currency_id' => factory(Currency::class)->create([
@@ -1093,13 +1095,32 @@ class TransactionTest extends TestCase
         ]);
 
         $this->expectException(InvalidCurrency::class);
-        $this->expectExceptionMessage('Transaction Currency must be the same as the Bank Account Currency ');
+        $this->expectExceptionMessage('Transaction Currency must be the same as the Bank: Test Savings and Loan Account Currency ');
 
         JournalEntry::create([
             "account_id" => $account->id,
             "transaction_date" => Carbon::now(),
             "narration" => $this->faker->word,
-            'currency_id' =>factory(ExchangeRate::class)->create()->currency_id
+            'currency_id' => factory(ExchangeRate::class)->create()->currency_id
+        ]);
+    }
+
+    /**
+     * Test Invalid Transaction Type.
+     *
+     * @return void
+     */
+    public function testInvalidTransactionType()
+    {
+        $journalEntry = factory(Transaction::class)->create([
+            'transaction_type' => Transaction::JN
+        ]);
+
+        $this->expectException(InvalidTransactionType::class);
+        $this->expectExceptionMessage('Transaction Type cannot be edited ');
+
+        $journalEntry->update([
+            'transaction_type' => Transaction::IN
         ]);
     }
 }

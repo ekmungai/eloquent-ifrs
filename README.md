@@ -38,7 +38,6 @@ Use composer to Install the package into your laravel or lumen application. Eloq
 
 ```php
 composer require "ekmungai/eloquent-ifrs"
-composer install --no-dev
 ```
 
 If using Lumen, make sure to register the package with your application by adding the `IFRSServiceProvider` to the `app.php` in the bootstrap folder.

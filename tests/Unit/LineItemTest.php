@@ -9,6 +9,10 @@ use IFRS\Tests\TestCase;
 use IFRS\User;
 
 use IFRS\Models\Account;
+
+use IFRS\Exceptions\NegativeAmount;
+use IFRS\Exceptions\NegativeQuantity;
+
 use IFRS\Models\Currency;
 use IFRS\Models\Entity;
 use IFRS\Models\LineItem;
@@ -16,8 +20,6 @@ use IFRS\Models\Transaction;
 use IFRS\Models\Vat;
 
 use IFRS\Transactions\ClientInvoice;
-
-use IFRS\Exceptions\NegativeAmount;
 
 class LineItemTest extends TestCase
 {
@@ -118,6 +120,27 @@ class LineItemTest extends TestCase
         ]);
         $this->expectException(NegativeAmount::class);
         $this->expectExceptionMessage('LineItem Amount cannot be negative');
+
+        $lineItem->save();
+    }
+
+    /**
+     * Test Negative Quantity.
+     *
+     * @return void
+     */
+    public function testNegativeQuantity()
+    {
+        $lineItem = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
+            'amount' => 100,
+            'quantity' => -1,
+        ]);
+        $this->expectException(NegativeQuantity::class);
+        $this->expectExceptionMessage('LineItem Quantity cannot be negative');
 
         $lineItem->save();
     }
