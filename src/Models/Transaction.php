@@ -112,23 +112,6 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
     protected $dates = [
         'transaction_date'
     ];
-
-    /**
-     * Construct new Transaction.
-     */
-    public function __construct($attributes = [])
-    {
-        $entity = Auth::user()->entity;
-        $this->table = config('ifrs.table_prefix') . 'transactions';
-
-        if (!isset($attributes['exchange_rate_id'])) {
-            $attributes['exchange_rate_id'] = $entity->default_rate->id;
-        }
-        $attributes['transaction_date'] = !isset($attributes['transaction_date']) ? Carbon::now() : Carbon::parse($attributes['transaction_date']);
-
-        return parent::__construct($attributes);
-    }
-
     /**
      * Transaction LineItems
      *
@@ -136,7 +119,6 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
      */
 
     private $items = [];
-
     /**
      * Transactions to be cleared and their clearance amounts
      *
@@ -146,63 +128,14 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
     private $assigned = [];
 
     /**
-     * Check if LineItem already exists.
-     *
-     * @param int $id
-     *
-     * @return int|false
+     * Construct new Transaction.
      */
-    private function lineItemExists(int $id = null)
+    public function __construct($attributes = [])
     {
-        return collect($this->items)->search(
-            function ($item, $key) use ($id) {
-                return $item->id == $id;
-            }
-        );
-    }
+        $this->table = config('ifrs.table_prefix') . 'transactions';
+        $attributes['transaction_date'] = !isset($attributes['transaction_date']) ? Carbon::now() : Carbon::parse($attributes['transaction_date']);
 
-    /**
-     * Check if Assigned Transaction already exists.
-     *
-     * @param int $id
-     *
-     * @return int|false
-     */
-    private function assignedTransactionExists(int $id = null)
-    {
-        return collect($this->assigned)->search(
-            function ($transaction, $key) use ($id) {
-                return $transaction['id'] == $id;
-            }
-        );
-    }
-
-    /**
-     * Check the balance remaining after clearing the currently Assigned Transactions.
-     *
-     * @return float
-     */
-    private function assignedAmountBalance()
-    {
-        $balance = $this->balance;
-        foreach ($this->assigned as $assignedSoFar) {
-            $balance -= $assignedSoFar['amount'];
-        }
-
-        return $balance;
-    }
-
-    /**
-     * Save LineItems.
-     */
-    private function saveLineItems(): void
-    {
-        if (count($this->items)) {
-            $lineItem = array_pop($this->items);
-            $this->lineItems()->save($lineItem);
-
-            $this->saveLineItems();
-        }
+        return parent::__construct($attributes);
     }
 
     /**
@@ -229,18 +162,6 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
     }
 
     /**
-     * Get Human Readable Transaction type
-     *
-     * @param string $type
-     *
-     * @return string
-     */
-    public static function getType($type): string
-    {
-        return config('ifrs')['transactions'][$type];
-    }
-
-    /**
      * Get Human Readable Transaction types
      *
      * @param array $types
@@ -258,26 +179,15 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
     }
 
     /**
-     * The next Transaction number for the transaction type and transaction_date.
+     * Get Human Readable Transaction type
      *
      * @param string $type
-     * @param Carbon $transaction_date
      *
      * @return string
      */
-    public static function transactionNo(string $type, Carbon $transaction_date = null)
+    public static function getType($type): string
     {
-        $period_count = ReportingPeriod::getPeriod($transaction_date)->period_count;
-        $period_start = ReportingPeriod::periodStart($transaction_date);
-
-        $next_id =  Transaction::withTrashed()
-            ->where("transaction_type", $type)
-            ->where("transaction_date", ">=", $period_start)
-            ->count() + 1;
-
-        return $type . str_pad((string) $period_count, 2, "0", STR_PAD_LEFT)
-            . "/" .
-            str_pad((string) $next_id, 4, "0", STR_PAD_LEFT);
+        return config('ifrs')['transactions'][$type];
     }
 
     /**
@@ -289,16 +199,6 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
     {
         $amount = ' for ' . number_format($this->amount, 2);
         return $type ? $this->type . ': ' . $this->transaction_no . $amount : $this->transaction_no . $amount;
-    }
-
-    /**
-     * Transaction Saved Line Items.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function lineItems()
-    {
-        return $this->hasMany(LineItem::class, 'transaction_id', 'id');
     }
 
     /**
@@ -404,13 +304,13 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
             $entry_type = $this->credited ? Balance::CREDIT : Balance::DEBIT;
 
             $amount = $ledger->newQuery()
-            ->selectRaw("SUM(amount/rate) as amount")
-            ->where([
-                "transaction_id" => $this->id,
-                "entry_type" => $entry_type,
-                "post_account" => $this->account_id,
-                "currency_id" => $this->currency_id
-            ])->get()[0]->amount;
+                ->selectRaw("SUM(amount/rate) as amount")
+                ->where([
+                    "transaction_id" => $this->id,
+                    "entry_type" => $entry_type,
+                    "post_account" => $this->account_id,
+                    "currency_id" => $this->currency_id
+                ])->get()[0]->amount;
 
         } else {
             foreach ($this->getLineItems() as $lineItem) {
@@ -421,6 +321,37 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
             }
         }
         return $amount;
+    }
+
+    /**
+     * Get Transaction LineItems.
+     *
+     * @return array
+     */
+    public function getLineItems()
+    {
+        foreach ($this->lineItems as $lineItem) {
+            if ($this->lineItemExists($lineItem->id) === false) {
+                $this->items[] = $lineItem;
+            }
+        }
+        return $this->items;
+    }
+
+    /**
+     * Check if LineItem already exists.
+     *
+     * @param int $id
+     *
+     * @return int|false
+     */
+    private function lineItemExists(int $id = null)
+    {
+        return collect($this->items)->search(
+            function ($item, $key) use ($id) {
+                return $item->id == $id;
+            }
+        );
     }
 
     /**
@@ -482,22 +413,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
      */
     public function attributes()
     {
-        return (object) $this->attributes;
-    }
-
-    /**
-     * Get Transaction LineItems.
-     *
-     * @return array
-     */
-    public function getLineItems()
-    {
-        foreach ($this->lineItems as $lineItem) {
-            if ($this->lineItemExists($lineItem->id) === false) {
-                $this->items[] = $lineItem;
-            }
-        }
-        return $this->items;
+        return (object)$this->attributes;
     }
 
     /**
@@ -587,6 +503,37 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
     }
 
     /**
+     * Check if Assigned Transaction already exists.
+     *
+     * @param int $id
+     *
+     * @return int|false
+     */
+    private function assignedTransactionExists(int $id = null)
+    {
+        return collect($this->assigned)->search(
+            function ($transaction, $key) use ($id) {
+                return $transaction['id'] == $id;
+            }
+        );
+    }
+
+    /**
+     * Check the balance remaining after clearing the currently Assigned Transactions.
+     *
+     * @return float
+     */
+    private function assignedAmountBalance()
+    {
+        $balance = $this->balance;
+        foreach ($this->assigned as $assignedSoFar) {
+            $balance -= $assignedSoFar['amount'];
+        }
+
+        return $balance;
+    }
+
+    /**
      * Create assignments for the assigned transactions being staged.
      *
      * @param int $forexAccountId
@@ -610,17 +557,43 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
     }
 
     /**
+     * Post Transaction to the Ledger.
+     */
+    public function post(): void
+    {
+        if (empty($this->getLineItems())) {
+            throw new MissingLineItem();
+        }
+        $this->save();
+
+        Ledger::post($this);
+    }
+
+    /**
      * Relate LineItems to Transaction.
      */
     public function save(array $options = []): bool
     {
-        if(isset($this->exchange_rate_id) && !isset($this->currency_id)){
+        if (is_null($this->entity_id)) {
+            $entity = Auth::user()->entity;
+        } else {
+            $entity = $this->entity;
+        }
+
+        if (!isset($this->exchange_rate_id) && !is_null($entity)) {
+            $this->exchange_rate_id = $entity->default_rate->id;
+        }
+
+        if (isset($this->exchange_rate_id) && !isset($this->currency_id)) {
             $this->currency_id = $this->exchangeRate->currency_id;
         }
 
-        $period = ReportingPeriod::getPeriod(Carbon::parse($this->transaction_date));
+        $this->transaction_date = !isset($this->transaction_date) ? Carbon::now() : Carbon::parse($this->transaction_date);
 
-        if (ReportingPeriod::periodStart($this->transaction_date)->eq(Carbon::parse($this->transaction_date))) {
+
+        $period = ReportingPeriod::getPeriod(Carbon::parse($this->transaction_date), $entity);
+
+        if (ReportingPeriod::periodStart($this->transaction_date, $entity)->eq(Carbon::parse($this->transaction_date))) {
             throw new InvalidTransactionDate();
         }
 
@@ -634,18 +607,19 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         
         if (in_array($this->account->account_type, config('ifrs.single_currency')) && 
             $this->account->currency_id != $this->currency_id && 
-            $this->currency_id != Auth::user()->entity->currency_id) {
+            $this->currency_id != $entity->currency_id) {
             throw new InvalidCurrency("Transaction", $this->account);
         }
 
-        if(!isset($this->currency_id)){
+        if (!isset($this->currency_id)) {
             $this->currency_id = $this->account->currency_id;
         }
 
         if (is_null($this->transaction_no)) {
             $this->transaction_no = Transaction::transactionNo(
                 $this->transaction_type,
-                Carbon::parse($this->transaction_date)
+                Carbon::parse($this->transaction_date),
+                $entity
             );
         }
 
@@ -663,16 +637,54 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
     }
 
     /**
-     * Post Transaction to the Ledger.
+     * The next Transaction number for the transaction type and transaction_date.
+     *
+     * @param string $type
+     * @param Carbon $transaction_date
+     *
+     * @return string
      */
-    public function post(): void
+    public static function transactionNo(string $type, Carbon $transaction_date = null, Entity $entity = null)
     {
-        if (empty($this->getLineItems())) {
-            throw new MissingLineItem();
+        if (is_null($entity)) {
+            $entity = Auth::user()->entity;
         }
-        $this->save();
 
-        Ledger::post($this);
+        $period_count = ReportingPeriod::getPeriod($transaction_date, $entity)->period_count;
+        $period_start = ReportingPeriod::periodStart($transaction_date, $entity);
+
+        $next_id = Transaction::withTrashed()
+                ->where("transaction_type", $type)
+                ->where("transaction_date", ">=", $period_start)
+                ->where("entity_id", '=', $entity->id)
+                ->count() + 1;
+
+        return $type . str_pad((string)$period_count, 2, "0", STR_PAD_LEFT)
+            . "/" .
+            str_pad((string)$next_id, 4, "0", STR_PAD_LEFT);
+    }
+
+    /**
+     * Save LineItems.
+     */
+    private function saveLineItems(): void
+    {
+        if (count($this->items)) {
+            $lineItem = array_pop($this->items);
+            $this->lineItems()->save($lineItem);
+
+            $this->saveLineItems();
+        }
+    }
+
+    /**
+     * Transaction Saved Line Items.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function lineItems()
+    {
+        return $this->hasMany(LineItem::class, 'transaction_id', 'id');
     }
 
     /**
@@ -684,7 +696,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         if (count($this->assignments) > 0) {
             throw new HangingClearances();
         }
-        
+
         // No deleting posted transactions
         if (count($this->ledgers) > 0) {
             throw new PostedTransaction('delete');

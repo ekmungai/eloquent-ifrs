@@ -37,47 +37,10 @@ class AccountSchedule extends AccountStatement
     ];
 
     /**
-     * Get Transaction amounts.
-     *
-     * @param Transaction|Balance $transaction
-     * @param string              $transactionType
-     */
-    private function getAmounts($transaction): void
-    {
-        $rate = is_null($this->currencyId) ? $transaction->exchangeRate->rate : 1;
-
-        $transaction->originalAmount = $transaction->amount * $rate;
-        $transaction->amountCleared= $transaction->clearedAmount * $rate;
-        $unclearedAmount = $transaction->originalAmount - $transaction->clearedAmount * $rate;
-
-        if ($unclearedAmount > 0) {
-
-            if ($transaction instanceof Balance) {
-                $transaction->transactionType = Transaction::getType($transaction->transaction_type);
-            } else {
-                $transaction->transactionType = $transaction->type;
-            }
-
-            $date = Carbon::parse($transaction->transaction_date);
-            $transaction->age  = $date->diffInDays($this->period['endDate']);
-            $transaction->transactionDate = Carbon::parse($transaction->transaction_date)->toFormattedDateString();
-
-            $this->balances["originalAmount"] += $transaction->originalAmount;
-            $this->balances['amountCleared'] += $transaction->amountCleared;
-            $this->balances['unclearedAmount'] += $unclearedAmount;
-            $this->balances['totalAge'] += $transaction->age;
-
-            $transaction->unclearedAmount = $unclearedAmount;
-
-            array_push($this->transactions, $transaction);
-        }
-    }
-
-    /**
      * Account Schedule for the account for the period.
      *
-     * @param int    $accountId
-     * @param int    $currencyId
+     * @param int $accountId
+     * @param int $currencyId
      * @param string $endDate
      */
     public function __construct(int $accountId = null, int $currencyId = null, string $endDate = null)
@@ -99,7 +62,9 @@ class AccountSchedule extends AccountStatement
      */
     public function getTransactions(): array
     {
-        $periodId = ReportingPeriod::getPeriod($this->period['endDate'])->id;
+        $entity = $this->account->entity;
+
+        $periodId = ReportingPeriod::getPeriod($this->period['endDate'], $entity)->id;
         $currencyId = $this->currencyId;
 
         // Opening Balances
@@ -120,7 +85,7 @@ class AccountSchedule extends AccountStatement
         // Clearable Transactions
         $transactions = $this->account->transactionsQuery(
             $this->period['startDate'],
-            $this->period['endDate'], 
+            $this->period['endDate'],
             $this->currencyId
         )->whereIn(
             'transaction_type',
@@ -143,7 +108,44 @@ class AccountSchedule extends AccountStatement
         if ($totaltransactions > 0) {
             $this->balances['averageAge'] = round($this->balances['totalAge'] / $totaltransactions, 0);
         }
-        
+
         return $this->transactions;
+    }
+
+    /**
+     * Get Transaction amounts.
+     *
+     * @param Transaction|Balance $transaction
+     * @param string $transactionType
+     */
+    private function getAmounts($transaction): void
+    {
+        $rate = is_null($this->currencyId) ? $transaction->exchangeRate->rate : 1;
+
+        $transaction->originalAmount = $transaction->amount * $rate;
+        $transaction->amountCleared = $transaction->clearedAmount * $rate;
+        $unclearedAmount = $transaction->originalAmount - $transaction->clearedAmount * $rate;
+
+        if ($unclearedAmount > 0) {
+
+            if ($transaction instanceof Balance) {
+                $transaction->transactionType = Transaction::getType($transaction->transaction_type);
+            } else {
+                $transaction->transactionType = $transaction->type;
+            }
+
+            $date = Carbon::parse($transaction->transaction_date);
+            $transaction->age = $date->diffInDays($this->period['endDate']);
+            $transaction->transactionDate = Carbon::parse($transaction->transaction_date)->toFormattedDateString();
+
+            $this->balances["originalAmount"] += $transaction->originalAmount;
+            $this->balances['amountCleared'] += $transaction->amountCleared;
+            $this->balances['unclearedAmount'] += $unclearedAmount;
+            $this->balances['totalAge'] += $transaction->age;
+
+            $transaction->unclearedAmount = $unclearedAmount;
+
+            array_push($this->transactions, $transaction);
+        }
     }
 }

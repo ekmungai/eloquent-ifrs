@@ -87,14 +87,14 @@ class Currency extends Model implements Recyclable, Segregatable
      */
     public function attributes()
     {
-        return (object) $this->attributes;
+        return (object)$this->attributes;
     }
 
     /**
      * Associate Entity.
      */
     public function save(array $options = []): bool
-    {        
+    {
         if (!isset($this->entity_id)) {
             $this->entity_id = Auth::user()->entity->id;
         }

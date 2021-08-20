@@ -82,7 +82,7 @@ class ExchangeRate extends Model implements Segregatable, Recyclable
      */
     public function attributes()
     {
-        return (object) $this->attributes;
+        return (object)$this->attributes;
     }
 
     /**

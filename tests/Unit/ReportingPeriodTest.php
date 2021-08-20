@@ -5,18 +5,15 @@ namespace Tests\Unit;
 
 use Illuminate\Support\Facades\Auth;
 
-use IFRS\Tests\TestCase;
 
 use Carbon\Carbon;
-use IFRS\Exceptions\InvalidAccountType;
-use IFRS\Exceptions\InvalidPeriodStatus;
-use IFRS\Exceptions\MissingClosingRate;
+
+use IFRS\Tests\TestCase;
+
+use IFRS\User;
 
 use IFRS\Models\RecycledObject;
 use IFRS\Models\ReportingPeriod;
-use IFRS\User;
-
-use IFRS\Exceptions\MissingReportingPeriod;
 use IFRS\Models\Account;
 use IFRS\Models\Assignment;
 use IFRS\Models\ClosingRate;
@@ -30,6 +27,10 @@ use IFRS\Transactions\ClientReceipt;
 use IFRS\Transactions\SupplierBill;
 use IFRS\Transactions\SupplierPayment;
 
+use IFRS\Exceptions\InvalidAccountType;
+use IFRS\Exceptions\InvalidPeriodStatus;
+use IFRS\Exceptions\MissingClosingRate;
+use IFRS\Exceptions\MissingReportingPeriod;
 class ReportingPeriodTest extends TestCase
 {
     /**

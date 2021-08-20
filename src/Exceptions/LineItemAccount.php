@@ -10,8 +10,8 @@
 
 namespace IFRS\Exceptions;
 
-use IFRS\Models\Transaction;
 use IFRS\Models\Account;
+use IFRS\Models\Transaction;
 
 class LineItemAccount extends IFRSException
 {
@@ -19,9 +19,9 @@ class LineItemAccount extends IFRSException
      * LineItem Account Exception
      *
      * @param string $transactionType
-     * @param array  $accountTypes
+     * @param array $accountTypes
      * @param string $message
-     * @param int    $code
+     * @param int $code
      */
     public function __construct(string $transactionType, array $accountTypes, string $message = null, int $code = null)
     {

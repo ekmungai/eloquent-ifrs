@@ -2,17 +2,18 @@
 
 namespace Tests\Unit;
 
-use IFRS\Exceptions\InvalidAccountType;
-use IFRS\Exceptions\MissingVatAccount;
+use IFRS\Tests\TestCase;
+
+use IFRS\User;
+
 use IFRS\Models\Account;
 use IFRS\Models\Currency;
 use IFRS\Models\Entity;
-use IFRS\Tests\TestCase;
-
 use IFRS\Models\RecycledObject;
-use IFRS\User;
 use IFRS\Models\Vat;
 
+use IFRS\Exceptions\InvalidAccountType;
+use IFRS\Exceptions\MissingVatAccount;
 class VatTest extends TestCase
 {
     /**

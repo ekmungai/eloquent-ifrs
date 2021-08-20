@@ -14,11 +14,11 @@ class DuplicateClosingRate extends IFRSException
 {
     /**
      * Duplicate Closing Rate Exception
-     * 
+     *
      * @param string $currencyCode
      * @param int $year
      * @param string $message
-     * @param int    $code
+     * @param int $code
      */
     public function __construct(string $currencyCode, int $year, string $message = null, int $code = null)
     {

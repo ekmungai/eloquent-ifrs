@@ -49,7 +49,7 @@ class ClosingTransaction extends Model implements Segregatable, Recyclable
         'currency_id',
         'entity_id',
     ];
-    
+
     /**
      * Instance Identifier.
      *
@@ -58,9 +58,9 @@ class ClosingTransaction extends Model implements Segregatable, Recyclable
     public function toString($type = false)
     {
         $classname = explode('\\', self::class);
-        $instanceName = $this->reportingPeriod->calendar_year . ' Forex Translation Transaction ' . $this->transaction->toString(); 
+        $instanceName = $this->reportingPeriod->calendar_year . ' Forex Translation Transaction ' . $this->transaction->toString();
         return $type ? array_pop($classname) . ': ' . $instanceName : $instanceName;
-    }    
+    }
 
     /**
      * Model's Parent Entity.
@@ -70,7 +70,7 @@ class ClosingTransaction extends Model implements Segregatable, Recyclable
     public function entity()
     {
         return $this->belongsTo(Entity::class);
-    } 
+    }
 
     /**
      * Closing Transaction's Transaction.
@@ -100,7 +100,7 @@ class ClosingTransaction extends Model implements Segregatable, Recyclable
     public function reportingPeriod()
     {
         return $this->belongsTo(ReportingPeriod::class);
-    }    
+    }
 
     /**
      * ClosingRate attributes.
@@ -109,6 +109,6 @@ class ClosingTransaction extends Model implements Segregatable, Recyclable
      */
     public function attributes()
     {
-        return (object) $this->attributes;
+        return (object)$this->attributes;
     }
 }

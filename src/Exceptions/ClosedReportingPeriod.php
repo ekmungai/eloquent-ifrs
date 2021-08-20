@@ -17,7 +17,7 @@ class ClosedReportingPeriod extends IFRSException
      *
      * @param int $year
      * @param string $message
-     * @param int    $code
+     * @param int $code
      */
     public function __construct(int $year, string $message = null, int $code = null)
     {

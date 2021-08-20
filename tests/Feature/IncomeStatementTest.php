@@ -6,6 +6,8 @@ use Carbon\Carbon;
 
 use IFRS\Tests\TestCase;
 
+use Illuminate\Support\Facades\Auth;
+
 use IFRS\Models\Account;
 use IFRS\Models\LineItem;
 use IFRS\Models\ReportingPeriod;
@@ -15,6 +17,7 @@ use IFRS\Models\Assignment;
 use IFRS\Models\Currency;
 
 use IFRS\Reports\IncomeStatement;
+
 
 use IFRS\Transactions\CashSale;
 use IFRS\Transactions\CreditNote;
@@ -352,6 +355,501 @@ class IncomeStatementTest extends TestCase
         );
 
         $results = IncomeStatement::getResults(date('m'),date('y'));
+
+        $this->assertEquals(
+            $results[IncomeStatement::OPERATING_REVENUES],
+            245
+        );
+
+        $this->assertEquals(
+            $results[IncomeStatement::NON_OPERATING_REVENUES],
+            205
+        );
+
+        $this->assertEquals(
+            $results[IncomeStatement::OPERATING_EXPENSES],
+            100
+        );
+
+        $this->assertEquals(
+            $results[IncomeStatement::GROSS_PROFIT],
+            350
+        );
+
+        $this->assertEquals(
+            $results[IncomeStatement::NON_OPERATING_EXPENSES],
+            160
+        );
+
+        $this->assertEquals(
+            $results[IncomeStatement::NET_PROFIT],
+            190
+        );
+    }
+
+    /**
+     * Test Income Statement when logged out
+     *
+     * @return void
+     */
+    public function testIncomeStatementLoggedOut()
+    {
+        $entity = Auth::user()->entity;
+        Auth::logout(); //log out user
+
+        $incomeStatement = new IncomeStatement(null, null, $entity);
+        $incomeStatement->attributes();
+
+        /*
+         | ------------------------------
+         | Operating Revenue Transactions
+         | ------------------------------
+         */
+        $currency = factory(Currency::class)->create([
+            "entity_id" => $entity->id
+        ]);
+        $cashSale = new CashSale([
+            "account_id" => Account::create([
+                'account_type' => Account::BANK,
+                'category_id' => null ,
+                'entity_id' => $entity->id,
+                'currency_id' => $currency->id,
+            ])->id,
+            "date" => Carbon::now(),
+            'currency_id' => $currency->id,
+            "narration" => $this->faker->word,
+            "entity_id" => $entity->id
+        ]);
+
+        $lineItem = LineItem::create([
+            'amount' => 200,
+            'vat_id' => Vat::create([
+                'name' => $this->faker->name,
+                'code' => $this->faker->randomLetter(),
+                'entity_id' => $entity->id,
+                'rate' => 16,
+                'account_id' => Account::create([
+                    'account_type' => Account::CONTROL,
+                    'category_id' => null,
+                    'entity_id' => $entity->id
+                ])->id,
+            ])->id,
+            "account_id" => Account::create([
+                'account_type' => Account::OPERATING_REVENUE,
+                'category_id' => null ,
+                'entity_id' => $entity->id,
+            ])->id,
+            "quantity" => 1,
+            "entity_id" => $entity->id
+        ]);
+
+
+        $cashSale->addLineItem($lineItem);
+        $cashSale->post();
+
+        $clientCurrency = factory(Currency::class)->create([
+            "entity_id" => $entity->id
+        ]);
+
+        $client = Account::create([
+            'account_type' => Account::RECEIVABLE,
+            'category_id' => null ,
+            'entity_id' => $entity->id,
+            'currency_id' => $clientCurrency->id,
+        ]);
+
+        $creditNote = new CreditNote([
+            "account_id" => $client->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "exchange_rate_id" => ExchangeRate::create([
+                'valid_from' => $this->faker->dateTimeThisMonth(),
+                'valid_to' => Carbon::now(),
+                'currency_id' => $clientCurrency->id,
+                'rate' => 1.1,
+                'entity_id' => $entity->id
+            ])->id,
+            "entity_id" => $entity->id
+        ]);
+
+        $lineItem = LineItem::create([
+            'amount' => 50,
+            'vat_id' => Vat::create([
+                'name' => $this->faker->name,
+                'code' => $this->faker->randomLetter(),
+                'entity_id' => $entity->id,
+                'rate' => 0,
+                'account_id' => Account::create([
+                    'account_type' => Account::CONTROL,
+                    'category_id' => null,
+                    'entity_id' => $entity->id
+                ])->id,
+            ])->id,
+            "account_id" => Account::create([
+                'account_type' => Account::OPERATING_REVENUE,
+                'category_id' => null ,
+                'entity_id' => $entity->id,
+            ])->id,
+            "quantity" => 1,
+            "entity_id" => $entity->id
+        ]);
+
+        $creditNote->addLineItem($lineItem);
+
+        $creditNote->post();
+
+        $ClientInvoice = new ClientInvoice([
+            "account_id" => $client->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "exchange_rate_id" => ExchangeRate::create([
+                'valid_from' => $this->faker->dateTimeThisMonth(),
+                'valid_to' => Carbon::now(),
+                'currency_id' => $clientCurrency->id,
+                'rate' => 1,
+                'entity_id' => $entity->id
+            ])->id,
+            "entity_id" => $entity->id
+        ]);
+
+        $lineItem = LineItem::create([
+            'amount' => 100,
+            'vat_id' => Vat::create([
+                'name' => $this->faker->name,
+                'code' => $this->faker->randomLetter(),
+                'entity_id' => $entity->id,
+                'rate' => 0,
+                'account_id' => Account::create([
+                    'account_type' => Account::CONTROL,
+                    'category_id' => null,
+                    'entity_id' => $entity->id
+                ])->id,
+            ])->id,
+            "account_id" => Account::create([
+                'account_type' => Account::OPERATING_REVENUE,
+                'category_id' => null ,
+                'entity_id' => $entity->id,
+            ])->id,
+            "entity_id" => $entity->id
+        ]);
+
+        $ClientInvoice->addLineItem($lineItem);
+        $ClientInvoice->post();
+
+        $forex = Account::create([
+            'account_type' => Account::NON_OPERATING_REVENUE,
+            'category_id' => null ,
+            'entity_id' => $entity->id,
+        ]);
+
+        $assignment = new Assignment([
+            'assignment_date' => Carbon::now(),
+            'transaction_id' => $creditNote->id,
+            'cleared_id' => $ClientInvoice->id,
+            'cleared_type' => $ClientInvoice->cleared_type,
+            'amount' => 50,
+            'forex_account_id' => $forex->id,
+            'entity_id' => $entity->id,
+        ]);
+        $assignment->save();
+
+        /*
+         | ------------------------------
+         | Non Operating Revenue Transactions
+         | ------------------------------
+         */
+        $currency = factory(Currency::class)->create([
+            "entity_id" => $entity->id
+        ]);
+
+        $journalEntry = new JournalEntry([
+            "account_id" => Account::create([
+                'account_type' => Account::BANK,
+                'category_id' => null,
+                'currency_id' => $currency->id,
+                'entity_id' => $entity->id,
+            ])->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "credited" => false,
+            'currency_id' => $currency->id,
+            "entity_id" => $entity->id
+        ]);
+
+        $lineItem = LineItem::create([
+            'amount' => 200,
+            'vat_id' => Vat::create([
+                'name' => $this->faker->name,
+                'code' => $this->faker->randomLetter(),
+                'entity_id' => $entity->id,
+                'rate' => 16,
+                'account_id' => Account::create([
+                    'account_type' => Account::CONTROL,
+                    'category_id' => null,
+                    'entity_id' => $entity->id
+                ])->id,
+            ])->id,
+            "account_id" => Account::create([
+                'account_type' => Account::NON_OPERATING_REVENUE,
+                'category_id' => null ,
+                'entity_id' => $entity->id,
+            ])->id,
+            "quantity" => 1,
+            "entity_id" => $entity->id
+        ]);
+
+        $journalEntry->addLineItem($lineItem);
+        $journalEntry->post();
+
+        /*
+         | ------------------------------
+         | Operating Expense Transactions
+         | ------------------------------
+         */
+        $bill = new SupplierBill([
+            "account_id" => Account::create([
+                'account_type' => Account::PAYABLE,
+                'category_id' => null ,
+                'entity_id' => $entity->id,
+            ])->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "entity_id" => $entity->id
+        ]);
+
+        $lineItem = LineItem::create([
+            'amount' => 100,
+            'vat_id' => Vat::create([
+                'name' => $this->faker->name,
+                'code' => $this->faker->randomLetter(),
+                'entity_id' => $entity->id,
+                'rate' => 16,
+                'account_id' => Account::create([
+                    'account_type' => Account::CONTROL,
+                    'category_id' => null,
+                    'entity_id' => $entity->id
+                ])->id,
+            ])->id,
+            "account_id" => Account::create([
+                'account_type' => Account::OPERATING_EXPENSE,
+                'category_id' => null ,
+                'entity_id' => $entity->id,
+            ])->id,
+            "quantity" => 1,
+            "entity_id" => $entity->id
+        ]);
+
+        $bill->addLineItem($lineItem);
+        $bill->post();
+
+        /*
+         | ------------------------------
+         | None Operating Expense Transactions
+         | ------------------------------
+         */
+        $bill = new SupplierBill([
+            "account_id" => Account::create([
+                'account_type' => Account::PAYABLE,
+                'category_id' => null ,
+                'entity_id' => $entity->id,
+            ])->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "entity_id" => $entity->id
+        ]);
+
+        $lineItem = LineItem::create([
+            'amount' => 70,
+            'vat_id' => Vat::create([
+                'name' => $this->faker->name,
+                'code' => $this->faker->randomLetter(),
+                'entity_id' => $entity->id,
+                'rate' => 16,
+                'account_id' => Account::create([
+                    'account_type' => Account::CONTROL,
+                    'category_id' => null,
+                    'entity_id' => $entity->id
+                ])->id,
+            ])->id,
+            "account_id" => Account::create([
+                'account_type' => Account::DIRECT_EXPENSE,
+                'category_id' => null ,
+                'entity_id' => $entity->id,
+            ])->id,
+            "quantity" => 1,
+            "entity_id" => $entity->id
+        ]);
+
+        $bill->addLineItem($lineItem);
+        $bill->post();
+
+        $journalEntry = new JournalEntry([
+            "account_id" => Account::create([
+                'account_type' => Account::PAYABLE,
+                'category_id' => null,
+                'entity_id' => $entity->id,
+            ])->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "entity_id" => $entity->id
+        ]);
+
+        $lineItem = LineItem::create([
+            'amount' => 70,
+            'vat_id' => Vat::create([
+                'name' => $this->faker->name,
+                'code' => $this->faker->randomLetter(),
+                'entity_id' => $entity->id,
+                'rate' => 0,
+                'account_id' => Account::create([
+                    'account_type' => Account::CONTROL,
+                    'category_id' => null,
+                    'entity_id' => $entity->id
+                ])->id,
+            ])->id,
+            "account_id" => Account::create([
+                'account_type' => Account::OVERHEAD_EXPENSE,
+                'category_id' => null ,
+                'entity_id' => $entity->id,
+            ])->id,
+            "quantity" => 1,
+            "entity_id" => $entity->id
+        ]);
+
+        $journalEntry->addLineItem($lineItem);
+        $journalEntry->post();
+
+        $currency = factory(Currency::class)->create([
+            "entity_id" => $entity->id
+        ]);
+        $cashPurchase = new CashPurchase([
+            "account_id" => Account::create([
+                'account_type' => Account::BANK,
+                'category_id' => null,
+                'currency_id' => $currency->id,
+                'entity_id' => $entity->id,
+            ])->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            'currency_id' => $currency->id,
+            'entity_id' => $entity->id,
+        ]);
+
+        $lineItem = LineItem::create([
+            'amount' => 70,
+            'vat_id' => Vat::create([
+                'name' => $this->faker->name,
+                'code' => $this->faker->randomLetter(),
+                'entity_id' => $entity->id,
+                'rate' => 0,
+                'account_id' => Account::create([
+                    'account_type' => Account::CONTROL,
+                    'category_id' => null,
+                    'entity_id' => $entity->id
+                ])->id,
+            ])->id,
+            "account_id" => Account::create([
+                'account_type' => Account::OTHER_EXPENSE,
+                'category_id' => null ,
+                'entity_id' => $entity->id,
+            ])->id,
+            "quantity" => 1,
+            "entity_id" => $entity->id
+        ]);
+
+        $cashPurchase->addLineItem($lineItem);
+        $cashPurchase->post();
+
+        $debitNote = new DebitNote([
+            "account_id" => Account::create([
+                'account_type' => Account::PAYABLE,
+                'category_id' => null,
+                'entity_id' => $entity->id,
+            ])->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "entity_id" => $entity->id
+        ]);
+
+        $lineItem = LineItem::create([
+            'amount' => 50,
+            'vat_id' => Vat::create([
+                'name' => $this->faker->name,
+                'code' => $this->faker->randomLetter(),
+                'entity_id' => $entity->id,
+                'rate' => 0,
+                'account_id' => Account::create([
+                    'account_type' => Account::CONTROL,
+                    'category_id' => null,
+                    'entity_id' => $entity->id
+                ])->id,
+            ])->id,
+            "account_id" => Account::create([
+                'account_type' => Account::OTHER_EXPENSE,
+                'category_id' => null ,
+                'entity_id' => $entity->id,
+            ])->id,
+            "quantity" => 1,
+            "entity_id" => $entity->id
+        ]);
+
+        $debitNote->addLineItem($lineItem);
+
+        $debitNote->post();
+
+        $startDate = ReportingPeriod::periodStart(null, $entity);
+        $endDate = ReportingPeriod::periodEnd(null, $entity);
+
+        $sections = $incomeStatement->getSections($startDate, $endDate, false);
+        $incomeStatement->toString();
+
+        $operatingRevenues = IncomeStatement::OPERATING_REVENUES;
+        $operatingExpenses = IncomeStatement::OPERATING_EXPENSES;
+        $nonOperatingRevenues = IncomeStatement::NON_OPERATING_REVENUES;
+        $nonOperatingExpenses = IncomeStatement::NON_OPERATING_EXPENSES;
+
+        $this->assertEquals(
+            $sections,
+            [
+                "accounts" => $incomeStatement->accounts,
+                "balances" => $incomeStatement->balances,
+                "results" => $incomeStatement->results,
+                "totals" => $incomeStatement->totals,
+            ]
+        );
+
+
+        $this->assertEquals(
+            $incomeStatement->balances[$operatingRevenues][Account::OPERATING_REVENUE],
+            -245
+        );
+
+        $this->assertEquals(
+            $incomeStatement->balances[$operatingExpenses][Account::OPERATING_EXPENSE],
+            100
+        );
+
+        $this->assertEquals(
+            $incomeStatement->balances[$nonOperatingRevenues][Account::NON_OPERATING_REVENUE],
+            -205
+        );
+
+        $this->assertEquals(
+            $incomeStatement->balances[$nonOperatingExpenses][Account::DIRECT_EXPENSE],
+            70
+        );
+
+        $this->assertEquals(
+            $incomeStatement->balances[$nonOperatingExpenses][Account::OVERHEAD_EXPENSE],
+            70
+        );
+
+        $this->assertEquals(
+            $incomeStatement->balances[$nonOperatingExpenses][Account::OTHER_EXPENSE],
+            20
+        );
+
+        $results = IncomeStatement::getResults(date('m'),date('y'), $entity);
 
         $this->assertEquals(
             $results[IncomeStatement::OPERATING_REVENUES],

@@ -2,16 +2,17 @@
 
 namespace Tests\Unit;
 
-use IFRS\Exceptions\DuplicateClosingRate;
+use IFRS\Tests\TestCase;
+
+use IFRS\User;
+
 use IFRS\Models\ClosingRate;
 use IFRS\Models\Entity;
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\RecycledObject;
 use IFRS\Models\ReportingPeriod;
 
-use IFRS\Tests\TestCase;
-use IFRS\User;
-
+use IFRS\Exceptions\DuplicateClosingRate;
 class ClosingRateTest extends TestCase
 {
     /**
@@ -34,14 +35,14 @@ class ClosingRateTest extends TestCase
         $this->assertEquals($closingRate->exchangeRate->rate, $exchangeRate->rate);
         $this->assertEquals($closingRate->exchangeRate->currency, $exchangeRate->currency);
         $this->assertEquals($closingRate->reportingPeriod->calendar_year, $reportingPeriod->calendar_year);
-        
+
         $this->assertEquals(
             $closingRate->toString(true),
-            'ClosingRate: ' . $reportingPeriod->calendar_year . ' ' . $exchangeRate->currency->currency_code .' at '. $exchangeRate->rate
+            'ClosingRate: ' . $reportingPeriod->calendar_year . ' ' . $exchangeRate->currency->currency_code . ' at ' . $exchangeRate->rate
         );
         $this->assertEquals(
             $closingRate->toString(),
-            $reportingPeriod->calendar_year . ' ' . $exchangeRate->currency->currency_code .' at '. $exchangeRate->rate
+            $reportingPeriod->calendar_year . ' ' . $exchangeRate->currency->currency_code . ' at ' . $exchangeRate->rate
         );
     }
 
@@ -96,7 +97,7 @@ class ClosingRateTest extends TestCase
     {
         $rate = factory(ExchangeRate::class)->create();
         $period = factory(ReportingPeriod::class)->create();
-        
+
         ClosingRate::create([
             'exchange_rate_id' => $rate->id,
             'reporting_period_id' => $period->id,
@@ -110,9 +111,9 @@ class ClosingRateTest extends TestCase
             'exchange_rate_id' => $rate->id,
             'reporting_period_id' => factory(ReportingPeriod::class)->create()->id,
         ]);
-        
+
         $this->expectException(DuplicateClosingRate::class);
-        $this->expectExceptionMessage('A Closing Rate already exists for ' . $rate->currency->currency_code . ' for ' .$period->calendar_year);
+        $this->expectExceptionMessage('A Closing Rate already exists for ' . $rate->currency->currency_code . ' for ' . $period->calendar_year);
 
         ClosingRate::create([
             'exchange_rate_id' => $rate->id,

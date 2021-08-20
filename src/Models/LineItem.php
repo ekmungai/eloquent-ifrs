@@ -121,7 +121,7 @@ class LineItem extends Model implements Recyclable, Segregatable
      */
     public function attributes()
     {
-        return (object) $this->attributes;
+        return (object)$this->attributes;
     }
 
     /**

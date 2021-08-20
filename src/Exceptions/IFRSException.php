@@ -10,6 +10,8 @@
 
 namespace IFRS\Exceptions;
 
+namespace IFRS\Exceptions;
+
 use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Log;
@@ -35,7 +37,7 @@ abstract class IFRSException extends \Exception
      * IFRS Base Exception
      *
      * @param string $message
-     * @param int    $code
+     * @param int $code
      */
 
     public function __construct(string $message = null, int $code = null)

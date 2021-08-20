@@ -74,63 +74,6 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
     ];
 
     /**
-     * Closing Rates.
-     * 
-     * @param int $forexAccountId
-     * @param int $vatId
-     * @param Account $account
-     * @param float $localBalance
-     * @param float $foreignBalance
-     * @param Carbon $closingDate
-     * @param object $currency
-     * 
-     * @return Transaction
-     */
-    private function balanceAccount(
-        int $forexAccountId,
-        int $vatId,
-        Account $account, 
-        float $localBalance, 
-        float $foreignBalance, 
-        Carbon $closingDate,
-        object $currency
-    ) : Transaction {
-
-        $difference = $foreignBalance - $localBalance;
-        $isAsset = in_array($account->account_type, config('ifrs')[BalanceSheet::ASSETS]);
-        $isLiability = in_array($account->account_type, config('ifrs')[BalanceSheet::LIABILITIES]);
-
-        if($isAsset && $difference > 0 || $isLiability && $difference < 0){
-            $credited = true;
-        }elseif($isAsset && $difference < 0 || $isLiability && $difference > 0){
-            $credited = false;
-        }
-
-        $balanceTransaction = JournalEntry::create([
-            "account_id" => $account->id,
-            "transaction_date" => $closingDate,
-            "narration" => $currency->currency_code . " ". $this->calendar_year . " Forex Balance Translation",
-            "reference" => $currency->currency_code,
-            "credited" => $credited
-        ]);
-
-        $balanceTransaction->addLineItem(LineItem::create([
-            'vat_id' => $vatId,
-            'account_id' => $forexAccountId,
-            'amount' => abs($difference),
-        ]));
-
-        $balanceTransaction->save();
-        
-        ClosingTransaction::create([
-            "reporting_period_id" => $this->id,
-            "transaction_id" => $balanceTransaction->id,
-            "currency_id" => $currency->currency_id
-        ]);
-        return $balanceTransaction;
-    }
-
-    /**
      * Construct new Reporting Period.
      */
     public function __construct($attributes = [])
@@ -142,29 +85,23 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
     }
 
     /**
-     * Instance Identifier.
-     *
-     * @return string
-     */
-    public function toString($type = false)
-    {
-        $classname = explode('\\', self::class);
-        return $type ? array_pop($classname) . ': ' . $this->calendar_year : $this->calendar_year;
-    }
-
-    /**
      * Fetch reporting period for the date
      *
      * @param string|Carbon $date
      * @return ReportingPeriod
      */
-    public static function getPeriod($date = null)
+    public static function getPeriod($date = null, Entity $entity = null)
     {
-        $year = ReportingPeriod::year($date);
-        
-        $period = ReportingPeriod::where("calendar_year", $year)->first();
+        if (is_null($entity)) {
+            $entity = Auth::user()->entity;
+        }
+
+        $year = ReportingPeriod::year($date, $entity);
+
+        $period = ReportingPeriod::where("calendar_year", $year)
+            ->where('entity_id', '=', $entity->id)->first();
         if (is_null($period)) {
-            throw new MissingReportingPeriod(Auth::user()->entity->name, $year);
+            throw new MissingReportingPeriod($entity->name, $year);
         }
         return $period;
     }
@@ -176,44 +113,33 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
      *
      * @return int
      */
-    public static function year($date = null)
+    public static function year($date = null, Entity $entity = null)
     {
-        if (is_null(Auth::user()->entity)) {
+        if (is_null($entity)) {
+            $entity = Auth::user()->entity;
+        }
+
+        if (is_null($entity)) {
             return date("Y");
         }
 
         $year = is_null($date) ? date("Y") : date("Y", strtotime($date));
         $month = is_null($date) ? date("m") : date("m", strtotime($date));
 
-        $year  = intval($month) < Auth::user()->entity->year_start ? intval($year) - 1 : $year;
+        $year = intval($month) < $entity->year_start ? intval($year) - 1 : $year;
 
         return intval($year);
     }
 
     /**
-     * ReportingPeriod start date
+     * Instance Identifier.
      *
-     * @return Carbon $date
+     * @return string
      */
-    public static function periodStart($date = null)
+    public function toString($type = false)
     {
-        return is_null(Auth::user()->entity) ? Carbon::parse(date("Y")."-01-01")->startOfDay() : Carbon::create(
-            ReportingPeriod::year($date),
-            Auth::user()->entity->year_start,
-            1
-        )->startOfDay();
-    }
-
-    /**
-     * ReportingPeriod end date
-     *
-     * @return Carbon
-     */
-    public static function periodEnd($date = null)
-    {
-        return ReportingPeriod::periodStart($date)
-            ->addYear()
-            ->subDay();
+        $classname = explode('\\', self::class);
+        return $type ? array_pop($classname) . ': ' . $this->calendar_year : $this->calendar_year;
     }
 
     /**
@@ -243,14 +169,126 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
      */
     public function attributes()
     {
-        return (object) $this->attributes;
+        return (object)$this->attributes;
+    }
+
+    /**
+     * Get the auto generated translation transactions for the period.
+     *
+     * @return array
+     */
+    public function getTranslations(): array
+    {
+        $transactions = [];
+
+        foreach ($this->closingTransactions as $translation) {
+            $transaction = Transaction::find($translation->transaction_id);
+            $account = $transaction->account;
+            $balances = $account->closingBalance($transaction->transaction_date, $translation->currency_id);
+            $closingRate = ClosingRate::where('reporting_period_id', $this->id)
+                ->whereHas('ExchangeRate', function ($q) use ($translation) {
+                    $q->where('currency_id', $translation->currency_id);
+                })->first()->exchangeRate->rate;
+            $credited = $transaction->credited ? -1 : 1;
+            $transactions[$account->name][] = [
+                'currency' => $transaction->reference,
+                'closingRate' => $closingRate,
+                'currencyBalance' => $balances[$translation->currency_id],
+                'localBalance' => $balances[$transaction->currency_id],
+                'foreignBalance' => $balances[$translation->currency_id] * $closingRate,
+                'translation' => $transaction->amount * $credited,
+                'posted' => $transaction->is_posted
+            ];
+        }
+        return $transactions;
+    }
+
+    /**
+     * Commit the auto generated translation transactions for the period to the ledger.
+     *
+     * @return void
+     */
+    public function postTranslations(): void
+    {
+        foreach ($this->closingTransactions as $translation) {
+            $transaction = Transaction::find($translation->transaction_id);
+            $transaction->post();
+        }
+    }
+
+    /**
+     * Prepare Forex Account Balances translations.
+     *
+     * @param int $forexAccountId
+     * @param int $vatId
+     * @param int $accountId
+     *
+     * @return array $transactions
+     */
+    public function prepareBalancesTranslation($forexAccountId, int $vatId, int $accountId = null): array
+    {
+
+        if (Account::find($forexAccountId)->account_type != Account::EQUITY) {
+            throw new InvalidAccountType('Transaltion Forex', Account::EQUITY);
+        }
+
+        if ($this->status != ReportingPeriod::ADJUSTING) {
+            throw new InvalidPeriodStatus();
+        }
+
+        $rates = $transactions = [];
+        foreach ($this->transactionCurrencies() as $currency) {
+            $closingRate = ClosingRate::where('reporting_period_id', $this->id)
+                ->whereHas('ExchangeRate', function ($q) use ($currency) {
+                    $q->where('currency_id', $currency->currency_id);
+                });
+
+            if ($closingRate->count() == 0) {
+                $currencyCode = Currency::find($currency->currency_id)->currency_code;
+                throw new MissingClosingRate($currencyCode);
+            }
+            $rates[$currency->currency_id] = $closingRate->get()->first()->exchangerate->rate;
+        }
+
+        $reportingCurrency = $this->entity->currency_id;
+        $periodEnd = ReportingPeriod::periodEnd($this->calendar_year . '01-01', $this->entity);
+
+        $accounts = Account::whereNotIn('currency_id', [$reportingCurrency]);
+        if (!is_null($accountId)) {
+            $accounts->where('id', $accountId);
+        }
+        foreach ($accounts->where('entity_id', '=', $this->entity->id)->get() as $account) {
+            if (!$account->isClosed($this->calendar_year)) {
+                $balances = $account->closingBalance($periodEnd);
+                if (array_sum($balances) <> 0) {
+                    foreach ($this->transactionCurrencies($account->id) as $currency) {
+                        $balances = $account->closingBalance($periodEnd, $currency->currency_id);
+                        $localBalance = $balances[$reportingCurrency];
+                        $foreignBalance = $balances[$currency->currency_id] * $rates[$currency->currency_id];
+
+                        if ($localBalance <> round($foreignBalance, config('ifrs.forex_scale'))) {
+                            $transactions[] = $this->balanceAccount(
+                                $forexAccountId,
+                                $vatId,
+                                $account,
+                                $localBalance,
+                                $foreignBalance,
+                                $periodEnd,
+                                $currency
+                            );
+                        }
+                    }
+                }
+            }
+        }
+        return $transactions;
     }
 
     /**
      * Retrieve the currencies used in trasactions for the period.
-     * 
+     *
      * @param int $accountId
-     * 
+     *
      * @return collection
      */
     public function transactionCurrencies($accountId = null)
@@ -273,114 +311,96 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
     }
 
     /**
-     * Get the auto generated translation transactions for the period.
-     * 
-     * @return array
+     * ReportingPeriod end date
+     *
+     * @return Carbon
      */
-    public function getTranslations() : array
+    public static function periodEnd($date = null, Entity $entity = null)
     {
-        $transactions = [];
-
-        foreach($this->closingTransactions as $translation){
-            $transaction = Transaction::find($translation->transaction_id);
-            $account = $transaction->account;
-            $balances = $account->closingBalance($transaction->transaction_date, $translation->currency_id);
-            $closingRate  = ClosingRate::where('reporting_period_id', $this->id)
-            ->whereHas('ExchangeRate', function($q) use ($translation) {
-                $q->where('currency_id', $translation->currency_id);
-            })->first()->exchangeRate->rate;
-            $credited = $transaction->credited ? -1 : 1;
-            $transactions[$account->name][] = [
-                'currency' => $transaction->reference,
-                'closingRate' => $closingRate,
-                'currencyBalance' => $balances[$translation->currency_id],
-                'localBalance' => $balances[$transaction->currency_id],
-                'foreignBalance' => $balances[$translation->currency_id] * $closingRate,
-                'translation' => $transaction->amount * $credited,
-                'posted' => $transaction->is_posted
-            ];
-        }        
-        return $transactions;
+        return ReportingPeriod::periodStart($date, $entity)
+            ->addYear()
+            ->subDay();
     }
 
     /**
-     * Commit the auto generated translation transactions for the period to the ledger.
-     * 
-     * @return void
+     * ReportingPeriod start date
+     *
+     * @return Carbon $date
      */
-    public function postTranslations() : void
+    public static function periodStart($date = null, Entity $entity = null)
     {
-        foreach($this->closingTransactions as $translation){
-            $transaction = Transaction::find($translation->transaction_id);
-            $transaction->post();       
-        }        
+        if (is_null($entity)) {
+            if (Auth::user()) {
+                $entity = Auth::user()->entity;
+            }
+        }
+        return is_null($entity) ? Carbon::parse(date("Y") . "-01-01")->startOfDay() : Carbon::create(
+            ReportingPeriod::year($date, $entity),
+            $entity->year_start,
+            1
+        )->startOfDay();
     }
 
     /**
-     * Prepare Forex Account Balances translations.
-     * 
+     * Closing Rates.
+     *
      * @param int $forexAccountId
      * @param int $vatId
-     * @param int $accountId
-     * 
-     * @return array $transactions
+     * @param Account $account
+     * @param float $localBalance
+     * @param float $foreignBalance
+     * @param Carbon $closingDate
+     * @param object $currency
+     *
+     * @return Transaction
      */
-    public function prepareBalancesTranslation($forexAccountId, int $vatId, int $accountId = null) : array
+    private function balanceAccount(
+        int $forexAccountId,
+        int $vatId,
+        Account $account,
+        float $localBalance,
+        float $foreignBalance,
+        Carbon $closingDate,
+        object $currency
+    ): Transaction
     {
 
-        if (Account::find($forexAccountId)->account_type != Account::EQUITY) {
-            throw new InvalidAccountType('Transaltion Forex', Account::EQUITY);
+        $difference = $foreignBalance - $localBalance;
+        $isAsset = in_array($account->account_type, config('ifrs')[BalanceSheet::ASSETS]);
+        $isLiability = in_array($account->account_type, config('ifrs')[BalanceSheet::LIABILITIES]);
+
+        if ($isAsset && $difference > 0 || $isLiability && $difference < 0) {
+            $credited = true;
+        } elseif ($isAsset && $difference < 0 || $isLiability && $difference > 0) {
+            $credited = false;
         }
 
-        if ($this->status != ReportingPeriod::ADJUSTING) {
-            throw new InvalidPeriodStatus();
-        }
+        $entity = $account->entity;
 
-        $rates = $transactions = [];
-        foreach($this->transactionCurrencies() as $currency){
-            $closingRate = ClosingRate::where('reporting_period_id', $this->id)
-            ->whereHas('ExchangeRate', function($q) use ($currency) {
-                $q->where('currency_id', $currency->currency_id);
-            });
+        $balanceTransaction = JournalEntry::create([
+            "account_id" => $account->id,
+            "transaction_date" => $closingDate,
+            "narration" => $currency->currency_code . " " . $this->calendar_year . " Forex Balance Translation",
+            "reference" => $currency->currency_code,
+            "credited" => $credited,
+            "entity_id" => $entity->id
+        ]);
 
-            if($closingRate->count() == 0) {
-                $currencyCode = Currency::find($currency->currency_id)->currency_code;
-                throw new MissingClosingRate($currencyCode);
-            }
-            $rates[$currency->currency_id] = $closingRate->get()->first()->exchangerate->rate;
-        }
-        
-        $reportingCurrency = $this->entity->currency_id;
-        $periodEnd = ReportingPeriod::periodEnd($this->calendar_year.'01-01');
+        $balanceTransaction->addLineItem(LineItem::create([
+            'vat_id' => $vatId,
+            'account_id' => $forexAccountId,
+            'amount' => abs($difference),
+            'entity_id' => $entity->id
+        ]));
 
-        $accounts = Account::whereNotIn('currency_id', [$reportingCurrency]);
-        if(!is_null($accountId)){
-            $accounts->where('id', $accountId);
-        }
-        foreach ($accounts->get() as $account){
-            if(!$account->isClosed($this->calendar_year)){
-                $balances = $account->closingBalance($periodEnd);
-                if(array_sum($balances) <> 0 ){
-                    foreach($this->transactionCurrencies($account->id) as $currency){
-                        $balances = $account->closingBalance($periodEnd, $currency->currency_id);
-                        $localBalance = $balances[$reportingCurrency];
-                        $foreignBalance = $balances[$currency->currency_id] * $rates[$currency->currency_id];
+        $balanceTransaction->save();
 
-                        if($localBalance <> round($foreignBalance, config('ifrs.forex_scale'))) {
-                            $transactions[] = $this->balanceAccount(
-                                $forexAccountId,
-                                $vatId,
-                                $account, 
-                                $localBalance, 
-                                $foreignBalance, 
-                                $periodEnd,
-                                $currency
-                            );
-                        }
-                    }
-                }
-            }
-        }   
-        return $transactions;
+        ClosingTransaction::create([
+            "reporting_period_id" => $this->id,
+            "transaction_id" => $balanceTransaction->id,
+            "currency_id" => $currency->currency_id,
+            "entity_id" => $entity->id
+        ]);
+        return $balanceTransaction;
     }
 }

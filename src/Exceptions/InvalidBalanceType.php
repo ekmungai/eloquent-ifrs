@@ -18,9 +18,9 @@ class InvalidBalanceType extends IFRSException
     /**
      * Invalid Balance Type Exception
      *
-     * @param array  $balanceTypes
+     * @param array $balanceTypes
      * @param string $message
-     * @param int    $code
+     * @param int $code
      */
     public function __construct(array $balanceTypes, string $message = null, int $code = null)
     {

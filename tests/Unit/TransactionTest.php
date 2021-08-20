@@ -6,9 +6,10 @@ use Carbon\Carbon;
 
 use Illuminate\Support\Facades\DB;
 
-use IFRS\User;
 
 use IFRS\Tests\TestCase;
+
+use IFRS\User;
 
 use IFRS\Exceptions\AdjustingReportingPeriod;
 use IFRS\Exceptions\ClosedReportingPeriod;
@@ -20,6 +21,7 @@ use IFRS\Exceptions\RedundantTransaction;
 use IFRS\Exceptions\UnpostedAssignment;
 use IFRS\Exceptions\InvalidTransactionDate;
 use IFRS\Exceptions\InvalidTransactionType;
+
 use IFRS\Models\Account;
 use IFRS\Models\Assignment;
 use IFRS\Models\Currency;

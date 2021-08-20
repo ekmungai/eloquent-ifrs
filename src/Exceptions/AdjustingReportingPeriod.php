@@ -10,8 +10,8 @@
 
 namespace IFRS\Exceptions;
 
-use IFRS\Models\Transaction;
 use IFRS\Models\ReportingPeriod;
+use IFRS\Models\Transaction;
 
 class AdjustingReportingPeriod extends IFRSException
 {
@@ -19,7 +19,7 @@ class AdjustingReportingPeriod extends IFRSException
      * Adjusting Reporting Period Exception
      *
      * @param string $message
-     * @param int    $code
+     * @param int $code
      */
     public function __construct(string $message = null, int $code = null)
     {

@@ -3,7 +3,10 @@
 namespace Tests\Unit;
 
 use Carbon\Carbon;
+
 use IFRS\Tests\TestCase;
+
+use IFRS\User;
 
 use IFRS\Models\Account;
 use IFRS\Models\Balance;
@@ -13,8 +16,8 @@ use IFRS\Models\LineItem;
 use IFRS\Models\RecycledObject;
 use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Vat;
+
 use IFRS\Transactions\ClientInvoice;
-use IFRS\User;
 
 class CategoryTest extends TestCase
 {
@@ -98,7 +101,7 @@ class CategoryTest extends TestCase
         $recycled = RecycledObject::all()->first();
         $this->assertEquals($category->recycled->first(), $recycled);
         $this->assertEquals($recycled->recyclable->id, $category->id);
-        
+
         $category->restore();
 
         $this->assertEquals(count($category->recycled()->get()), 0);

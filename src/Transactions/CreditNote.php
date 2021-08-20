@@ -10,12 +10,12 @@
 
 namespace IFRS\Transactions;
 
-use IFRS\Interfaces\Sells;
 use IFRS\Interfaces\Assignable;
 
-use IFRS\Traits\Selling;
-use IFRS\Traits\Fetching;
+use IFRS\Interfaces\Sells;
+
 use IFRS\Traits\Assigning;
+use IFRS\Traits\Selling;
 
 use IFRS\Models\Transaction;
 
