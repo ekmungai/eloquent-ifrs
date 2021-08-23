@@ -250,12 +250,14 @@ return [
         IncomeStatement::TOTAL_EXPENSES => 'Total Expenses',
         IncomeStatement::NET_PROFIT => 'Net Profit',
 
-        // Balance Sheet
+        // Balance Sheet: Sections
         BalanceSheet::TITLE => 'Balance Sheet',
         BalanceSheet::ASSETS => 'Assets',
         BalanceSheet::LIABILITIES => 'Liabilities',
         BalanceSheet::EQUITY => 'Equity',
         BalanceSheet::RECONCILIATION => 'Reconciliation',
+
+        // Balance Sheet: Results
         BalanceSheet::TOTAL_ASSETS => 'Total Assets',
         BalanceSheet::TOTAL_LIABILITIES => 'Total Liabilities',
         BalanceSheet::NET_ASSETS => 'Net Assets',
@@ -275,7 +277,6 @@ return [
         CashFlowStatement::NON_CURRENT_ASSETS => 'Non Current Assets',
         CashFlowStatement::NON_CURRENT_LIABILITIES => 'Non Current Liabilities',
         CashFlowStatement::EQUITY => 'Equity',
-
 
         // Cash Flow Statement: Headings
         CashFlowStatement::TITLE => 'Cash Flow Statement',

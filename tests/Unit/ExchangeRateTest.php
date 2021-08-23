@@ -2,12 +2,14 @@
 
 namespace Tests\Unit;
 
+use Carbon\Carbon;
+
 use IFRS\Tests\TestCase;
+
+use IFRS\User;
 
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\RecycledObject;
-use IFRS\User;
-use Carbon\Carbon;
 use IFRS\Models\Currency;
 
 class ExchangeRateTest extends TestCase

@@ -18,7 +18,6 @@ use IFRS\Models\Balance;
 use IFRS\Models\Entity;
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\Transaction;
-use IFRS\Models\Ledger;
 
 use IFRS\Transactions\JournalEntry;
 use IFRS\Transactions\ClientInvoice;

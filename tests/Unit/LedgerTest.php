@@ -2,10 +2,9 @@
 
 namespace Tests\Unit;
 
-use IFRS\Tests\TestCase;
-
-
 use Carbon\Carbon;
+
+use IFRS\Tests\TestCase;
 
 use IFRS\Models\Account;
 use IFRS\Models\Balance;

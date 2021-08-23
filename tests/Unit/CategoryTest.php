@@ -3,7 +3,10 @@
 namespace Tests\Unit;
 
 use Carbon\Carbon;
+
 use IFRS\Tests\TestCase;
+
+use IFRS\User;
 
 use IFRS\Models\Account;
 use IFRS\Models\Balance;
@@ -13,8 +16,8 @@ use IFRS\Models\LineItem;
 use IFRS\Models\RecycledObject;
 use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Vat;
+
 use IFRS\Transactions\ClientInvoice;
-use IFRS\User;
 
 class CategoryTest extends TestCase
 {

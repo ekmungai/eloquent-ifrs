@@ -10,8 +10,8 @@ use IFRS\Models\Account;
 use IFRS\Models\Balance;
 use IFRS\Models\Currency;
 use IFRS\Models\Ledger;
-use IFRS\Models\Vat;
 use IFRS\Models\LineItem;
+use IFRS\Models\Vat;
 
 use IFRS\Transactions\SupplierPayment;
 

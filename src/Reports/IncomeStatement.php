@@ -11,10 +11,12 @@
 namespace IFRS\Reports;
 
 use Carbon\Carbon;
-use IFRS\Models\Balance;
-use IFRS\Models\ReportingPeriod;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+
+use IFRS\Models\Balance;
+use IFRS\Models\ReportingPeriod;
 
 class IncomeStatement extends FinancialStatement
 {

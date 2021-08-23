@@ -2,15 +2,17 @@
 
 namespace Tests\Unit;
 
-use IFRS\Exceptions\DuplicateClosingRate;
+use IFRS\Tests\TestCase;
+
+use IFRS\User;
+
 use IFRS\Models\ClosingRate;
 use IFRS\Models\Entity;
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\RecycledObject;
 use IFRS\Models\ReportingPeriod;
 
-use IFRS\Tests\TestCase;
-use IFRS\User;
+use IFRS\Exceptions\DuplicateClosingRate;
 
 class ClosingRateTest extends TestCase
 {

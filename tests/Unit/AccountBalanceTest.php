@@ -4,15 +4,19 @@ namespace Tests\Unit;
 
 use Carbon\Carbon;
 
+use Illuminate\Support\Facades\Auth;
+
 use IFRS\Tests\TestCase;
+
+use IFRS\User;
 
 use IFRS\Models\Account;
 use IFRS\Models\Balance;
 use IFRS\Models\Currency;
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\RecycledObject;
-use IFRS\User;
 use IFRS\Models\Transaction;
+use IFRS\Models\Entity;
 
 use IFRS\Exceptions\InvalidBalanceTransaction;
 use IFRS\Exceptions\InvalidAccountClassBalance;
@@ -20,8 +24,6 @@ use IFRS\Exceptions\NegativeAmount;
 use IFRS\Exceptions\InvalidBalanceType;
 use IFRS\Exceptions\InvalidBalanceDate;
 use IFRS\Exceptions\InvalidCurrency;
-use IFRS\Models\Entity;
-use Illuminate\Support\Facades\Auth;
 
 class AccountBalanceTest extends TestCase
 {

@@ -2,14 +2,16 @@
 
 namespace Tests\Unit;
 
+use IFRS\Tests\TestCase;
+
+use IFRS\User;
+
 use IFRS\Models\ClosingTransaction;
 use IFRS\Models\Currency;
 use IFRS\Models\Entity;
 use IFRS\Models\RecycledObject;
 use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Transaction;
-use IFRS\Tests\TestCase;
-use IFRS\User;
 
 class ClosingTransactionTest extends TestCase
 {

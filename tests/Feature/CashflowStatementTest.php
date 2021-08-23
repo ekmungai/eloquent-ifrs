@@ -12,7 +12,6 @@ use IFRS\Models\ExchangeRate;
 use IFRS\Models\LineItem;
 use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Vat;
-use IFRS\Reports\CashFlowStatement;
 
 use IFRS\Transactions\CreditNote;
 use IFRS\Transactions\JournalEntry;
@@ -20,6 +19,8 @@ use IFRS\Transactions\SupplierBill;
 use IFRS\Transactions\CashPurchase;
 use IFRS\Transactions\ClientInvoice;
 use IFRS\Transactions\DebitNote;
+
+use IFRS\Reports\CashFlowStatement;
 
 class CashFlowStatementTest extends TestCase
 {
