@@ -71,7 +71,7 @@ class Vat extends Model implements Segregatable, Recyclable
     {
         $vatLineItems = [];
         $lineItem = LineItem::find($lineItemId);
-        $zeroRate = Vat::where('rate', 0)->first();
+        $zeroRate = Vat::where('rate', 0)->get()->first();
         $chargeAmount = $lineItem->amount * $lineItem->quantity;
 
         if(count($vatIds) < 2){
