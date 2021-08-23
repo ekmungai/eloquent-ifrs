@@ -724,7 +724,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
                 // echo PHP_EOL;
                 // echo $ledger->hashed();
                 // echo PHP_EOL;
-                return password_verify($ledger->hashed(), $ledger->hash);
+                return hash(config('ifrs')['hashing_algorithm'],$ledger->hashed()) == $ledger->hash;
             }
         );
     }

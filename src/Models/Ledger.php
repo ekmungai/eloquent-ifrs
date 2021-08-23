@@ -132,10 +132,7 @@ class Ledger extends Model implements Segregatable
     {
         parent::save();
 
-        $this->hash = password_hash(
-            $this->hashed(),
-            config('ifrs')['hashing_algorithm']
-        );
+        $this->hash = hash(config('ifrs')['hashing_algorithm'],$this->hashed());
 
         return parent::save();
     }
