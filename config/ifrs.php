@@ -105,7 +105,7 @@ return [
      | The Hashing Algorim to be used when hashing Ledger records.
      |
      */
-    'hashing_algorithm' => env('HASHING_ALGORITHM', PASSWORD_DEFAULT),
+    'hashing_algorithm' => env('HASHING_ALGORITHM', 'sha256'),
 
     /*
      |--------------------------------------------------------------------------

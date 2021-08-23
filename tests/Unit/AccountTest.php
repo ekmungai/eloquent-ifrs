@@ -4,27 +4,29 @@ namespace Tests\Unit;
 
 use Carbon\Carbon;
 
+use Illuminate\Support\Facades\Auth;
+
 use IFRS\Tests\TestCase;
 
 use IFRS\User;
 
 use IFRS\Models\Account;
-use IFRS\Models\Category;
-use IFRS\Models\Currency;
-use IFRS\Models\RecycledObject;
 use IFRS\Models\Balance;
+use IFRS\Models\Category;
+use IFRS\Models\ClosingRate;
+use IFRS\Models\Currency;
+use IFRS\Models\Entity;
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\Ledger;
+use IFRS\Models\LineItem;
+use IFRS\Models\RecycledObject;
 use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Vat;
-use IFRS\Models\LineItem;
-use IFRS\Models\ClosingRate;
-use IFRS\Models\Entity;
 
 use IFRS\Transactions\ClientInvoice;
-use IFRS\Transactions\SupplierBill;
 use IFRS\Transactions\ClientReceipt;
 use IFRS\Transactions\JournalEntry;
+use IFRS\Transactions\SupplierBill;
 
 use IFRS\Exceptions\HangingTransactions;
 use IFRS\Exceptions\InvalidCategoryType;
@@ -88,6 +90,34 @@ class AccountTest extends TestCase
 
         $this->be(User::withoutGlobalScopes()->find(1));
         $this->assertEquals(count(Account::all()), 0);
+    }
+
+    /**
+     * Test Account model Sessionless Entity Scope.
+     *
+     * @return void
+     */
+    public function testAccountSessionlessEntityScope()
+    {
+        $entity = factory(Entity::class)->create();
+
+        $type = $this->faker->randomElement(array_keys(config('ifrs')['accounts']));
+
+        Account::create([
+            'name' => $this->faker->name,
+            'currency_id' => factory(Currency::class)->create()->id,
+            'account_type' => $type,
+            'category_id' => null,
+            'entity_id' => $entity->id
+        ]);
+
+        // Scope applies to session user entity
+        $this->assertEquals(count(Account::all()), 0);
+
+        Auth::logout();
+
+        // Scope is bypassed 
+        $this->assertEquals(count((new Account(['entity_id' => $entity->id]))->get()), 1);
     }
 
     /**
@@ -163,7 +193,7 @@ class AccountTest extends TestCase
             'category_id' => null
         ]);
         $account->save();
-        
+
         $this->assertEquals(config('ifrs')['account_codes'][Account::NON_CURRENT_ASSET] + 1, $account->code);
 
         factory(Account::class, 3)->create([
@@ -296,11 +326,11 @@ class AccountTest extends TestCase
         ]);
 
         $this->assertEquals(
-            $account->openingBalance(Carbon::now()->addYear()->year), 
+            $account->openingBalance(Carbon::now()->addYear()->year),
             [$this->reportingCurrencyId => 3500]
         );
         $this->assertEquals($account->openingBalance(
-            Carbon::now()->addYear()->year, $rate->currency_id), 
+            Carbon::now()->addYear()->year, $rate->currency_id),
             [$this->reportingCurrencyId => 3500, $rate->currency_id => 140]
         );
 
@@ -397,10 +427,10 @@ class AccountTest extends TestCase
         ]);
 
         $account = Account::find($account->id);
-        
+
         $this->assertEquals($account->closingBalance(), [$this->reportingCurrencyId => 22680]);
         $this->assertEquals(
-            $account->closingBalance(Carbon::now(), $rate->currency_id), 
+            $account->closingBalance(Carbon::now(), $rate->currency_id),
             [$this->reportingCurrencyId => 22680, $rate->currency_id => 216]
         );
     }
@@ -1124,7 +1154,7 @@ class AccountTest extends TestCase
             ])->id,
             'currency_id' => $currency1->id,
         ]);
-        
+
         $line = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
@@ -1134,7 +1164,7 @@ class AccountTest extends TestCase
             ])->id,
             'amount' => 100,
         ]);
-        
+
         $transaction->addLineItem($line);
         $transaction->post();
 
@@ -1198,7 +1228,7 @@ class AccountTest extends TestCase
             ])->id,
             'currency_id' => $currency1->id,
         ]);
-        
+
         $line = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
@@ -1208,7 +1238,7 @@ class AccountTest extends TestCase
             ])->id,
             'amount' => 100,
         ]);
-        
+
         $transaction->addLineItem($line);
         $transaction->post();
 
@@ -1222,7 +1252,7 @@ class AccountTest extends TestCase
             ])->id,
             'currency_id' => $currency2->id,
         ]);
-        
+
         $line = new LineItem([
             'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
@@ -1232,12 +1262,12 @@ class AccountTest extends TestCase
             ])->id,
             'amount' => 100,
         ]);
-        
+
         $transaction->addLineItem($line);
         $transaction->post();
 
         $this->assertFalse($account->isClosed());
-        
+
         $this->period->status = ReportingPeriod::ADJUSTING;
 
         $this->period->prepareBalancesTranslation($forex->id, $vatId);
@@ -1248,12 +1278,12 @@ class AccountTest extends TestCase
 
         $this->assertEquals($transactions[0]->account_id, $account->id);
         $this->assertTrue(boolval($transactions[0]->credited));
-        $this->assertEquals($transactions[0]->narration, $currency1->currency_code . " ". $this->period->calendar_year . " Forex Balance Translation");
+        $this->assertEquals($transactions[0]->narration, $currency1->currency_code . " " . $this->period->calendar_year . " Forex Balance Translation");
         $this->assertEquals($transactions[0]->amount, 0);
 
         $this->assertEquals($transactions[1]->account_id, $account->id);
         $this->assertFalse(boolval($transactions[1]->credited));
-        $this->assertEquals($transactions[1]->narration, $currency2->currency_code . " ". $this->period->calendar_year . " Forex Balance Translation");
+        $this->assertEquals($transactions[1]->narration, $currency2->currency_code . " " . $this->period->calendar_year . " Forex Balance Translation");
         $this->assertEquals($transactions[1]->amount, 0);
 
     }

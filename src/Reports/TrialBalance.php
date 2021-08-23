@@ -11,9 +11,10 @@
 namespace IFRS\Reports;
 
 use Carbon\Carbon;
+
 use IFRS\Models\Account;
 use IFRS\Models\ReportingPeriod;
-use Illuminate\Support\Facades\Auth;
+use IFRS\Models\Entity;
 
 class TrialBalance extends FinancialStatement
 {
@@ -28,15 +29,16 @@ class TrialBalance extends FinancialStatement
      * Construct Trial Balance
      *
      * @param string $year
+     * @param Entity $entity
      */
-    public function __construct(string $year = null)
+    public function __construct(string $year = null, Entity $entity = null)
     {
-        $startDate = $year."-01-01";
-        $period = ReportingPeriod::getPeriod(Carbon::parse($startDate));
-        
-        parent::__construct($period);
-        
-        $this->endDate = ReportingPeriod::periodEnd($startDate);
+        $startDate = $year . "-01-01";
+        $period = ReportingPeriod::getPeriod(Carbon::parse($startDate), $entity);
+
+        parent::__construct($period, $entity);
+
+        $this->endDate = ReportingPeriod::periodEnd($startDate, $entity);
 
         $this->accounts[IncomeStatement::TITLE] = [];
         $this->accounts[BalanceSheet::TITLE] = [];
@@ -50,9 +52,9 @@ class TrialBalance extends FinancialStatement
      */
     public function getSections($startDate = null, $endDate = null, $fullbalance = true): array
     {
-        foreach (Account::all() as $account) {
-            $balance = $account->closingBalance($this->endDate)[Auth::user()->entity->currency_id];
-            
+        foreach (Account::where('entity_id', '=', $this->entity->id)->get() as $account) {
+            $balance = $account->closingBalance($this->endDate)[$this->entity->currency_id];
+
             if ($balance <> 0) {
                 if ($balance > 0) {
                     $this->balances["debit"] += abs($balance);
@@ -75,7 +77,7 @@ class TrialBalance extends FinancialStatement
      * Get Income Statement Sections.
      *
      * @param Account $account
-     * @param float   $balance
+     * @param float $balance
      */
     private function getIncomeStatementSections(Account $account, $balance): void
     {
@@ -102,7 +104,7 @@ class TrialBalance extends FinancialStatement
      * Get Balance Sheet Sections.
      *
      * @param Account $account
-     * @param float   $balance
+     * @param float $balance
      */
     private function getBalanceSheetSections(Account $account, $balance): void
     {

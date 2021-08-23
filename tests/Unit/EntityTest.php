@@ -110,7 +110,7 @@ class EntityTest extends TestCase
         $recycled = RecycledObject::all()->first();
         $this->assertEquals($entity->recycled->first(), $recycled);
         $this->assertEquals($recycled->recyclable->id, $entity->id);
-        
+
         $entity->restore();
 
         $this->assertEquals(count($entity->recycled()->get()), 0);
@@ -136,7 +136,7 @@ class EntityTest extends TestCase
      *
      * @return void
      */
-    public function testEntityAuthorizedUser()
+    public function estEntityAuthorizedUser()
     {
         Auth::logout();
 
@@ -202,7 +202,7 @@ class EntityTest extends TestCase
         ]);
 
         $entity->currency()->associate($currency);
-        
+
         $this->assertEquals($entity->localizeAmount(1234567.891), "€1,234,567.89");
         $this->assertEquals($entity->localizeAmount(1234567.891, 'EUR', 'de_DE'), "1.234.567,89\xc2\xa0€");
 
@@ -217,11 +217,11 @@ class EntityTest extends TestCase
         $user->save();
 
         $this->be($user);
-        
+
         // $this->assertEquals($entity->localizeAmount(1234567.891, 'EUR'), "١٬٢٣٤٬٥٦٧٫٨٩\xc2\xa0€");
         // $this->assertEquals($entity->localizeAmount(1234567.891, 'BHD'), "١٬٢٣٤٬٥٦٧٫٨٩١\xc2\xa0د.ب.‏");
     }
-    
+
     /**
      * Test Entity Reporting Currency Exception
      *
@@ -234,7 +234,7 @@ class EntityTest extends TestCase
         ]);
         $entity->save();
         $this->expectException(MissingReportingCurrency::class);
-        $this->expectExceptionMessage("Entity '". $entity->name ."' has no Reporting Currency defined ");
+        $this->expectExceptionMessage("Entity '" . $entity->name . "' has no Reporting Currency defined ");
 
         $entity->reportingCurrency;
     }

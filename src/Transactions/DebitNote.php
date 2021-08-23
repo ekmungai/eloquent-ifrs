@@ -10,12 +10,11 @@
 
 namespace IFRS\Transactions;
 
-use IFRS\Interfaces\Buys;
 use IFRS\Interfaces\Assignable;
+use IFRS\Interfaces\Buys;
 
-use IFRS\Traits\Buying;
-use IFRS\Traits\Fetching;
 use IFRS\Traits\Assigning;
+use IFRS\Traits\Buying;
 
 use IFRS\Models\Transaction;
 

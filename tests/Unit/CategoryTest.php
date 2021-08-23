@@ -101,7 +101,7 @@ class CategoryTest extends TestCase
         $recycled = RecycledObject::all()->first();
         $this->assertEquals($category->recycled->first(), $recycled);
         $this->assertEquals($recycled->recyclable->id, $category->id);
-        
+
         $category->restore();
 
         $this->assertEquals(count($category->recycled()->get()), 0);

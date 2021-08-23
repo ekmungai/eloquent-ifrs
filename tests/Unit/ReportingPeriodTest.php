@@ -11,10 +11,8 @@ use IFRS\Tests\TestCase;
 
 use IFRS\User;
 
-
 use IFRS\Models\RecycledObject;
 use IFRS\Models\ReportingPeriod;
-
 use IFRS\Models\Account;
 use IFRS\Models\Assignment;
 use IFRS\Models\ClosingRate;

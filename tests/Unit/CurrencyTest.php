@@ -93,7 +93,7 @@ class CurrencyTest extends TestCase
         $recycled = RecycledObject::all()->first();
         $this->assertEquals($currency->recycled->first(), $recycled);
         $this->assertEquals($recycled->recyclable->id, $currency->id);
-        
+
         $currency->restore();
 
         $this->assertEquals(count($currency->recycled()->get()), 0);

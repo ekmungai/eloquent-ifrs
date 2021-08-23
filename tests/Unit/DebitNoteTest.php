@@ -12,6 +12,8 @@ use IFRS\Models\Ledger;
 use IFRS\Models\LineItem;
 use IFRS\Models\Vat;
 
+use IFRS\Models\Currency;
+
 use IFRS\Transactions\DebitNote;
 
 use IFRS\Exceptions\LineItemAccount;
@@ -115,8 +117,8 @@ class DebitNoteTest extends TestCase
         $this->expectException(LineItemAccount::class);
         $this->expectExceptionMessage(
             "Debit Note LineItem Account must be of type "
-                . "Operating Expense, Direct Expense, Overhead Expense, "
-                . "Other Expense, Non Current Asset, Current Asset, Inventory"
+            . "Operating Expense, Direct Expense, Overhead Expense, "
+            . "Other Expense, Non Current Asset, Current Asset, Inventory"
         );
 
         $lineItem = factory(LineItem::class)->create([

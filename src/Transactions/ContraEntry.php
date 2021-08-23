@@ -14,12 +14,12 @@ use IFRS\Models\Account;
 use IFRS\Models\LineItem;
 use IFRS\Models\Transaction;
 
-use IFRS\Exceptions\VatCharge;
-use IFRS\Exceptions\MainAccount;
 use IFRS\Exceptions\LineItemAccount;
 
-class ContraEntry extends Transaction {
+use IFRS\Exceptions\MainAccount;
+use IFRS\Exceptions\VatCharge;
 
+class ContraEntry extends Transaction {
     use \Parental\HasParent;
 
     /**

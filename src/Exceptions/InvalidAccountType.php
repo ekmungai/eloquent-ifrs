@@ -18,14 +18,14 @@ class InvalidAccountType extends IFRSException
     /**
      * Invalid Account Type Exception
      *
-     * @param string  $accountName
-     * @param array|string  $accountTypes
+     * @param string $accountName
+     * @param array|string $accountTypes
      * @param string $message
-     * @param int    $code
+     * @param int $code
      */
     public function __construct($accountName, $accountTypes, string $message = null, int $code = null)
-    {   
-        $error = $accountName.' Account';
+    {
+        $error = $accountName . ' Account';
         if (is_array($accountTypes)) {
             $accountTypes = Account::getTypes($accountTypes);
             $error .= " Type must be one of: " . implode(", ", $accountTypes);

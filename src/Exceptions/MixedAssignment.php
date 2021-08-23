@@ -18,7 +18,7 @@ class MixedAssignment extends IFRSException
      * @param string $previous
      * @param string $current
      * @param string $message
-     * @param int    $code
+     * @param int $code
      */
     public function __construct(string $previous, string $current, string $message = null, int $code = null)
     {

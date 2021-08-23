@@ -16,9 +16,9 @@ class MissingReportingPeriod extends IFRSException
      * Missing Reporting Period Exception
      *
      * @param string $entity
-     * @param int    $year
+     * @param int $year
      * @param string $message
-     * @param int    $code
+     * @param int $code
      */
     public function __construct(string $entity, int $year, string $message = null, int $code = null)
     {

@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 
 use IFRS\Models\Balance;
 use IFRS\Models\ReportingPeriod;
+use IFRS\Models\Entity;
 
 class IncomeStatement extends FinancialStatement
 {
@@ -53,97 +54,19 @@ class IncomeStatement extends FinancialStatement
     ];
 
     /**
-     * Get Income Statement Account Types.
-     *
-     * @return array
-     */
-    public static function getAccountTypes()
-    {
-        return array_merge(
-            config('ifrs')[self::OPERATING_REVENUES],
-            config('ifrs')[self::NON_OPERATING_REVENUES],
-            config('ifrs')[self::OPERATING_EXPENSES],
-            config('ifrs')[self::NON_OPERATING_EXPENSES]
-        );
-    }
-
-    /**
-     * Get Income Statement Account Type balance total.
-     *
-     * @param int month
-     * @param int year
-     */
-    private static function getBalance( array $accountTypes, Carbon $startDate, Carbon $endDate) : float
-    {
-        $accountTable = config('ifrs.table_prefix') . 'accounts';
-        $ledgerTable = config('ifrs.table_prefix') . 'ledgers';
-
-        $baseQuery = DB::table(
-            $accountTable
-        )
-            ->leftJoin($ledgerTable, $accountTable . '.id', '=', $ledgerTable . '.post_account')
-            ->whereIn('account_type', $accountTypes)
-            ->where($ledgerTable . '.deleted_at', null)
-            ->where($accountTable . '.entity_id', Auth::user()->entity_id)
-            ->where($ledgerTable . '.posting_date', '>=', $startDate)
-            ->where($ledgerTable . '.posting_date', '<=', $endDate->endOfDay());
-            
-            $cloneQuery = clone $baseQuery;
-        
-        $debits = $baseQuery
-        ->where($ledgerTable . '.entry_type', Balance::DEBIT)
-        ->sum($ledgerTable . '.amount');
-
-        $credits = $cloneQuery
-        ->where($ledgerTable . '.entry_type', Balance::CREDIT)
-        ->sum($ledgerTable . '.amount');
-        
-        return $debits - $credits;
-    }
-
-    /**
-     * Get Income Statement Account Types.
-     *
-     * @param int|string month
-     * @param int|string year
-     * @return array
-     */
-    public static function getResults($month, $year)
-    {  
-        $startDate = Carbon::parse($year.'-'.$month.'-01')->startOfDay();
-        $endDate = Carbon::parse($year.'-'.$month.'-01')->endOfMonth();
-        
-        $revenues = self::getBalance(config('ifrs')[self::OPERATING_REVENUES], $startDate, $endDate);
-
-        $otherRevenues = self::getBalance(config('ifrs')[self::NON_OPERATING_REVENUES], $startDate, $endDate);
-
-        $cogs = self::getBalance(config('ifrs')[self::OPERATING_EXPENSES], $startDate, $endDate);
-
-        $expenses = self::getBalance(config('ifrs')[self::NON_OPERATING_EXPENSES], $startDate, $endDate);
-        
-        return [
-            self::OPERATING_REVENUES => abs($revenues),
-            self::NON_OPERATING_REVENUES => abs($otherRevenues),
-            self::OPERATING_EXPENSES => $cogs,
-            self::GROSS_PROFIT => abs($revenues + $otherRevenues + $cogs),
-            self::NON_OPERATING_EXPENSES => $expenses,
-            self::NET_PROFIT => abs($revenues + $otherRevenues + $cogs + $expenses),
-        ];
-    }
-
-    /**
      * Construct Income Statement for the given period.
      *
      * @param string $startDate
      * @param string $endDate
+     * @param Entity $entity
      */
-    public function __construct(string $startDate = null, string $endDate = null)
+    public function __construct(string $startDate = null, string $endDate = null, Entity $entity = null)
     {
-        $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart() : $startDate;
-        $this->period['endDate'] = is_null($endDate) ? ReportingPeriod::periodEnd() : Carbon::parse($endDate);
+        $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart(null, $entity) : Carbon::parse($startDate);
+        $this->period['endDate'] = is_null($endDate) ? ReportingPeriod::periodEnd(null, $entity) : Carbon::parse($endDate);
 
-        $reportingPeriod = ReportingPeriod::getPeriod($endDate);
-        parent::__construct($reportingPeriod);
+        $reportingPeriod = ReportingPeriod::getPeriod($endDate, $entity);
+        parent::__construct($reportingPeriod, $entity);
 
         // Section Accounts
         $this->accounts[self::OPERATING_REVENUES] = [];
@@ -170,6 +93,93 @@ class IncomeStatement extends FinancialStatement
     }
 
     /**
+     * Get Income Statement Account Types.
+     *
+     * @return array
+     */
+    public static function getAccountTypes()
+    {
+        return array_merge(
+            config('ifrs')[self::OPERATING_REVENUES],
+            config('ifrs')[self::NON_OPERATING_REVENUES],
+            config('ifrs')[self::OPERATING_EXPENSES],
+            config('ifrs')[self::NON_OPERATING_EXPENSES]
+        );
+    }
+
+    /**
+     * Get Income Statement Account Types.
+     *
+     * @param int|string month
+     * @param int|string year
+     * @return array
+     */
+    public static function getResults($month, $year, Entity $entity = null)
+    {
+        if (is_null($entity)) {
+            $entity = Auth::user()->entity;
+        }
+
+        $startDate = Carbon::parse($year . '-' . $month . '-01')->startOfDay();
+        $endDate = Carbon::parse($year . '-' . $month . '-01')->endOfMonth();
+
+        $revenues = self::getBalance(config('ifrs')[self::OPERATING_REVENUES], $startDate, $endDate, $entity);
+
+        $otherRevenues = self::getBalance(config('ifrs')[self::NON_OPERATING_REVENUES], $startDate, $endDate, $entity);
+
+        $cogs = self::getBalance(config('ifrs')[self::OPERATING_EXPENSES], $startDate, $endDate, $entity);
+
+        $expenses = self::getBalance(config('ifrs')[self::NON_OPERATING_EXPENSES], $startDate, $endDate, $entity);
+
+        return [
+            self::OPERATING_REVENUES => abs($revenues),
+            self::NON_OPERATING_REVENUES => abs($otherRevenues),
+            self::OPERATING_EXPENSES => $cogs,
+            self::GROSS_PROFIT => abs($revenues + $otherRevenues + $cogs),
+            self::NON_OPERATING_EXPENSES => $expenses,
+            self::NET_PROFIT => abs($revenues + $otherRevenues + $cogs + $expenses),
+        ];
+    }
+
+    /**
+     * Get Income Statement Account Type balance total.
+     *
+     * @param int month
+     * @param int year
+     */
+    private static function getBalance(array $accountTypes, Carbon $startDate, Carbon $endDate, Entity $entity = null): float
+    {
+        if (is_null($entity)) {
+            $entity = Auth::user()->entity;
+        }
+
+        $accountTable = config('ifrs.table_prefix') . 'accounts';
+        $ledgerTable = config('ifrs.table_prefix') . 'ledgers';
+
+        $baseQuery = DB::table(
+            $accountTable
+        )
+            ->leftJoin($ledgerTable, $accountTable . '.id', '=', $ledgerTable . '.post_account')
+            ->whereIn('account_type', $accountTypes)
+            ->where($ledgerTable . '.deleted_at', null)
+            ->where($accountTable . '.entity_id', $entity->id)
+            ->where($ledgerTable . '.posting_date', '>=', $startDate)
+            ->where($ledgerTable . '.posting_date', '<=', $endDate->endOfDay());
+
+        $cloneQuery = clone $baseQuery;
+
+        $debits = $baseQuery
+            ->where($ledgerTable . '.entry_type', Balance::DEBIT)
+            ->sum($ledgerTable . '.amount');
+
+        $credits = $cloneQuery
+            ->where($ledgerTable . '.entry_type', Balance::CREDIT)
+            ->sum($ledgerTable . '.amount');
+
+        return $debits - $credits;
+    }
+
+    /**
      * Income Statement attributes.
      *
      * @return array
@@ -184,7 +194,7 @@ class IncomeStatement extends FinancialStatement
      */
     public function getSections($startDate = null, $endDate = null, $fullbalance = true): array
     {
-        
+
         parent::getSections($this->period['startDate'], $this->period['endDate'], false);
 
         // Gross Profit

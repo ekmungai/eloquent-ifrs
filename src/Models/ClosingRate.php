@@ -59,9 +59,9 @@ class ClosingRate extends Model implements Segregatable, Recyclable
     {
         $classname = explode('\\', self::class);
         $exchangeRate = $this->exchangeRate;
-        $instanceName = $this->reportingPeriod->calendar_year . ' ' . $exchangeRate->currency->currency_code .' at '. $exchangeRate->rate; 
+        $instanceName = $this->reportingPeriod->calendar_year . ' ' . $exchangeRate->currency->currency_code . ' at ' . $exchangeRate->rate;
         return $type ? array_pop($classname) . ': ' . $instanceName : $instanceName;
-    }    
+    }
 
     /**
      * Model's Parent Entity.
@@ -71,7 +71,7 @@ class ClosingRate extends Model implements Segregatable, Recyclable
     public function entity()
     {
         return $this->belongsTo(Entity::class);
-    } 
+    }
 
     /**
      * Closing Rates's Exchange Rate.
@@ -91,7 +91,7 @@ class ClosingRate extends Model implements Segregatable, Recyclable
     public function reportingPeriod()
     {
         return $this->belongsTo(ReportingPeriod::class);
-    }    
+    }
 
     /**
      * ClosingRate attributes.
@@ -100,7 +100,7 @@ class ClosingRate extends Model implements Segregatable, Recyclable
      */
     public function attributes()
     {
-        return (object) $this->attributes;
+        return (object)$this->attributes;
     }
 
     /**
@@ -108,13 +108,13 @@ class ClosingRate extends Model implements Segregatable, Recyclable
      */
     public function save(array $options = []): bool
     {
-       $rate = ExchangeRate::find($this->exchange_rate_id);
-       $period = ReportingPeriod::find($this->reporting_period_id);
+        $rate = ExchangeRate::find($this->exchange_rate_id);
+        $period = ReportingPeriod::find($this->reporting_period_id);
 
         if (ClosingRate::where('reporting_period_id', $period->id)
-        ->whereHas('ExchangeRate', function($q) use ($rate) {
-            $q->where('currency_id', $rate->currency_id);
-        })->count() > 0) {
+                ->whereHas('ExchangeRate', function ($q) use ($rate) {
+                    $q->where('currency_id', $rate->currency_id);
+                })->count() > 0) {
             throw new DuplicateClosingRate($rate->currency->currency_code, $period->calendar_year);
         }
 

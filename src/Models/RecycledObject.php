@@ -72,6 +72,6 @@ class RecycledObject extends Model implements Segregatable
      */
     public function attributes()
     {
-        return (object) $this->attributes;
+        return (object)$this->attributes;
     }
 }

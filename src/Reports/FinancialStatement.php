@@ -24,19 +24,11 @@ abstract class FinancialStatement
 {
 
     /**
-     * Financial Statement Entity.
-     *
-     * @var Entity
-     */
-    protected $entity;
-
-    /**
      * Financial Statement Reporting Period.
      *
      * @var string
      */
     public $reportingPeriod = null;
-
     /**
      * Financial Statement balances.
      *
@@ -46,27 +38,94 @@ abstract class FinancialStatement
         "debit" => 0,
         "credit" => 0,
     ];
-
     /**
      * Financial Statement accounts.
      *
      * @var array
      */
     public $accounts = [];
-
     /**
      * Financial Statement totals.
      *
      * @var array
      */
     public $totals = [];
-
     /**
      * Financial Statement results.
      *
      * @var array
      */
     public $results = [];
+    /**
+     * Financial Statement Entity.
+     *
+     * @var Entity
+     */
+    protected $entity;
+
+    /**
+     * Construct Financial Statement for the given period
+     *
+     * @param ReportingPeriod $period
+     */
+    public function __construct(ReportingPeriod $period = null, Entity $entity = null)
+    {
+        if (is_null($entity)) {
+            $this->entity = Auth::user()->entity;
+        }else{
+            $this->entity = $entity;
+        }
+        $this->reportingPeriod = is_null($period) ? $this->entity->currentReportingPeriod : $period;
+
+        $this->statement = "";
+        $this->indent = "    ";
+        $this->separator = "                        ---------------";
+        $this->grand_total = "                        ===============";
+        $this->result_indents = 4;
+    }
+
+    /**
+     * Print Financial Statement attributes.
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            "Entity" => $this->entity->name,
+            "ReportingPeriod" => $this->reportingPeriod,
+            "Balances" => $this->balances
+        ];
+    }
+
+    /**
+     * @param bool $fullbalance
+     *
+     * Get Statement Sections.
+     */
+    public function getSections($startDate = null, $endDate = null, $fullbalance = true): array
+    {
+        foreach (array_keys($this->accounts) as $section) {
+            foreach (config('ifrs')[$section] as $accountType) {
+                $sectionBalances = Account::sectionBalances([$accountType], $startDate, $endDate, $fullbalance, $this->entity);
+
+                if ($sectionBalances["sectionClosingBalance"] <> 0) {
+
+                    $this->accounts[$section][$accountType] = $sectionBalances["sectionCategories"];
+                    $this->balances[$section][$accountType] = $sectionBalances["sectionClosingBalance"];
+                    $this->totals[$section] += $sectionBalances["sectionClosingBalance"];
+
+                    if ($sectionBalances["sectionClosingBalance"] < 0) {
+                        $this->balances["credit"] += abs($sectionBalances["sectionClosingBalance"]);
+                    } else {
+                        $this->balances["debit"] += abs($sectionBalances["sectionClosingBalance"]);
+                    }
+                }
+            }
+        }
+
+        return [];
+    }
 
     /**
      * Print Statement Title
@@ -89,15 +148,16 @@ abstract class FinancialStatement
             'startDate',
             array_keys($this->period)
         ) ? "For the Period: " . $this->period['startDate']->format(
-            $dateFormat
-        ) . " to " . $this->period['endDate']->format(
-            $dateFormat
-        ) . PHP_EOL : "As at: " . $this->period['endDate']->format(
-            $dateFormat
-        ) . PHP_EOL;
+                $dateFormat
+            ) . " to " . $this->period['endDate']->format(
+                $dateFormat
+            ) . PHP_EOL : "As at: " . $this->period['endDate']->format(
+                $dateFormat
+            ) . PHP_EOL;
 
         return $statement .= $period;
     }
+
     /**
      * Print Statement Section
      *
@@ -141,7 +201,7 @@ abstract class FinancialStatement
         $accountNames = array_merge(config('ifrs')['accounts'], config('ifrs')['statements']);
 
         $statement .= $this->separator . PHP_EOL;
-        $statement .= 'Total ' . $accountNames[$section]  . str_repeat($indent, $indentFactor);
+        $statement .= 'Total ' . $accountNames[$section] . str_repeat($indent, $indentFactor);
 
         return $statement .= $this->totals[$section] * $amountFactor . PHP_EOL;
     }
@@ -164,65 +224,5 @@ abstract class FinancialStatement
         $statement .= config('ifrs')['statements'][$result] . str_repeat($indent, $indentFactor);
 
         return $statement .= $this->results[$result] . PHP_EOL;
-    }
-
-    /**
-     * Construct Financial Statement for the given period
-     *
-     * @param ReportingPeriod $period
-     */
-    public function __construct(ReportingPeriod $period = null)
-    {
-        $this->entity = Auth::user()->entity;
-        $this->reportingPeriod = is_null($period) ? $this->entity->currentReportingPeriod : $period;
-
-        $this->statement = "";
-        $this->indent = "    ";
-        $this->separator = "                        ---------------";
-        $this->grand_total = "                        ===============";
-        $this->result_indents = 4;
-    }
-
-    /**
-     * Print Financial Statement attributes.
-     *
-     * @return array
-     */
-    public function attributes()
-    {
-        return [
-            "Entity" => $this->entity->name,
-            "ReportingPeriod" => $this->reportingPeriod,
-            "Balances" => $this->balances
-        ];
-    }
-
-    /**
-     * @param bool $fullbalance
-     *
-     * Get Statement Sections.
-     */
-    public function getSections($startDate = null, $endDate = null, $fullbalance = true): array
-    {
-        foreach (array_keys($this->accounts) as $section) {
-            foreach (config('ifrs')[$section] as $accountType) {
-                $sectionBalances = Account::sectionBalances([$accountType], $startDate, $endDate, $fullbalance);
-
-                if ($sectionBalances["sectionClosingBalance"] <> 0) {
-
-                    $this->accounts[$section][$accountType] = $sectionBalances["sectionCategories"];
-                    $this->balances[$section][$accountType] = $sectionBalances["sectionClosingBalance"];
-                    $this->totals[$section] += $sectionBalances["sectionClosingBalance"];
-
-                    if ($sectionBalances["sectionClosingBalance"] < 0) {
-                        $this->balances["credit"] += abs($sectionBalances["sectionClosingBalance"]);
-                    } else {
-                        $this->balances["debit"] += abs($sectionBalances["sectionClosingBalance"]);
-                    }
-                }
-            }
-        }
-
-        return [];
     }
 }

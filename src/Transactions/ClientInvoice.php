@@ -10,8 +10,9 @@
 
 namespace IFRS\Transactions;
 
-use IFRS\Interfaces\Sells;
+
 use IFRS\Interfaces\Clearable;
+use IFRS\Interfaces\Sells;
 
 use IFRS\Traits\Selling;
 use IFRS\Traits\Clearing;

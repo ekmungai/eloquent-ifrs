@@ -16,7 +16,6 @@ use IFRS\Models\Assignment;
  *
  * @author emung
  */
-
 trait Clearing
 {
     /**
@@ -33,6 +32,7 @@ trait Clearing
 
         return $cleared;
     }
+
     /**
      * Cleared Model records.
      *

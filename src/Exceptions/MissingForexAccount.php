@@ -6,6 +6,7 @@
  * @copyright Edward Mungai, 2020, Germany
  * @license   MIT
  */
+
 namespace IFRS\Exceptions;
 
 use IFRS\Models\Account;
@@ -23,6 +24,6 @@ class MissingForexAccount extends IFRSException
     {
         $error = "A Forex Differences Account of type '". Account::getType(Account::NON_OPERATING_REVENUE). "' is required for Assignment Transactions with different exchange rates ";
 
-        parent::__construct($error.$message, $code);
+        parent::__construct($error . $message, $code);
     }
 }
