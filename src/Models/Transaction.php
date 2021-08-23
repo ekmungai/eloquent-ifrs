@@ -721,9 +721,6 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         // verify transaction ledger hashes
         return $this->ledgers->every(
             function ($ledger, $key) {
-                // echo PHP_EOL;
-                // echo $ledger->hashed();
-                // echo PHP_EOL;
                 return hash(config('ifrs')['hashing_algorithm'],$ledger->hashed()) == $ledger->hash;
             }
         );

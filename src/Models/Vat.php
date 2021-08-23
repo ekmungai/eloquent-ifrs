@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Eloquent IFRS Accounting
  *
@@ -12,6 +11,7 @@ namespace IFRS\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 use IFRS\Interfaces\Recyclable;
 use IFRS\Interfaces\Segregatable;
@@ -22,6 +22,7 @@ use IFRS\Traits\ModelTablePrefix;
 
 use IFRS\Exceptions\MissingVatAccount;
 use IFRS\Exceptions\InvalidAccountType;
+use IFRS\Exceptions\MultipleVatError;
 
 /**
  * Class Vat
@@ -59,11 +60,61 @@ class Vat extends Model implements Segregatable, Recyclable
     ];
 
     /**
+     * Apply multiple VATs to Line Item.
+     * 
+     * @param array $vatIds
+     * @param int $lineItemId
+     * @param boolean $compound
+     * @return array
+     */
+    public static function applyMultiple(array $vatIds, int $lineItemId, bool $compound = false) : array
+    {
+        $vatLineItems = [];
+        $lineItem = LineItem::find($lineItemId);
+        $zeroRate = Vat::where('rate', 0)->first();
+        $chargeAmount = $lineItem->amount * $lineItem->quantity;
+
+        if(count($vatIds) < 2){
+            throw new MultipleVatError('There must be at least two Vat Ids');
+        }
+
+        if($chargeAmount == 0){
+            throw new MultipleVatError('Line Item amount must be non zero');
+        }
+
+        if(is_null($zeroRate)){
+            throw new MultipleVatError('VAT Line Items require a Zero rated Vat object');
+        }
+
+        DB::beginTransaction();
+
+        foreach($vatIds as $vatId){
+            $vat = Vat::find($vatId);
+
+            if($vat->rate == 0){
+                DB::rollBack();
+                throw new MultipleVatError('Zero rated taxes cannot be applied');
+            }
+            $tax = $chargeAmount * $vat->rate/100;
+            $vatLineItems[] = LineItem::create([
+                'vat_id' => $zeroRate->id,
+                'account_id' => $vat->account_id,
+                'narration' => $vat->rate.'% ' .$vat->name. ' Tax on '.$chargeAmount,
+                'amount' => $tax
+            ]);
+            $chargeAmount += $compound ? $tax : 0;
+        }
+
+        DB::commit();
+        return $vatLineItems;
+    }
+
+    /**
      * Instance Identifier.
      *
      * @return string
      */
-    public function toString($type = false)
+    public function toString($type = false) : string
     {
         $classname = explode('\\', self::class);
         $description = $this->name . ' (' . $this->code . ') at ' . number_format($this->rate, 2) . '%';
@@ -75,7 +126,7 @@ class Vat extends Model implements Segregatable, Recyclable
      *
      * @return object
      */
-    public function attributes()
+    public function attributes() : object
     {
         return (object)$this->attributes;
     }
