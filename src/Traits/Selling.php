@@ -33,12 +33,12 @@ trait Selling
     /**
      * Validate Selling Transaction LineItem.
      */
-    public function addLineItem(LineItem $lineItem): void
+    public function addLineItem(LineItem $lineItem): bool
     {
         if ($lineItem->account->account_type != Account::OPERATING_REVENUE) {
             throw new LineItemAccount(self::PREFIX, [Account::OPERATING_REVENUE]);
         }
 
-        parent::addLineItem($lineItem);
+        return parent::addLineItem($lineItem);
     }
 }

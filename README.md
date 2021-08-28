@@ -499,10 +499,10 @@ I am acutely aware that as a professionally trained Accountant I may have used s
 - [x] Add Cashflow Statement
 - [x] Laravel 8 Compatibility
 - [x] Add Multicurrency support
+- [] Expand Taxation Functionality
 
 ## License
 This software is distributed for free under the MIT License
-
 
 ## References
 * This package is heavily influenced by [chippyash/simple-accounts-3](https://github.com/chippyash/simple-accounts-3) and [scottlaurent/accounting](https://github.com/scottlaurent/accounting).

@@ -13,10 +13,14 @@ namespace IFRS\Transactions;
 use IFRS\Interfaces\Assignable;
 use IFRS\Interfaces\Clearable;
 
+use IFRS\Models\LineItem;
+
 use IFRS\Traits\Assigning;
 use IFRS\Traits\Clearing;
 
 use IFRS\Models\Transaction;
+
+use IFRS\Exceptions\InvalidVatRate;
 /**
  * Class JournalEntry
  *
@@ -63,6 +67,34 @@ class JournalEntry extends Transaction implements Assignable, Clearable
         }
         $attributes['transaction_type'] = self::PREFIX;
 
+        if(isset($attributes['compound']) && $attributes['compound']){
+            parent::addCompoundEntry([
+                    'id' => $attributes['account_id'], 
+                    'amount' => $attributes['main_account_amount']
+                ], 
+                $attributes['credited']
+            );
+        }
+
         parent::__construct($attributes);
+    }
+
+    /**
+     * Add LineItem to Transaction LineItems.
+     *
+     * @param LineItem $lineItem
+     */
+    public function addLineItem(LineItem $lineItem): bool
+    {
+        if ($this->compound && !is_null($lineItem->vat) && $lineItem->vat->rate > 0) {
+            throw new InvalidVatRate();
+        }
+
+        $success = parent::addLineItem($lineItem);
+        
+        if($success && $this->compound){
+            parent::addCompoundEntry(['id' => $lineItem->account_id, 'amount' => $lineItem->amount * $lineItem->quantity], $lineItem->credited);
+        }
+        return $success;
     }
 }

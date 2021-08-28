@@ -29,6 +29,7 @@ use IFRS\Exceptions\InsufficientBalance;
 use IFRS\Exceptions\InvalidClearanceAccount;
 use IFRS\Exceptions\InvalidClearanceCurrency;
 use IFRS\Exceptions\InvalidClearanceEntry;
+use IFRS\Exceptions\InvalidTransaction;
 use IFRS\Exceptions\MissingForexAccount;
 use IFRS\Exceptions\MixedAssignment;
 use IFRS\Exceptions\NegativeAmount;
@@ -1547,5 +1548,73 @@ class AssignmentTest extends TestCase
             'cleared_type' => $cleared2->cleared_type,
             'amount' => 50,
         ]);
+    }
+
+    /**
+     * Test Assignment Compound Transaction.
+     *
+     * @return void
+     */
+    public function testAssignmentCompoundTransaction()
+    {
+        $account = factory(Account::class)->create([
+            'category_id' => null
+        ]);
+        $rate = factory(ExchangeRate::class)->create([
+            'rate' => 1
+        ]);
+
+        $transaction = new JournalEntry([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "exchange_rate_id" => $rate->id,
+            "currency_id" => $rate->currency_id,
+            "credited" => false,
+            "main_account_amount" => 125,
+            "compound" => true
+        ]);
+
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
+            'amount' => 125,
+            "credited" => true,
+        ]);
+        $transaction->addLineItem($line);
+
+        $transaction->post();
+
+        $cleared = new JournalEntry([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "currency_id" => $rate->currency_id,
+        ]);
+
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
+            'amount' => 100,
+        ]);
+
+        $cleared->addLineItem($line);
+        $cleared->post();
+
+        $this->expectException(InvalidTransaction::class);
+        $this->expectExceptionMessage('Compound Journal Entry Transactions can be neither Assigned nor Cleared');
+
+        $assignment = new Assignment([
+            'assignment_date' => Carbon::now(),
+            'transaction_id' => $transaction->id,
+            'cleared_id' => $cleared->id,
+            'cleared_type' => $cleared->cleared_type,
+            'amount' => 50,
+        ]);
+        $assignment->save();
     }
 }

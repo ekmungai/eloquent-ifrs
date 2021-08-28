@@ -66,7 +66,7 @@ class ClientReceipt extends Transaction implements Assignable
     /**
      * Validate Client Receipt LineItem.
      */
-    public function addLineItem(LineItem $lineItem): void
+    public function addLineItem(LineItem $lineItem): bool
     {
         if ($lineItem->account->account_type != Account::BANK) {
             throw new LineItemAccount(self::PREFIX, [Account::BANK]);
@@ -76,6 +76,6 @@ class ClientReceipt extends Transaction implements Assignable
             throw new VatCharge(self::PREFIX);
         }
 
-        parent::addLineItem($lineItem);
+        return parent::addLineItem($lineItem);
     }
 }

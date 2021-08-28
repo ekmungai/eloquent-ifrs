@@ -54,14 +54,12 @@ class Ledger extends Model implements Segregatable
     /**
      * Get Ledger pairs and assign the proper entry types
      *
-     * @param LineItem    $lineItem
      * @param Transaction $transaction
      *
      * @return array
      */
-    private static function getLedgers(LineItem $lineItem, Transaction $transaction): array
+    private static function getLedgers(Transaction $transaction): array
     {
-
         $post = new Ledger();
         $folio = new Ledger();
 
@@ -80,25 +78,50 @@ class Ledger extends Model implements Segregatable
     }
 
     /**
-     * Create Ledger entries for the Transaction.
+     * Create VAT Ledger entries for the Transaction LineItem.
+     *
+     * @param LineItem $lineItem
+     * @param Transaction $transaction
+     *
+     * @return void
+     */
+    private static function postVat(LineItem $lineItem, Transaction $transaction): void
+    {
+        $amount = $lineItem->vat_inclusive ? $lineItem->amount - ($lineItem->amount / (1 + ($lineItem->vat->rate / 100))) : $lineItem->amount * $lineItem->vat->rate / 100;
+        $rate = $transaction->exchangeRate->rate;
+
+        list($post, $folio) = Ledger::getLedgers($transaction);
+
+        // identical double entry data
+        $post->transaction_id = $folio->transaction_id = $transaction->id;
+        $post->currency_id = $folio->currency_id = $transaction->currency_id;
+        $post->posting_date = $folio->posting_date = $transaction->transaction_date;
+        $post->line_item_id = $folio->line_item_id = $lineItem->id;
+        $post->vat_id = $folio->vat_id = $lineItem->vat_id;
+        $post->amount = $folio->amount = $amount * $rate * $lineItem->quantity;
+        $post->rate = $folio->rate = $rate;
+
+        // different double entry data
+        $post->post_account = $folio->folio_account = $lineItem->vat_inclusive ? $lineItem->account_id : $transaction->account_id;
+        $post->folio_account = $folio->post_account = $lineItem->vat->account_id;
+
+        $post->save();
+        $folio->save();
+    }
+
+    /**
+     * Post basic Transaction Line Items to the Ledger
      *
      * @param Transaction $transaction
+     *
+     * @return void
      */
-    public static function post(Transaction $transaction): void
+    private static function postBasic(Transaction $transaction): void
     {
-        //Remove current ledgers if any prior to creating new ones (prevents bypassing Posted Transaction Exception)
-        $transaction->ledgers()->delete();
-
-        //get entity from transaction object
-        $entity = $transaction->entity;
-
         foreach ($transaction->getLineItems() as $lineItem) {
             $rate = $transaction->exchangeRate->rate;
 
-            $post = new Ledger();
-            $folio = new Ledger();
-
-            list($post, $folio) = Ledger::getLedgers($lineItem, $transaction);
+            list($post, $folio) = Ledger::getLedgers($transaction);
 
             // identical double entry data
             $post->transaction_id = $folio->transaction_id = $transaction->id;
@@ -116,12 +139,122 @@ class Ledger extends Model implements Segregatable
             $post->save();
             $folio->save();
 
-            if ($lineItem->vat->rate > 0) {
+            if ($lineItem->vat && $lineItem->vat->rate > 0) {
                 Ledger::postVat($lineItem, $transaction);
             }
+        }
+    
+        // reload ledgers to reflect changes
+        $transaction->load('ledgers');
+    }
 
-            // reload ledgers to reflect changes
-            $transaction->load('ledgers');
+    /**
+     * Create single sided compound entry ledgers
+     *
+     * @param array $posts
+     * @param array $folios
+     * @param Transaction $transaction
+     * @param string $entryType
+     *
+     * @return bool
+     */
+    private static function makeCompountEntryLedgers(array $posts, array $folios, Transaction $transaction, $entryType): bool
+    {
+        if(count($posts) == 0){
+            return true;
+        } else {
+            $postAccount = array_key_first($posts);
+            $amount = $posts[$postAccount];
+
+            return Ledger::allocateAmount($postAccount, $amount, $posts, $folios, $transaction, $entryType);
+        }
+    }
+
+    /**
+     * Allocate available folio accounts and amounts to the post ledger 
+     *
+     * @param int $postAccount
+     * @param float $amount
+     * @param array $posts
+     * @param array $folios
+     * @param Transaction $transaction
+     * @param string $entryType
+     *
+     * @return bool
+     */
+    private static function allocateAmount($postAccount, $amount, $posts, $folios, $transaction, $entryType): bool
+    {
+        if($amount == 0){
+            unset($posts[$postAccount]);
+            return Ledger::makeCompountEntryLedgers($posts, $folios, $transaction, $entryType);
+        } else {
+
+            $folioAccount = array_key_first($folios);
+
+            $ledger = new Ledger();
+
+            $ledger->transaction_id = $transaction->id;
+            $ledger->currency_id = $transaction->currency_id;
+            $ledger->posting_date = $transaction->transaction_date;
+            $ledger->rate = $transaction->exchangeRate->rate;;
+            $ledger->entry_type = $entryType;
+            $ledger->post_account = $postAccount;
+            $ledger->folio_account = $folioAccount;
+
+            if($folios[$folioAccount] > $amount){
+                $ledger->amount =  $amount;
+                $ledger->save();
+
+                $folios[$folioAccount] -= $ledger->amount;
+                $amount = 0;
+            } else {
+                $debitAmount = $folios[$folioAccount];
+                $ledger->amount = $debitAmount;
+                $ledger->save();
+                
+                unset($folios[$folioAccount]);
+                $amount -= $ledger->amount;
+            }
+
+            return Ledger::allocateAmount($postAccount, $amount, $posts, $folios, $transaction, $entryType);
+        }
+    }
+
+    /**
+     * Post compound Transaction Line Items to the Ledger
+     *
+     * @param Transaction $transaction
+     *
+     * @return void
+     */
+    private static function postCompound(Transaction $transaction): void
+    {
+        extract($transaction->getCompoundEntries());
+
+        // Credit Entry Ledgers 
+        Ledger::makeCompountEntryLedgers($C, $D, $transaction, Balance::CREDIT);
+
+        // Debit Entry Ledgers 
+        Ledger::makeCompountEntryLedgers($D, $C, $transaction, Balance::DEBIT);
+
+        // reload ledgers to reflect changes
+        $transaction->load('ledgers');
+    }
+
+    /**
+     * Create Ledger entries for the Transaction.
+     *
+     * @param Transaction $transaction
+     */
+    public static function post(Transaction $transaction): void
+    {
+        //Remove current ledgers if any prior to creating new ones (prevents bypassing Posted Transaction Exception)
+        $transaction->ledgers()->delete();
+
+        if($transaction->compound){
+            Ledger::postCompound($transaction);
+        }else{
+            Ledger::postBasic($transaction);
         }
     }
 
@@ -163,47 +296,6 @@ class Ledger extends Model implements Segregatable
         $previousHash = is_null($previousLedger) ? env('APP_KEY', 'test application key') : $previousLedger->hash;
         $ledger[] = $previousHash;
         return utf8_encode(implode($ledger));
-    }
-
-    /**
-     * Create VAT Ledger entries for the Transaction LineItem.
-     *
-     * @param LineItem $lineItem
-     * @param Transaction $transaction
-     *
-     * @return void
-     */
-    private static function postVat(LineItem $lineItem, Transaction $transaction): void
-    {
-
-        $amount = $lineItem->vat_inclusive ? $lineItem->amount - ($lineItem->amount / (1 + ($lineItem->vat->rate / 100))) : $lineItem->amount * $lineItem->vat->rate / 100;
-        $rate = $transaction->exchangeRate->rate;
-
-        list($post, $folio) = Ledger::getLedgers($lineItem, $transaction);
-
-        if ($transaction->is_credited) {
-            $post->entry_type = Balance::CREDIT;
-            $folio->entry_type = Balance::DEBIT;
-        } else {
-            $post->entry_type = Balance::DEBIT;
-            $folio->entry_type = Balance::CREDIT;
-        }
-
-        // identical double entry data
-        $post->transaction_id = $folio->transaction_id = $transaction->id;
-        $post->currency_id = $folio->currency_id = $transaction->currency_id;
-        $post->posting_date = $folio->posting_date = $transaction->transaction_date;
-        $post->line_item_id = $folio->line_item_id = $lineItem->id;
-        $post->vat_id = $folio->vat_id = $lineItem->vat_id;
-        $post->amount = $folio->amount = $amount * $rate * $lineItem->quantity;
-        $post->rate = $folio->rate = $rate;
-
-        // different double entry data
-        $post->post_account = $folio->folio_account = $lineItem->vat_inclusive ? $lineItem->account_id : $transaction->account_id;
-        $post->folio_account = $folio->post_account = $lineItem->vat->account_id;
-
-        $post->save();
-        $folio->save();
     }
 
     /**

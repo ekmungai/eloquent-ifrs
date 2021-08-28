@@ -303,6 +303,7 @@ class VatTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             'amount' => 100,
+            'quantity' => 1
         ]);
 
         $this->expectException(MultipleVatError::class);

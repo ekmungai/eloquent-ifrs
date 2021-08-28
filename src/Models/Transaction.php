@@ -37,6 +37,7 @@ use IFRS\Exceptions\InvalidTransactionDate;
 use IFRS\Exceptions\AdjustingReportingPeriod;
 use IFRS\Exceptions\InvalidCurrency;
 use IFRS\Exceptions\InvalidTransactionType;
+use IFRS\Exceptions\UnbalancedTransaction;
 
 /**
  * Class Transaction
@@ -53,7 +54,9 @@ use IFRS\Exceptions\InvalidTransactionType;
  * @property string $transaction_type
  * @property string $narration
  * @property bool $credited
+ * @property bool $compound
  * @property float $amount
+ * @property float $main_account_amount
  * @property Carbon $destroyed_at
  * @property Carbon $deleted_at
  */
@@ -104,6 +107,8 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         'narration',
         'reference',
         'credited',
+        'main_account_amount',
+        'compound',
         'transaction_type',
         'transaction_no',
         'entity_id',
@@ -112,13 +117,14 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
     protected $dates = [
         'transaction_date'
     ];
+
     /**
      * Transaction LineItems
      *
      * @var array $items
      */
-
     private $items = [];
+
     /**
      * Transactions to be cleared and their clearance amounts
      *
@@ -126,6 +132,40 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
      */
 
     private $assigned = [];
+
+    /**
+     * Compound Ledger entries for the transaction 
+     *
+     * @var array $compoundEntries
+     */
+
+    protected $compoundEntries = [
+        Balance::CREDIT => [],
+        Balance::DEBIT => []
+    ];
+
+    /**
+     * Get the entry type for the Compound Entry.
+     *
+     * @param bool $credited
+     */
+    private static function getCompoundEntrytype(bool $credited): string
+    {
+        return $credited ? Balance::CREDIT : Balance::DEBIT;
+    }
+
+    /**
+     * Add Compound Entry to Transaction CompoundEntries.
+     *
+     * @param array $compoundEntry
+     * @param bool $credited
+     */
+    protected function addCompoundEntry(array $compoundEntry, bool $credited): void
+    {
+        $this->compoundEntries[
+            Transaction::getCompoundEntrytype($credited)][$compoundEntry['id']
+        ] = $compoundEntry['amount'];
+    }
 
     /**
      * Construct new Transaction.
@@ -252,6 +292,16 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
     }
 
     /**
+     * Transaction Saved Line Items.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function lineItems()
+    {
+        return $this->hasMany(LineItem::class, 'transaction_id', 'id');
+    }
+
+    /**
      * Instance Type Translator.
      *
      * @return string
@@ -301,26 +351,52 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
 
         if ($this->is_posted) {
 
-            $entry_type = $this->credited ? Balance::CREDIT : Balance::DEBIT;
+            $query = $ledger->newQuery()
+            ->selectRaw("SUM(amount/rate) as amount")
+            ->where([
+                "transaction_id" => $this->id,
+                "entry_type" => Transaction::getCompoundEntrytype($this->credited),
+                "currency_id" => $this->currency_id
+            ]);
 
-            $amount = $ledger->newQuery()
-                ->selectRaw("SUM(amount/rate) as amount")
-                ->where([
-                    "transaction_id" => $this->id,
-                    "entry_type" => $entry_type,
-                    "post_account" => $this->account_id,
-                    "currency_id" => $this->currency_id
-                ])->get()[0]->amount;
+            if(!$this->compound){
+                $query->where("post_account", $this->account_id);
+            }
+
+            $amount = $query->get()[0]->amount;
 
         } else {
             foreach ($this->getLineItems() as $lineItem) {
-                $amount += $lineItem->amount * $lineItem->quantity;
-                if (!$lineItem->vat_inclusive) {
-                    $amount += $lineItem->amount * ($lineItem->vat->rate / 100) * $lineItem->quantity;
+                if($lineItem->credited != $this->credited){
+                    $amount += $lineItem->amount * $lineItem->quantity;
+                     if (!$lineItem->vat_inclusive) {
+                        $amount += $lineItem->amount * ($lineItem->vat->rate / 100) * $lineItem->quantity;
+                    }
                 }
             }
         }
         return $amount;
+    }
+
+    /**
+     * Get Transaction CompoundEntries.
+     *
+     * @return array
+     */
+    public function getCompoundEntries()
+    {
+        if($this->isPosted){    
+            $this->compoundEntries[
+                Transaction::getCompoundEntrytype($this->credited)
+            ][$this->account_id] = floatval($this->main_account_amount);
+
+            foreach ($this->lineItems as $lineItem) {
+                $this->compoundEntries[
+                    Transaction::getCompoundEntrytype($lineItem->credited)
+                ][$lineItem->account_id] = $lineItem->amount * $lineItem->quantity;
+            }
+        }
+        return $this->compoundEntries;
     }
 
     /**
@@ -421,7 +497,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
      *
      * @param LineItem $lineItem
      */
-    public function addLineItem(LineItem $lineItem): void
+    public function addLineItem(LineItem $lineItem): bool
     {
         if (in_array($lineItem->account->account_type, config('ifrs.single_currency')) && $lineItem->account->currency_id != $this->currency_id) {
             throw new InvalidCurrency("Transaction", $lineItem->account);
@@ -435,9 +511,15 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
             throw new RedundantTransaction();
         }
 
+        if(!$this->compound){
+            $lineItem->credited = !$this->credited;
+        }
+
         if ($this->lineItemExists($lineItem->id) === false) {
             $this->items[] = $lineItem;
+            return true;
         }
+        return false;
     }
 
     /**
@@ -455,6 +537,13 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
 
         if ($key !== false) {
             unset($this->items[$key]);
+        }
+
+        if($this->compound){
+            $entryType = Transaction::getCompoundEntrytype($lineItem->credited);
+            if(array_key_exists($lineItem->account_id, $this->compoundEntries[$entryType])){
+                unset($this->compoundEntries[$entryType][$lineItem->account_id]);
+            }
         }
 
         $lineItem->transaction()->dissociate();
@@ -564,6 +653,12 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         if (empty($this->getLineItems())) {
             throw new MissingLineItem();
         }
+
+        extract($this->getCompoundEntries());
+        if ($this->compound && array_sum($C) != array_sum($D)) {
+            throw new UnbalancedTransaction();
+        }
+
         $this->save();
 
         Ledger::post($this);
@@ -650,18 +745,18 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
             $entity = Auth::user()->entity;
         }
 
-        $period_count = ReportingPeriod::getPeriod($transaction_date, $entity)->period_count;
-        $period_start = ReportingPeriod::periodStart($transaction_date, $entity);
+        $periodCount = ReportingPeriod::getPeriod($transaction_date, $entity)->period_count;
+        $periodStart = ReportingPeriod::periodStart($transaction_date, $entity);
 
-        $next_id = Transaction::withTrashed()
+        $nextId = Transaction::withTrashed()
                 ->where("transaction_type", $type)
-                ->where("transaction_date", ">=", $period_start)
+                ->where("transaction_date", ">=", $periodStart)
                 ->where("entity_id", '=', $entity->id)
                 ->count() + 1;
 
-        return $type . str_pad((string)$period_count, 2, "0", STR_PAD_LEFT)
+        return $type . str_pad((string)$periodCount, 2, "0", STR_PAD_LEFT)
             . "/" .
-            str_pad((string)$next_id, 4, "0", STR_PAD_LEFT);
+            str_pad((string) $nextId, 4, "0", STR_PAD_LEFT);
     }
 
     /**
@@ -675,16 +770,6 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
 
             $this->saveLineItems();
         }
-    }
-
-    /**
-     * Transaction Saved Line Items.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function lineItems()
-    {
-        return $this->hasMany(LineItem::class, 'transaction_id', 'id');
     }
 
     /**

@@ -10,9 +10,13 @@ use IFRS\Models\Account;
 use IFRS\Models\Balance;
 use IFRS\Models\LineItem;
 use IFRS\Models\Ledger;
+use IFRS\Models\Transaction;
 use IFRS\Models\Vat;
 
 use IFRS\Transactions\JournalEntry;
+
+use IFRS\Exceptions\UnbalancedTransaction;
+use IFRS\Exceptions\InvalidVatRate;
 
 class JournalEntryTest extends TestCase
 {
@@ -162,5 +166,153 @@ class JournalEntryTest extends TestCase
 
         $found = JournalEntry::find($transaction->id);
         $this->assertEquals($found->transaction_no, $transaction->transaction_no);
+    }
+
+    /**
+     * Test Compound Journal Entry Transaction
+     *
+     * @return void
+     */
+    public function testCompoundJournalEntryTransaction()
+    {
+        $vat = factory(Vat::class)->create(["rate" => 0]);
+
+        $journalEntry = new JournalEntry([
+            "account_id" => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "compound" => true,
+            "main_account_amount" => 10
+        ]);
+
+        $lineItem1 = factory(LineItem::class)->create([
+            "amount" => 30,
+            "vat_id" => $vat->id,
+            "quantity" => 1,
+            "credited" => true,
+        ]);
+
+        $lineItem2 = factory(LineItem::class)->create([
+            "amount" => 25,
+            "vat_id" => $vat->id,
+            "quantity" => 1,
+        ]);
+
+        $lineItem3 = factory(LineItem::class)->create([
+            "amount" => 15,
+            "vat_id" => $vat->id,
+            "quantity" => 1,
+        ]);
+
+        $journalEntry->addLineItem($lineItem1);
+        $journalEntry->addLineItem($lineItem2);
+        $journalEntry->addLineItem($lineItem3);
+
+        $this->assertEquals($journalEntry->amount, 40);
+        $this->assertEquals($journalEntry->getCompoundEntries(), [
+            "C" => [
+                2 => 10,
+                5 => 30
+            ],
+            "D" => [
+                8 => 25,
+                11 => 15
+            ]
+        ]);
+
+        $journalEntry->post();
+        
+        $transaction = Transaction::find($journalEntry->id);
+        
+        $this->assertEquals($transaction->getCompoundEntries(), [
+            "C" => [
+                2 => 10,
+                5 => 30
+            ],
+            "D" => [
+                8 => 25,
+                11 => 15
+            ]
+        ]);
+
+        // Main Account
+        $this->assertEquals(Ledger::contribution($transaction->account, $transaction->id), -10);
+
+        // lineItem 1
+        $this->assertEquals(Ledger::contribution($lineItem1->account, $transaction->id), -30);
+
+        // lineItem 2
+        $this->assertEquals(Ledger::contribution($lineItem2->account, $transaction->id), 25);
+        
+        // lineItem 3
+        $this->assertEquals(Ledger::contribution($lineItem3->account, $transaction->id), 15);
+
+        $this->assertEquals($transaction->amount, 40);
+    }
+
+    /**
+     * Test Unbalanced Journal Entry Exception
+     *
+     * @return void
+     */
+    public function testUnbalancedJournalEntryException()
+    {
+        $vat = factory(Vat::class)->create(["rate" => 0]);
+
+        $journalEntry = new JournalEntry([
+            "account_id" => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "compound" => true,
+            "main_account_amount" => 10
+        ]);
+
+        $lineItem1 = factory(LineItem::class)->create([
+            "amount" => 30,
+            "vat_id" => $vat->id,
+            "quantity" => 1,
+        ]);
+
+        $journalEntry->addLineItem($lineItem1);
+
+        $this->expectException(UnbalancedTransaction::class);
+        $this->expectExceptionMessage('Total Debit amounts do not match total Credit amounts ');
+
+        $journalEntry->post();
+    }
+
+    /**
+     * Test Unbalanced Journal Entry Exception
+     *
+     * @return void
+     */
+    public function testInvalidVatRateException()
+    {
+        $vat = factory(Vat::class)->create(["rate" => 1]);
+
+        $journalEntry = new JournalEntry([
+            "account_id" => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "compound" => true,
+            "main_account_amount" => 10
+        ]);
+
+        $lineItem1 = factory(LineItem::class)->create([
+            "amount" => 30,
+            "vat_id" => $vat->id,
+            "quantity" => 1,
+        ]);
+
+        $this->expectException(InvalidVatRate::class);
+        $this->expectExceptionMessage('Compound Journal Entry Vat objects must all be null or zero rated ');
+        
+        $journalEntry->addLineItem($lineItem1);
     }
 }

@@ -60,7 +60,24 @@ class LineItem extends Model implements Recyclable, Segregatable
         'transaction_id',
         'vat_inclusive',
         'entity_id',
+        'credited',
     ];
+
+    /**
+     * Construct new JournalEntry
+     *
+     * @param array $attributes
+     */
+    public function __construct($attributes = [])
+    {
+        if (!isset($attributes['credited'])) {
+            $attributes['credited'] = false;
+        }
+        if (!isset($attributes['quantity'])) {
+            $attributes['quantity'] = 1;
+        }
+        parent::__construct($attributes);
+    }
 
     /**
      * Instance Identifier.

@@ -35,6 +35,7 @@ use IFRS\Exceptions\UnclearableTransaction;
 use IFRS\Exceptions\InvalidClearanceAccount;
 use IFRS\Exceptions\UnassignableTransaction;
 use IFRS\Exceptions\InvalidClearanceCurrency;
+use IFRS\Exceptions\InvalidTransaction;
 
 /**
  * Class Assignment
@@ -112,24 +113,21 @@ class Assignment extends Model implements Segregatable
         $schedule->getTransactions();
 
         foreach ($schedule->transactions as $outstanding) {
-
+            $assignment = new Assignment([
+                'assignment_date' => Carbon::now(),
+                'transaction_id' => $transaction->id,
+                'cleared_id' => $outstanding->id,
+                'cleared_type' => $outstanding->cleared_type,
+            ]);
+            
             if ($outstanding->unclearedAmount > $balance) {
-                Assignment::create([
-                    'assignment_date' => Carbon::now(),
-                    'transaction_id' => $transaction->id,
-                    'cleared_id' => $outstanding->id,
-                    'cleared_type' => $outstanding->cleared_type,
-                    'amount' => $balance,
-                ]);
+                $assignment->amount = $balance;
+                $assignment->save();
                 break;
             } else {
-                Assignment::create([
-                    'assignment_date' => Carbon::now(),
-                    'transaction_id' => $transaction->id,
-                    'cleared_id' => $outstanding->id,
-                    'cleared_type' => $outstanding->cleared_type,
-                    'amount' => $outstanding->unclearedAmount,
-                ]);
+                $assignment->amount = $outstanding->unclearedAmount;
+                $assignment->save();
+
                 $balance -= $outstanding->unclearedAmount;
             }
         }
@@ -140,8 +138,6 @@ class Assignment extends Model implements Segregatable
      */
     public function save(array $options = []): bool
     {
-        $entity = $this->entity;
-
         $transactionType = $this->transaction->transaction_type;
         $clearedType = $this->cleared->transaction_type;
 
@@ -220,6 +216,10 @@ class Assignment extends Model implements Segregatable
 
         if (count($this->transaction->clearances) > 0) {
             throw new MixedAssignment("Cleared", "Assigned");
+        }
+
+        if($this->transaction->compound || $this->cleared->compound) {
+            throw new InvalidTransaction();
         }
     }
 

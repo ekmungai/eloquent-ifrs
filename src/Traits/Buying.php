@@ -33,13 +33,13 @@ trait Buying
     /**
      * Validate Buying Transaction LineItem.
      */
-    public function addLineItem(LineItem $lineItem): void
+    public function addLineItem(LineItem $lineItem): bool
     {
 
         if (!in_array($lineItem->account->account_type, Account::PURCHASABLES)) {
             throw new LineItemAccount(self::PREFIX, Account::PURCHASABLES);
         }
 
-        parent::addLineItem($lineItem);
+        return parent::addLineItem($lineItem);
     }
 }
