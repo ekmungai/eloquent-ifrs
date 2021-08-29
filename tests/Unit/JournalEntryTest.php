@@ -17,6 +17,7 @@ use IFRS\Transactions\JournalEntry;
 
 use IFRS\Exceptions\UnbalancedTransaction;
 use IFRS\Exceptions\InvalidVatRate;
+use IFRS\Exceptions\MissingMainAccountAmount;
 
 class JournalEntryTest extends TestCase
 {
@@ -187,6 +188,8 @@ class JournalEntryTest extends TestCase
             "main_account_amount" => 10
         ]);
 
+        $journalEntry->save();
+        
         $lineItem1 = factory(LineItem::class)->create([
             "amount" => 30,
             "vat_id" => $vat->id,
@@ -213,8 +216,8 @@ class JournalEntryTest extends TestCase
         $this->assertEquals($journalEntry->amount, 40);
         $this->assertEquals($journalEntry->getCompoundEntries(), [
             "C" => [
-                2 => 10,
-                5 => 30
+                5 => 30,
+                2 => 10
             ],
             "D" => [
                 8 => 25,
@@ -286,7 +289,7 @@ class JournalEntryTest extends TestCase
     }
 
     /**
-     * Test Unbalanced Journal Entry Exception
+     * Test Invalid Vat Rate Exception
      *
      * @return void
      */
@@ -314,5 +317,27 @@ class JournalEntryTest extends TestCase
         $this->expectExceptionMessage('Compound Journal Entry Vat objects must all be null or zero rated ');
         
         $journalEntry->addLineItem($lineItem1);
+    }
+
+    /**
+     * Test Missing Main Account Amount Exception
+     *
+     * @return void
+     */
+    public function testMissingMainAccountAmountException()
+    {
+        $journalEntry = new JournalEntry([
+            "account_id" => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "compound" => true
+        ]);
+
+        $this->expectException(MissingMainAccountAmount::class);
+        $this->expectExceptionMessage('Compund Journal Entries must have a Main Account Amount ');
+        
+        $journalEntry->save();
     }
 }

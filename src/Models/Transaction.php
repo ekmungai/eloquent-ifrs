@@ -175,7 +175,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         $this->table = config('ifrs.table_prefix') . 'transactions';
         $attributes['transaction_date'] = !isset($attributes['transaction_date']) ? Carbon::now() : Carbon::parse($attributes['transaction_date']);
 
-        return parent::__construct($attributes);
+        parent::__construct($attributes);
     }
 
     /**
@@ -654,12 +654,12 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
             throw new MissingLineItem();
         }
 
+        $this->save();
+
         extract($this->getCompoundEntries());
         if ($this->compound && array_sum($C) != array_sum($D)) {
             throw new UnbalancedTransaction();
         }
-
-        $this->save();
 
         Ledger::post($this);
     }
@@ -684,7 +684,6 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         }
 
         $this->transaction_date = !isset($this->transaction_date) ? Carbon::now() : Carbon::parse($this->transaction_date);
-
 
         $period = ReportingPeriod::getPeriod(Carbon::parse($this->transaction_date), $entity);
 
@@ -721,7 +720,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         if ($this->isDirty('transaction_type') && $this->transaction_type != $this->getOriginal('transaction_type') && !is_null($this->id)) {
             throw new InvalidTransactionType();
         }
-
+        
         $save = parent::save();
         $this->saveLineItems();
 

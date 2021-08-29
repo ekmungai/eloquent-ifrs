@@ -21,6 +21,8 @@ use IFRS\Traits\Clearing;
 use IFRS\Models\Transaction;
 
 use IFRS\Exceptions\InvalidVatRate;
+use IFRS\Exceptions\MissingMainAccountAmount;
+
 /**
  * Class JournalEntry
  *
@@ -67,15 +69,6 @@ class JournalEntry extends Transaction implements Assignable, Clearable
         }
         $attributes['transaction_type'] = self::PREFIX;
 
-        if(isset($attributes['compound']) && $attributes['compound']){
-            parent::addCompoundEntry([
-                    'id' => $attributes['account_id'], 
-                    'amount' => $attributes['main_account_amount']
-                ], 
-                $attributes['credited']
-            );
-        }
-
         parent::__construct($attributes);
     }
 
@@ -96,5 +89,27 @@ class JournalEntry extends Transaction implements Assignable, Clearable
             parent::addCompoundEntry(['id' => $lineItem->account_id, 'amount' => $lineItem->amount * $lineItem->quantity], $lineItem->credited);
         }
         return $success;
+    }
+
+    /**
+     * Relate LineItems to Transaction.
+     */
+    public function save(array $options = []): bool
+    {
+
+        if($this->compound && (is_null($this->main_account_amount) || $this->main_account_amount == 0)){
+            throw new MissingMainAccountAmount();
+        }
+
+        if($this->compound){
+            parent::addCompoundEntry([
+                    'id' => $this->account_id, 
+                    'amount' => $this->main_account_amount
+                ], 
+                $this->credited
+            );
+        }
+        
+        return parent::save();
     }
 }
