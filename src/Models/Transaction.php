@@ -369,7 +369,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
             foreach ($this->getLineItems() as $lineItem) {
                 if($lineItem->credited != $this->credited){
                     $amount += $lineItem->amount * $lineItem->quantity;
-                     if (!$lineItem->vat_inclusive) {
+                    if (!is_null($lineItem->vat) && !$lineItem->vat_inclusive) {
                         $amount += $lineItem->amount * ($lineItem->vat->rate / 100) * $lineItem->quantity;
                     }
                 }
@@ -385,16 +385,14 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
      */
     public function getCompoundEntries()
     {
-        if($this->isPosted){    
-            $this->compoundEntries[
-                Transaction::getCompoundEntrytype($this->credited)
-            ][$this->account_id] = floatval($this->main_account_amount);
+        $this->compoundEntries[
+            Transaction::getCompoundEntrytype($this->credited)
+        ][$this->account_id] = floatval($this->main_account_amount);
 
-            foreach ($this->lineItems as $lineItem) {
-                $this->compoundEntries[
-                    Transaction::getCompoundEntrytype($lineItem->credited)
-                ][$lineItem->account_id] = $lineItem->amount * $lineItem->quantity;
-            }
+        foreach ($this->lineItems as $lineItem) {
+            $this->compoundEntries[
+                Transaction::getCompoundEntrytype($lineItem->credited)
+            ][$lineItem->account_id] = $lineItem->amount * $lineItem->quantity;
         }
         return $this->compoundEntries;
     }
@@ -715,6 +713,10 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
                 Carbon::parse($this->transaction_date),
                 $entity
             );
+        }
+
+        if (!isset($this->exchange_rate_id)) {
+            $this->exchange_rate_id =  Auth::user()->entity->default_rate->id;
         }
 
         if ($this->isDirty('transaction_type') && $this->transaction_type != $this->getOriginal('transaction_type') && !is_null($this->id)) {
