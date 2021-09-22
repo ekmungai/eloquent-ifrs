@@ -213,12 +213,12 @@ $assetAccount = Account::create([
 
 $salesVatAccount = Account::create([
     'name' => "Sales VAT Account",
-    'account_type' => Account::CONTROL_ACCOUNT,
+    'account_type' => Account::CONTROL,
 ]);
 
 $purchasesVatAccount = Account::create([
     'name' => "Input VAT Account",
-    'account_type' => Account::CONTROL_ACCOUNT,
+    'account_type' => Account::CONTROL,
 ]);
 ```
 
@@ -287,7 +287,7 @@ $cashPurchase = CashPurchase::create([
 $cashPurchaseLineItem = LineItem::create([
     'vat_id' => $inputVat->id,
     'account_id' => $opexAccount->id,
-    'vat_account_id' => $purchaseVatAccount->id,
+    'vat_account_id' => $purchasesVatAccount->id,
     'narration' => "Example Cash Purchase Line Item",
     'quantity' => 4,
     'amount' => 25,
@@ -306,7 +306,7 @@ $supplierBill = SupplierBill::create([
 $supplierBillLineItem = LineItem::create([
     'vat_id' => $inputVat->id,
     'account_id' => $assetAccount->id,
-    'vat_account_id' => $purchaseVatAccount->id,
+    'vat_account_id' => $purchasesVatAccount->id,
     'narration' => "Example Credit Purchase Line Item",
     'quantity' => 4,
     'amount' => 25,
@@ -325,7 +325,7 @@ $clientReceipt = ClientReceipt::create([
 $clientReceiptLineItem = LineItem::create([
     'vat_id' => $zeroVat->id,
     'account_id' => $bankAccount->id,
-    'vat_account_id' => $purchaseVatAccount->id,
+    'vat_account_id' => $purchasesVatAccount->id,
     'narration' => "Part payment for Client Invoice",
     'quantity' => 1,
     'amount' => 50,
