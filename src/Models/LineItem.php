@@ -20,9 +20,12 @@ use IFRS\Traits\Recycling;
 use IFRS\Traits\Segregating;
 use IFRS\Traits\ModelTablePrefix;
 
+use IFRS\Models\AppliedVat;
+
 use IFRS\Exceptions\NegativeAmount;
 use IFRS\Exceptions\NegativeQuantity;
 use IFRS\Exceptions\PostedTransaction;
+use IFRS\Exceptions\MultipleVatError;
 
 /**
  * Class LineItem
@@ -53,7 +56,6 @@ class LineItem extends Model implements Recyclable, Segregatable
      */
     protected $fillable = [
         'account_id',
-        'vat_id',
         'amount',
         'quantity',
         'narration',
@@ -64,7 +66,51 @@ class LineItem extends Model implements Recyclable, Segregatable
     ];
 
     /**
-     * Construct new JournalEntry
+     * Line Item Vats
+     *
+     * @var array $vats
+     */
+    private $vats = [];
+
+    /**
+     * Check if Vat already exists.
+     *
+     * @param int $id
+     *
+     * @return int|false
+     */
+    private function vatExists(int $id = null)
+    {
+        return collect($this->vats)->search(
+            function ($vat, $key) use ($id) {
+                return $vat->id == $id;
+            }
+        );
+    }
+
+    /**
+     * Create applied vat objects for the vats being staged.
+     *
+     * @return void
+     */
+    private function applyVats(): void
+    {
+        $itemAmount = $this->amount * $this->quantity;
+        
+        foreach ($this->vats as $vat) {
+            $tax = $this->vat_inclusive ? $itemAmount - ($itemAmount / (1 + ($vat->rate / 100))) : $itemAmount * $vat->rate / 100;
+
+            AppliedVat::firstOrCreate([
+                'vat_id' => $vat->id,
+                'line_item_id' => $this->id,
+                'amount' => $tax
+            ]);
+            $itemAmount += $this->compound_vat ? $tax : 0;
+        }
+    }
+
+    /**
+     * Construct new LineItem
      *
      * @param array $attributes
      */
@@ -122,13 +168,32 @@ class LineItem extends Model implements Recyclable, Segregatable
     }
 
     /**
-     * LineItem VAT.
+     * LineItem Applied VATs.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function vat()
+    public function appliedVats()
     {
-        return $this->belongsTo(Vat::class);
+        return $this->hasMany(AppliedVat::class);
+    }
+
+    /**
+     * Total Vat amount of the LineItem.
+     *
+     * @return array
+     */
+    public function getVatAttribute(): array
+    {
+        $vats = ['total' => 0];
+        foreach ($this->appliedVats as $appliedVat) {
+            $vats['total'] += $appliedVat->amount;
+            if (array_key_exists($appliedVat->vat->code, $vats)) {
+                $vats[$appliedVat->vat->code] += $appliedVat->amount;
+            } else {
+                $vats[$appliedVat->vat->code] = $appliedVat->amount;
+            }
+        }
+        return $vats;
     }
 
     /**
@@ -139,6 +204,84 @@ class LineItem extends Model implements Recyclable, Segregatable
     public function attributes()
     {
         return (object)$this->attributes;
+    }
+
+    /**
+     * Add Vat to LineItem Vats.
+     *
+     * @param Vat $vat
+     */
+    public function addVat(Vat $vat): bool
+    {
+        if (count($this->ledgers) > 0) {
+            throw new PostedTransaction("add Vat to");
+        }
+
+        if($vat->rate == 0 && $this->compound_vat){
+            throw new MultipleVatError('Zero rated taxes cannot be applied to a compound vat Line Item');
+        }
+
+        if($this->vat_inclusive && $this->compound_vat){
+            throw new MultipleVatError('Vat inclusive Line Items cannot have compound Vat');
+        }
+
+        $this->getVats();
+
+        if(count($this->vats) > 0 && $this->vat_inclusive){
+            throw new MultipleVatError('Vat inclusive Line Items cannot have more than one Vat');
+        }
+
+        if ($this->vatExists($vat->id) === false) {
+            $this->vats[] = $vat;
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Get LineItem Vats.
+     *
+     * @return array
+     */
+    public function getVats()
+    {
+        foreach ($this->appliedVats as $appliedVat) {
+            if ($this->vatExists($appliedVat->vat_id) === false) {
+                $this->vats[] = $appliedVat->vat;
+            }
+        }
+        return $this->vats;
+    }
+
+    /**
+     * Remove Vat from LineItem Vats.
+     *
+     * @param Vat $vat
+     */
+    public function removeVat(Vat $vat): void
+    {
+        if (count($this->ledgers) > 0) {
+            throw new PostedTransaction("remove Vat from");
+        }
+
+        if($this->compound_vat){
+            $this->vats = [];
+            AppliedVat::all()->delete();
+        }else{
+
+            $key = $this->vatExists($vat->id);
+            if ($key !== false) {
+                unset($this->vats[$key]);
+            }
+
+            AppliedVat::where([
+                'line_item_id' => $this->id, 
+                'vat_id' => $vat->id
+            ])->first()->delete();
+        }
+
+        // reload applied vats to reflect changes
+        $this->load('appliedVats');
     }
 
     /**
@@ -158,6 +301,13 @@ class LineItem extends Model implements Recyclable, Segregatable
             throw new PostedTransaction("change a LineItem of");
         }
 
-        return parent::save();
+        $save = parent::save();
+        $this->applyVats();
+
+        // reload vats to reflect changes
+        $this->load('appliedVats');
+
+        return $save;
+
     }
 }

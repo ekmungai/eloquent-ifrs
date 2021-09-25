@@ -399,28 +399,33 @@ class TransactionTest extends TestCase
             "currency_id" => $currency->id
         ]);
 
-        $transaction->addLineItem(
-            factory(LineItem::class)->create([
-                "amount" => 20,
-                "quantity" => 1,
-                'vat_id' => factory(Vat::class)->create([
-                    'rate' => 10,
-                    'code' => 'E',
-                    'name' => 'Export 10%'
-                ])->id
+        $lineItem1 = factory(LineItem::class)->create([
+            "amount" => 20,
+            "quantity" => 1,
+        ]);
+        $lineItem1->addVat(
+            factory(Vat::class)->create([
+                'rate' => 10,
+                'code' => 'E',
+                'name' => 'Export 10%'
             ])
         );
-        $transaction->addLineItem(
-            factory(LineItem::class)->create([
-                "amount" => 100,
-                "quantity" => 1,
-                'vat_id' => factory(Vat::class)->create([
-                    'rate' => 5,
-                    'code' => 'L',
-                    'name' => 'Local 5%'
-                ])->id
+        $lineItem1->save();
+        $transaction->addLineItem($lineItem1);
+
+        $lineItem2 = factory(LineItem::class)->create([
+            "amount" => 100,
+            "quantity" => 1,
+        ]);
+        $lineItem2->addVat(
+            factory(Vat::class)->create([
+                'rate' => 5,
+                'code' => 'L',
+                'name' => 'Local 5%'
             ])
         );
+        $lineItem2->save();
+        $transaction->addLineItem($lineItem2);
         $transaction->post();
 
         $this->assertEquals($transaction->vat, ['total' => 7.0,'E' => 2.0, 'L' => 5.0]);
@@ -743,14 +748,17 @@ class TransactionTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 16
-            ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::RECONCILIATION,
                 'category_id' => null
             ])->id,
         ]);
+        $lineItem->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16
+            ])
+        );
+        $lineItem->save();
 
         $transaction->addLineItem($lineItem);
 
@@ -797,11 +805,14 @@ class TransactionTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 16
-            ])->id,
             "account_id" => $account->id,
         ]);
+        $lineItem->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16
+            ])
+        );
+        $lineItem->save();
 
         $this->expectException(RedundantTransaction::class);
         $this->expectExceptionMessage('A Transaction Main Account cannot be one of the Line Item Accounts');

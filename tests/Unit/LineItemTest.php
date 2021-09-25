@@ -19,6 +19,8 @@ use IFRS\Transactions\ClientInvoice;
 
 use IFRS\Exceptions\NegativeAmount;
 use IFRS\Exceptions\NegativeQuantity;
+use IFRS\Exceptions\MultipleVatError;
+
 class LineItemTest extends TestCase
 {
     /**
@@ -41,12 +43,13 @@ class LineItemTest extends TestCase
         ]);
 
         $lineItem = new LineItem([
-            'vat_id' => $vat->id,
             'account_id' => $account->id,
             'narration' => $this->faker->sentence,
             'quantity' => 1,
             'amount' => 50,
         ]);
+
+        $lineItem->addVat($vat);
         $lineItem->save();
         $lineItem->attributes();
 
@@ -57,8 +60,10 @@ class LineItemTest extends TestCase
 
         $this->assertEquals($lineItem->transaction->transaction_no, $transaction->transaction_no);
         $this->assertEquals($lineItem->account->name, $account->name);
-        $this->assertEquals($lineItem->vat->account->name, $vatAccount->name);
-        $this->assertEquals($lineItem->vat->rate, $vat->rate);
+
+        $vats = $lineItem->appliedVats;
+        $this->assertEquals($vats[0]->vat->account->name, $vatAccount->name);
+        $this->assertEquals($vats[0]->vat->rate, $vat->rate);
         $this->assertEquals(
             $lineItem->toString(true),
             'LineItem: ' . $lineItem->account->toString() . ' for 50'
@@ -88,7 +93,6 @@ class LineItemTest extends TestCase
         $newEntity->save();
 
         $lineItem = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -110,7 +114,6 @@ class LineItemTest extends TestCase
     public function testNegativeAmount()
     {
         $lineItem = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -130,7 +133,6 @@ class LineItemTest extends TestCase
     public function testNegativeQuantity()
     {
         $lineItem = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -169,10 +171,11 @@ class LineItemTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => $vat->id,
             "account_id" => $revenueAccount->id,
             "quantity" => 1,
         ]);
+        $lineItem->addVat($vat);
+        $lineItem->save();
         $clientInvoice->addLineItem($lineItem);
 
         $clientInvoice->post();
@@ -201,11 +204,12 @@ class LineItemTest extends TestCase
 
         $lineItem2 = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => $vat2->id,
             "account_id" => $revenueAccount2->id,
             "vat_inclusive" => true,
             "quantity" => 1,
         ]);
+        $lineItem2->addVat($vat2);
+        $lineItem2->save();
         $clientInvoice2->addLineItem($lineItem2);
 
         $clientInvoice2->post();
@@ -214,5 +218,170 @@ class LineItemTest extends TestCase
         $this->assertEquals($clientInvoice2->account->closingBalance()[$this->reportingCurrencyId], 100);
         $this->assertEquals(round($revenueAccount2->closingBalance()[$this->reportingCurrencyId], 2), -86.21);
         $this->assertEquals(round($vat2->account->closingBalance()[$this->reportingCurrencyId], 2), -13.79);
+    }
+
+    /**
+     * Test Simple Multiple Tax.
+     *
+     * @return void
+     */
+    public function testSimpleMultipleTax()
+    {
+        $revenueAccount = factory(Account::class)->create([
+            "account_type" => Account::OPERATING_REVENUE,
+            'category_id' => null
+        ]);
+        $vat = factory(Vat::class)->create([
+            "rate" => 5
+        ]);
+        $vat2 = factory(Vat::class)->create([
+            "rate" => 7
+        ]);
+
+        $clientInvoice = new ClientInvoice([
+            "account_id" => factory(Account::class)->create([
+                'account_type' => Account::RECEIVABLE,
+                'category_id' => null
+            ])->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
+
+        $lineItem = factory(LineItem::class)->create([
+            "amount" => 100,
+            "account_id" => $revenueAccount->id,
+            "quantity" => 1,
+        ]);
+        $lineItem->addVat($vat);
+        $lineItem->addVat($vat2);
+        $lineItem->save();
+
+        $clientInvoice->addLineItem($lineItem);
+
+        $clientInvoice->post();
+
+        $this->assertEquals($clientInvoice->amount, 112);
+        $this->assertEquals($clientInvoice->account->closingBalance(), [$this->reportingCurrencyId => 112]);
+        $this->assertEquals($revenueAccount->closingBalance(), [$this->reportingCurrencyId => -100]);
+        $this->assertEquals($vat->account->closingBalance(), [$this->reportingCurrencyId => -5]);
+        $this->assertEquals($vat2->account->closingBalance(), [$this->reportingCurrencyId => -7]);
+    }
+
+    /**
+     * Test Compound Multiple Tax.
+     *
+     * @return void
+     */
+    public function testCompoundMultipleTax()
+    {
+        $revenueAccount = factory(Account::class)->create([
+            "account_type" => Account::OPERATING_REVENUE,
+            'category_id' => null
+        ]);
+        $vat = factory(Vat::class)->create([
+            "rate" => 5
+        ]);
+        $vat2 = factory(Vat::class)->create([
+            "rate" => 7
+        ]);
+
+        $clientInvoice = new ClientInvoice([
+            "account_id" => factory(Account::class)->create([
+                'account_type' => Account::RECEIVABLE,
+                'category_id' => null
+            ])->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
+
+        $lineItem = factory(LineItem::class)->create([
+            "amount" => 100,
+            "account_id" => $revenueAccount->id,
+            "quantity" => 1,
+            "compound_vat" => true,
+        ]);
+        $lineItem->addVat($vat);
+        $lineItem->addVat($vat2);
+        $lineItem->save();
+
+        $clientInvoice->addLineItem($lineItem);
+        
+        $clientInvoice->post();
+
+        $this->assertEquals($clientInvoice->amount, 112.35);
+        $this->assertEquals($clientInvoice->account->closingBalance(), [$this->reportingCurrencyId => 112.35]);
+        $this->assertEquals($revenueAccount->closingBalance(), [$this->reportingCurrencyId => -100]);
+        $this->assertEquals($vat->account->closingBalance(), [$this->reportingCurrencyId => -5]);
+        $this->assertEquals($vat2->account->closingBalance(), [$this->reportingCurrencyId => -7.35]);
+    }
+
+    /**
+     * Test Zero Rated Compound Tax.
+     *
+     * @return void
+     */
+    public function testZeroRatedCompoundTax()
+    {
+        $vat = factory(Vat::class)->create([
+            "rate" => 0
+        ]);
+
+        $lineItem = factory(LineItem::class)->create([
+            "amount" => 100,
+            "quantity" => 1,
+            "compound_vat" => true,
+        ]);
+        $this->expectException(MultipleVatError::class);
+        $this->expectExceptionMessage('Zero rated taxes cannot be applied to a compound vat Line Item');
+        
+        $lineItem->addVat($vat);
+    }
+
+    /**
+     * Test Vat Inclusive Compound Tax.
+     *
+     * @return void
+     */
+    public function testVatInclusiveCompoundTax()
+    {
+        $vat = factory(Vat::class)->create([
+            "rate" => 5
+        ]);
+
+        $lineItem = factory(LineItem::class)->create([
+            "amount" => 100,
+            "quantity" => 1,
+            "compound_vat" => true,
+            "vat_inclusive" => true,
+        ]);
+        $this->expectException(MultipleVatError::class);
+        $this->expectExceptionMessage('Vat inclusive Line Items cannot have compound Vat');
+        
+        $lineItem->addVat($vat);
+    }
+
+    /**
+     * Test Vat Inclusive Multiple Tax.
+     *
+     * @return void
+     */
+    public function testVatInclusiveMultipleTax()
+    {
+        $vat = factory(Vat::class)->create([
+            "rate" => 5
+        ]);
+
+        $lineItem = factory(LineItem::class)->create([
+            "amount" => 100,
+            "quantity" => 1,
+            "vat_inclusive" => true,
+        ]);
+
+        $lineItem->addVat($vat);
+
+        $this->expectException(MultipleVatError::class);
+        $this->expectExceptionMessage('Vat inclusive Line Items cannot have more than one Vat');
+        
+        $lineItem->addVat($vat);
     }
 }

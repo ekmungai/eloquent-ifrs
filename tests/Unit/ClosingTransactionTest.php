@@ -12,6 +12,7 @@ use IFRS\Models\Entity;
 use IFRS\Models\RecycledObject;
 use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Transaction;
+
 class ClosingTransactionTest extends TestCase
 {
     /**

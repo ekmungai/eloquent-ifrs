@@ -78,35 +78,40 @@ class Ledger extends Model implements Segregatable
     }
 
     /**
-     * Create VAT Ledger entries for the Transaction LineItem.
+     * Create VAT Ledger entries for the Transaction LineItem's Vat.
      *
-     * @param LineItem $lineItem
+     * @param \Illuminate\Database\Eloquent\Relations\HasMany $appliedVats
      * @param Transaction $transaction
+     * @param LineItem $lineItem
      *
      * @return void
      */
-    private static function postVat(LineItem $lineItem, Transaction $transaction): void
+    private static function postVat($appliedVats, $transaction, $lineItem): void
     {
-        $amount = $lineItem->vat_inclusive ? $lineItem->amount - ($lineItem->amount / (1 + ($lineItem->vat->rate / 100))) : $lineItem->amount * $lineItem->vat->rate / 100;
         $rate = $transaction->exchangeRate->rate;
+        foreach($appliedVats as $appliedVat){
+            list($post, $folio) = Ledger::getLedgers($transaction);
 
-        list($post, $folio) = Ledger::getLedgers($transaction);
+            // identical double entry data
+            $post->transaction_id = $folio->transaction_id = $transaction->id;
+            $post->currency_id = $folio->currency_id = $transaction->currency_id;
+            $post->posting_date = $folio->posting_date = $transaction->transaction_date;
+            $post->line_item_id = $folio->line_item_id = $appliedVat->line_item_id;
+            $post->vat_id = $folio->vat_id = $appliedVat->vat_id;
+            $post->amount = $folio->amount = $appliedVat->amount * $rate;
+            $post->rate = $folio->rate = $rate;;
 
-        // identical double entry data
-        $post->transaction_id = $folio->transaction_id = $transaction->id;
-        $post->currency_id = $folio->currency_id = $transaction->currency_id;
-        $post->posting_date = $folio->posting_date = $transaction->transaction_date;
-        $post->line_item_id = $folio->line_item_id = $lineItem->id;
-        $post->vat_id = $folio->vat_id = $lineItem->vat_id;
-        $post->amount = $folio->amount = $amount * $rate * $lineItem->quantity;
-        $post->rate = $folio->rate = $rate;
+            // different double entry data
+            $post->post_account = $folio->folio_account = $lineItem->vat_inclusive ? $lineItem->account_id : $transaction->account_id;
+            $post->folio_account = $folio->post_account = $appliedVat->vat->account_id;
 
-        // different double entry data
-        $post->post_account = $folio->folio_account = $lineItem->vat_inclusive ? $lineItem->account_id : $transaction->account_id;
-        $post->folio_account = $folio->post_account = $lineItem->vat->account_id;
+            if(is_null($post->folio_account)){
+                dd($appliedVats);
+            }
 
-        $post->save();
-        $folio->save();
+            $post->save();
+            $folio->save();
+        }
     }
 
     /**
@@ -118,8 +123,8 @@ class Ledger extends Model implements Segregatable
      */
     private static function postBasic(Transaction $transaction): void
     {
+        $rate = $transaction->exchangeRate->rate;
         foreach ($transaction->getLineItems() as $lineItem) {
-            $rate = $transaction->exchangeRate->rate;
 
             list($post, $folio) = Ledger::getLedgers($transaction);
 
@@ -138,9 +143,9 @@ class Ledger extends Model implements Segregatable
 
             $post->save();
             $folio->save();
-
-            if ($lineItem->vat && $lineItem->vat->rate > 0) {
-                Ledger::postVat($lineItem, $transaction);
+            
+            if (count($lineItem->appliedVats) > 0) {
+                Ledger::postVat($lineItem->appliedVats, $transaction, $lineItem);
             }
         }
     

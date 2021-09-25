@@ -22,6 +22,7 @@ use IFRS\Models\Transaction;
 
 use IFRS\Exceptions\InvalidVatRate;
 use IFRS\Exceptions\MissingMainAccountAmount;
+use IFRS\Exceptions\MultipleVatError;
 
 /**
  * Class JournalEntry
@@ -79,8 +80,8 @@ class JournalEntry extends Transaction implements Assignable, Clearable
      */
     public function addLineItem(LineItem $lineItem): bool
     {
-        if ($this->compound && !is_null($lineItem->vat) && $lineItem->vat->rate > 0) {
-            throw new InvalidVatRate();
+        if ($this->compound && count($lineItem->vat) > 1) {
+            throw new MultipleVatError('Compound Journal Entries cannot have Vat');
         }
 
         $success = parent::addLineItem($lineItem);

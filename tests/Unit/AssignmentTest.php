@@ -38,6 +38,7 @@ use IFRS\Exceptions\SelfClearance;
 use IFRS\Exceptions\UnassignableTransaction;
 use IFRS\Exceptions\UnclearableTransaction;
 use IFRS\Exceptions\UnpostedAssignment;
+
 class AssignmentTest extends TestCase
 {
     /**
@@ -58,7 +59,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -76,7 +76,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -143,7 +142,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -161,7 +159,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -204,7 +201,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -221,7 +217,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -251,7 +246,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -283,7 +277,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -355,7 +348,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::BANK,
                 'category_id' => null,
@@ -378,7 +370,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::OPERATING_REVENUE,
                 'category_id' => null
@@ -424,7 +415,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::BANK,
                 'category_id' => null,
@@ -447,7 +437,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::NON_CURRENT_ASSET,
                 'category_id' => null
@@ -500,7 +489,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::BANK,
                 'category_id' => null
@@ -522,7 +510,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::OPERATING_REVENUE,
                 'category_id' => null
@@ -568,7 +555,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::BANK,
                 'category_id' => null,
@@ -591,7 +577,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::NON_CURRENT_ASSET,
                 'category_id' => null
@@ -641,7 +626,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -659,7 +643,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -703,7 +686,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -721,7 +703,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -765,7 +746,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -808,7 +788,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::OPERATING_REVENUE,
                 'category_id' => null
@@ -826,7 +805,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -875,7 +853,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -892,7 +869,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::BANK,
                 'category_id' => null,
@@ -943,7 +919,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -960,7 +935,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -1005,7 +979,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -1027,7 +1000,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::BANK,
                 'category_id' => null,
@@ -1074,7 +1046,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -1093,7 +1064,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::BANK,
                 'category_id' => null,
@@ -1139,7 +1109,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -1156,7 +1125,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -1200,7 +1168,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -1216,7 +1183,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -1258,7 +1224,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -1275,7 +1240,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -1292,7 +1256,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -1332,7 +1295,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -1352,7 +1314,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -1397,7 +1358,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -1414,7 +1374,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -1441,7 +1400,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -1484,7 +1442,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -1501,7 +1458,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -1528,7 +1484,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -1576,7 +1531,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,
@@ -1595,7 +1549,6 @@ class AssignmentTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'category_id' => null
             ])->id,

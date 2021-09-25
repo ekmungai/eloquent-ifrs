@@ -93,15 +93,18 @@ class AccountStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 16
-            ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OPERATING_REVENUE,
                 'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
+        $lineItem->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16
+            ])
+        );
+        $lineItem->save();
         $cashSale->addLineItem($lineItem);
 
         $cashSale->post();
@@ -121,9 +124,6 @@ class AccountStatementTest extends TestCase
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
             "account_id" => $account->id,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 0
-            ])->id,
             "quantity" => 1,
         ]);
         $creditContraEntry->addLineItem($lineItem);
@@ -145,9 +145,6 @@ class AccountStatementTest extends TestCase
                 'category_id' => null,
                 'currency_id' => $account->currency_id,
             ])->id,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 0
-            ])->id,
             "quantity" => 1,
         ]);
         $debitContraEntry->addLineItem($lineItem);
@@ -168,9 +165,6 @@ class AccountStatementTest extends TestCase
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
             "account_id" => $account->id,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 0
-            ])->id,
             "quantity" => 1,
         ]);
         $clientReceipt->addLineItem($lineItem);
@@ -187,13 +181,18 @@ class AccountStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 75,
-            "vat_id" => factory(Vat::class)->create(["rate" => 16])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OTHER_EXPENSE,
                 'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
+        $lineItem->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16
+            ])
+        );
+        $lineItem->save();
         $cashPurchase->addLineItem($lineItem);
 
         $cashPurchase->post();
@@ -211,9 +210,6 @@ class AccountStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 0
-            ])->id,
             "account_id" => $account->id,
             "quantity" => 1,
         ]);
@@ -231,9 +227,6 @@ class AccountStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 0
-            ])->id,
             "quantity" => 1,
         ]);
         $creditJournalEntry->addLineItem($lineItem);
@@ -253,9 +246,6 @@ class AccountStatementTest extends TestCase
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
             "account_id" => $account->id,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 0
-            ])->id,
             "quantity" => 1,
         ]);
         $debitJournalEntry->addLineItem($lineItem);
@@ -344,13 +334,18 @@ class AccountStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory(Vat::class)->create(["rate" => 16])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OPERATING_REVENUE,
                 'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
+        $lineItem->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16
+            ])
+        );
+        $lineItem->save();
         $clientInvoice->addLineItem($lineItem);
 
         $clientInvoice->post();
@@ -368,11 +363,14 @@ class AccountStatementTest extends TestCase
                 "account_type" => Account::OPERATING_REVENUE,
                 'category_id' => null
             ])->id,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 16
-            ])->id,
             "quantity" => 1,
         ]);
+        $lineItem->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16
+            ])
+        );
+        $lineItem->save();
         $creditNote->addLineItem($lineItem);
 
         $creditNote->post();
@@ -394,9 +392,6 @@ class AccountStatementTest extends TestCase
                     'category_id' => null,
                     'currency_id' => $currency->id,
                 ])->id,
-                "vat_id" => factory(Vat::class)->create([
-                    "rate" => 0
-                ])->id,
                 "quantity" => 1,
             ]
         );
@@ -413,9 +408,6 @@ class AccountStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 0
-            ])->id,
             "quantity" => 1,
         ]);
         $creditJournalEntry->addLineItem($lineItem);
@@ -435,9 +427,6 @@ class AccountStatementTest extends TestCase
             [
                 "amount" => 50,
                 "account_id" => $account->id,
-                "vat_id" => factory(Vat::class)->create([
-                    "rate" => 0
-                ])->id,
                 "quantity" => 1,
             ]
         );
@@ -515,13 +504,18 @@ class AccountStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory(Vat::class)->create(["rate" => 16])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OPERATING_EXPENSE,
                 'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
+        $lineItem->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16
+            ])
+        );
+        $lineItem->save();
         $supplierBill->addLineItem($lineItem);
 
         $supplierBill->post();
@@ -539,11 +533,14 @@ class AccountStatementTest extends TestCase
                 "account_type" => Account::OVERHEAD_EXPENSE,
                 'category_id' => null
             ])->id,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 16
-            ])->id,
             "quantity" => 1,
         ]);
+        $lineItem->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16
+            ])
+        );
+        $lineItem->save();
         $debitNote->addLineItem($lineItem);
 
         $debitNote->post();
@@ -564,9 +561,6 @@ class AccountStatementTest extends TestCase
                 'category_id' => null,
                 'currency_id' => $currency->id,
             ])->id,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 0
-            ])->id,
             "quantity" => 1,
         ]);
         $supplierPayment->addLineItem($lineItem);
@@ -582,9 +576,6 @@ class AccountStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 0
-            ])->id,
             "quantity" => 1,
         ]);
         $creditJournalEntry->addLineItem($lineItem);
@@ -603,9 +594,6 @@ class AccountStatementTest extends TestCase
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
             "account_id" => $account->id,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 0
-            ])->id,
             "quantity" => 1,
         ]);
         $debitJournalEntry->addLineItem($lineItem);
@@ -711,13 +699,18 @@ class AccountStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory(Vat::class)->create(["rate" => 16])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OPERATING_REVENUE,
                 'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
+        $lineItem->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16
+            ])
+        );
+        $lineItem->save();
         $clientInvoice1->addLineItem($lineItem);
 
         $clientInvoice1->post();     
@@ -733,13 +726,18 @@ class AccountStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory(Vat::class)->create(["rate" => 16])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OPERATING_REVENUE,
                 'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
+        $lineItem->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16
+            ])
+        );
+        $lineItem->save();
         $clientInvoice2->addLineItem($lineItem);
 
         $clientInvoice2->post();
@@ -759,9 +757,6 @@ class AccountStatementTest extends TestCase
                     "account_type" => Account::BANK,
                     'category_id' => null,
                     "currency_id" => $baseCurrency,
-                ])->id,
-                "vat_id" => factory(Vat::class)->create([
-                    "rate" => 0
                 ])->id,
                 "quantity" => 1,
             ]
@@ -786,9 +781,6 @@ class AccountStatementTest extends TestCase
                     "account_type" => Account::BANK,
                     'category_id' => null,
                     "currency_id" => $rate->currency_id,
-                ])->id,
-                "vat_id" => factory(Vat::class)->create([
-                    "rate" => 0
                 ])->id,
                 "quantity" => 1,
             ]

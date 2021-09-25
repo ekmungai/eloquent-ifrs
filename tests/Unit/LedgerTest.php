@@ -16,7 +16,6 @@ use IFRS\Models\Vat;
 
 use IFRS\Transactions\JournalEntry;
 
-
 class LedgerTest extends TestCase
 {
     /**
@@ -32,7 +31,6 @@ class LedgerTest extends TestCase
         $lineAccount = factory(Account::class)->create([
             'category_id' => null
         ]);
-        $vat = factory(Vat::class)->create(["rate" => 0]);
 
         $transaction = new JournalEntry([
             "account_id" => $account->id,
@@ -43,7 +41,6 @@ class LedgerTest extends TestCase
         $lineItem = factory(LineItem::class)->create([
             "account_id" => $lineAccount->id,
             "amount" => 50,
-            "vat_id" => $vat->id,
         ]);
 
         $transaction->addLineItem($lineItem);
@@ -73,7 +70,6 @@ class LedgerTest extends TestCase
         $lineAccount2 = factory(Account::class)->create([
             'category_id' => null
         ]);
-        $vat = factory(Vat::class)->create(["rate" => 0]);
 
         $transaction = new JournalEntry([
             "account_id" => $account->id,
@@ -84,7 +80,6 @@ class LedgerTest extends TestCase
         $lineItem1 = factory(LineItem::class)->create([
             "account_id" => $lineAccount1->id,
             "amount" => 75,
-            "vat_id" => $vat->id,
             "quantity" => 1,
         ]);
 
@@ -93,7 +88,6 @@ class LedgerTest extends TestCase
         $lineItem2 = factory(LineItem::class)->create([
             "account_id" => $lineAccount2->id,
             "amount" => 120,
-            "vat_id" => $vat->id,
             "quantity" => 1,
         ]);
 
@@ -155,8 +149,6 @@ class LedgerTest extends TestCase
             'category_id' => null
         ]);
 
-        $vat = factory(Vat::class)->create(["rate" => 10]);
-
         $rate = factory(ExchangeRate::class)->create([
             'rate' => 105
         ]);
@@ -171,18 +163,24 @@ class LedgerTest extends TestCase
         $lineItem1 = factory(LineItem::class)->create([
             "account_id" => $lineAccount1->id,
             "amount" => 75,
-            "vat_id" => $vat->id,
             "quantity" => 1,
         ]);
+        $lineItem1->addVat(
+            factory(Vat::class)->create(["rate" => 10])
+        );
+        $lineItem1->save();
 
         $transaction->addLineItem($lineItem1);
 
         $lineItem2 = factory(LineItem::class)->create([
             "account_id" => $lineAccount2->id,
             "amount" => 120,
-            "vat_id" => $vat->id,
             "quantity" => 1,
         ]);
+        $lineItem2->addVat(
+            factory(Vat::class)->create(["rate" => 10])
+        );
+        $lineItem2->save();
 
         $transaction->addLineItem($lineItem2);
 
@@ -215,7 +213,6 @@ class LedgerTest extends TestCase
         $lineItem1 = factory(LineItem::class)->create([
             "account_id" => $lineAccount1->id,
             "amount" => 75,
-            "vat_id" => factory(Vat::class)->create(["rate" => 0])->id,
             "quantity" => 1,
         ]);
 

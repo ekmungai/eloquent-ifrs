@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class AddLineItemEntryColumn extends Migration
+class AddCompoundVatColumn extends Migration
 {
     /**
      * Run the migrations.
@@ -17,7 +17,7 @@ class AddLineItemEntryColumn extends Migration
         Schema::table(
             config('ifrs.table_prefix') . 'line_items',
             function (Blueprint $table) {
-                $table->boolean('credited')->default(false);
+                $table->boolean('compound_vat')->default(false);
         });
     }
 
@@ -33,7 +33,7 @@ class AddLineItemEntryColumn extends Migration
             if (config('database.default') == 'sqlite') {
                 DB::statement('PRAGMA foreign_keys = OFF;'); // sqlite needs to drop the entire table to remove a column, which fails because the table is already referenced
             }
-            $table->dropColumn('credited');
+            $table->dropColumn('compound_vat');
         });
     }
 }

@@ -13,6 +13,7 @@ use IFRS\Models\RecycledObject;
 use IFRS\Models\ReportingPeriod;
 
 use IFRS\Exceptions\DuplicateClosingRate;
+
 class ClosingRateTest extends TestCase
 {
     /**

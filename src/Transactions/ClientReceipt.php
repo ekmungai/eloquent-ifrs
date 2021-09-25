@@ -72,7 +72,7 @@ class ClientReceipt extends Transaction implements Assignable
             throw new LineItemAccount(self::PREFIX, [Account::BANK]);
         }
 
-        if ($lineItem->vat->rate > 0) {
+        if ($lineItem->vat['total'] > 0) {
             throw new VatCharge(self::PREFIX);
         }
 

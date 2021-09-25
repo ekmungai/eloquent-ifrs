@@ -170,9 +170,6 @@ class TrialBalanceTest extends TestCase
         $contraEntry->addLineItem(
             factory(LineItem::class)->create([
                 "account_id" => $bank,
-                "vat_id" => factory(Vat::class)->create([
-                    "rate" => 0
-                ])->id,
             ])
         );
         $contraEntry->post();
@@ -783,24 +780,26 @@ class TrialBalanceTest extends TestCase
             "narration" => $this->faker->word,
             "entity_id" => $entity->id
         ]);
-
         $lineItem = LineItem::create([
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => $this->faker->randomDigit(),
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => $nonCurrentAsset->id,
             'quantity' => $this->faker->randomNumber(),
             'amount' => $this->faker->randomFloat(2, 0, 200),
             "entity_id" => $entity->id
         ]);
+
+        $vat = Vat::create([
+            'name' => $this->faker->name,
+            'code' => $this->faker->randomLetter(),
+            'entity_id' => $entity->id,
+            'rate' => $this->faker->randomDigitNotNull,
+            'account_id' => Account::create([
+                'account_type' => Account::CONTROL,
+                'category_id' => null,
+                'entity_id' => $entity->id
+            ])->id,
+        ]);
+        $lineItem->addVat($vat);
+        $lineItem->save();
 
         $bill->addLineItem($lineItem);
         $bill->post();
@@ -848,22 +847,24 @@ class TrialBalanceTest extends TestCase
         ]);
 
         $lineItem = LineItem::create([
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => $this->faker->randomDigit(),
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => $nonCurrentAsset->id,
             'quantity' => $this->faker->randomNumber(),
             'amount' => $this->faker->randomFloat(2, 0, 200),
             "entity_id" => $entity->id
         ]);
+        $vat2 = Vat::create([
+            'name' => $this->faker->name,
+            'code' => $this->faker->randomLetter(),
+            'entity_id' => $entity->id,
+            'rate' => $this->faker->randomDigitNotNull,
+            'account_id' => Account::create([
+                'account_type' => Account::CONTROL,
+                'category_id' => null,
+                'entity_id' => $entity->id
+            ])->id,
+        ]);
+        $lineItem->addVat($vat2);
+        $lineItem->save();
 
         $journal->addLineItem($lineItem);
         $journal->post();
@@ -923,22 +924,24 @@ class TrialBalanceTest extends TestCase
         ]);
 
         $lineItem = LineItem::create([
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => $this->faker->randomDigit(),
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => $inventory->id,
             'quantity' => $this->faker->randomNumber(),
             'amount' => $this->faker->randomFloat(2, 0, 200),
             "entity_id" => $entity->id
         ]);
+        $vat3 = Vat::create([
+            'name' => $this->faker->name,
+            'code' => $this->faker->randomLetter(),
+            'entity_id' => $entity->id,
+            'rate' => $this->faker->randomDigit(),
+            'account_id' => Account::create([
+                'account_type' => Account::CONTROL,
+                'category_id' => null,
+                'entity_id' => $entity->id
+            ])->id,
+        ]);
+        $lineItem->addVat($vat3);
+        $lineItem->save();
 
         $cashPurchase->addLineItem($lineItem);
         $cashPurchase->post();
@@ -994,17 +997,6 @@ class TrialBalanceTest extends TestCase
         ]);
 
         $lineItem = LineItem::create([
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => 0,
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => $bank->id,
             'quantity' => $this->faker->randomNumber(),
             'amount' => $this->faker->randomFloat(2, 0, 200),
@@ -1058,17 +1050,6 @@ class TrialBalanceTest extends TestCase
         ]);
 
         $lineItem = LineItem::create([
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => $this->faker->randomDigit(),
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => Account::create([
                 'account_type' => Account::CURRENT_ASSET,
                 'category_id' => null,
@@ -1078,6 +1059,19 @@ class TrialBalanceTest extends TestCase
             'amount' => $this->faker->randomFloat(2, 0, 200),
             "entity_id" => $entity->id
         ]);
+        $vat5 = Vat::create([
+            'name' => $this->faker->name,
+            'code' => $this->faker->randomLetter(),
+            'entity_id' => $entity->id,
+            'rate' => $this->faker->randomDigitNotNull,
+            'account_id' => Account::create([
+                'account_type' => Account::CONTROL,
+                'category_id' => null,
+                'entity_id' => $entity->id
+            ])->id,
+        ]);
+        $lineItem->addVat($vat5);
+        $lineItem->save();
 
         $journalEntry->addLineItem($lineItem);
         $journalEntry->post();
@@ -1127,17 +1121,6 @@ class TrialBalanceTest extends TestCase
         ]);
 
         $lineItem = LineItem::create([
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => $this->faker->randomDigit(),
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => Account::create([
                 'account_type' => Account::OPERATING_REVENUE,
                 'category_id' => null,
@@ -1147,6 +1130,19 @@ class TrialBalanceTest extends TestCase
             'amount' => $this->faker->randomFloat(2, 0, 200),
             "entity_id" => $entity->id
         ]);
+        $vat6 = Vat::create([
+            'name' => $this->faker->name,
+            'code' => $this->faker->randomLetter(),
+            'entity_id' => $entity->id,
+            'rate' => $this->faker->randomDigitNotNull,
+            'account_id' => Account::create([
+                'account_type' => Account::CONTROL,
+                'category_id' => null,
+                'entity_id' => $entity->id
+            ])->id,
+        ]);
+        $lineItem->addVat($vat6);
+        $lineItem->save();
 
         $clientInvoice->addLineItem($lineItem);
         $clientInvoice->post();
@@ -1201,17 +1197,6 @@ class TrialBalanceTest extends TestCase
         ]);
 
         $lineItem = LineItem::create([
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => $this->faker->randomDigit(),
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => Account::create([
                 'account_type' => Account::OPERATING_REVENUE,
                 'category_id' => null,
@@ -1221,6 +1206,19 @@ class TrialBalanceTest extends TestCase
             'amount' => $this->faker->randomFloat(2, 0, 200),
             "entity_id" => $entity->id
         ]);
+        $vat7 = Vat::create([
+            'name' => $this->faker->name,
+            'code' => $this->faker->randomLetter(),
+            'entity_id' => $entity->id,
+            'rate' => $this->faker->randomDigitNotNull,
+            'account_id' => Account::create([
+                'account_type' => Account::CONTROL,
+                'category_id' => null,
+                'entity_id' => $entity->id
+            ])->id,
+        ]);
+        $lineItem->addVat($vat7);
+        $lineItem->save();
 
         $journalEntry->addLineItem($lineItem);
         $journalEntry->post();
@@ -1270,17 +1268,6 @@ class TrialBalanceTest extends TestCase
         ]);
 
         $lineItem = LineItem::create([
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => $this->faker->randomDigit(),
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => Account::create([
                 'account_type' => Account::OPERATING_REVENUE,
                 'category_id' => null,
@@ -1290,6 +1277,19 @@ class TrialBalanceTest extends TestCase
             'amount' => $this->faker->randomFloat(2, 0, 200),
             "entity_id" => $entity->id
         ]);
+        $vat8 = Vat::create([
+            'name' => $this->faker->name,
+            'code' => $this->faker->randomLetter(),
+            'entity_id' => $entity->id,
+            'rate' => $this->faker->randomDigitNotNull,
+            'account_id' => Account::create([
+                'account_type' => Account::CONTROL,
+                'category_id' => null,
+                'entity_id' => $entity->id
+            ])->id,
+        ]);
+        $lineItem->addVat($vat8);
+        $lineItem->save();
 
         $journalEntry->addLineItem($lineItem);
         $journalEntry->post();
@@ -1339,17 +1339,6 @@ class TrialBalanceTest extends TestCase
         ]);
 
         $lineItem = LineItem::create([
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => $this->faker->randomDigit(),
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => Account::create([
                 'account_type' => Account::OPERATING_REVENUE,
                 'category_id' => null,
@@ -1359,6 +1348,19 @@ class TrialBalanceTest extends TestCase
             'amount' => $this->faker->randomFloat(2, 0, 200),
             "entity_id" => $entity->id
         ]);
+        $vat9 = Vat::create([
+            'name' => $this->faker->name,
+            'code' => $this->faker->randomLetter(),
+            'entity_id' => $entity->id,
+            'rate' => $this->faker->randomDigitNotNull,
+            'account_id' => Account::create([
+                'account_type' => Account::CONTROL,
+                'category_id' => null,
+                'entity_id' => $entity->id
+            ])->id,
+        ]);
+        $lineItem->addVat($vat9);
+        $lineItem->save();
 
         $journalEntry->addLineItem($lineItem);
         $journalEntry->post();
@@ -1408,22 +1410,24 @@ class TrialBalanceTest extends TestCase
         ]);
 
         $lineItem = LineItem::create([
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => $this->faker->randomDigit(),
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => $nonCurrentAsset->id,
             'quantity' => $this->faker->randomNumber(),
             'amount' => $this->faker->randomFloat(2, 0, 200),
             "entity_id" => $entity->id
         ]);
+        $vat10 = Vat::create([
+            'name' => $this->faker->name,
+            'code' => $this->faker->randomLetter(),
+            'entity_id' => $entity->id,
+            'rate' => $this->faker->randomDigitNotNull,
+            'account_id' => Account::create([
+                'account_type' => Account::CONTROL,
+                'category_id' => null,
+                'entity_id' => $entity->id
+            ])->id,
+        ]);
+        $lineItem->addVat($vat10);
+        $lineItem->save();
 
         $bill->addLineItem($lineItem);
         $bill->post();
@@ -1473,22 +1477,24 @@ class TrialBalanceTest extends TestCase
         ]);
 
         $lineItem = LineItem::create([
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => $this->faker->randomDigit(),
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => $nonCurrentAsset->id,
             'quantity' => $this->faker->randomNumber(),
             'amount' => $this->faker->randomFloat(2, 0, 200),
             "entity_id" => $entity->id
         ]);
+        $vat11 = Vat::create([
+            'name' => $this->faker->name,
+            'code' => $this->faker->randomLetter(),
+            'entity_id' => $entity->id,
+            'rate' => $this->faker->randomDigitNotNull,
+            'account_id' => Account::create([
+                'account_type' => Account::CONTROL,
+                'category_id' => null,
+                'entity_id' => $entity->id
+            ])->id,
+        ]);
+        $lineItem->addVat($vat11);
+        $lineItem->save();
 
         $journalEntry->addLineItem($lineItem);
         $journalEntry->post();
@@ -1543,17 +1549,6 @@ class TrialBalanceTest extends TestCase
         ]);
 
         $lineItem = LineItem::create([
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => $this->faker->randomDigit(),
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => Account::create([
                 'account_type' => Account::OPERATING_REVENUE,
                 'category_id' => null,
@@ -1563,6 +1558,19 @@ class TrialBalanceTest extends TestCase
             'amount' => $this->faker->randomFloat(2, 0, 200),
             "entity_id" => $entity->id
         ]);
+        $vat12 = Vat::create([
+            'name' => $this->faker->name,
+            'code' => $this->faker->randomLetter(),
+            'entity_id' => $entity->id,
+            'rate' => $this->faker->randomDigitNotNull,
+            'account_id' => Account::create([
+                'account_type' => Account::CONTROL,
+                'category_id' => null,
+                'entity_id' => $entity->id
+            ])->id,
+        ]);
+        $lineItem->addVat($vat12);
+        $lineItem->save();
 
         $journalEntry->addLineItem($lineItem);
         $journalEntry->post();
@@ -1588,22 +1596,24 @@ class TrialBalanceTest extends TestCase
         ]);
 
         $lineItem = LineItem::create([
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => $this->faker->randomDigit(),
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => $operatingIncome->id,
             'quantity' => $this->faker->randomNumber(),
             'amount' => $this->faker->randomFloat(2, 0, 200),
             "entity_id" => $entity->id
         ]);
+        $vat13 = Vat::create([
+            'name' => $this->faker->name,
+            'code' => $this->faker->randomLetter(),
+            'entity_id' => $entity->id,
+            'rate' => $this->faker->randomDigitNotNull,
+            'account_id' => Account::create([
+                'account_type' => Account::CONTROL,
+                'category_id' => null,
+                'entity_id' => $entity->id
+            ])->id,
+        ]);
+        $lineItem->addVat($vat13);
+        $lineItem->save();
 
         $clientInvoice->addLineItem($lineItem);
         $clientInvoice->post();
@@ -1634,22 +1644,24 @@ class TrialBalanceTest extends TestCase
         ]);
 
         $lineItem = LineItem::create([
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => $this->faker->randomDigit(),
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => $operatingExpenses->id,
             'quantity' => $this->faker->randomNumber(),
             'amount' => $this->faker->randomFloat(2, 0, 200),
             "entity_id" => $entity->id
         ]);
+        $vat14 = Vat::create([
+            'name' => $this->faker->name,
+            'code' => $this->faker->randomLetter(),
+            'entity_id' => $entity->id,
+            'rate' => $this->faker->randomDigitNotNull,
+            'account_id' => Account::create([
+                'account_type' => Account::CONTROL,
+                'category_id' => null,
+                'entity_id' => $entity->id
+            ])->id,
+        ]);
+        $lineItem->addVat($vat14);
+        $lineItem->save();
 
         $cashPurchase->addLineItem($lineItem);
         $cashPurchase->post();
@@ -1675,17 +1687,6 @@ class TrialBalanceTest extends TestCase
         ]);
 
         $lineItem = LineItem::create([
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => $this->faker->randomDigit(),
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => Account::create([
                 'account_type' => Account::OPERATING_REVENUE,
                 'category_id' => null,
@@ -1695,6 +1696,19 @@ class TrialBalanceTest extends TestCase
             'amount' => $this->faker->randomFloat(2, 0, 200),
             "entity_id" => $entity->id
         ]);
+        $vat15 = Vat::create([
+            'name' => $this->faker->name,
+            'code' => $this->faker->randomLetter(),
+            'entity_id' => $entity->id,
+            'rate' => $this->faker->randomDigitNotNull,
+            'account_id' => Account::create([
+                'account_type' => Account::CONTROL,
+                'category_id' => null,
+                'entity_id' => $entity->id
+            ])->id,
+        ]);
+        $lineItem->addVat($vat15);
+        $lineItem->save();
 
         $journalEntry->addLineItem($lineItem);
         $journalEntry->post();
@@ -1714,22 +1728,24 @@ class TrialBalanceTest extends TestCase
         ]);
 
         $lineItem = LineItem::create([
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => $this->faker->randomDigit(),
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => $directExpense->id,
             'quantity' => $this->faker->randomNumber(),
             'amount' => $this->faker->randomFloat(2, 0, 200),
             "entity_id" => $entity->id
         ]);
+        $vat16 = Vat::create([
+            'name' => $this->faker->name,
+            'code' => $this->faker->randomLetter(),
+            'entity_id' => $entity->id,
+            'rate' => $this->faker->randomDigitNotNull,
+            'account_id' => Account::create([
+                'account_type' => Account::CONTROL,
+                'category_id' => null,
+                'entity_id' => $entity->id
+            ])->id,
+        ]);
+        $lineItem->addVat($vat16);
+        $lineItem->save();
 
         $bill->addLineItem($lineItem);
         $bill->post();
@@ -1755,22 +1771,24 @@ class TrialBalanceTest extends TestCase
         ]);
 
         $lineItem = LineItem::create([
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => $this->faker->randomDigit(),
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => $overheadExpense->id,
             'quantity' => $this->faker->randomNumber(),
             'amount' => $this->faker->randomFloat(2, 0, 200),
             "entity_id" => $entity->id
         ]);
+        $vat17 = Vat::create([
+            'name' => $this->faker->name,
+            'code' => $this->faker->randomLetter(),
+            'entity_id' => $entity->id,
+            'rate' => $this->faker->randomDigitNotNull,
+            'account_id' => Account::create([
+                'account_type' => Account::CONTROL,
+                'category_id' => null,
+                'entity_id' => $entity->id
+            ])->id,
+        ]);
+        $lineItem->addVat($vat17);
+        $lineItem->save();
 
         $cashPurchase->addLineItem($lineItem);
         $cashPurchase->post();
@@ -1790,22 +1808,24 @@ class TrialBalanceTest extends TestCase
         ]);
 
         $lineItem = LineItem::create([
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => $this->faker->randomDigit(),
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => $otherExpense->id,
             'quantity' => $this->faker->randomNumber(),
             'amount' => $this->faker->randomFloat(2, 0, 200),
             "entity_id" => $entity->id
         ]);
+        $vat18 = Vat::create([
+            'name' => $this->faker->name,
+            'code' => $this->faker->randomLetter(),
+            'entity_id' => $entity->id,
+            'rate' => $this->faker->randomDigitNotNull,
+            'account_id' => Account::create([
+                'account_type' => Account::CONTROL,
+                'category_id' => null,
+                'entity_id' => $entity->id
+            ])->id,
+        ]);
+        $lineItem->addVat($vat18);
+        $lineItem->save();
 
         $bill->addLineItem($lineItem);
         $bill->post();

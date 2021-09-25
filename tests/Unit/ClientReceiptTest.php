@@ -67,9 +67,6 @@ class ClientReceiptTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 0
-            ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::BANK,
                 'category_id' => null,
@@ -114,14 +111,17 @@ class ClientReceiptTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 16
-            ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::RECONCILIATION,
                 'category_id' => null
             ])->id,
         ]);
+        $lineItem->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16
+            ])
+        );
+        $lineItem->save();
         $clientReceipt->addLineItem($lineItem);
 
         $clientReceipt->post();
@@ -149,9 +149,6 @@ class ClientReceiptTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 0
-            ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::BANK,
                 'category_id' => null,
@@ -183,14 +180,17 @@ class ClientReceiptTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 10
-            ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::BANK,
                 'category_id' => null
             ])->id,
         ]);
+        $lineItem->addVat(
+            factory(Vat::class)->create([
+                "rate" => 10
+            ])
+        );
+        $lineItem->save();
         $clientReceipt->addLineItem($lineItem);
 
         $clientReceipt->post();

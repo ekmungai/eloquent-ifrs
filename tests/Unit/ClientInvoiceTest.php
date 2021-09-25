@@ -60,15 +60,18 @@ class ClientInvoiceTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 16
-            ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OPERATING_REVENUE,
                 'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
+        $lineItem->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16
+            ])
+        );
+        $lineItem->save();
         $clientInvoice->addLineItem($lineItem);
 
         $clientInvoice->post();
@@ -87,9 +90,9 @@ class ClientInvoiceTest extends TestCase
         $vat_credit = Ledger::where("entry_type", Balance::CREDIT)->get()[1];
 
         $this->assertEquals($vat_debit->post_account, $clientInvoice->account->id);
-        $this->assertEquals($vat_debit->folio_account, $lineItem->vat->account_id);
+        $this->assertEquals($vat_debit->folio_account, $lineItem->appliedVats[0]->vat->account_id);
         $this->assertEquals($vat_credit->folio_account, $clientInvoice->account->id);
-        $this->assertEquals($vat_credit->post_account, $lineItem->vat->account_id);
+        $this->assertEquals($vat_credit->post_account, $lineItem->appliedVats[0]->vat->account_id);
         $this->assertEquals($vat_debit->amount, 16);
         $this->assertEquals($vat_credit->amount, 16);
 
@@ -116,14 +119,17 @@ class ClientInvoiceTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 16
-            ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::RECONCILIATION,
                 'category_id' => null
             ])->id,
         ]);
+        $lineItem->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16
+            ])
+        );
+        $lineItem->save();
         $clientInvoice->addLineItem($lineItem);
 
         $clientInvoice->post();
@@ -149,14 +155,17 @@ class ClientInvoiceTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 16
-            ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OPERATING_REVENUE,
                 'category_id' => null
             ])->id,
         ]);
+        $lineItem->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16
+            ])
+        );
+        $lineItem->save();
         $clientInvoice->addLineItem($lineItem);
 
         $clientInvoice->post();

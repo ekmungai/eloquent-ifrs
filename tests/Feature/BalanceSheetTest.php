@@ -13,6 +13,7 @@ use IFRS\Tests\TestCase;
 use IFRS\Models\Transaction;
 use IFRS\Models\Account;
 use IFRS\Models\Balance;
+use IFRS\Models\Category;
 use IFRS\Models\Currency;
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\LineItem;
@@ -75,15 +76,18 @@ class BalanceSheetTest extends TestCase
 
         $lineItem =  factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 16
-            ])->id,
             "account_id" => factory(Account::class)->create([
                 'account_type' => Account::NON_CURRENT_ASSET,
                 'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
+        $lineItem->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16
+            ])
+        );
+        $lineItem->save();
 
         $bill->addLineItem($lineItem);
         $bill->post();
@@ -102,15 +106,18 @@ class BalanceSheetTest extends TestCase
 
         $lineItem =  factory(LineItem::class)->create([
             "amount" => 200,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 16
-            ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OPERATING_REVENUE,
                 'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
+        $lineItem->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16
+            ])
+        );
+        $lineItem->save();
 
         $cashSale->addLineItem($lineItem);
 
@@ -128,9 +135,6 @@ class BalanceSheetTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 70,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 0
-            ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::RECONCILIATION,
                 'category_id' => null
@@ -221,7 +225,10 @@ class BalanceSheetTest extends TestCase
         Balance::create([
            'account_id' => Account::create([
                'account_type' => Account::INVENTORY,
-               'category_id' => null ,
+               'category_id' => factory(Category::class)->create([
+                    'category_type' => Account::INVENTORY,
+                    'entity_id' => $entity->id
+                ])->id,
                'entity_id' => $entity->id
            ])->id,
             'balance_type' => Balance::DEBIT,
@@ -253,7 +260,10 @@ class BalanceSheetTest extends TestCase
         Balance::create([
             'account_id' => Account::create([
                 'account_type' => Account::CURRENT_LIABILITY,
-                'category_id' => null ,
+                'category_id' => factory(Category::class)->create([
+                    'category_type' => Account::CURRENT_LIABILITY,
+                    'entity_id' => $entity->id
+                ])->id ,
                 'entity_id' => $entity->id
             ])->id,
             'balance_type' => Balance::CREDIT,
@@ -286,7 +296,10 @@ class BalanceSheetTest extends TestCase
         $bill = new SupplierBill([
             "account_id" => Account::create([
                 'account_type' => Account::PAYABLE,
-                'category_id' => null ,
+                'category_id' => factory(Category::class)->create([
+                    'category_type' => Account::PAYABLE,
+                    'entity_id' => $entity->id
+                ])->id ,
                 'entity_id' => $entity->id
             ])->id,
             "date" => Carbon::now(),
@@ -295,28 +308,28 @@ class BalanceSheetTest extends TestCase
         ]);
 
 
+        $vat = Vat::create([
+            'name' => $faker->name,
+            'code' => $faker->randomLetter(),
+            'entity_id' => $entity->id,
+            'rate' => 16,
+            'account_id' => Account::create([
+                'account_type' => Account::CONTROL,
+                'category_id' => null,
+                'entity_id' => $entity->id
+            ])->id
+        ]);
         $lineItem = LineItem::create([
             'amount' => 100,
-            'vat_id' => Vat::create([
-                'name' => $faker->name,
-                'code' => $faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => 16,
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => Account::create([
                 'account_type' => Account::NON_CURRENT_ASSET,
-                'category_id' => null ,
+                'category_id' => null,
                 'entity_id' => $entity->id
             ])->id,
             "quantity" => 1,
             "entity_id" => $entity->id
         ]);
-
+        $lineItem->addVat($vat);
 
         $bill->addLineItem($lineItem);
         $bill->post();
@@ -328,7 +341,10 @@ class BalanceSheetTest extends TestCase
         $cashSale = new CashSale([
             "account_id" => Account::create([
                 'account_type' => Account::BANK,
-                'category_id' => null ,
+                'category_id' => factory(Category::class)->create([
+                    'category_type' => Account::BANK,
+                    'entity_id' => $entity->id
+                ])->id ,
                 'entity_id' => $entity->id,
                 'currency_id' => $currency->id,
             ])->id,
@@ -340,25 +356,31 @@ class BalanceSheetTest extends TestCase
 
         $lineItem = LineItem::create([
             'amount' => 200,
-            'vat_id' => Vat::create([
-                'name' => $faker->name,
-                'code' => $faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => 16,
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => Account::create([
                 'account_type' => Account::OPERATING_REVENUE,
-                'category_id' => null ,
+                'category_id' => factory(Category::class)->create([
+                    'category_type' => Account::OPERATING_REVENUE,
+                    'entity_id' => $entity->id
+                ])->id ,
                 'entity_id' => $entity->id,
             ])->id,
             "quantity" => 1,
             "entity_id" => $entity->id
         ]);
+
+        $vat2 = Vat::create([
+            "rate" => 16,
+            "name" => 'Test Vat',
+            "code" => 'T',
+            "account_id" => Account::create([
+                'account_type' => Account::CONTROL,
+                'category_id' => null,
+                'entity_id' => $entity->id,
+            ])->id,
+            'entity_id' => $entity->id,
+        ]);
+        $lineItem->addVat($vat2);
+        $lineItem->save();
 
         $cashSale->addLineItem($lineItem);
 
@@ -367,7 +389,10 @@ class BalanceSheetTest extends TestCase
         $journalEntry = new JournalEntry([
             "account_id" => Account::create([
                 'account_type' => Account::EQUITY,
-                'category_id' => null ,
+                'category_id' => factory(Category::class)->create([
+                    'category_type' => Account::EQUITY,
+                    'entity_id' => $entity->id
+                ])->id ,
                 'entity_id' => $entity->id,
             ])->id,
             "date" => Carbon::now(),
@@ -378,20 +403,12 @@ class BalanceSheetTest extends TestCase
 
         $lineItem = LineItem::create([
             'amount' => 70,
-            'vat_id' => Vat::create([
-                'name' => $faker->name,
-                'code' => $faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => 0,
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" =>  Account::create([
                 'account_type' => Account::RECONCILIATION,
-                'category_id' => null ,
+                'category_id' => factory(Category::class)->create([
+                    'category_type' => Account::RECONCILIATION,
+                    'entity_id' => $entity->id
+                ])->id ,
                 'entity_id' => $entity->id,
             ])->id,
             "quantity" => 1,

@@ -195,9 +195,6 @@ class CategoryTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create([
-                "rate" => 0,
-            ])->id,
             'account_id' => $account2->id,
             'narration' => $this->faker->sentence,
             'quantity' => $this->faker->randomNumber(),

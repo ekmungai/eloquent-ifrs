@@ -18,6 +18,7 @@ use IFRS\Transactions\JournalEntry;
 use IFRS\Exceptions\UnbalancedTransaction;
 use IFRS\Exceptions\InvalidVatRate;
 use IFRS\Exceptions\MissingMainAccountAmount;
+use IFRS\Exceptions\MultipleVatError;
 
 class JournalEntryTest extends TestCase
 {
@@ -61,9 +62,6 @@ class JournalEntryTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 0
-            ])->id,
             "quantity" => 1,
         ]);
         $journalEntry->addLineItem($lineItem);
@@ -94,18 +92,18 @@ class JournalEntryTest extends TestCase
 
         $lineItem1 = factory(LineItem::class)->create([
             "amount" => 50,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 0
-            ])->id,
             "quantity" => 1,
         ]);
         $lineItem2 = factory(LineItem::class)->create([
             "amount" => 25,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 16
-            ])->id,
             "quantity" => 1,
         ]);
+        $lineItem2->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16
+            ])
+        );
+        $lineItem2->save();
         $journalEntry2->addLineItem($lineItem1);
         $journalEntry2->addLineItem($lineItem2);
 
@@ -139,9 +137,9 @@ class JournalEntryTest extends TestCase
 
         // lineItem 2 Vat
         $this->assertEquals($debit3->post_account, $journalEntry2->account->id);
-        $this->assertEquals($debit3->folio_account, $lineItem2->vat->account_id);
+        $this->assertEquals($debit3->folio_account, $lineItem2->appliedVats[0]->vat->account_id);
         $this->assertEquals($credit3->folio_account, $journalEntry2->account->id);
-        $this->assertEquals($credit3->post_account, $lineItem2->vat->account_id);
+        $this->assertEquals($credit3->post_account, $lineItem2->appliedVats[0]->vat->account_id);
 
         $this->assertEquals($journalEntry2->amount, 79);
     }
@@ -176,7 +174,6 @@ class JournalEntryTest extends TestCase
      */
     public function testCompoundJournalEntryTransaction()
     {
-        $vat = factory(Vat::class)->create(["rate" => 0]);
 
         $journalEntry = new JournalEntry([
             "account_id" => factory(Account::class)->create([
@@ -192,20 +189,17 @@ class JournalEntryTest extends TestCase
         
         $lineItem1 = factory(LineItem::class)->create([
             "amount" => 30,
-            "vat_id" => $vat->id,
             "quantity" => 1,
             "credited" => true,
         ]);
 
         $lineItem2 = factory(LineItem::class)->create([
             "amount" => 25,
-            "vat_id" => $vat->id,
             "quantity" => 1,
         ]);
 
         $lineItem3 = factory(LineItem::class)->create([
             "amount" => 15,
-            "vat_id" => $vat->id,
             "quantity" => 1,
         ]);
 
@@ -216,12 +210,12 @@ class JournalEntryTest extends TestCase
         $this->assertEquals($journalEntry->amount, 40);
         $this->assertEquals($journalEntry->getCompoundEntries(), [
             "C" => [
-                5 => 30,
-                2 => 10
+                $lineItem1->account_id => 30,
+                $journalEntry->account_id => 10.0
             ],
             "D" => [
-                8 => 25,
-                11 => 15
+                $lineItem2->account_id => 25,
+                $lineItem3->account_id => 15
             ]
         ]);
 
@@ -231,12 +225,12 @@ class JournalEntryTest extends TestCase
         
         $this->assertEquals($transaction->getCompoundEntries(), [
             "C" => [
-                2 => 10,
-                5 => 30
+                $lineItem1->account_id => 30,
+                $journalEntry->account_id => 10.0
             ],
             "D" => [
-                8 => 25,
-                11 => 15
+                $lineItem2->account_id => 25,
+                $lineItem3->account_id => 15
             ]
         ]);
 
@@ -262,8 +256,6 @@ class JournalEntryTest extends TestCase
      */
     public function testUnbalancedJournalEntryException()
     {
-        $vat = factory(Vat::class)->create(["rate" => 0]);
-
         $journalEntry = new JournalEntry([
             "account_id" => factory(Account::class)->create([
                 'category_id' => null
@@ -276,7 +268,6 @@ class JournalEntryTest extends TestCase
 
         $lineItem1 = factory(LineItem::class)->create([
             "amount" => 30,
-            "vat_id" => $vat->id,
             "quantity" => 1,
         ]);
 
@@ -295,8 +286,6 @@ class JournalEntryTest extends TestCase
      */
     public function testInvalidVatRateException()
     {
-        $vat = factory(Vat::class)->create(["rate" => 1]);
-
         $journalEntry = new JournalEntry([
             "account_id" => factory(Account::class)->create([
                 'category_id' => null
@@ -307,16 +296,17 @@ class JournalEntryTest extends TestCase
             "main_account_amount" => 10
         ]);
 
-        $lineItem1 = factory(LineItem::class)->create([
+        $lineItem = factory(LineItem::class)->create([
             "amount" => 30,
-            "vat_id" => $vat->id,
             "quantity" => 1,
         ]);
+        $lineItem->addVat(factory(Vat::class)->create(["rate" => 1]));
+        $lineItem->save();
 
-        $this->expectException(InvalidVatRate::class);
-        $this->expectExceptionMessage('Compound Journal Entry Vat objects must all be null or zero rated ');
+        $this->expectException(MultipleVatError::class);
+        $this->expectExceptionMessage('Compound Journal Entries cannot have Vat ');
         
-        $journalEntry->addLineItem($lineItem1);
+        $journalEntry->addLineItem($lineItem);
     }
 
     /**

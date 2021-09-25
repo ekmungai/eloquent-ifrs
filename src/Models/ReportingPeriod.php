@@ -220,12 +220,11 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
      * Prepare Forex Account Balances translations.
      *
      * @param int $forexAccountId
-     * @param int $vatId
      * @param int $accountId
      *
      * @return array $transactions
      */
-    public function prepareBalancesTranslation($forexAccountId, int $vatId, int $accountId = null): array
+    public function prepareBalancesTranslation($forexAccountId, int $accountId = null): array
     {
 
         if (Account::find($forexAccountId)->account_type != Account::EQUITY) {
@@ -269,7 +268,6 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
                         if ($localBalance <> round($foreignBalance, config('ifrs.forex_scale'))) {
                             $transactions[] = $this->balanceAccount(
                                 $forexAccountId,
-                                $vatId,
                                 $account,
                                 $localBalance,
                                 $foreignBalance,
@@ -345,7 +343,6 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
      * Closing Rates.
      *
      * @param int $forexAccountId
-     * @param int $vatId
      * @param Account $account
      * @param float $localBalance
      * @param float $foreignBalance
@@ -356,7 +353,6 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
      */
     private function balanceAccount(
         int $forexAccountId,
-        int $vatId,
         Account $account,
         float $localBalance,
         float $foreignBalance,
@@ -387,7 +383,6 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
         ]);
 
         $balanceTransaction->addLineItem(LineItem::create([
-            'vat_id' => $vatId,
             'account_id' => $forexAccountId,
             'amount' => abs($difference),
             'entity_id' => $entity->id

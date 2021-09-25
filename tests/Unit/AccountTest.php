@@ -400,9 +400,6 @@ class AccountTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create([
-                "rate" => 16
-            ])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::OPERATING_REVENUE,
                 'category_id' => null,
@@ -412,6 +409,13 @@ class AccountTest extends TestCase
             'amount' => 100,
             'quantity' => 1,
         ]);
+
+        $line->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16,
+            ])
+        );
+        $line->save();
 
         $clientInvoice->addLineItem($line);
 
@@ -514,16 +518,20 @@ class AccountTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create([
-                "rate" => 16,
-                "account_id" => $account4->id
-            ])->id,
             'account_id' => $account3->id,
             'narration' => $this->faker->sentence,
             'quantity' => $this->faker->randomNumber(),
             'amount' => 100,
             'quantity' => 1,
         ]);
+
+        $line->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16,
+                "account_id" => $account4->id
+            ])
+        );
+        $line->save();
 
         $clientInvoice->addLineItem($line);
 
@@ -688,16 +696,20 @@ class AccountTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create([
-                "rate" => 16,
-                "account_id" => $vat->id
-            ])->id,
             'account_id' => $revenue->id,
             'narration' => $this->faker->sentence,
             'quantity' => $this->faker->randomNumber(),
             'amount' => 100,
             'quantity' => 1,
         ]);
+
+        $line->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16,
+                "account_id" => $vat->id
+            ])
+        );
+        $line->save();
 
         $clientInvoice->addLineItem($line);
         $clientInvoice->post();
@@ -750,16 +762,19 @@ class AccountTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create([
-                "rate" => 16,
-                "account_id" => $vat->id
-            ])->id,
             'account_id' => $asset->id,
             'narration' => $this->faker->sentence,
             'quantity' => $this->faker->randomNumber(),
             'amount' => 50,
             'quantity' => 1,
         ]);
+
+        $line->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16,
+            ])
+        );
+        $line->save();
 
         $SupplierBill->addLineItem($line);
         $SupplierBill->post();
@@ -832,10 +847,6 @@ class AccountTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create([
-                "rate" => 16,
-                "account_id" => $account4->id
-            ])->id,
             'account_id' => $account3->id,
             'narration' => $this->faker->sentence,
             'quantity' => $this->faker->randomNumber(),
@@ -843,6 +854,13 @@ class AccountTest extends TestCase
             'quantity' => 1,
         ]);
 
+        $line->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16,
+                "account_id" => $account4->id
+            ])
+        );
+        $line->save();
         $clientInvoice->addLineItem($line);
         $clientInvoice->post();
 
@@ -905,14 +923,12 @@ class AccountTest extends TestCase
         $account6->save();
 
         $line1 = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => $account5->id,
             'amount' => 125,
         ]);
         $line1->save();
 
         $line2 = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => $account6->id,
             'amount' => 70,
         ]);
@@ -1073,9 +1089,6 @@ class AccountTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create([
-                "rate" => 0,
-            ])->id,
             'account_id' => $revenue->id,
             'narration' => $this->faker->sentence,
             'quantity' => $this->faker->randomNumber(),
@@ -1093,9 +1106,6 @@ class AccountTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create([
-                "rate" => 0,
-            ])->id,
             'account_id' => $revenue->id,
             'narration' => $this->faker->sentence,
             'quantity' => $this->faker->randomNumber(),
@@ -1127,7 +1137,6 @@ class AccountTest extends TestCase
             'account_type' => Account::EQUITY,
             'category_id' => null
         ]);
-        $vatId = factory(Vat::class)->create(["rate" => 0])->id;
 
         $currency1 = factory(Currency::class)->create();
         ClosingRate::create([
@@ -1156,7 +1165,6 @@ class AccountTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::BANK,
                 'category_id' => null,
@@ -1171,7 +1179,7 @@ class AccountTest extends TestCase
         $this->assertFalse($account1->isClosed());
 
         $this->period->status = ReportingPeriod::ADJUSTING;
-        $this->period->prepareBalancesTranslation($forex->id, $vatId);
+        $this->period->prepareBalancesTranslation($forex->id);
 
         $this->assertTrue($account1->isClosed());
 
@@ -1191,7 +1199,6 @@ class AccountTest extends TestCase
             'account_type' => Account::EQUITY,
             'category_id' => null
         ]);
-        $vatId = factory(Vat::class)->create(["rate" => 0])->id;
 
         $currency1 = factory(Currency::class)->create();
         $currency2 = factory(Currency::class)->create();
@@ -1230,7 +1237,6 @@ class AccountTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::BANK,
                 'category_id' => null,
@@ -1254,7 +1260,6 @@ class AccountTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::BANK,
                 'category_id' => null,
@@ -1270,7 +1275,7 @@ class AccountTest extends TestCase
 
         $this->period->status = ReportingPeriod::ADJUSTING;
 
-        $this->period->prepareBalancesTranslation($forex->id, $vatId);
+        $this->period->prepareBalancesTranslation($forex->id);
 
         $transactions = $account->closingTransactions()['transactions'];
 

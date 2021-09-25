@@ -10,7 +10,6 @@ use IFRS\Tests\TestCase;
 
 use IFRS\Models\Currency;
 use IFRS\Models\Transaction;
-
 use IFRS\Models\Account;
 use IFRS\Models\Balance;
 use IFRS\Models\ExchangeRate;
@@ -76,15 +75,19 @@ class CashFlowStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 500,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 16
-            ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OPERATING_REVENUE,
                 'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
+
+        $lineItem->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16
+            ])
+        );
+        $lineItem->save();
 
         $clientInvoice->addLineItem($lineItem);
 
@@ -101,9 +104,6 @@ class CashFlowStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 0
-            ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OPERATING_REVENUE,
                 'category_id' => null
@@ -130,15 +130,19 @@ class CashFlowStatementTest extends TestCase
 
         $lineItem =  factory(LineItem::class)->create([
             "amount" => 500,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 16
-            ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::NON_OPERATING_REVENUE,
                 'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
+
+        $lineItem->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16
+            ])
+        );
+        $lineItem->save();
         $journalEntry->addLineItem($lineItem);
         $journalEntry->post();
 
@@ -158,15 +162,18 @@ class CashFlowStatementTest extends TestCase
 
         $lineItem =  factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 16
-            ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OPERATING_EXPENSE,
                 'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
+        $lineItem->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16
+            ])
+        );
+        $lineItem->save();
         $bill->addLineItem($lineItem);
         $bill->post();
 
@@ -186,15 +193,18 @@ class CashFlowStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 16
-            ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::DIRECT_EXPENSE,
                 'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
+        $lineItem->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16
+            ])
+        );
+        $lineItem->save();
         $bill->addLineItem($lineItem);
         $bill->post();
 
@@ -210,9 +220,6 @@ class CashFlowStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 0
-            ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OTHER_EXPENSE,
                 'category_id' => null
@@ -232,9 +239,6 @@ class CashFlowStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 0
-            ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OTHER_EXPENSE,
                 'category_id' => null
@@ -255,9 +259,6 @@ class CashFlowStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 50,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 0,
-            ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::OTHER_EXPENSE,
                 'category_id' => null
@@ -285,15 +286,18 @@ class CashFlowStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 16
-            ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::INVENTORY,
                 'category_id' => null
             ])->id,
             "quantity" => 1,
         ]);
+        $lineItem->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16
+            ])
+        );
+        $lineItem->save();
         $bill->addLineItem($lineItem);
         $bill->post();
 
@@ -315,9 +319,6 @@ class CashFlowStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 0
-            ])->id,
             "account_id" => $bank->id,
             "quantity" => 1,
         ]);
@@ -340,9 +341,6 @@ class CashFlowStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 150,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 0
-            ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::NON_CURRENT_ASSET,
                 'category_id' => null
@@ -371,9 +369,6 @@ class CashFlowStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 0
-            ])->id,
             "account_id" => $bank->id,
             "quantity" => 1,
         ]);
@@ -399,9 +394,6 @@ class CashFlowStatementTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 0
-            ])->id,
             "account_id" => $bank->id,
             "quantity" => 1,
         ]);
@@ -587,17 +579,6 @@ class CashFlowStatementTest extends TestCase
 
         $lineItem = LineItem::create([
             'amount' => 500,
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => 16,
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => Account::create([
                 'account_type' => Account::OPERATING_REVENUE,
                 'category_id' => null ,
@@ -606,6 +587,20 @@ class CashFlowStatementTest extends TestCase
             "quantity" => 1,
             "entity_id" => $entity->id
         ]);
+
+        $vat = Vat::create([
+            'name' => 'Test vat',
+            'code' => 'T',
+            'entity_id' => $entity->id,
+            'rate' => 16,
+            'account_id' => Account::create([
+                'account_type' => Account::CONTROL,
+                'category_id' => null,
+                'entity_id' => $entity->id
+            ])->id
+        ]);
+        $lineItem->addVat($vat);
+        $lineItem->save();
 
         $clientInvoice->addLineItem($lineItem);
 
@@ -624,17 +619,6 @@ class CashFlowStatementTest extends TestCase
 
         $lineItem = LineItem::create([
             'amount' => 50,
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => 0,
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => Account::create([
                 'account_type' => Account::OPERATING_REVENUE,
                 'category_id' => null ,
@@ -665,17 +649,6 @@ class CashFlowStatementTest extends TestCase
 
         $lineItem = LineItem::create([
             'amount' => 500,
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => 16,
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => Account::create([
                 'account_type' => Account::NON_OPERATING_REVENUE,
                 'category_id' => null ,
@@ -684,7 +657,19 @@ class CashFlowStatementTest extends TestCase
             "quantity" => 1,
             "entity_id" => $entity->id
         ]);
-
+        $vat2 = Vat::create([
+            'name' => 'Test vat',
+            'code' => 'T',
+            'entity_id' => $entity->id,
+            'rate' => 16,
+            'account_id' => Account::create([
+                'account_type' => Account::CONTROL,
+                'category_id' => null,
+                'entity_id' => $entity->id
+            ])->id
+        ]);
+        $lineItem->addVat($vat2);
+        $lineItem->save();
         $journalEntry->addLineItem($lineItem);
         $journalEntry->post();
 
@@ -706,17 +691,6 @@ class CashFlowStatementTest extends TestCase
 
         $lineItem = LineItem::create([
             'amount' => 100,
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => 16,
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => Account::create([
                 'account_type' => Account::OPERATING_EXPENSE,
                 'category_id' => null ,
@@ -725,6 +699,19 @@ class CashFlowStatementTest extends TestCase
             "quantity" => 1,
             "entity_id" => $entity->id
         ]);
+        $vat3 = Vat::create([
+            'name' => 'Test vat',
+            'code' => 'T',
+            'entity_id' => $entity->id,
+            'rate' => 16,
+            'account_id' => Account::create([
+                'account_type' => Account::CONTROL,
+                'category_id' => null,
+                'entity_id' => $entity->id
+            ])->id
+        ]);
+        $lineItem->addVat($vat3);
+        $lineItem->save();
 
         $bill->addLineItem($lineItem);
         $bill->post();
@@ -747,17 +734,6 @@ class CashFlowStatementTest extends TestCase
 
         $lineItem = LineItem::create([
             'amount' => 100,
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => 16,
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => Account::create([
                 'account_type' => Account::DIRECT_EXPENSE,
                 'category_id' => null ,
@@ -766,6 +742,19 @@ class CashFlowStatementTest extends TestCase
             "quantity" => 1,
             "entity_id" => $entity->id
         ]);
+        $vat4 = Vat::create([
+            'name' => 'Test vat',
+            'code' => 'T',
+            'entity_id' => $entity->id,
+            'rate' => 16,
+            'account_id' => Account::create([
+                'account_type' => Account::CONTROL,
+                'category_id' => null,
+                'entity_id' => $entity->id
+            ])->id
+        ]);
+        $lineItem->addVat($vat4);
+        $lineItem->save();
 
         $bill->addLineItem($lineItem);
         $bill->post();
@@ -784,17 +773,6 @@ class CashFlowStatementTest extends TestCase
 
         $lineItem = LineItem::create([
             'amount' => 50,
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => 0,
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => Account::create([
                 'account_type' => Account::OTHER_EXPENSE,
                 'category_id' => null ,
@@ -817,17 +795,6 @@ class CashFlowStatementTest extends TestCase
 
         $lineItem = LineItem::create([
             'amount' => 50,
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => 0,
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => Account::create([
                 'account_type' => Account::OTHER_EXPENSE,
                 'category_id' => null ,
@@ -853,17 +820,6 @@ class CashFlowStatementTest extends TestCase
 
         $lineItem = LineItem::create([
             'amount' => 50,
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => 0,
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => Account::create([
                 'account_type' => Account::OTHER_EXPENSE,
                 'category_id' => null ,
@@ -896,17 +852,6 @@ class CashFlowStatementTest extends TestCase
 
         $lineItem = LineItem::create([
             'amount' => 100,
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => 16,
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => Account::create([
                 'account_type' => Account::INVENTORY,
                 'category_id' => null ,
@@ -915,6 +860,19 @@ class CashFlowStatementTest extends TestCase
             "quantity" => 1,
             "entity_id" => $entity->id
         ]);
+        $vat5 = Vat::create([
+            'name' => 'Test vat',
+            'code' => 'T',
+            'entity_id' => $entity->id,
+            'rate' => 16,
+            'account_id' => Account::create([
+                'account_type' => Account::CONTROL,
+                'category_id' => null,
+                'entity_id' => $entity->id
+            ])->id
+        ]);
+        $lineItem->addVat($vat5);
+        $lineItem->save();
 
         $bill->addLineItem($lineItem);
         $bill->post();
@@ -939,17 +897,6 @@ class CashFlowStatementTest extends TestCase
 
         $lineItem = LineItem::create([
             'amount' => 100,
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => 0,
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => $bank->id,
             "quantity" => 1,
             "entity_id" => $entity->id
@@ -974,17 +921,6 @@ class CashFlowStatementTest extends TestCase
 
         $lineItem = LineItem::create([
             'amount' => 150,
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => 0,
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => Account::create([
                 'account_type' => Account::NON_CURRENT_ASSET,
                 'category_id' => null,
@@ -1017,17 +953,6 @@ class CashFlowStatementTest extends TestCase
 
         $lineItem = LineItem::create([
             'amount' => 100,
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => 0,
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => $bank->id,
             "quantity" => 1,
             "entity_id" => $entity->id
@@ -1056,17 +981,6 @@ class CashFlowStatementTest extends TestCase
 
         $lineItem = LineItem::create([
             'amount' => 100,
-            'vat_id' => Vat::create([
-                'name' => $this->faker->name,
-                'code' => $this->faker->randomLetter(),
-                'entity_id' => $entity->id,
-                'rate' => 0,
-                'account_id' => Account::create([
-                    'account_type' => Account::CONTROL,
-                    'category_id' => null,
-                    'entity_id' => $entity->id
-                ])->id,
-            ])->id,
             "account_id" => $bank->id,
             "quantity" => 1,
             "entity_id" => $entity->id

@@ -145,6 +145,38 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
     ];
 
     /**
+     * Check if LineItem already exists.
+     *
+     * @param int $id
+     *
+     * @return int|false
+     */
+    private function lineItemExists(int $id = null)
+    {
+        return collect($this->items)->search(
+            function ($item, $key) use ($id) {
+                return $item->id == $id;
+            }
+        );
+    }
+
+    /**
+     * Check if Assigned Transaction already exists.
+     *
+     * @param int $id
+     *
+     * @return int|false
+     */
+    private function assignedTransactionExists(int $id = null)
+    {
+        return collect($this->assigned)->search(
+            function ($transaction, $key) use ($id) {
+                return $transaction['id'] == $id;
+            }
+        );
+    }
+
+    /**
      * Get the entry type for the Compound Entry.
      *
      * @param bool $credited
@@ -369,8 +401,8 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
             foreach ($this->getLineItems() as $lineItem) {
                 if($lineItem->credited != $this->credited){
                     $amount += $lineItem->amount * $lineItem->quantity;
-                    if (!is_null($lineItem->vat) && !$lineItem->vat_inclusive) {
-                        $amount += $lineItem->amount * ($lineItem->vat->rate / 100) * $lineItem->quantity;
+                    if (!$lineItem->vat_inclusive) {
+                        $amount += $lineItem->vat['total'];
                     }
                 }
             }
@@ -385,15 +417,18 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
      */
     public function getCompoundEntries()
     {
-        $this->compoundEntries[
-            Transaction::getCompoundEntrytype($this->credited)
-        ][$this->account_id] = floatval($this->main_account_amount);
-
-        foreach ($this->lineItems as $lineItem) {
+        if($this->compound){
             $this->compoundEntries[
-                Transaction::getCompoundEntrytype($lineItem->credited)
-            ][$lineItem->account_id] = $lineItem->amount * $lineItem->quantity;
+                Transaction::getCompoundEntrytype($this->credited)
+            ][$this->account_id] = floatval($this->main_account_amount);
+    
+            foreach ($this->lineItems as $lineItem) {
+                $this->compoundEntries[
+                    Transaction::getCompoundEntrytype($lineItem->credited)
+                ][$lineItem->account_id] = $lineItem->amount * $lineItem->quantity;
+            }
         }
+        
         return $this->compoundEntries;
     }
 
@@ -413,41 +448,22 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
     }
 
     /**
-     * Check if LineItem already exists.
-     *
-     * @param int $id
-     *
-     * @return int|false
-     */
-    private function lineItemExists(int $id = null)
-    {
-        return collect($this->items)->search(
-            function ($item, $key) use ($id) {
-                return $item->id == $id;
-            }
-        );
-    }
-
-    /**
      * Total Vat amount of the transaction.
      *
      * @return array
      */
     public function getVatAttribute(): array
     {
-        $vat = ['total' => 0];
+        $vats = ['total' => 0];
         foreach ($this->getLineItems() as $lineItem) {
-            if ($lineItem->vat->rate > 0) {
-                $vatAmount = $lineItem->amount * ($lineItem->vat->rate / 100) * $lineItem->quantity;
-                $vat['total'] += $vatAmount;
-                if (array_key_exists($lineItem->vat->code, $vat)) {
-                    $vat[$lineItem->vat->code] += $vatAmount;
-                } else {
-                    $vat[$lineItem->vat->code] = $vatAmount;
-                }
+            foreach($lineItem->vat as $type => $amount)
+            if (array_key_exists($type, $vats)) {
+                $vats[$type] += $amount;
+            } else {
+                $vats[$type] = $amount;
             }
         }
-        return $vat;
+        return $vats;
     }
 
     /**
@@ -512,6 +528,8 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         if(!$this->compound){
             $lineItem->credited = !$this->credited;
         }
+
+        $this->getLineItems();
 
         if ($this->lineItemExists($lineItem->id) === false) {
             $this->items[] = $lineItem;
@@ -587,22 +605,6 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
                 ];
             }
         }
-    }
-
-    /**
-     * Check if Assigned Transaction already exists.
-     *
-     * @param int $id
-     *
-     * @return int|false
-     */
-    private function assignedTransactionExists(int $id = null)
-    {
-        return collect($this->assigned)->search(
-            function ($transaction, $key) use ($id) {
-                return $transaction['id'] == $id;
-            }
-        );
     }
 
     /**

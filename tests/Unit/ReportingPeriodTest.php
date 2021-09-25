@@ -30,6 +30,7 @@ use IFRS\Exceptions\InvalidAccountType;
 use IFRS\Exceptions\InvalidPeriodStatus;
 use IFRS\Exceptions\MissingClosingRate;
 use IFRS\Exceptions\MissingReportingPeriod;
+
 class ReportingPeriodTest extends TestCase
 {
     /**
@@ -158,7 +159,6 @@ class ReportingPeriodTest extends TestCase
         
         
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::BANK,
                 'category_id' => null,
@@ -183,7 +183,6 @@ class ReportingPeriodTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::OPERATING_REVENUE,
                 'category_id' => null
@@ -232,7 +231,6 @@ class ReportingPeriodTest extends TestCase
         ]);
         
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::BANK,
                 'category_id' => null,
@@ -256,7 +254,6 @@ class ReportingPeriodTest extends TestCase
         ]);
 
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::NON_CURRENT_ASSET,
                 'category_id' => null
@@ -294,12 +291,11 @@ class ReportingPeriodTest extends TestCase
             'account_type' => Account::RECEIVABLE,
             'category_id' => null
         ]);
-        $vatId = factory(Vat::class)->create(["rate" => 0])->id;
 
         $this->expectException(InvalidAccountType::class);
         $this->expectExceptionMessage('Transaltion Forex Account must be of Type Equity');
 
-        $this->period->prepareBalancesTranslation($forex->id, $vatId);
+        $this->period->prepareBalancesTranslation($forex->id);
         
     }
 
@@ -314,12 +310,11 @@ class ReportingPeriodTest extends TestCase
             'account_type' => Account::EQUITY,
             'category_id' => null
         ]);
-        $vatId = factory(Vat::class)->create(["rate" => 0])->id;
 
         $this->expectException(InvalidPeriodStatus::class);
         $this->expectExceptionMessage('Reporting Period must have Adjusting status to translate foreign balances');
 
-        $this->period->prepareBalancesTranslation($forex->id, $vatId);
+        $this->period->prepareBalancesTranslation($forex->id);
         
     }
 
@@ -334,11 +329,10 @@ class ReportingPeriodTest extends TestCase
             'account_type' => Account::EQUITY,
             'category_id' => null
         ]);
-        $vatId = factory(Vat::class)->create(["rate" => 0])->id;
 
         $this->period->status = ReportingPeriod::ADJUSTING;
 
-        $this->assertEquals($this->period->prepareBalancesTranslation($forex->id, $vatId), []);
+        $this->assertEquals($this->period->prepareBalancesTranslation($forex->id), []);
 
         $currency1 = factory(Currency::class)->create();
         
@@ -361,7 +355,6 @@ class ReportingPeriodTest extends TestCase
         ]);
         
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::BANK,
                 'category_id' => null,
@@ -376,7 +369,7 @@ class ReportingPeriodTest extends TestCase
         $this->expectException(MissingClosingRate::class);
         $this->expectExceptionMessage('Closing Rate for ' . $currency1->currency_code . ' is missing ');
 
-        $this->period->prepareBalancesTranslation($forex->id, $vatId);
+        $this->period->prepareBalancesTranslation($forex->id);
     }
 
     /**
@@ -390,7 +383,6 @@ class ReportingPeriodTest extends TestCase
             'account_type' => Account::EQUITY,
             'category_id' => null
         ]);
-        $vatId = factory(Vat::class)->create(["rate" => 0])->id;
 
         $currency1 = factory(Currency::class)->create();
         ClosingRate::create([
@@ -425,7 +417,6 @@ class ReportingPeriodTest extends TestCase
         ]);
         
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::BANK,
                 'category_id' => null,
@@ -449,7 +440,6 @@ class ReportingPeriodTest extends TestCase
         ]);
         
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::BANK,
                 'category_id' => null,
@@ -463,7 +453,7 @@ class ReportingPeriodTest extends TestCase
 
         $this->period->status = ReportingPeriod::ADJUSTING;
 
-        $transactions = $this->period->prepareBalancesTranslation($forex->id, $vatId);
+        $transactions = $this->period->prepareBalancesTranslation($forex->id);
 
         $this->assertEquals($transactions[0]->account->id, $account1->id);
         $this->assertTrue($transactions[0]->credited);
@@ -501,7 +491,6 @@ class ReportingPeriodTest extends TestCase
         ]);
         
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::NON_CURRENT_ASSET,
                 'category_id' => null,
@@ -525,7 +514,6 @@ class ReportingPeriodTest extends TestCase
         ]);
         
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::NON_CURRENT_ASSET,
                 'category_id' => null,
@@ -537,7 +525,7 @@ class ReportingPeriodTest extends TestCase
         $transaction->addLineItem($line);
         $transaction->post();
 
-        $transactions = $this->period->prepareBalancesTranslation($forex->id, $vatId);
+        $transactions = $this->period->prepareBalancesTranslation($forex->id);
 
         $this->assertEquals($transactions[0]->account->id, $account3->id);
         $this->assertFalse($transactions[0]->credited);
@@ -563,7 +551,6 @@ class ReportingPeriodTest extends TestCase
             'account_type' => Account::EQUITY,
             'category_id' => null
         ]);
-        $vatId = factory(Vat::class)->create(["rate" => 0])->id;
 
         $currency1 = factory(Currency::class)->create();
         $closingRate1 = ClosingRate::create([
@@ -598,7 +585,6 @@ class ReportingPeriodTest extends TestCase
         ]);
         
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::BANK,
                 'category_id' => null,
@@ -622,7 +608,6 @@ class ReportingPeriodTest extends TestCase
         ]);
         
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::BANK,
                 'category_id' => null,
@@ -658,7 +643,6 @@ class ReportingPeriodTest extends TestCase
         ]);
         
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::NON_CURRENT_ASSET,
                 'category_id' => null,
@@ -682,7 +666,6 @@ class ReportingPeriodTest extends TestCase
         ]);
         
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::NON_CURRENT_ASSET,
                 'category_id' => null,
@@ -716,7 +699,6 @@ class ReportingPeriodTest extends TestCase
         ]);
         
         $line = new LineItem([
-            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::BANK,
                 'category_id' => null,
@@ -730,7 +712,7 @@ class ReportingPeriodTest extends TestCase
 
         $this->period->status = ReportingPeriod::ADJUSTING;
         
-        $this->period->prepareBalancesTranslation($forex->id, $vatId);
+        $this->period->prepareBalancesTranslation($forex->id);
 
         $transactions = $this->period->getTranslations();
 

@@ -66,9 +66,6 @@ class ContraEntryTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 0
-            ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::BANK,
                 'category_id' => null,
@@ -113,14 +110,17 @@ class ContraEntryTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 16
-            ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::RECONCILIATION,
                 'category_id' => null
             ])->id,
         ]);
+        $lineItem->addVat(
+            factory(Vat::class)->create([
+                "rate" => 16
+            ])
+        );
+        $lineItem->save();
         $contraEntry->addLineItem($lineItem);
 
         $contraEntry->post();
@@ -148,9 +148,6 @@ class ContraEntryTest extends TestCase
 
         $lineItem = factory(LineItem::class)->create([
             "amount" => 100,
-            "vat_id" => factory(Vat::class)->create([
-                "rate" => 0
-            ])->id,
             "account_id" => factory(Account::class)->create([
                 "account_type" => Account::BANK,
                 'category_id' => null,
