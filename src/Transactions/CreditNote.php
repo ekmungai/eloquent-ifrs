@@ -24,8 +24,6 @@ class CreditNote extends Transaction implements Sells, Assignable
     use Selling;
     use Assigning;
 
-    use \Parental\HasParent;
-
     /**
      * Transaction Number prefix
      *

@@ -23,8 +23,6 @@ class SupplierBill extends Transaction implements Buys, Clearable
     use Buying;
     use Clearing;
 
-    use \Parental\HasParent;
-
     /**
      * Transaction Number prefix
      *

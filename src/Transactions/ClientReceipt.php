@@ -28,8 +28,6 @@ class ClientReceipt extends Transaction implements Assignable
 {
     use Assigning;
 
-    use \Parental\HasParent;
-
     /**
      * Transaction Number prefix
      *

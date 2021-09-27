@@ -23,8 +23,6 @@ class CashSale extends Transaction implements Sells
 {
     use Selling;
 
-    use \Parental\HasParent;
-
     /**
      * Transaction Number prefix
      *

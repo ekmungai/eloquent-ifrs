@@ -24,8 +24,6 @@ class ClientInvoice extends Transaction implements Sells, Clearable
     use Selling;
     use Clearing;
 
-    use \Parental\HasParent;
-
     /**
      * Transaction Number prefix
      *

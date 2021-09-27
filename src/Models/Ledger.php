@@ -104,11 +104,7 @@ class Ledger extends Model implements Segregatable
             // different double entry data
             $post->post_account = $folio->folio_account = $lineItem->vat_inclusive ? $lineItem->account_id : $transaction->account_id;
             $post->folio_account = $folio->post_account = $appliedVat->vat->account_id;
-
-            if(is_null($post->folio_account)){
-                dd($appliedVats);
-            }
-
+            
             $post->save();
             $folio->save();
         }

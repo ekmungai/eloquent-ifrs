@@ -23,8 +23,6 @@ class CashPurchase extends Transaction implements Buys
 {
     use Buying;
 
-    use \Parental\HasParent;
-
     /**
      * Transaction Number prefix
      *

@@ -20,8 +20,7 @@ use IFRS\Exceptions\MainAccount;
 use IFRS\Exceptions\VatCharge;
 
 class ContraEntry extends Transaction {
-    use \Parental\HasParent;
-
+    
     /**
      * Transaction Number prefix
      *

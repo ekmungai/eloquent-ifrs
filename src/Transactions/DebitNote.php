@@ -23,8 +23,6 @@ class DebitNote extends Transaction implements Buys, Assignable
     use Buying;
     use Assigning;
 
-    use \Parental\HasParent;
-
     /**
      * Transaction Number prefix
      *

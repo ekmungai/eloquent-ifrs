@@ -49,8 +49,6 @@ class JournalEntry extends Transaction implements Assignable, Clearable
     use Assigning;
     use Clearing;
 
-    use \Parental\HasParent;
-
     /**
      * Transaction Number prefix
      *
