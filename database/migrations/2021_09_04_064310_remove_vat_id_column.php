@@ -16,7 +16,7 @@ class RemoveVatIdColumn extends Migration
         Schema::table(config('ifrs.table_prefix') . 'line_items', function (Blueprint $table) {
             
             if (config('database.default') !== 'sqlite') {
-                $table->dropForeign('vats_vat_id_foreign'); // sqlite does not support dropping foregn keys
+                $table->dropForeign(['vat_id']); // sqlite does not support dropping foregn keys
             }
             $table->dropColumn('vat_id');
         });
@@ -30,7 +30,7 @@ class RemoveVatIdColumn extends Migration
     public function down()
     {
         Schema::table(config('ifrs.table_prefix') . 'line_items', function (Blueprint $table) {
-            $table->unsignedBigInteger('vat_id')->nullable();  
+            $table->unsignedBigInteger('vat_id')->nullable();
             $table->foreign('vat_id')->references('id')->on(config('ifrs.table_prefix') . 'vats');
 
         });
