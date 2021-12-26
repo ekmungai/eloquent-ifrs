@@ -34,7 +34,7 @@ class CreateIfrsRecycledObjectsTable extends Migration
                 $version = strpos($versionString, "Components") > 0 ? substr($versionString, 7, 1) : $versionString;
                 $userModel = is_array(config('ifrs.user_model')) ? config('ifrs.user_model')[intval($version)] : config('ifrs.user_model');
                 $type = Schema::getColumnType((new $userModel())->getTable(),'id');
-                if ($type == 'integer') {
+                if ($type === 'integer') {
                     $table->unsignedInteger('user_id');
                 } elseif ($type === 'string') {
                     $table->uuid('user_id');
