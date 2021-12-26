@@ -34,9 +34,11 @@ class CreateIfrsRecycledObjectsTable extends Migration
                 $version = strpos($versionString, "Components") > 0 ? substr($versionString, 7, 1) : $versionString;
                 $userModel = is_array(config('ifrs.user_model')) ? config('ifrs.user_model')[intval($version)] : config('ifrs.user_model');
                 $type = Schema::getColumnType((new $userModel())->getTable(),'id');
-                if($type == "integer"){
+                if ($type == 'integer') {
                     $table->unsignedInteger('user_id');
-                }else{
+                } elseif ($type === 'string') {
+                    $table->uuid('user_id');
+                } else {
                     $table->unsignedBigInteger('user_id');
                 }
 
@@ -48,7 +50,13 @@ class CreateIfrsRecycledObjectsTable extends Migration
                 $table->foreign('user_id')->references('id')->on((new $userModel())->getTable());
 
                 // attributes
-                $table->bigInteger('recyclable_id');
+                if ($type === 'integer') {
+                    $table->unsignedInteger('recyclable_id');
+                } elseif ($type === 'string') {
+                    $table->uuid('recyclable_id');
+                } else {
+                    $table->bigInteger('recyclable_id');
+                }
                 $table->string('recyclable_type', 300);
 
                 // *permanent* deletion
