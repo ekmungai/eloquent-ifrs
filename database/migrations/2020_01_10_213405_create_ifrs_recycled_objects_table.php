@@ -30,10 +30,7 @@ class CreateIfrsRecycledObjectsTable extends Migration
                 $table->unsignedBigInteger('entity_id');
 
                 // before we set the datatype of this field, we check the existing user's table's id columns datatype
-                $versionString = App::version();
-                $version = strpos($versionString, "Components") > 0 ? substr($versionString, 7, 1) : $versionString;
-                $userModel = is_array(config('ifrs.user_model')) ? config('ifrs.user_model')[intval($version)] : config('ifrs.user_model');
-                $type = Schema::getColumnType((new $userModel())->getTable(),'id');
+                $type = Schema::getColumnType(config('ifrs.table_prefix').'users','id');
                 if ($type === 'integer') {
                     $table->unsignedInteger('user_id');
                 } elseif ($type === 'string') {
@@ -43,11 +40,8 @@ class CreateIfrsRecycledObjectsTable extends Migration
                 }
 
                 // constraints
-                $versionString = App::version();
-                $version = strpos($versionString, "Components") > 0 ? substr($versionString, 7, 1) : $versionString;
-                $userModel = is_array(config('ifrs.user_model')) ? config('ifrs.user_model')[intval($version)] : config('ifrs.user_model');
                 $table->foreign('entity_id')->references('id')->on(config('ifrs.table_prefix').'entities');
-                $table->foreign('user_id')->references('id')->on((new $userModel())->getTable());
+                $table->foreign('user_id')->references('id')->on(config('ifrs.table_prefix').'users');
 
                 // attributes
                 if ($type === 'integer') {

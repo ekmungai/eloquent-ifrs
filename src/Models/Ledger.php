@@ -197,7 +197,7 @@ class Ledger extends Model implements Segregatable
             $ledger->transaction_id = $transaction->id;
             $ledger->currency_id = $transaction->currency_id;
             $ledger->posting_date = $transaction->transaction_date;
-            $ledger->rate = $transaction->exchangeRate->rate;;
+            $ledger->rate = $transaction->exchangeRate->rate;
             $ledger->entry_type = $entryType;
             $ledger->post_account = $postAccount;
             $ledger->folio_account = $folioAccount;

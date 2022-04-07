@@ -20,9 +20,9 @@ class IfrsCreateOrUpdateUsersTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable($this->getTableName())) {
+        if (Schema::hasTable(config('ifrs.table_prefix') . 'users')) {
             Schema::table(
-                $this->getTableName(),
+                config('ifrs.table_prefix') . 'users',
                 function (Blueprint $table) {
                     //entity
                     $table->unsignedBigInteger('entity_id')->nullable();
@@ -31,7 +31,7 @@ class IfrsCreateOrUpdateUsersTable extends Migration
             });
         }else{
             Schema::create(
-                $this->getTableName(),
+                config('ifrs.table_prefix') . 'users',
                 function (Blueprint $table) {
                     $table->bigIncrements('id');
 
@@ -66,25 +66,17 @@ class IfrsCreateOrUpdateUsersTable extends Migration
      */
     public function down()
     {
-        if (Schema::hasColumn($this->getTableName(), 'created'))
+        if (Schema::hasColumn(config('ifrs.table_prefix') . 'users', 'created'))
         {
-            Schema::dropIfExists($this->getTableName());
+            Schema::dropIfExists(config('ifrs.table_prefix') . 'users');
         }else{
             Schema::table(
-                $this->getTableName(),
+                config('ifrs.table_prefix') . 'users',
                 function (Blueprint $table) {
                     $table->dropColumn('entity_id');
                     $table->dropColumn('destroyed_at');
                 }
             );
         }
-    }
-
-    private function getTableName()
-    {
-        $versionString = App::version();
-        $version = strpos($versionString, "Components") > 0 ? substr($versionString, 7, 1) : $versionString;
-        $userModel = is_array(config('ifrs.user_model')) ? config('ifrs.user_model')[intval($version)] : config('ifrs.user_model');
-        return (new $userModel())->getTable();
     }
 }

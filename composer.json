@@ -22,9 +22,9 @@
 	],
 	"minimum-stability": "dev",
 	"require": {
-		"php": "^7.3|^8.0",
-		"illuminate/database": "^7.0|^8.40.0",
-		"illuminate/auth": "^7.0|^8.40.0",
+		"php": "^8.0.2",
+		"illuminate/database": "^8.4|^9.0",
+		"illuminate/auth": "^8.4|^9.0",
 		"doctrine/dbal": "^2.10|^3.1"
 	},
 	"require-dev": {

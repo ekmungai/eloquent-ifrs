@@ -79,7 +79,7 @@ class AccountSchedule extends AccountStatement
         }
 
         foreach ($balances as $balance) {
-            $this->getAmounts($balance, _("Opening Balance"));
+            $this->getAmounts($balance, "Opening Balance");
         }
 
         // Clearable Transactions
