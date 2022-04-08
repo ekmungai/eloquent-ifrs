@@ -2,10 +2,7 @@
 
 - Add Laravel 9 Compatibility
 - Minimum PHP 8.0 requirement
-- Add sessionless support (Thanks to @hicka)
-- Add support for custom ledger hashing algorithm (Thanks to @hicka)
-- Add support for Multiple VATs (Taxes) 
-- Add support for compound Journal Entries
+- Add compount VAT support
 ## 4.1.0 - 2021-06-22
 
 - Add Forex Difference transactions during clearing 
