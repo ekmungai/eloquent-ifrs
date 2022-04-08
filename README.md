@@ -499,7 +499,7 @@ I am acutely aware that as a professionally trained Accountant I may have used s
 - [x] Add Cashflow Statement
 - [x] Laravel 8 Compatibility
 - [x] Add Multicurrency support
-- [ ] Expand Taxation Functionality
+- [x] Expand Taxation Functionality
 
 ## License
 This software is distributed for free under the MIT License
