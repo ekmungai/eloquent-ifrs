@@ -176,12 +176,6 @@ $inputVat = Vat::create([
         'account_type' => Account::CONTROL,
     ])
 ]);
-
-$zeroVat = Vat::create([
-    'name' => "Zero Vat",
-    'code' => "Z",
-    'rate' => 0,
-]);
 ```
 
 Now we'll set up some Accounts:
