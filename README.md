@@ -161,12 +161,20 @@ $outputVat = Vat::create([
     'name' => "Standard Output Vat",
     'code' => "O",
     'rate' => 20,
+    'account_id' => Account::create([
+        'name' => "Sales VAT Account",
+        'account_type' => Account::CONTROL,
+    ])
 ]);
 
 $inputVat = Vat::create([
     'name' => "Standard Input Vat",
     'code' => "I",
     'rate' => 10,
+    'account_id' =>  Account::create([
+        'name' => "Input VAT Account",
+        'account_type' => Account::CONTROL,
+    ])
 ]);
 
 $zeroVat = Vat::create([
@@ -211,15 +219,6 @@ $assetAccount = Account::create([
     'account_type' => Account::NON_CURRENT_ASSET,
 ]);
 
-$salesVatAccount = Account::create([
-    'name' => "Sales VAT Account",
-    'account_type' => Account::CONTROL,
-]);
-
-$purchasesVatAccount = Account::create([
-    'name' => "Input VAT Account",
-    'account_type' => Account::CONTROL,
-]);
 ```
 
 Now that all Accounts are prepared, we can create the first Transaction, a Cash Sale:
@@ -239,14 +238,13 @@ So far the Transaction has only one side of the double entry, so we create a Lin
 use IFRS\models\LineItem;
 
 $cashSaleLineItem = LineItem::create([
-    'vat_id' => $outputVat->id,
     'account_id' => $revenueAccount->id,
-    'vat_account_id' => $salesVatAccount->id,
     'narration' => "Example Cash Sale Line Item",
     'quantity' => 1,
     'amount' => 100,
 ]);
 
+$cashSaleLineItem->addVat($salesVatAccount);
 $cashSale->addLineItem($cashSaleLineItem);
 $cashSale->post(); // This posts the Transaction to the Ledger
 
@@ -263,14 +261,13 @@ $clientInvoice = ClientInvoice::create([
 ]);
 
 $clientInvoiceLineItem = LineItem::create([
-    'vat_id' => $outputVat->id,
     'account_id' => $revenueAccount->id,
-    'vat_account_id' => $salesVatAccount->id,
     'narration' => "Example Credit Sale Line Item",
     'quantity' => 2,
     'amount' => 50,
 ]);
 
+$clientInvoiceLineItem->addVat($salesVatAccount);
 $clientInvoice->addLineItem($clientInvoiceLineItem);
 
 //Transaction save may be skipped as post() saves the Transaction automatically
@@ -285,14 +282,14 @@ $cashPurchase = CashPurchase::create([
 ]);
 
 $cashPurchaseLineItem = LineItem::create([
-    'vat_id' => $inputVat->id,
     'account_id' => $opexAccount->id,
-    'vat_account_id' => $purchasesVatAccount->id,
     'narration' => "Example Cash Purchase Line Item",
     'quantity' => 4,
     'amount' => 25,
 ]);
 
+
+$cashPurchaseLineItem->addVat($purchasesVatAccount);
 $cashPurchase->addLineItem($cashPurchaseLineItem)->post();
 
 use IFRS\Transactions\SupplierBill;
@@ -306,12 +303,12 @@ $supplierBill = SupplierBill::create([
 $supplierBillLineItem = LineItem::create([
     'vat_id' => $inputVat->id,
     'account_id' => $assetAccount->id,
-    'vat_account_id' => $purchasesVatAccount->id,
     'narration' => "Example Credit Purchase Line Item",
     'quantity' => 4,
     'amount' => 25,
 ]);
 
+$supplierBillLineItem->addVat($purchasesVatAccount);
 $supplierBill->addLineItem($supplierBillLineItem)->post();
 
 use IFRS\Transactions\ClientReceipt;
@@ -323,9 +320,7 @@ $clientReceipt = ClientReceipt::create([
 ]);
 
 $clientReceiptLineItem = LineItem::create([
-    'vat_id' => $zeroVat->id,
     'account_id' => $bankAccount->id,
-    'vat_account_id' => $purchasesVatAccount->id,
     'narration' => "Part payment for Client Invoice",
     'quantity' => 1,
     'amount' => 50,
