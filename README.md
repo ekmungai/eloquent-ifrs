@@ -32,7 +32,7 @@ The motivation for this package can be found in detail on my blog post [here](ht
 
 ## Installation
 
-Use composer to Install the package into your laravel or lumen application. Eloquent IFRS requires PHP version 7.3 and Eloquent version 7 and above.
+Use composer to Install the package into your laravel or lumen application. Eloquent IFRS requires PHP version 8.0.2 and Eloquent version 8 and above.
 
 #### For production
 
