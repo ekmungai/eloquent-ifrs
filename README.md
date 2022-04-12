@@ -238,7 +238,7 @@ $cashSaleLineItem = LineItem::create([
     'amount' => 100,
 ]);
 
-$cashSaleLineItem->addVat($salesVatAccount);
+$cashSaleLineItem->addVat($outputVat);
 $cashSale->addLineItem($cashSaleLineItem);
 $cashSale->post(); // This posts the Transaction to the Ledger
 
@@ -261,7 +261,7 @@ $clientInvoiceLineItem = LineItem::create([
     'amount' => 50,
 ]);
 
-$clientInvoiceLineItem->addVat($salesVatAccount);
+$clientInvoiceLineItem->addVat($outputVat);
 $clientInvoice->addLineItem($clientInvoiceLineItem);
 
 //Transaction save may be skipped as post() saves the Transaction automatically
@@ -283,7 +283,7 @@ $cashPurchaseLineItem = LineItem::create([
 ]);
 
 
-$cashPurchaseLineItem->addVat($purchasesVatAccount);
+$cashPurchaseLineItem->addVat($inputVat);
 $cashPurchase->addLineItem($cashPurchaseLineItem)->post();
 
 use IFRS\Transactions\SupplierBill;
@@ -302,7 +302,7 @@ $supplierBillLineItem = LineItem::create([
     'amount' => 25,
 ]);
 
-$supplierBillLineItem->addVat($purchasesVatAccount);
+$supplierBillLineItem->addVat($inputVat);
 $supplierBill->addLineItem($supplierBillLineItem)->post();
 
 use IFRS\Transactions\ClientReceipt;
