@@ -215,6 +215,18 @@ $assetAccount = Account::create([
 
 ```
 
+Now we will create some Transactions in the Ledger, afterwards we will generate some reports. First though, it require a reporting period:
+
+```php
+use IFRS\Models\ReportingPeriod;
+
+$period = ReportingPeriod::create([
+    'period_count' => 1,
+    'calendar_year' => 2022,
+]);
+
+```
+
 Now that all Accounts are prepared, we can create the first Transaction, a Cash Sale:
 
 ```php
@@ -341,17 +353,7 @@ echo $clientInvoice->clearedAmount(); //50
 echo $clientReceipt->balance(); //0: The Receipt has been assigned fully to the Invoice
 
 ```
-We have now some Transactions in the Ledger, so lets generate some reports. First though, Reports require a reporting period:
 
-```php
-use IFRS\Models\ReportingPeriod;
-
-$period = ReportingPeriod::create([
-    'period_count' => 1,
-    'calendar_year' => 2022,
-]);
-
-```
 The Income Statement (Profit and Loss):
 
 ```php
