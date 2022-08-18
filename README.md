@@ -348,7 +348,7 @@ use IFRS\Models\ReportingPeriod;
 
 $period = ReportingPeriod::create([
     'period_count' => 1,
-    'year' => 2021,
+    'calendar_year' => 2022,
 ]);
 
 ```
