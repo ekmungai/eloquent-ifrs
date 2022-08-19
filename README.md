@@ -296,7 +296,8 @@ $cashPurchaseLineItem = LineItem::create([
 
 
 $cashPurchaseLineItem->addVat($inputVat);
-$cashPurchase->addLineItem($cashPurchaseLineItem)->post();
+$cashPurchase->addLineItem($cashPurchaseLineItem);
+$cashPurchase->post();
 
 use IFRS\Transactions\SupplierBill;
 
@@ -315,7 +316,8 @@ $supplierBillLineItem = LineItem::create([
 ]);
 
 $supplierBillLineItem->addVat($inputVat);
-$supplierBill->addLineItem($supplierBillLineItem)->post();
+$supplierBill->addLineItem($supplierBillLineItem);
+$supplierBill->post();
 
 use IFRS\Transactions\ClientReceipt;
 
@@ -332,7 +334,8 @@ $clientReceiptLineItem = LineItem::create([
     'amount' => 50,
 ]);
 
-$clientReceipt->addLineItem($clientReceiptLineItem)->post();
+$clientReceipt->addLineItem($clientReceiptLineItem);
+$clientReceipt->post();
 ```
 We can assign the receipt to partially clear the Invoice above:
 
