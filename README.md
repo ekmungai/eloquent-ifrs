@@ -339,18 +339,19 @@ We can assign the receipt to partially clear the Invoice above:
 ```php
 use IFRS\Models\Assignment;
 
-echo $clientInvoice->clearedAmount(); //0: Currently the Invoice has not been cleared at all
-echo $clientReceipt->balance(); //50: The Receipt has not been assigned to clear any transaction
+echo $clientInvoice->clearedAmount; //0: Currently the Invoice has not been cleared at all
+echo $clientReceipt->balance; //50: The Receipt has not been assigned to clear any transaction
 
 $assignment = Assignment::create([
+    'assignment_date'=> Carbon::now(),
     'transaction_id' => $clientReceipt->id,
     'cleared_id' => $clientInvoice->id,
-    'cleared_type'=> $clientInvoice->getClearedType(),
+    'cleared_type'=> $clientInvoice->clearedType,
     'amount' => 50,
 ]);
 
-echo $clientInvoice->clearedAmount(); //50
-echo $clientReceipt->balance(); //0: The Receipt has been assigned fully to the Invoice
+echo $clientInvoice->clearedAmount; //50
+echo $clientReceipt->balance; //0: The Receipt has been assigned fully to the Invoice
 
 ```
 
