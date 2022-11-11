@@ -99,6 +99,9 @@ class CashFlowStatement extends FinancialStatement
         $this->balances[self::NON_CURRENT_ASSETS] = 0;
         $this->balances[self::NON_CURRENT_LIABILITIES] = 0;
         $this->balances[self::EQUITY] = 0;
+        $this->balances[self::PROFIT] = 0;
+        $this->balances[self::START_CASH_BALANCE] = 0;
+        $this->balances[self::NET_CASH_FLOW] = 0;
 
         // Statement Results
         $this->results[self::OPERATIONS_CASH_FLOW] = 0;
