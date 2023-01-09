@@ -129,7 +129,7 @@ class User ... implements Recyclable {
 ?>
 ```
 
-### Examples
+## Examples
 This simple example covers the four scenarios to demonstrate the use of the package. First, a description of a Cash Sale to a customer, then a Credit Sale (Invoice) to a client, then a Cash Purchase for an operations expense and finally a Credit Purchase (Bill) from a Supplier for a non operations purpose (Asset Purchase).
 
 First we'll setup the Company (Reporting Entity) and required Accounts to record the Transactions. (Assuming that a registered User already exists):
@@ -215,6 +215,18 @@ $assetAccount = Account::create([
 
 ```
 
+Now we will create some Transactions in the Ledger, afterwards we will generate some reports. First though, it require a reporting period:
+
+```php
+use IFRS\Models\ReportingPeriod;
+
+$period = ReportingPeriod::create([
+    'period_count' => 1,
+    'calendar_year' => 2022,
+]);
+
+```
+
 Now that all Accounts are prepared, we can create the first Transaction, a Cash Sale:
 
 ```php
@@ -284,7 +296,8 @@ $cashPurchaseLineItem = LineItem::create([
 
 
 $cashPurchaseLineItem->addVat($inputVat);
-$cashPurchase->addLineItem($cashPurchaseLineItem)->post();
+$cashPurchase->addLineItem($cashPurchaseLineItem);
+$cashPurchase->post();
 
 use IFRS\Transactions\SupplierBill;
 
@@ -303,7 +316,8 @@ $supplierBillLineItem = LineItem::create([
 ]);
 
 $supplierBillLineItem->addVat($inputVat);
-$supplierBill->addLineItem($supplierBillLineItem)->post();
+$supplierBill->addLineItem($supplierBillLineItem);
+$supplierBill->post();
 
 use IFRS\Transactions\ClientReceipt;
 
@@ -320,38 +334,30 @@ $clientReceiptLineItem = LineItem::create([
     'amount' => 50,
 ]);
 
-$clientReceipt->addLineItem($clientReceiptLineItem)->post();
+$clientReceipt->addLineItem($clientReceiptLineItem);
+$clientReceipt->post();
 ```
 We can assign the receipt to partially clear the Invoice above:
 
 ```php
 use IFRS\Models\Assignment;
 
-echo $clientInvoice->clearedAmount(); //0: Currently the Invoice has not been cleared at all
-echo $clientReceipt->balance(); //50: The Receipt has not been assigned to clear any transaction
+echo $clientInvoice->clearedAmount; //0: Currently the Invoice has not been cleared at all
+echo $clientReceipt->balance; //50: The Receipt has not been assigned to clear any transaction
 
 $assignment = Assignment::create([
+    'assignment_date'=> Carbon::now(),
     'transaction_id' => $clientReceipt->id,
     'cleared_id' => $clientInvoice->id,
-    'cleared_type'=> $clientInvoice->getClearedType(),
+    'cleared_type'=> $clientInvoice->clearedType,
     'amount' => 50,
 ]);
 
-echo $clientInvoice->clearedAmount(); //50
-echo $clientReceipt->balance(); //0: The Receipt has been assigned fully to the Invoice
+echo $clientInvoice->clearedAmount; //50
+echo $clientReceipt->balance; //0: The Receipt has been assigned fully to the Invoice
 
 ```
-We have now some Transactions in the Ledger, so lets generate some reports. First though, Reports require a reporting period:
 
-```php
-use IFRS\Models\ReportingPeriod;
-
-$period = ReportingPeriod::create([
-    'period_count' => 1,
-    'year' => 2021,
-]);
-
-```
 The Income Statement (Profit and Loss):
 
 ```php
