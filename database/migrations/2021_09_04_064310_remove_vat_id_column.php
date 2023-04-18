@@ -15,7 +15,7 @@ class RemoveVatIdColumn extends Migration
     {
         Schema::table(config('ifrs.table_prefix') . 'line_items', function (Blueprint $table) {
             
-            if (config('database.default') !== 'sqlite') {
+            if (!in_array(config('database.default'), ['sqlite', 'testing'])) {
                 $table->dropForeign(config('ifrs.table_prefix') . 'line_items_vat_id_foreign'); // sqlite does not support dropping foregn keys
             }
             $table->dropColumn('vat_id');

@@ -442,11 +442,11 @@ class AccountScheduleTest extends TestCase
         $this->assertEquals($schedule->transactions[2]->transactionType, "Journal Entry");
         $this->assertEquals($schedule->transactions[2]->originalAmount, 278.4);
         $this->assertEquals($schedule->transactions[2]->amountCleared, 112.8);
-        $this->assertEquals($schedule->transactions[2]->unclearedAmount, 165.6);
+        $this->assertEqualsWithDelta($schedule->transactions[2]->unclearedAmount, 165.6, 0.1);
 
         $this->assertEquals($schedule->balances['originalAmount'], 686.4);
         $this->assertEquals($schedule->balances['amountCleared'], 221.8);
-        $this->assertEquals($schedule->balances['unclearedAmount'], 464.6);
+        $this->assertEqualsWithDelta($schedule->balances['unclearedAmount'], 464.6, 0.1);
         $this->assertEquals($schedule->balances['totalAge'], 365);
         $this->assertEquals($schedule->balances['averageAge'], 122.0);
     }

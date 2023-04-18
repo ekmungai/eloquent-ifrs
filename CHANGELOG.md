@@ -1,4 +1,7 @@
-## 4.0.0 - 2021-04-20
+## 5.0.1 - 2023-04-18
+
+- Add Laravel 10 Compatibility
+## 5.0.0 - 2021-04-20
 
 - Add Laravel 9 Compatibility
 - Minimum PHP 8.0 requirement
