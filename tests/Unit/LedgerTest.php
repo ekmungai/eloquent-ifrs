@@ -3,9 +3,6 @@
 namespace Tests\Unit;
 
 use Carbon\Carbon;
-
-use IFRS\Tests\TestCase;
-
 use IFRS\Models\Account;
 use IFRS\Models\Balance;
 use IFRS\Models\Currency;
@@ -13,7 +10,7 @@ use IFRS\Models\ExchangeRate;
 use IFRS\Models\Ledger;
 use IFRS\Models\LineItem;
 use IFRS\Models\Vat;
-
+use IFRS\Tests\TestCase;
 use IFRS\Transactions\JournalEntry;
 
 class LedgerTest extends TestCase
@@ -224,6 +221,157 @@ class LedgerTest extends TestCase
         $this->assertEquals(
             $account->currentBalance(null, null, $rate1->currency_id),
             [$this->reportingCurrencyId => -750, $rate1->currency_id => -75]
+        );
+    }
+
+    /**
+     * Test Ledger Model Account Contribution.
+     *
+     * @return void
+     */
+    public function testLedgerMultupleForeignCurrencies()
+    {
+
+        $line1Amount = 75;
+        $line2Amount = 120.2;
+
+        $line1Vat = 10.0;
+        $line2Vat = 10.0;
+
+        $transaction1ExchangeRate = 10.0;
+        $transaction2ExchangeRate = 100.0;
+
+
+        $transaction1Currency = factory(Currency::class)->create([
+            'name' => 'Currency1',
+            'currency_code' => 'CUR1',
+        ]);
+
+        $transaction2Currency = factory(Currency::class)->create([
+            'name' => 'Currency2',
+            'currency_code' => 'CUR2',
+        ]);
+
+        $transaction1ExchangeRateEntity = factory(ExchangeRate::class)->create([
+            'valid_from' => Carbon::now()->startOfYear(),
+            'currency_id' => $transaction1Currency->id,
+            'rate' => $transaction1ExchangeRate,
+        ]);
+
+        $transaction2ExchangeRateEntity = factory(ExchangeRate::class)->create([
+            'valid_from' => Carbon::now()->startOfYear(),
+            'currency_id' => $transaction2Currency->id,
+            'rate' => $transaction2ExchangeRate,
+        ]);
+
+        $account = factory(Account::class)->create([
+            'category_id' => null,
+//            'currency_id' => $transaction1Currency->id,
+        ]);
+
+        $lineAccount1 = factory(Account::class)->create([
+            'category_id' => null,
+            'currency_id' => $transaction2Currency->id,
+        ]);
+
+        $lineAccount2 = factory(Account::class)->create([
+            'category_id' => null,
+            'currency_id' => $transaction1Currency->id,
+        ]);
+
+        $transaction1 = new JournalEntry([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "exchange_rate_id" => $transaction1ExchangeRateEntity->id
+        ]);
+
+        $lineItem1 = factory(LineItem::class)->create([
+            "account_id" => $lineAccount1->id,
+            "amount" => $line1Amount,
+            "quantity" => 1,
+        ]);
+        $lineItem1->addVat(
+            factory(Vat::class)->create(["rate" => $line1Vat])
+        );
+        $lineItem1->save();
+
+        $transaction1->addLineItem($lineItem1);
+
+        $lineItem2 = factory(LineItem::class)->create([
+            "account_id" => $lineAccount2->id,
+            "amount" => $line2Amount,
+            "quantity" => 1,
+        ]);
+        $lineItem2->addVat(
+            factory(Vat::class)->create(["rate" => $line2Vat])
+        );
+        $lineItem2->save();
+
+        $transaction1->addLineItem($lineItem2);
+
+        $transaction1->post();
+
+        $this->assertEquals(round(($line1Amount * (1 + $line1Vat / 100) + ($line2Amount * (1 + $line2Vat / 100))), 2), $transaction1->amount);
+        $this->assertEquals($line1Amount * $transaction1ExchangeRate, Ledger::contribution($lineAccount1, $transaction1->id));
+        $this->assertEquals($line2Amount * $transaction1ExchangeRate, Ledger::contribution($lineAccount2, $transaction1->id));
+        $this->assertEquals($line1Amount, Ledger::contribution($lineAccount1, $transaction1->id, $transaction2ExchangeRateEntity->currency_id));
+        $this->assertEquals($line2Amount, Ledger::contribution($lineAccount2, $transaction1->id, $transaction2ExchangeRateEntity->currency_id));
+
+        $reportingCurrencyTransaction1Amount = round(($line1Amount * (1 + $line1Vat / 100) + ($line2Amount * (1 + $line2Vat / 100))) * $transaction1ExchangeRate * -1, 2);
+        $eurTransaction1Amount = round(($line1Amount * (1 + $line1Vat / 100) + ($line2Amount * (1 + $line2Vat / 100))) * -1, 2);
+        $this->assertEquals(
+            [
+                $this->reportingCurrencyId => $reportingCurrencyTransaction1Amount
+            ],
+            $account->currentBalance());
+        $this->assertEquals(
+            [
+                $this->reportingCurrencyId => $reportingCurrencyTransaction1Amount,
+                $transaction1ExchangeRateEntity->currency_id => $eurTransaction1Amount
+            ],
+            $account->currentBalance(null, null, $transaction1ExchangeRateEntity->currency_id)
+        );
+
+
+        $this->assertEquals(
+            [
+                $this->reportingCurrencyId => $line2Amount * $transaction1ExchangeRateEntity->rate,
+                $transaction1ExchangeRateEntity->currency_id => $line2Amount
+            ],
+            $lineAccount2->currentBalance(null, null, $transaction1ExchangeRateEntity->currency_id)
+        );
+
+        // ----------------------
+        $transaction2 = new JournalEntry([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "exchange_rate_id" => $transaction2ExchangeRateEntity->id
+        ]);
+
+        $lineItem1 = factory(LineItem::class)->create([
+            "account_id" => $lineAccount1->id,
+            "amount" => $line1Amount,
+            "quantity" => 1,
+        ]);
+
+        $transaction2->addLineItem($lineItem1);
+
+        $transaction2->post();
+
+        $this->assertEquals(
+            [
+                $this->reportingCurrencyId => $reportingCurrencyTransaction1Amount + round($line1Amount * $transaction2ExchangeRateEntity->rate * -1, 2)
+            ]
+            , $account->currentBalance());
+
+        $this->assertEquals(
+            [
+                $this->reportingCurrencyId => -$line1Amount * $transaction2ExchangeRateEntity->rate,
+                $transaction2ExchangeRateEntity->currency_id => -$line1Amount
+            ],
+            $account->currentBalance(null, null, $transaction2ExchangeRateEntity->currency_id)
         );
     }
 }

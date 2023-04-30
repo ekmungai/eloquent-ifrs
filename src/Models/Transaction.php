@@ -11,33 +11,29 @@
 namespace IFRS\Models;
 
 use Carbon\Carbon;
-
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
-use IFRS\Interfaces\Clearable;
+use IFRS\Exceptions\AdjustingReportingPeriod;
+use IFRS\Exceptions\ClosedReportingPeriod;
+use IFRS\Exceptions\HangingClearances;
+use IFRS\Exceptions\InvalidCurrency;
+use IFRS\Exceptions\InvalidTransactionDate;
+use IFRS\Exceptions\InvalidTransactionType;
+use IFRS\Exceptions\MissingLineItem;
+use IFRS\Exceptions\PostedTransaction;
+use IFRS\Exceptions\RedundantTransaction;
+use IFRS\Exceptions\UnbalancedTransaction;
+use IFRS\Exceptions\UnpostedAssignment;
 use IFRS\Interfaces\Assignable;
+use IFRS\Interfaces\Clearable;
 use IFRS\Interfaces\Recyclable;
 use IFRS\Interfaces\Segregatable;
-
-use IFRS\Traits\Clearing;
 use IFRS\Traits\Assigning;
+use IFRS\Traits\Clearing;
+use IFRS\Traits\ModelTablePrefix;
 use IFRS\Traits\Recycling;
 use IFRS\Traits\Segregating;
-use IFRS\Traits\ModelTablePrefix;
-
-use IFRS\Exceptions\MissingLineItem;
-use IFRS\Exceptions\HangingClearances;
-use IFRS\Exceptions\PostedTransaction;
-use IFRS\Exceptions\UnpostedAssignment;
-use IFRS\Exceptions\RedundantTransaction;
-use IFRS\Exceptions\ClosedReportingPeriod;
-use IFRS\Exceptions\InvalidTransactionDate;
-use IFRS\Exceptions\AdjustingReportingPeriod;
-use IFRS\Exceptions\InvalidCurrency;
-use IFRS\Exceptions\InvalidTransactionType;
-use IFRS\Exceptions\UnbalancedTransaction;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Transaction
@@ -380,11 +376,12 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
     {
         $ledger = new Ledger();
         $amount = 0;
+        $scale = config('ifrs.forex_scale');
 
         if ($this->is_posted) {
 
             $query = $ledger->newQuery()
-            ->selectRaw("SUM(amount/rate) as amount")
+            ->selectRaw("SUM(ROUND(amount," . $scale . ")/ROUND(rate," . $scale . ")) as amount")
             ->where([
                 "transaction_id" => $this->id,
                 "entry_type" => Transaction::getCompoundEntrytype($this->credited),
@@ -407,7 +404,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
                 }
             }
         }
-        return $amount;
+        return round($amount, $scale);
     }
 
     /**

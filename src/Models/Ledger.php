@@ -354,9 +354,10 @@ class Ledger extends Model implements Segregatable
     public static function contribution(Account $account, int $transactionId, int $currencyId = null): float
     {
         $ledger = new Ledger();
+        $scale = config('ifrs.forex_scale');
 
-        $baseQuery = is_null($currencyId) ? $ledger->newQuery()->selectRaw("SUM(amount) AS amount")
-            : $ledger->newQuery()->selectRaw("SUM(amount/rate) AS amount");
+        $baseQuery = is_null($currencyId) ? $ledger->newQuery()->selectRaw("SUM(ROUND(amount," . $scale . ")) AS amount")
+            : $ledger->newQuery()->selectRaw("SUM(ROUND(amount," . $scale . ")/ROUND(rate," . $scale . ")) as amount");
 
         $baseQuery->from($ledger->getTable())->where([
             "post_account" => $account->id,
@@ -368,7 +369,7 @@ class Ledger extends Model implements Segregatable
         $debits = $baseQuery->where("entry_type", Balance::DEBIT);
         $credits = $cloneQuery->where("entry_type", Balance::CREDIT);
 
-        return $debits->get()[0]->amount - $credits->get()[0]->amount;
+        return round($debits->get()[0]->amount - $credits->get()[0]->amount, $scale);
     }
 
     /**
@@ -388,7 +389,9 @@ class Ledger extends Model implements Segregatable
 
         $balances = [$entity->currency_id => 0];
 
-        $baseQuery = $ledger->newQuery()->selectRaw("SUM(amount) AS local_amount, SUM(amount/rate) AS amount");
+        $scale = config('ifrs.forex_scale');
+
+        $baseQuery = $ledger->newQuery()->selectRaw("SUM(ROUND(amount," . $scale . ")) AS local_amount, SUM(ROUND(amount," . $scale . ")/ROUND(rate," . $scale . ")) AS amount");
 
         $baseQuery->where("post_account", $account->id)
             ->where("posting_date", ">=", $startDate)
@@ -404,10 +407,10 @@ class Ledger extends Model implements Segregatable
         $debits = $baseQuery->where("entry_type", Balance::DEBIT);
         $credits = $cloneQuery->where("entry_type", Balance::CREDIT);
 
-        $balances[$entity->currency_id] = $debits->get()[0]->local_amount - $credits->get()[0]->local_amount;
+        $balances[$entity->currency_id] = round($debits->get()[0]->local_amount - $credits->get()[0]->local_amount, $scale);
         if (!is_null($currencyId)) {
             $baseQuery->where("currency_id", $currencyId);
-            $balances[$currencyId] = $debits->get()[0]->amount - $credits->get()[0]->amount;
+            $balances[$currencyId] = round($debits->get()[0]->amount - $credits->get()[0]->amount, $scale);
         }
         return $balances;
     }
