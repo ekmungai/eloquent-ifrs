@@ -68,7 +68,7 @@ class AgingSchedule
         }
         
         $this->period['endDate'] = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
-        $this->currency = is_null($currencyId) ? $this->entity->currency : Currency::find($currencyId);
+        $this->currency = is_null($currencyId) ? $this->entity->reportingCurrency : Currency::find($currencyId);
 
         $this->brackets = config('ifrs')['aging_schedule_brackets'];
 

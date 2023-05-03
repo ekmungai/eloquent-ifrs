@@ -28,8 +28,9 @@ use IFRS\Traits\ModelTablePrefix;
  *
  * @package Ekmungai\Eloquent-IFRS
  *
- * @property Currency $currency
  * @property string $name
+ * @property Currency $currency
+ * @property Currency $reportingCurrency Currency used by this entity field or parent's one. Better to use it to get current Entity's currency.
  * @property bool $multi_currency
  * @property integer $year_start
  * @property Carbon $destroyed_at
@@ -79,7 +80,7 @@ class Entity extends Model implements Recyclable
     /**
      * Model's Parent Entity (if exists).
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function parent()
     {
@@ -89,7 +90,7 @@ class Entity extends Model implements Recyclable
     /**
      * Model's Daughter Entities (if any).
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function daughters()
     {
@@ -203,7 +204,7 @@ class Entity extends Model implements Recyclable
             throw new MissingReportingCurrency($this->name);
         }
 
-        return is_null($this->parent) ? $this->currency : $this->parent->currency;
+        return is_null($this->parent) ? $this->currency : $this->parent->reportigCurrency;
     }
 
     /**

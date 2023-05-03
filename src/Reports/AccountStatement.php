@@ -92,7 +92,7 @@ class AccountStatement
 
         $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart(null, $this->entity) : Carbon::parse($startDate);
         $this->period['endDate'] = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
-        $this->currency = is_null($currencyId) ? $this->entity->currency : Currency::find($currencyId);
+        $this->currency = is_null($currencyId) ? $this->entity->reportingCurrency : Currency::find($currencyId);
         $this->currencyId = $currencyId;
     }
 
