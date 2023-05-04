@@ -204,7 +204,7 @@ class Entity extends Model implements Recyclable
             throw new MissingReportingCurrency($this->name);
         }
 
-        return is_null($this->parent) ? $this->currency : $this->parent->reportigCurrency;
+        return is_null($this->parent) ? $this->currency : $this->parent->currency;
     }
 
     /**

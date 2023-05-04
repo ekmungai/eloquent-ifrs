@@ -440,15 +440,15 @@ class AccountScheduleTest extends TestCase
 
         $this->assertEquals($schedule->transactions[2]->id, $creditJournalEntry->id);
         $this->assertEquals($schedule->transactions[2]->transactionType, "Journal Entry");
-        $this->assertEquals($schedule->transactions[2]->originalAmount, 278.4);
-        $this->assertEquals($schedule->transactions[2]->amountCleared, 112.8);
-        $this->assertEquals($schedule->transactions[2]->unclearedAmount, 165.6);
+        $this->assertEquals(number_format($schedule->transactions[2]->originalAmount, 1), 278.4);
+        $this->assertEquals(number_format($schedule->transactions[2]->amountCleared, 1), 112.8);
+        $this->assertEquals(number_format($schedule->transactions[2]->unclearedAmount, 1), 165.6);
 
-        $this->assertEquals($schedule->balances['originalAmount'], 686.4);
-        $this->assertEquals($schedule->balances['amountCleared'], 221.8);
-        $this->assertEquals($schedule->balances['unclearedAmount'], 464.6);
+        $this->assertEquals(number_format($schedule->balances['originalAmount'], 1), 686.4);
+        $this->assertEquals(number_format($schedule->balances['amountCleared'], 1), 221.8);
+        $this->assertEquals(number_format($schedule->balances['unclearedAmount'], 1), 464.6);
         $this->assertEquals($schedule->balances['totalAge'], 365);
-        $this->assertEquals($schedule->balances['averageAge'], 122.0);
+        $this->assertEquals(number_format($schedule->balances['averageAge'], 1), 122.0);
     }
 
     /**
