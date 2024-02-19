@@ -34,6 +34,7 @@ use IFRS\Exceptions\RedundantTransaction;
 use IFRS\Exceptions\UnpostedAssignment;
 use IFRS\Exceptions\InvalidTransactionDate;
 use IFRS\Exceptions\InvalidTransactionType;
+use IFRS\Models\Category;
 
 class TransactionTest extends TestCase
 {
@@ -123,7 +124,7 @@ class TransactionTest extends TestCase
 
         $newEntity->currency()->associate(factory(Currency::class)->create());
         $newEntity->save();
-        
+
         $currency = factory(Currency::class)->create();
 
         $entity = new Entity();
@@ -230,7 +231,7 @@ class TransactionTest extends TestCase
         $transaction->delete();
     }
 
-        /**
+    /**
      * Test Transaction Model recylcling
      *
      * @return void
@@ -428,7 +429,7 @@ class TransactionTest extends TestCase
         $transaction->addLineItem($lineItem2);
         $transaction->post();
 
-        $this->assertEquals($transaction->vat, ['total' => 7.0,'E' => 2.0, 'L' => 5.0]);
+        $this->assertEquals($transaction->vat, ['total' => 7.0, 'E' => 2.0, 'L' => 5.0]);
     }
 
     /**
@@ -1082,9 +1083,9 @@ class TransactionTest extends TestCase
     {
         $this->expectException(InvalidTransactionDate::class);
         $this->expectExceptionMessage('Transaction date cannot be at the beginning of the first day of the Reporting Period. Use a Balance object instead');
-        
+
         Transaction::create([
-            'transaction_date' => Carbon::parse(date('Y').'-01-01'),
+            'transaction_date' => Carbon::parse(date('Y') . '-01-01'),
         ]);
     }
 
@@ -1132,5 +1133,47 @@ class TransactionTest extends TestCase
         $journalEntry->update([
             'transaction_type' => Transaction::IN
         ]);
+    }
+
+    /**
+     * Test Transaction Attachments.
+     *
+     * @return void
+     */
+    public function testTransactionAttachments()
+    {
+        $account = factory(Account::class)->create([
+            'account_type' => Account::RECEIVABLE,
+            'category_id' => null
+        ]);
+
+        $category = new Category([
+            'name' => $this->faker->word,
+            'category_type' => Account::BANK,
+        ]);
+        $category->save();
+
+        $transaction = new JournalEntry([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "attachment_id" => $category->id,
+            "attachment_type" => Category::class
+        ]);
+
+        $line = new LineItem([
+            'vat_id' => factory(Vat::class)->create(["rate" => 0])->id,
+            'account_id' => factory(Account::class)->create([
+                'category_id' => null
+            ])->id,
+            'amount' => 125,
+        ]);
+
+        $transaction->addLineItem($line);
+        $transaction->save();
+        $transaction->refresh();
+
+        $this->assertEquals($transaction->attachment->id, $category->id);
+        $this->assertEquals($transaction->attachment->name, $category->name);
     }
 }

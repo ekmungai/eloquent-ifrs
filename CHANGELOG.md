@@ -1,3 +1,6 @@
+## 5.0.2 - 2024-02-19
+
+- Add Attachments to Transactions
 ## 5.0.1 - 2023-04-18
 
 - Add Laravel 10 Compatibility
