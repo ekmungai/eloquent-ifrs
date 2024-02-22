@@ -31,7 +31,7 @@
 		"spatie/laravel-ignition": "^1.6.4|^2.0",
 		"laravel/legacy-factories": "1.x-dev",
 		"nunomaduro/collision": "^7.0",
-		"phpunit/phpunit": "^9.4",
+		"phpunit/phpunit": "^9.4 || ^10.0",
 		"squizlabs/php_codesniffer": "*",
 		"orchestra/testbench": "^6.0|^7.0|^8.0"
 	},
