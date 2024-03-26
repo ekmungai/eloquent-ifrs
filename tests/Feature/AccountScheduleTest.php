@@ -256,7 +256,7 @@ class AccountScheduleTest extends TestCase
         $this->assertEquals($schedule->balances["originalAmount"], 241);
         $this->assertEquals($schedule->balances["amountCleared"], 95);
         $this->assertEquals($schedule->balances["unclearedAmount"], 146);
-        $this->assertEquals($schedule->balances["totalAge"], 365);
+        $this->assertEquals($schedule->balances["totalAge"], Carbon::now()->isLeapYear() ? 366 : 365);
         $this->assertEquals($schedule->balances["averageAge"], 122);
     }
 
@@ -447,7 +447,7 @@ class AccountScheduleTest extends TestCase
         $this->assertEquals($schedule->balances['originalAmount'], 686.4);
         $this->assertEquals($schedule->balances['amountCleared'], 221.8);
         $this->assertEqualsWithDelta($schedule->balances['unclearedAmount'], 464.6, 0.1);
-        $this->assertEquals($schedule->balances['totalAge'], 365);
+        $this->assertEquals($schedule->balances['totalAge'], Carbon::now()->isLeapYear() ? 366 : 365);
         $this->assertEquals($schedule->balances['averageAge'], 122.0);
     }
 
@@ -498,7 +498,7 @@ class AccountScheduleTest extends TestCase
             ])->id,
             "quantity" => 1,
         ]);
-        
+
         $supplierPayment1->addLineItem($lineItem);
 
         $supplierPayment1->post();
@@ -509,7 +509,7 @@ class AccountScheduleTest extends TestCase
             'cleared_type' => "IFRS\Models\Balance",
             "amount" => 24,
         ]);
-        
+
         // Foreign currency opening balances
         $balance2 = factory(Balance::class)->create([
             "account_id" => $account->id,
@@ -700,7 +700,7 @@ class AccountScheduleTest extends TestCase
         $this->assertEquals($schedule->balances['originalAmount'], 43248.0);
         $this->assertEquals($schedule->balances['amountCleared'], 11554);
         $this->assertEquals($schedule->balances['unclearedAmount'], 31694.0);
-        $this->assertEquals($schedule->balances['totalAge'], 730);
+        $this->assertEquals($schedule->balances['totalAge'], Carbon::now()->isLeapYear() ? 732 : 730);
         $this->assertEquals($schedule->balances['averageAge'], 183.0);
 
         // Base Currency transactions
@@ -722,7 +722,7 @@ class AccountScheduleTest extends TestCase
         $this->assertEquals($schedule->balances['originalAmount'], 408.0);
         $this->assertEquals($schedule->balances['amountCleared'], 109);
         $this->assertEquals($schedule->balances['unclearedAmount'], 299.0);
-        $this->assertEquals($schedule->balances['totalAge'], 365);
+        $this->assertEquals($schedule->balances['totalAge'], Carbon::now()->isLeapYear() ? 366 : 365);
         $this->assertEquals($schedule->balances['averageAge'], 183.0);
 
         // Foreign Currency transactions
@@ -744,8 +744,7 @@ class AccountScheduleTest extends TestCase
         $this->assertEquals($schedule->balances['originalAmount'], 408.0);
         $this->assertEquals($schedule->balances['amountCleared'], 109);
         $this->assertEquals($schedule->balances['unclearedAmount'], 299.0);
-        $this->assertEquals($schedule->balances['totalAge'], 365);
+        $this->assertEquals($schedule->balances['totalAge'], Carbon::now()->isLeapYear() ? 366 : 365);
         $this->assertEquals($schedule->balances['averageAge'], 183.0);
-
     }
 }

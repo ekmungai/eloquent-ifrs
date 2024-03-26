@@ -186,11 +186,16 @@ class JournalEntryTest extends TestCase
         ]);
 
         $journalEntry->save();
-        
+
+        $doubleAccount = factory(Account::class)->create([
+            'category_id' => null
+        ]);
+
         $lineItem1 = factory(LineItem::class)->create([
             "amount" => 30,
             "quantity" => 1,
             "credited" => true,
+            "account_id" => $doubleAccount->id
         ]);
 
         $lineItem2 = factory(LineItem::class)->create([
@@ -199,38 +204,48 @@ class JournalEntryTest extends TestCase
         ]);
 
         $lineItem3 = factory(LineItem::class)->create([
-            "amount" => 15,
+            "amount" => 20,
             "quantity" => 1,
+        ]);
+
+        $lineItem4 = factory(LineItem::class)->create([
+            "amount" => 5,
+            "quantity" => 1,
+            "credited" => true,
+            "account_id" => $doubleAccount->id
         ]);
 
         $journalEntry->addLineItem($lineItem1);
         $journalEntry->addLineItem($lineItem2);
         $journalEntry->addLineItem($lineItem3);
+        $journalEntry->addLineItem($lineItem4);
 
-        $this->assertEquals($journalEntry->amount, 40);
+        $this->assertEquals($journalEntry->amount, 45);
         $this->assertEquals($journalEntry->getCompoundEntries(), [
             "C" => [
-                $lineItem1->account_id => 30,
-                $journalEntry->account_id => 10.0
+                ['id' => $journalEntry->account_id, 'amount' =>  10.0],
+                ['id' => $lineItem1->account_id, 'amount' =>  30],
+                ['id' => $lineItem4->account_id, 'amount' =>  5]
             ],
             "D" => [
-                $lineItem2->account_id => 25,
-                $lineItem3->account_id => 15
+                ['id' => $lineItem2->account_id, 'amount' =>  25],
+                ['id' => $lineItem3->account_id, 'amount' =>  20]
             ]
         ]);
 
         $journalEntry->post();
-        
+
         $transaction = Transaction::find($journalEntry->id);
-        
+
         $this->assertEquals($transaction->getCompoundEntries(), [
             "C" => [
-                $lineItem1->account_id => 30,
-                $journalEntry->account_id => 10.0
+                ['id' => $journalEntry->account_id, 'amount' =>  10.0],
+                ['id' => $lineItem1->account_id, 'amount' =>  30],
+                ['id' => $lineItem4->account_id, 'amount' =>  5],
             ],
             "D" => [
-                $lineItem2->account_id => 25,
-                $lineItem3->account_id => 15
+                ['id' => $lineItem2->account_id, 'amount' =>  25],
+                ['id' => $lineItem3->account_id, 'amount' =>  20]
             ]
         ]);
 
@@ -238,15 +253,15 @@ class JournalEntryTest extends TestCase
         $this->assertEquals(Ledger::contribution($transaction->account, $transaction->id), -10);
 
         // lineItem 1
-        $this->assertEquals(Ledger::contribution($lineItem1->account, $transaction->id), -30);
+        $this->assertEquals(Ledger::contribution($lineItem1->account, $transaction->id), -35);
 
         // lineItem 2
         $this->assertEquals(Ledger::contribution($lineItem2->account, $transaction->id), 25);
-        
-        // lineItem 3
-        $this->assertEquals(Ledger::contribution($lineItem3->account, $transaction->id), 15);
 
-        $this->assertEquals($transaction->amount, 40);
+        // lineItem 3
+        $this->assertEquals(Ledger::contribution($lineItem3->account, $transaction->id), 20);
+
+        $this->assertEquals($transaction->amount, 45);
     }
 
     /**
@@ -305,7 +320,7 @@ class JournalEntryTest extends TestCase
 
         $this->expectException(MultipleVatError::class);
         $this->expectExceptionMessage('Compound Journal Entries cannot have Vat ');
-        
+
         $journalEntry->addLineItem($lineItem);
     }
 
@@ -327,7 +342,7 @@ class JournalEntryTest extends TestCase
 
         $this->expectException(MissingMainAccountAmount::class);
         $this->expectExceptionMessage('Compund Journal Entries must have a Main Account Amount ');
-        
+
         $journalEntry->save();
     }
 }

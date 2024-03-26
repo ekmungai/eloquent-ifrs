@@ -89,7 +89,7 @@ class Ledger extends Model implements Segregatable
     private static function postVat($appliedVats, $transaction, $lineItem): void
     {
         $rate = $transaction->exchangeRate->rate;
-        foreach($appliedVats as $appliedVat){
+        foreach ($appliedVats as $appliedVat) {
             list($post, $folio) = Ledger::getLedgers($transaction);
 
             // identical double entry data
@@ -104,7 +104,7 @@ class Ledger extends Model implements Segregatable
             // different double entry data
             $post->post_account = $folio->folio_account = $lineItem->vat_inclusive ? $lineItem->account_id : $transaction->account_id;
             $post->folio_account = $folio->post_account = $appliedVat->vat->account_id;
-            
+
             $post->save();
             $folio->save();
         }
@@ -139,12 +139,12 @@ class Ledger extends Model implements Segregatable
 
             $post->save();
             $folio->save();
-            
+
             if (count($lineItem->appliedVats) > 0) {
                 Ledger::postVat($lineItem->appliedVats, $transaction, $lineItem);
             }
         }
-    
+
         // reload ledgers to reflect changes
         $transaction->load('ledgers');
     }
@@ -161,13 +161,11 @@ class Ledger extends Model implements Segregatable
      */
     private static function makeCompountEntryLedgers(array $posts, array $folios, Transaction $transaction, $entryType): bool
     {
-        if(count($posts) == 0){
+        if (count($posts) == 0) {
             return true;
         } else {
-            $postAccount = array_key_first($posts);
-            $amount = $posts[$postAccount];
-
-            return Ledger::allocateAmount($postAccount, $amount, $posts, $folios, $transaction, $entryType);
+            $key = array_key_first($posts);
+            return Ledger::allocateAmount($posts[$key]['id'], $posts[$key]['amount'], $posts, $folios, $transaction, $entryType);
         }
     }
 
@@ -185,12 +183,14 @@ class Ledger extends Model implements Segregatable
      */
     private static function allocateAmount($postAccount, $amount, $posts, $folios, $transaction, $entryType): bool
     {
-        if($amount == 0){
-            unset($posts[$postAccount]);
+        if ($amount == 0) {
+            $key = array_key_first($posts);
+            unset($posts[$key]);
             return Ledger::makeCompountEntryLedgers($posts, $folios, $transaction, $entryType);
         } else {
 
-            $folioAccount = array_key_first($folios);
+            $key = array_key_first($folios);
+            $folioAccount = $folios[$key]['id'];
 
             $ledger = new Ledger();
 
@@ -202,18 +202,18 @@ class Ledger extends Model implements Segregatable
             $ledger->post_account = $postAccount;
             $ledger->folio_account = $folioAccount;
 
-            if($folios[$folioAccount] > $amount){
+            if ($folios[$key]['amount'] > $amount) {
                 $ledger->amount =  $amount;
                 $ledger->save();
 
-                $folios[$folioAccount] -= $ledger->amount;
+                $folios[$key]['amount'] -= $ledger->amount;
                 $amount = 0;
             } else {
-                $debitAmount = $folios[$folioAccount];
+                $debitAmount = $folios[$key]['amount'];
                 $ledger->amount = $debitAmount;
                 $ledger->save();
-                
-                unset($folios[$folioAccount]);
+
+                unset($folios[$key]);
                 $amount -= $ledger->amount;
             }
 
@@ -252,9 +252,9 @@ class Ledger extends Model implements Segregatable
         //Remove current ledgers if any prior to creating new ones (prevents bypassing Posted Transaction Exception)
         $transaction->ledgers()->delete();
 
-        if($transaction->compound){
+        if ($transaction->compound) {
             Ledger::postCompound($transaction);
-        }else{
+        } else {
             Ledger::postBasic($transaction);
         }
     }

@@ -817,8 +817,8 @@ class AssignmentTest extends TestCase
         $this->expectException(UnassignableTransaction::class);
         $this->expectExceptionMessage(
             "Client Invoice Transaction cannot have assignments. "
-            . "Assignment Transaction must be one of: "
-            . "Client Receipt, Supplier Payment, Credit Note, Debit Note, Journal Entry"
+                . "Assignment Transaction must be one of: "
+                . "Client Receipt, Supplier Payment, Credit Note, Debit Note, Journal Entry"
         );
 
         $assignment = new Assignment([
@@ -883,8 +883,8 @@ class AssignmentTest extends TestCase
         $this->expectException(UnclearableTransaction::class);
         $this->expectExceptionMessage(
             "Client Receipt Transaction cannot be cleared. "
-            . "Transaction to be cleared must be one of: "
-            . "Client Invoice, Supplier Bill, Journal Entry"
+                . "Transaction to be cleared must be one of: "
+                . "Client Invoice, Supplier Bill, Journal Entry"
         );
 
         $assignment = new Assignment([
@@ -1540,7 +1540,6 @@ class AssignmentTest extends TestCase
         $transaction->addLineItem($line);
 
         $transaction->post();
-
         $cleared = new JournalEntry([
             "account_id" => $account->id,
             "transaction_date" => Carbon::now(),
