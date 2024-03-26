@@ -78,13 +78,13 @@ class JournalEntry extends Transaction implements Assignable, Clearable
      */
     public function addLineItem(LineItem $lineItem): bool
     {
-        if ($this->compound && count($lineItem->vat) > 1) {
+        if ($this->compound && count($lineItem->getVats()) > 0) {
             throw new MultipleVatError('Compound Journal Entries cannot have Vat');
         }
 
         $success = parent::addLineItem($lineItem);
-        
-        if($success && $this->compound){
+
+        if ($success && $this->compound) {
             parent::addCompoundEntry(['id' => $lineItem->account_id, 'amount' => $lineItem->amount * $lineItem->quantity], $lineItem->credited);
         }
         return $success;
@@ -96,19 +96,9 @@ class JournalEntry extends Transaction implements Assignable, Clearable
     public function save(array $options = []): bool
     {
 
-        if($this->compound && (is_null($this->main_account_amount) || $this->main_account_amount == 0)){
+        if ($this->compound && (is_null($this->main_account_amount) || $this->main_account_amount == 0)) {
             throw new MissingMainAccountAmount();
         }
-
-        if($this->compound){
-            parent::addCompoundEntry([
-                    'id' => $this->account_id, 
-                    'amount' => $this->main_account_amount
-                ], 
-                $this->credited
-            );
-        }
-        
         return parent::save();
     }
 }

@@ -55,3 +55,5 @@ clover.*
 # PHPSTORM
 .idea
 Dockerfile
+.vscode
+ifrs.code-workspace

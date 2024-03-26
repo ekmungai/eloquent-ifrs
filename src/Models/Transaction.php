@@ -141,10 +141,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
      * @var array $compoundEntries
      */
 
-    protected $compoundEntries = [
-        Balance::CREDIT => [],
-        Balance::DEBIT => []
-    ];
+    protected $compoundEntries = [];
 
     /**
      * Check if LineItem already exists.
@@ -189,6 +186,22 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
     }
 
     /**
+     * Get the sum of the amounts on the given side of the compound entries
+     * 
+     * @param string entryType
+     * @return float
+     */
+    private function entriesSum(string $entryType): float
+    {
+        $sum = 0;
+        foreach ($this->compoundEntries[$entryType] as $entry) {
+            $sum += $entry['amount'];
+        }
+        return $sum;
+    }
+
+
+    /**
      * Add Compound Entry to Transaction CompoundEntries.
      *
      * @param array $compoundEntry
@@ -196,7 +209,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
      */
     protected function addCompoundEntry(array $compoundEntry, bool $credited): void
     {
-        $this->compoundEntries[Transaction::getCompoundEntrytype($credited)][$compoundEntry['id']] = $compoundEntry['amount'];
+        $this->compoundEntries[Transaction::getCompoundEntrytype($credited)][] = $compoundEntry;
     }
 
     /**
@@ -427,10 +440,16 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
     public function getCompoundEntries()
     {
         if ($this->compound) {
-            $this->compoundEntries[Transaction::getCompoundEntrytype($this->credited)][$this->account_id] = floatval($this->main_account_amount);
 
-            foreach ($this->lineItems as $lineItem) {
-                $this->compoundEntries[Transaction::getCompoundEntrytype($lineItem->credited)][$lineItem->account_id] = $lineItem->amount * $lineItem->quantity;
+            $this->compoundEntries = [
+                Balance::CREDIT => [],
+                Balance::DEBIT => []
+            ];
+
+            $this->compoundEntries[Transaction::getCompoundEntrytype($this->credited)][] = ['id' => $this->account_id, 'amount' => floatval($this->main_account_amount)];
+
+            foreach ($this->getLineItems() as $lineItem) {
+                $this->compoundEntries[Transaction::getCompoundEntrytype($lineItem->credited)][] = ['id' => $lineItem->account_id, 'amount' =>  $lineItem->amount * $lineItem->quantity];
             }
         }
 
@@ -562,8 +581,11 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
 
         if ($this->compound) {
             $entryType = Transaction::getCompoundEntrytype($lineItem->credited);
-            if (array_key_exists($lineItem->account_id, $this->compoundEntries[$entryType])) {
-                unset($this->compoundEntries[$entryType][$lineItem->account_id]);
+
+            foreach ($this->compoundEntries[$entryType] as $index => $entry) {
+                if ($lineItem->account_id == $entry['id']) {
+                    unset($this->compoundEntries[$entryType][$index]);
+                }
             }
         }
 
@@ -661,8 +683,9 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
 
         $this->save();
 
-        extract($this->getCompoundEntries());
-        if ($this->compound && array_sum($C) != array_sum($D)) {
+        $this->getCompoundEntries();
+        // dd($this->getCompoundEntries());
+        if ($this->compound && $this->entriesSum(Balance::CREDIT) != $this->entriesSum(Balance::DEBIT)) {
             throw new UnbalancedTransaction();
         }
 

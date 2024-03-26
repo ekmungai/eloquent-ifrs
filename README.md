@@ -12,7 +12,8 @@ This Package enables any Laravel application to generate [International Financia
 
 The package supports multiple Entities (Companies), Account Categorization, Transaction assignment, Start of Year Opening Balances and accounting for VAT Transactions. Transactions are also protected against tampering via direct database changes ensuring the integrity of the Ledger. Outstanding amounts for clients and suppliers can also be displayed according to how long they have been outstanding using configurable time periods (Current, 31 - 60 days, 61 - 90 days etc). Finally, the package supports the automated posting of forex difference transactions both within the reporting period as well as translating foreign denominated account balances at a set closing rate.
 
-This package's functionality is now available as a REST API Service. More details can be found [here](https://microbooks.io)
+This package is a community initiative of [microbooks.io](https://microbooks.io).
+
 ## Table of contents
 - [Eloquent IFRS](#eloquent-ifrs)
   - [Table of contents](#table-of-contents)
