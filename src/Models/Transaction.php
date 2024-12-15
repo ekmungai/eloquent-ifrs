@@ -391,7 +391,12 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
      */
     public function getClearedTypeAttribute(): string
     {
-        return Transaction::MODELNAME;
+        return match ($this->transaction_type) {
+                Transaction::IN => ClientInvoice::class,
+                Transaction::BL => SupplierBill::class,
+                Transaction::JN => JournalEntry::class,
+                default => Transaction::class,
+            };
     }
 
     /**
