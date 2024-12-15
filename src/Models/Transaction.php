@@ -39,6 +39,10 @@ use IFRS\Exceptions\InvalidCurrency;
 use IFRS\Exceptions\InvalidTransactionType;
 use IFRS\Exceptions\UnbalancedTransaction;
 
+use IFRS\Transactions\ClientInvoice;
+use IFRS\Transactions\JournalEntry;
+use IFRS\Transactions\SupplierBill;
+
 /**
  * Class Transaction
  *
