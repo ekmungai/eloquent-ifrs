@@ -1,3 +1,9 @@
+## 5.0.4 - 2025-03-21
+
+- Add Laravel 12 Compatibility
+## 5.0.3 - 2024-03-26
+
+- Add Laravel 11 Compatibility
 ## 5.0.2 - 2024-02-19
 
 - Add Attachments to Transactions
