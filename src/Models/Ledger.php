@@ -181,8 +181,10 @@ class Ledger extends Model implements Segregatable
      *
      * @return bool
      */
-    private static function allocateAmount($postAccount, $amount, $posts, $folios, $transaction, $entryType): bool
+private static function allocateAmount($postAccount, $amount, $posts, $folios, $transaction, $entryType): bool
     {
+        $rate = $transaction->exchangeRate->rate;
+
         if ($amount == 0) {
             $key = array_key_first($posts);
             unset($posts[$key]);
@@ -197,24 +199,24 @@ class Ledger extends Model implements Segregatable
             $ledger->transaction_id = $transaction->id;
             $ledger->currency_id = $transaction->currency_id;
             $ledger->posting_date = $transaction->transaction_date;
-            $ledger->rate = $transaction->exchangeRate->rate;
+            $ledger->rate = $rate;
             $ledger->entry_type = $entryType;
             $ledger->post_account = $postAccount;
             $ledger->folio_account = $folioAccount;
 
             if ($folios[$key]['amount'] > $amount) {
-                $ledger->amount =  $amount;
+                $ledger->amount = $amount * $rate;
                 $ledger->save();
 
-                $folios[$key]['amount'] -= $ledger->amount;
+                $folios[$key]['amount'] -= $amount;
                 $amount = 0;
             } else {
-                $debitAmount = $folios[$key]['amount'];
-                $ledger->amount = $debitAmount;
+                $debitAmountForeign = $folios[$key]['amount'];
+                $ledger->amount = $debitAmountForeign * $rate;
                 $ledger->save();
 
                 unset($folios[$key]);
-                $amount -= $ledger->amount;
+                $amount -= $debitAmountForeign;
             }
 
             return Ledger::allocateAmount($postAccount, $amount, $posts, $folios, $transaction, $entryType);
