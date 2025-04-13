@@ -35,7 +35,13 @@ class IFRSServiceProvider extends ServiceProvider
             __DIR__ . '/../config/ifrs.php' => app()->configPath('ifrs.php'),
         ]);
 
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-        $this->loadFactoriesFrom(__DIR__ . '/../database/factories');
+		
+		if (config('ifrs.load_migrations', true)) {
+			$this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+		}
+
+		if ($this->app->runningInConsole() && config('ifrs.load_factories', true)) {
+			$this->loadFactoriesFrom(__DIR__ . '/../database/factories');
+		}				
     }
 }
