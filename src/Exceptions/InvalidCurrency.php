@@ -22,7 +22,7 @@ class InvalidCurrency extends IFRSException
      * @param string $message
      * @param int $code
      */
-    public function __construct(string $changeType, Account $account, string $message = null, int $code = null)
+    public function __construct(string $changeType, Account $account, ?string $message = null, ?int $code = null)
     {
         $error = $changeType. " Currency must be the same as the ".$account->toString(true)." Account Currency ";
 

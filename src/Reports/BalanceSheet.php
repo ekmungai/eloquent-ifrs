@@ -56,7 +56,7 @@ class BalanceSheet extends FinancialStatement
      * @param string $endDate
      * @param Entity $entity
      */
-    public function __construct(string $endDate = null, Entity $entity = null)
+    public function __construct(?string $endDate = null, ?Entity $entity = null)
     {
         $this->period['startDate'] = ReportingPeriod::periodStart($endDate, $entity);
         $this->period['endDate'] = is_null($endDate) ? ReportingPeriod::periodEnd(null, $entity) : Carbon::parse($endDate);

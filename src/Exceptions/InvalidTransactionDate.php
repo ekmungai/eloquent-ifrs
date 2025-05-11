@@ -19,7 +19,7 @@ class InvalidTransactionDate extends IFRSException
      * @param string $message
      * @param int $code
      */
-    public function __construct(string $message = null, int $code = null)
+    public function __construct(?string $message = null, ?int $code = null)
     {
         $error = "Transaction date cannot be at the beginning of the first day of the Reporting Period. Use a Balance object instead ";
 

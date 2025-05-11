@@ -43,7 +43,7 @@ class AccountSchedule extends AccountStatement
      * @param int $currencyId
      * @param string $endDate
      */
-    public function __construct(int $accountId = null, int $currencyId = null, string $endDate = null)
+    public function __construct(?int $accountId = null, ?int $currencyId = null, ?string $endDate = null)
     {
         if (is_null($accountId)) {
             throw new MissingAccount("Account Schedule");

@@ -22,7 +22,7 @@ class InvalidBalanceTransaction extends IFRSException
      * @param string $message
      * @param int $code
      */
-    public function __construct(array $transactionTypes, string $message = null, int $code = null)
+    public function __construct(array $transactionTypes, ?string $message = null, ?int $code = null)
     {
         $transactionTypes = Transaction::getTypes($transactionTypes);
 

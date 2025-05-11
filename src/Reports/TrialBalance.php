@@ -31,7 +31,7 @@ class TrialBalance extends FinancialStatement
      * @param string $year
      * @param Entity $entity
      */
-    public function __construct(string $year = null, Entity $entity = null)
+    public function __construct(?string $year = null, ?Entity $entity = null)
     {
         $startDate = $year . "-01-01";
         $period = ReportingPeriod::getPeriod(Carbon::parse($startDate), $entity);

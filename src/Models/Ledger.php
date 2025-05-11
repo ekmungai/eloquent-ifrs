@@ -353,7 +353,7 @@ private static function allocateAmount($postAccount, $amount, $posts, $folios, $
      *
      * @return float
      */
-    public static function contribution(Account $account, int $transactionId, int $currencyId = null): float
+    public static function contribution(Account $account, int $transactionId, ?int $currencyId = null): float
     {
         $ledger = new Ledger();
 
@@ -383,7 +383,7 @@ private static function allocateAmount($postAccount, $amount, $posts, $folios, $
      *
      * @return array
      */
-    public static function balance(Account $account, Carbon $startDate, Carbon $endDate, int $currencyId = null): array
+    public static function balance(Account $account, Carbon $startDate, Carbon $endDate, ?int $currencyId = null): array
     {
         $ledger = new Ledger();
         $entity = $account->entity;

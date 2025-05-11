@@ -79,7 +79,7 @@ class LineItem extends Model implements Recyclable, Segregatable
      *
      * @return int|false
      */
-    private function vatExists(int $id = null)
+    private function vatExists(?int $id = null)
     {
         return collect($this->vats)->search(
             function ($vat, $key) use ($id) {

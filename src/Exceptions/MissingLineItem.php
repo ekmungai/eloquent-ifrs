@@ -18,10 +18,10 @@ class MissingLineItem extends IFRSException
      * @param string $message
      * @param int $code
      */
-    public function __construct(string $message = null, int $code = null)
+    public function __construct(?string $message = null, ?int $code = null)
     {
         $error = "A Transaction must have at least one LineItem to be posted ";
 
-        parent::__construct($error . $message, $code = null);
+        parent::__construct($error . $message, $code);
     }
 }

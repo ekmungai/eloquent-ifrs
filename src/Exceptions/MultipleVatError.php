@@ -18,7 +18,7 @@ class MultipleVatError extends IFRSException
      * @param string $message
      * @param int $code
      */
-    public function __construct(string $error, string $message = null, int $code = null)
+    public function __construct(string $error, ?string $message = null, ?int $code = null)
     {
         parent::__construct($error . ' ' . $message, $code);
     }

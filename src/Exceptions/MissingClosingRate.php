@@ -19,7 +19,7 @@ class MissingClosingRate extends IFRSException
      * @param string $message
      * @param int $code
      */
-    public function __construct(string $currencyCode, string $message = null, int $code = null)
+    public function __construct(string $currencyCode, ?string $message = null, ?int $code = null)
     {
         $error = "Closing Rate for " . $currencyCode . " is missing  ";
 
