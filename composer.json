@@ -1,5 +1,5 @@
 {
-    "name": "octax-app/laravel-accounting",
+    "name": "ekmungai/eloquent-ifrs",
     "description": "Eloquent Double Entry Accounting with focus on IFRS Compliant Reporting",
     "keywords": [
         "accounting",
