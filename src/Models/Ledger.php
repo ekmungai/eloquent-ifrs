@@ -197,6 +197,7 @@ private static function allocateAmount($postAccount, $amount, $posts, $folios, $
             $ledger = new Ledger();
 
             $ledger->transaction_id = $transaction->id;
+            $ledger->entity_id = $transaction->entity_id;
             $ledger->currency_id = $transaction->currency_id;
             $ledger->posting_date = $transaction->transaction_date;
             $ledger->rate = $rate;
