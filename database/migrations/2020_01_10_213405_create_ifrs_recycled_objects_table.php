@@ -21,16 +21,19 @@ class CreateIfrsRecycledObjectsTable extends Migration
     public function up()
     {
 
+        $userModel = config('ifrs.user_model');
+        $usersTable = (new $userModel())->getTable();
+
         Schema::create(
             config('ifrs.table_prefix').'recycled_objects',
-            function (Blueprint $table) {
+            function (Blueprint $table) use ($usersTable) {
                 $table->bigIncrements('id');
 
                 // relationships
                 $table->unsignedBigInteger('entity_id');
 
                 // before we set the datatype of this field, we check the existing user's table's id columns datatype
-                $type = Schema::getColumnType(config('ifrs.table_prefix').'users','id');
+                $type = Schema::getColumnType($usersTable,'id');
                 if ($type === 'integer') {
                     $table->unsignedInteger('user_id');
                 } elseif ($type === 'string') {
@@ -41,7 +44,7 @@ class CreateIfrsRecycledObjectsTable extends Migration
 
                 // constraints
                 $table->foreign('entity_id')->references('id')->on(config('ifrs.table_prefix').'entities');
-                $table->foreign('user_id')->references('id')->on(config('ifrs.table_prefix').'users');
+                $table->foreign('user_id')->references('id')->on($usersTable);
 
                 // attributes
                 if ($type === 'integer') {

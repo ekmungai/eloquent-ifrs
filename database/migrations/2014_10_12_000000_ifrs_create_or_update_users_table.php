@@ -20,9 +20,12 @@ class IfrsCreateOrUpdateUsersTable extends Migration
      */
     public function up()
     {
-        if (Schema::hasTable(config('ifrs.table_prefix') . 'users')) {
+        $userModel = config('ifrs.user_model');
+        $usersTable = (new $userModel())->getTable();
+
+        if (Schema::hasTable($usersTable)) {
             Schema::table(
-                config('ifrs.table_prefix') . 'users',
+                $usersTable,
                 function (Blueprint $table) {
                     //entity
                     $table->unsignedBigInteger('entity_id')->nullable();
@@ -31,7 +34,7 @@ class IfrsCreateOrUpdateUsersTable extends Migration
             });
         }else{
             Schema::create(
-                config('ifrs.table_prefix') . 'users',
+                $usersTable,
                 function (Blueprint $table) {
                     $table->bigIncrements('id');
 
@@ -66,12 +69,15 @@ class IfrsCreateOrUpdateUsersTable extends Migration
      */
     public function down()
     {
-        if (Schema::hasColumn(config('ifrs.table_prefix') . 'users', 'created'))
+        $userModel = config('ifrs.user_model');
+        $usersTable = (new $userModel())->getTable();
+
+        if (Schema::hasColumn($usersTable, 'created'))
         {
-            Schema::dropIfExists(config('ifrs.table_prefix') . 'users');
+            Schema::dropIfExists($usersTable);
         }else{
             Schema::table(
-                config('ifrs.table_prefix') . 'users',
+                $usersTable,
                 function (Blueprint $table) {
                     $table->dropColumn('entity_id');
                     $table->dropColumn('destroyed_at');
