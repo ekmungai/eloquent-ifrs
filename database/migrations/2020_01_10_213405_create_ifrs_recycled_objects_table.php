@@ -14,23 +14,48 @@ use Illuminate\Support\Facades\Schema;
 class CreateIfrsRecycledObjectsTable extends Migration
 {
     /**
+     * Resolve the users table name from the configured User model.
+     *
+     * Handles both the string format ('App\Models\User') and the legacy
+     * array format ([7 => App\User::class, 8 => App\Models\User::class]).
+     *
+     * @return string
+     */
+    private function getUsersTable()
+    {
+        $userModel = config('ifrs.user_model');
+
+        if (is_array($userModel)) {
+            $major = (int) App::version();
+            $userModel = $userModel[$major] ?? end($userModel);
+        }
+
+        if (is_string($userModel) && class_exists($userModel)) {
+            return (new $userModel())->getTable();
+        }
+
+        return 'users';
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
      */
     public function up()
     {
+        $usersTable = $this->getUsersTable();
 
         Schema::create(
             config('ifrs.table_prefix').'recycled_objects',
-            function (Blueprint $table) {
+            function (Blueprint $table) use ($usersTable) {
                 $table->bigIncrements('id');
 
                 // relationships
                 $table->unsignedBigInteger('entity_id');
 
                 // before we set the datatype of this field, we check the existing user's table's id columns datatype
-                $type = Schema::getColumnType(config('ifrs.table_prefix').'users','id');
+                $type = Schema::getColumnType($usersTable,'id');
                 if ($type === 'integer') {
                     $table->unsignedInteger('user_id');
                 } elseif ($type === 'string') {
@@ -41,7 +66,7 @@ class CreateIfrsRecycledObjectsTable extends Migration
 
                 // constraints
                 $table->foreign('entity_id')->references('id')->on(config('ifrs.table_prefix').'entities');
-                $table->foreign('user_id')->references('id')->on(config('ifrs.table_prefix').'users');
+                $table->foreign('user_id')->references('id')->on($usersTable);
 
                 // attributes
                 if ($type === 'integer') {
