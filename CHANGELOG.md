@@ -7,6 +7,7 @@
 - Fix the `remove_vat_id_column` migration to drop the foreign key before the column on every driver (modern SQLite rejects the dangling foreign key during the Laravel 11+ table rebuild)
 - Fix `AccountSchedule` age calculation for Carbon 3, which returns a signed float from `diffInDays()` instead of a whole number
 - Modernise `phpunit.xml` to the PHPUnit 10+ schema (`<source>` element; remove attributes dropped in PHPUnit 10)
+- Make the test suite deterministic: seed the global PRNG via a test bootstrap and pin the execution order, eliminating intermittent failures caused by Faker drawing from a process-wide random stream shared across tests
 - Test against PHP 8.2, 8.3 and 8.4 in CI via a build matrix
 ## 5.0.4 - 2025-03-21
 
