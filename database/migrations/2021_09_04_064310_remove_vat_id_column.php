@@ -14,10 +14,10 @@ class RemoveVatIdColumn extends Migration
     public function up()
     {
         Schema::table(config('ifrs.table_prefix') . 'line_items', function (Blueprint $table) {
-            
-            if (!in_array(config('database.default'), ['sqlite', 'testing'])) {
-                $table->dropForeign(config('ifrs.table_prefix') . 'line_items_vat_id_foreign'); // sqlite does not support dropping foregn keys
-            }
+            // Drop the foreign key before the column on every driver. Modern SQLite
+            // (and Laravel 11+, which drops columns via a table rebuild) rejects a
+            // table that still references vat_id in a foreign key definition.
+            $table->dropForeign(['vat_id']);
             $table->dropColumn('vat_id');
         });
     }

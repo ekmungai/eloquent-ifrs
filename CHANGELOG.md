@@ -4,6 +4,9 @@
 - **BREAKING:** Raise minimum PHP requirement to 8.2 (PHP 8.1 reached end of life)
 - **BREAKING:** Drop support for Laravel 10 and PHP 8.1; supported range is now Laravel 11, 12 and 13
 - Update dev dependencies for the supported range (orchestra/testbench ^9|^10|^11, nunomaduro/collision ^8, phpunit ^11|^12, spatie/laravel-ignition ^2)
+- Fix the `remove_vat_id_column` migration to drop the foreign key before the column on every driver (modern SQLite rejects the dangling foreign key during the Laravel 11+ table rebuild)
+- Fix `AccountSchedule` age calculation for Carbon 3, which returns a signed float from `diffInDays()` instead of a whole number
+- Modernise `phpunit.xml` to the PHPUnit 10+ schema (`<source>` element; remove attributes dropped in PHPUnit 10)
 - Test against PHP 8.2, 8.3 and 8.4 in CI via a build matrix
 ## 5.0.4 - 2025-03-21
 
