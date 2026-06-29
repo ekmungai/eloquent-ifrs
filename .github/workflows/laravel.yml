@@ -11,13 +11,22 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [ '8.2', '8.3', '8.4' ]
+
+    name: PHP ${{ matrix.php }}
+
     steps:
-    - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
+    - uses: actions/checkout@v4
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.1'
-    - uses: actions/checkout@v3
+        php-version: ${{ matrix.php }}
+        coverage: none
     - name: Install Dependencies
-      run: composer update && composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      run: composer update --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
     - name: Create Database
       run: |
         mkdir -p database

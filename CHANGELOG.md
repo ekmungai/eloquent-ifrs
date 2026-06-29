@@ -1,3 +1,10 @@
+## 6.0.0 - 2026-06-29
+
+- Add Laravel 13 Compatibility
+- **BREAKING:** Raise minimum PHP requirement to 8.2 (PHP 8.1 reached end of life)
+- **BREAKING:** Drop support for Laravel 10 and PHP 8.1; supported range is now Laravel 11, 12 and 13
+- Update dev dependencies for the supported range (orchestra/testbench ^9|^10|^11, nunomaduro/collision ^8, phpunit ^11|^12, spatie/laravel-ignition ^2)
+- Test against PHP 8.2, 8.3 and 8.4 in CI via a build matrix
 ## 5.0.4 - 2025-03-21
 
 - Add Laravel 12 Compatibility

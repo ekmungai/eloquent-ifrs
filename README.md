@@ -3,7 +3,8 @@
 [![Build Status](https://app.travis-ci.com/ekmungai/eloquent-ifrs.svg?branch=master)](https://travis-ci.com/ekmungai/eloquent-ifrs)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/7afac1253d0f662d1cfd/test_coverage)](https://codeclimate.com/github/ekmungai/eloquent-ifrs/test_coverage)
 [![Maintainability](https://api.codeclimate.com/v1/badges/7afac1253d0f662d1cfd/maintainability)](https://codeclimate.com/github/ekmungai/eloquent-ifrs/maintainability)
-![PHP 8.0](https://img.shields.io/badge/PHP-8.0-blue.svg)
+![PHP 8.2+](https://img.shields.io/badge/PHP-8.2%2B-blue.svg)
+![Laravel 11+](https://img.shields.io/badge/Laravel-11%20|%2012%20|%2013-red.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Total Downloads](https://poser.pugx.org/ekmungai/eloquent-ifrs/downloads)](//packagist.org/packages/ekmungai/eloquent-ifrs)
 [![Latest Stable Version](https://poser.pugx.org/ekmungai/eloquent-ifrs/v)](//packagist.org/packages/ekmungai/eloquent-ifrs)
@@ -33,7 +34,7 @@ This package is a community initiative of [microbooks.io](https://microbooks.io)
 
 ## Installation
 
-Use composer to Install the package into your laravel or lumen application. Eloquent IFRS requires PHP version 8.0.2 and Eloquent version 8 and above.
+Use composer to Install the package into your laravel or lumen application. Eloquent IFRS requires PHP version 8.2 and Laravel (Eloquent) version 11 and above.
 
 #### For production
 
