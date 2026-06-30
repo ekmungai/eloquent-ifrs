@@ -135,7 +135,9 @@ class AccountSchedule extends AccountStatement
             }
 
             $date = Carbon::parse($transaction->transaction_date);
-            $transaction->age = $date->diffInDays($this->period['endDate']);
+            // Carbon 3 (Laravel 11+) returns a signed float from diffInDays(); cast to
+            // an absolute integer to preserve the whole-day count Carbon 2 returned.
+            $transaction->age = (int) abs($date->diffInDays($this->period['endDate']));
             $transaction->transactionDate = Carbon::parse($transaction->transaction_date)->toFormattedDateString();
 
             $this->balances["originalAmount"] += $transaction->originalAmount;

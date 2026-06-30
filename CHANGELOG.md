@@ -1,3 +1,15 @@
+## 6.0.0 - 2026-06-29
+
+- Add Laravel 13 Compatibility
+- **BREAKING:** Raise minimum PHP requirement to 8.2 (PHP 8.1 reached end of life)
+- **BREAKING:** Drop support for Laravel 10 and PHP 8.1; supported range is now Laravel 11, 12 and 13
+- Update dev dependencies for the supported range (orchestra/testbench ^9|^10|^11, nunomaduro/collision ^8, phpunit ^11|^12, spatie/laravel-ignition ^2)
+- Fix the `remove_vat_id_column` migration to drop the foreign key before the column on every driver (modern SQLite rejects the dangling foreign key during the Laravel 11+ table rebuild)
+- Fix `AccountSchedule` age calculation for Carbon 3, which returns a signed float from `diffInDays()` instead of a whole number
+- Modernise `phpunit.xml` to the PHPUnit 10+ schema (`<source>` element; remove attributes dropped in PHPUnit 10)
+- Make the test suite deterministic: seed the global PRNG via a test bootstrap and pin the execution order, eliminating intermittent failures caused by Faker drawing from a process-wide random stream shared across tests
+- Stop the `LineItem` and `Vat` factories from generating zero `amount`/`quantity`/`rate` values, which produced zero-balance accounts that reports legitimately omit and caused the Trial Balance test to fail intermittently when a differing dependency tree (e.g. the PHP 8.2 CI leg) shifted the shared random stream
+- Test against PHP 8.2, 8.3 and 8.4 in CI via a build matrix
 ## 5.0.4 - 2025-03-21
 
 - Add Laravel 12 Compatibility
