@@ -17,8 +17,8 @@ $factory->define(
                 'category_id' => null
             ])->id,
             'narration' => $faker->sentence,
-            'quantity' => $faker->randomNumber(),
-            'amount' => $faker->randomFloat(2, 0, 200),
+            'quantity' => $faker->randomNumber() ?: 1,
+            'amount' => $faker->randomFloat(2, 0.01, 200),
         ];
     }
 );

@@ -15,7 +15,7 @@ $factory->define(
         return [
             'name' => $faker->name,
             'code' => $faker->randomLetter(),
-            'rate' => $faker->randomDigit(),
+            'rate' => $faker->randomDigitNotNull(),
             'account_id' => factory(Account::class)->create([
                 'account_type' => Account::CONTROL,
                 'category_id' => null

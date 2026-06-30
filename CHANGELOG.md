@@ -8,6 +8,7 @@
 - Fix `AccountSchedule` age calculation for Carbon 3, which returns a signed float from `diffInDays()` instead of a whole number
 - Modernise `phpunit.xml` to the PHPUnit 10+ schema (`<source>` element; remove attributes dropped in PHPUnit 10)
 - Make the test suite deterministic: seed the global PRNG via a test bootstrap and pin the execution order, eliminating intermittent failures caused by Faker drawing from a process-wide random stream shared across tests
+- Stop the `LineItem` and `Vat` factories from generating zero `amount`/`quantity`/`rate` values, which produced zero-balance accounts that reports legitimately omit and caused the Trial Balance test to fail intermittently when a differing dependency tree (e.g. the PHP 8.2 CI leg) shifted the shared random stream
 - Test against PHP 8.2, 8.3 and 8.4 in CI via a build matrix
 ## 5.0.4 - 2025-03-21
 
