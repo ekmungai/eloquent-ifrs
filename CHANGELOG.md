@@ -1,4 +1,4 @@
-## 6.0.0 - 2026-06-29
+## 6.0.0 - 2026-07-01
 
 - Add Laravel 13 Compatibility
 - **BREAKING:** Raise minimum PHP requirement to 8.2 (PHP 8.1 reached end of life)
