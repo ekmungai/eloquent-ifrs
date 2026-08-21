@@ -22,7 +22,7 @@ class UnassignableTransaction extends IFRSException
      * @param string $message
      * @param int $code
      */
-    public function __construct(string $transactionType, array $transactionTypes, string $message = null, int $code = null)
+    public function __construct(string $transactionType, array $transactionTypes, ?string $message = null, ?int $code = null)
     {
         $transactionTypes = Transaction::getTypes($transactionTypes);
         $transactionType = Transaction::getType($transactionType);

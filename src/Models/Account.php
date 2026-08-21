@@ -144,7 +144,7 @@ class Account extends Model implements Recyclable, Segregatable
      *
      * @return array
      */
-    public static function openingBalances(int $year, Entity $entity = null)
+    public static function openingBalances(int $year, ?Entity $entity = null)
     {
         if (is_null($entity)) {
             $entity = Auth::user()->entity;
@@ -182,7 +182,7 @@ class Account extends Model implements Recyclable, Segregatable
         $startDate = null,
         $endDate = null,
         $fullBalance = true,
-        Entity $entity = null
+        ?Entity $entity = null
     ): array
     {
 
@@ -306,7 +306,7 @@ class Account extends Model implements Recyclable, Segregatable
      *
      * @return array
      */
-    public function closingBalance(string $endDate = null, int $currencyId = null): array
+    public function closingBalance(?string $endDate = null, ?int $currencyId = null): array
     {
         $entity = $this->entity;
 
@@ -329,7 +329,7 @@ class Account extends Model implements Recyclable, Segregatable
      *
      * @return array
      */
-    public function openingBalance(int $year = null, int $currencyId = null): array
+    public function openingBalance(?int $year = null, ?int $currencyId = null): array
     {
         $entity = $this->entity;
 
@@ -375,7 +375,7 @@ class Account extends Model implements Recyclable, Segregatable
      *
      * @return array
      */
-    public function currentBalance(Carbon $startDate = null, Carbon $endDate = null, int $currencyId = null): array
+    public function currentBalance(?Carbon $startDate = null, ?Carbon $endDate = null, ?int $currencyId = null): array
     {
         $entity = $this->entity;
 
@@ -390,7 +390,7 @@ class Account extends Model implements Recyclable, Segregatable
      * @param int $year
      *
      */
-    public function isClosed(int $year = null): bool
+    public function isClosed(?int $year = null): bool
     {
         if (is_null($year)) {
             $year = $this->entity->current_reporting_period->calendar_year;
@@ -423,7 +423,7 @@ class Account extends Model implements Recyclable, Segregatable
      * @param int $year
      *
      */
-    public function closingTransactions(int $year = null): array
+    public function closingTransactions(?int $year = null): array
     {
         if (is_null($year)) {
             $year = $this->entity->current_reporting_period->calendar_year;
@@ -461,7 +461,7 @@ class Account extends Model implements Recyclable, Segregatable
      *
      * @return array
      */
-    public function getTransactions(string $startDate = null, string $endDate = null): array
+    public function getTransactions(?string $startDate = null, ?string $endDate = null): array
     {
 
         $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate, $this->entity) : Carbon::parse($startDate);
@@ -479,7 +479,7 @@ class Account extends Model implements Recyclable, Segregatable
      *
      * @return Builder
      */
-    public function transactionsQuery(Carbon $startDate, Carbon $endDate, int $currencyId = null)
+    public function transactionsQuery(Carbon $startDate, Carbon $endDate, ?int $currencyId = null)
     {
         $transactionsTable = config('ifrs.table_prefix') . 'transactions';
         $ledgerTable = config('ifrs.table_prefix') . 'ledgers';

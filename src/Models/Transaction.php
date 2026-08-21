@@ -150,7 +150,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
      *
      * @return int|false
      */
-    private function lineItemExists(int $id = null)
+    private function lineItemExists(?int $id = null)
     {
         return collect($this->items)->search(
             function ($item, $key) use ($id) {
@@ -166,7 +166,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
      *
      * @return int|false
      */
-    private function assignedTransactionExists(int $id = null)
+    private function assignedTransactionExists(?int $id = null)
     {
         return collect($this->assigned)->search(
             function ($transaction, $key) use ($id) {
@@ -656,7 +656,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
      *
      * @return null
      */
-    public function processAssigned(int $forexAccountId = null): void
+    public function processAssigned(?int $forexAccountId = null): void
     {
         foreach ($this->assigned as $outstanding) {
             $cleared = Transaction::find($outstanding['id']);
@@ -772,7 +772,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
      *
      * @return string
      */
-    public static function transactionNo(string $type, Carbon $transaction_date = null, Entity $entity = null)
+    public static function transactionNo(string $type, ?Carbon $transaction_date = null, ?Entity $entity = null)
     {
         if (is_null($entity)) {
             $entity = Auth::user()->entity;

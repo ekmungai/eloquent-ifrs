@@ -18,7 +18,7 @@ class HangingClearances extends IFRSException
      * @param string $message
      * @param int $code
      */
-    public function __construct(string $message = null, int $code = null)
+    public function __construct(?string $message = null, ?int $code = null)
     {
         $error = "Transaction cannot be deleted because it has been used to to Clear other Transactions ";
 

@@ -20,7 +20,7 @@ class MixedAssignment extends IFRSException
      * @param string $message
      * @param int $code
      */
-    public function __construct(string $previous, string $current, string $message = null, int $code = null)
+    public function __construct(string $previous, string $current, ?string $message = null, ?int $code = null)
     {
         $error = "A Transaction that has been " . $previous . " cannot be " . $current;
 

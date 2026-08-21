@@ -18,7 +18,7 @@ class UnbalancedTransaction extends IFRSException
      * @param string $message
      * @param int $code
      */
-    public function __construct(string $message = null, int $code = null)
+    public function __construct(?string $message = null, ?int $code = null)
     {
         $error = "Total Debit amounts do not match total Credit amounts ";
 

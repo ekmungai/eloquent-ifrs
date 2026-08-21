@@ -40,7 +40,7 @@ abstract class IFRSException extends \Exception
      * @param int $code
      */
 
-    public function __construct(string $message = null, int $code = null)
+    public function __construct(?string $message = null, ?int $code = null)
     {
         Log::notice(
             $message,
