@@ -73,6 +73,16 @@ $app->register(IFRSServiceProvider::class);
 ?>
 ```
 
+Before running the migrations, make sure your application's users table already exists. Eloquent IFRS extends that
+table (adding `entity_id` and `destroyed_at`) and references it from `ifrs_recycled_objects`, but it never creates it:
+the migration fails with an explicit message if the table configured through `ifrs.user_model` is missing. In practice
+this means the users migration of your application must be dated before `2014_10_12_000000`, which is the case for the
+migration shipped with Laravel. The package only creates its own prefixed table when `ifrs.user_model` points at
+`IFRS\User`.
+
+The primary key of your users table may be a big integer, an integer, a uuid or any other string type, and it may carry
+a name other than `id`: the foreign key column is derived from the actual column definition.
+
 Then run migrations to create the database tables.
 
 ```php

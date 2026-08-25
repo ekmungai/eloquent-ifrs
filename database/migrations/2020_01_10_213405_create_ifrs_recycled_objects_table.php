@@ -8,35 +8,12 @@
  */
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;
+
+use IFRS\Support\UsersTable;
 
 class CreateIfrsRecycledObjectsTable extends Migration
 {
-    /**
-     * Resolve the users table name from the configured User model.
-     *
-     * Handles both the string format ('App\Models\User') and the legacy
-     * array format ([7 => App\User::class, 8 => App\Models\User::class]).
-     *
-     * @return string
-     */
-    private function getUsersTable()
-    {
-        $userModel = config('ifrs.user_model');
-
-        if (is_array($userModel)) {
-            $major = (int) App::version();
-            $userModel = $userModel[$major] ?? end($userModel);
-        }
-
-        if (is_string($userModel) && class_exists($userModel)) {
-            return (new $userModel())->getTable();
-        }
-
-        return 'users';
-    }
-
     /**
      * Run the migrations.
      *
@@ -44,7 +21,7 @@ class CreateIfrsRecycledObjectsTable extends Migration
      */
     public function up()
     {
-        $usersTable = $this->getUsersTable();
+        $usersTable = UsersTable::requireTable(basename(__FILE__, '.php'));
 
         Schema::create(
             config('ifrs.table_prefix').'recycled_objects',
@@ -54,28 +31,16 @@ class CreateIfrsRecycledObjectsTable extends Migration
                 // relationships
                 $table->unsignedBigInteger('entity_id');
 
-                // before we set the datatype of this field, we check the existing user's table's id columns datatype
-                $type = Schema::getColumnType($usersTable,'id');
-                if ($type === 'integer') {
-                    $table->unsignedInteger('user_id');
-                } elseif ($type === 'string') {
-                    $table->uuid('user_id');
-                } else {
-                    $table->unsignedBigInteger('user_id');
-                }
+                // the user id column has to match the primary key of the users table
+                UsersTable::matchUserId($table, 'user_id', $usersTable);
 
                 // constraints
                 $table->foreign('entity_id')->references('id')->on(config('ifrs.table_prefix').'entities');
-                $table->foreign('user_id')->references('id')->on($usersTable);
+                $table->foreign('user_id')->references(UsersTable::keyName())->on($usersTable);
 
                 // attributes
-                if ($type === 'integer') {
-                    $table->unsignedInteger('recyclable_id');
-                } elseif ($type === 'string') {
-                    $table->uuid('recyclable_id');
-                } else {
-                    $table->bigInteger('recyclable_id');
-                }
+                // recyclable models are IFRS models, whose keys are always big integers
+                $table->unsignedBigInteger('recyclable_id');
                 $table->string('recyclable_type', 300);
 
                 // *permanent* deletion
