@@ -405,7 +405,7 @@ class AccountTest extends TestCase
                 'category_id' => null,
             ])->id,
             'narration' => $this->faker->sentence,
-            'quantity' => $this->faker->randomNumber(),
+            'quantity' => $this->faker->randomNumber() ?: 1,
             'amount' => 100,
             'quantity' => 1,
         ]);
@@ -520,7 +520,7 @@ class AccountTest extends TestCase
         $line = new LineItem([
             'account_id' => $account3->id,
             'narration' => $this->faker->sentence,
-            'quantity' => $this->faker->randomNumber(),
+            'quantity' => $this->faker->randomNumber() ?: 1,
             'amount' => 100,
             'quantity' => 1,
         ]);
@@ -698,7 +698,7 @@ class AccountTest extends TestCase
         $line = new LineItem([
             'account_id' => $revenue->id,
             'narration' => $this->faker->sentence,
-            'quantity' => $this->faker->randomNumber(),
+            'quantity' => $this->faker->randomNumber() ?: 1,
             'amount' => 100,
             'quantity' => 1,
         ]);
@@ -764,7 +764,7 @@ class AccountTest extends TestCase
         $line = new LineItem([
             'account_id' => $asset->id,
             'narration' => $this->faker->sentence,
-            'quantity' => $this->faker->randomNumber(),
+            'quantity' => $this->faker->randomNumber() ?: 1,
             'amount' => 50,
             'quantity' => 1,
         ]);
@@ -849,7 +849,7 @@ class AccountTest extends TestCase
         $line = new LineItem([
             'account_id' => $account3->id,
             'narration' => $this->faker->sentence,
-            'quantity' => $this->faker->randomNumber(),
+            'quantity' => $this->faker->randomNumber() ?: 1,
             'amount' => 100,
             'quantity' => 1,
         ]);
@@ -1091,7 +1091,7 @@ class AccountTest extends TestCase
         $line = new LineItem([
             'account_id' => $revenue->id,
             'narration' => $this->faker->sentence,
-            'quantity' => $this->faker->randomNumber(),
+            'quantity' => $this->faker->randomNumber() ?: 1,
             'amount' => 100,
             'quantity' => 1,
         ]);
@@ -1108,7 +1108,7 @@ class AccountTest extends TestCase
         $line = new LineItem([
             'account_id' => $revenue->id,
             'narration' => $this->faker->sentence,
-            'quantity' => $this->faker->randomNumber(),
+            'quantity' => $this->faker->randomNumber() ?: 1,
             'amount' => 100,
             'quantity' => 1,
         ]);

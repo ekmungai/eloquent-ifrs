@@ -197,7 +197,7 @@ class CategoryTest extends TestCase
         $line = new LineItem([
             'account_id' => $account2->id,
             'narration' => $this->faker->sentence,
-            'quantity' => $this->faker->randomNumber(),
+            'quantity' => $this->faker->randomNumber() ?: 1,
             'amount' => 100,
             'quantity' => 1,
         ]);

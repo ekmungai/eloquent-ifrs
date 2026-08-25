@@ -7,6 +7,7 @@
 - Support a custom primary key name on the configured User model
 - Remove the stray indentation that made the users migration emit whitespace before its opening PHP tag
 - Fix posting a Transaction whose Line Item carries a zero rated Vat, which failed with a not null constraint violation on `ifrs_ledgers.folio_account`. A zero rated Vat is charged no amount and, by design, has no Vat account, so it now posts no Vat Ledgers
+- Stop the report tests generating zero Line Item quantities and amounts of their own. `LineItemFactory` was guarded in 6.0.0, but `TrialBalanceTest`, `AccountTest` and `CategoryTest` build Line Items inline with `randomNumber()`, which returns zero for about one draw in eighty, zeroing an account balance and dropping the section the test then indexes
 ## 6.0.0 - 2026-07-01
 
 - Add Laravel 13 Compatibility
