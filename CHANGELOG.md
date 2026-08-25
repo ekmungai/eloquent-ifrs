@@ -6,6 +6,7 @@
 - Fix `ifrs_recycled_objects.recyclable_id`, which was typed from the users table primary key even though it references IFRS models, whose keys are always big integers
 - Support a custom primary key name on the configured User model
 - Remove the stray indentation that made the users migration emit whitespace before its opening PHP tag
+- Fix posting a Transaction whose Line Item carries a zero rated Vat, which failed with a not null constraint violation on `ifrs_ledgers.folio_account`. A zero rated Vat is charged no amount and, by design, has no Vat account, so it now posts no Vat Ledgers
 ## 6.0.0 - 2026-07-01
 
 - Add Laravel 13 Compatibility

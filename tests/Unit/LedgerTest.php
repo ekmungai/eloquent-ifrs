@@ -55,6 +55,49 @@ class LedgerTest extends TestCase
     }
 
     /**
+     * Zero rated Vat Ledger test.
+     *
+     * @return void
+     */
+    public function testLedgerZeroRatedVat()
+    {
+        $account = factory(Account::class)->create([
+            'category_id' => null
+        ]);
+        $lineAccount = factory(Account::class)->create([
+            'category_id' => null
+        ]);
+
+        $transaction = new JournalEntry([
+            "account_id" => $account->id,
+            "date" => Carbon::now(),
+            "narration" => $this->faker->word,
+        ]);
+
+        $lineItem = factory(LineItem::class)->create([
+            "account_id" => $lineAccount->id,
+            "amount" => 50,
+            "quantity" => 1,
+        ]);
+
+        // a zero rated Vat has no Vat account, so it can post no Vat Ledgers
+        $zeroRated = factory(Vat::class)->create([
+            'rate' => 0,
+        ]);
+
+        $lineItem->addVat($zeroRated);
+        $lineItem->save();
+
+        $transaction->addLineItem($lineItem);
+        $transaction->post();
+
+        $this->assertNull($zeroRated->account_id);
+        $this->assertEquals(count($transaction->ledgers), 2);
+        $this->assertEquals(count(Ledger::where('vat_id', $zeroRated->id)->get()), 0);
+        $this->assertEquals($transaction->amount, 50);
+    }
+
+    /**
      * Test Ledger Model Account Contribution.
      *
      * @return void
