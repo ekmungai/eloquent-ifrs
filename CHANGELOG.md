@@ -1,3 +1,11 @@
+## Unreleased
+
+- **BREAKING:** The `ifrs_create_or_update_users_table` migration no longer creates an application `users` table as a fallback. The table configured through `ifrs.user_model` must exist before the IFRS migrations run; the migration now fails with an explicit message instead of silently creating a competing table. Only the package's own prefixed table (`IFRS\User`) is still created for standalone use (#195)
+- Make the users table extension additive and idempotent: only the columns the package is missing are added, and `down()` drops only those columns instead of the application's table (#195)
+- Match the `ifrs_recycled_objects.user_id` column to the actual primary key of the users table. Laravel 11 reports native database types from `Schema::getColumnType()`, so `char`, `varchar`, `uuid` and the driver specific integer names are now all mapped to a compatible column, fixing the incompatible `bigint unsigned` foreign key against UUID and integer primary keys (#195)
+- Fix `ifrs_recycled_objects.recyclable_id`, which was typed from the users table primary key even though it references IFRS models, whose keys are always big integers
+- Support a custom primary key name on the configured User model
+- Remove the stray indentation that made the users migration emit whitespace before its opening PHP tag
 ## 6.0.0 - 2026-07-01
 
 - Add Laravel 13 Compatibility
