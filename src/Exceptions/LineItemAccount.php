@@ -23,7 +23,7 @@ class LineItemAccount extends IFRSException
      * @param string $message
      * @param int $code
      */
-    public function __construct(string $transactionType, array $accountTypes, string $message = null, int $code = null)
+    public function __construct(string $transactionType, array $accountTypes, ?string $message = null, ?int $code = null)
     {
         $transactionType = Transaction::getType($transactionType);
         $accountTypes = Account::getTypes($accountTypes);

@@ -19,7 +19,7 @@ class NegativeQuantity extends IFRSException
      * @param string $message
      * @param int    $code
      */
-    public function __construct(string $message = null, int $code = null)
+    public function __construct(?string $message = null, ?int $code = null)
     {
         $error = "LineItem Quantity cannot be negative ";
 

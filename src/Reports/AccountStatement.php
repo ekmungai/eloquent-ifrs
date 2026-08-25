@@ -76,10 +76,10 @@ class AccountStatement
      * @param string $endDate
      */
     public function __construct(
-        int $accountId = null,
-        int $currencyId = null,
-        string $startDate = null,
-        string $endDate = null
+        ?int $accountId = null,
+        ?int $currencyId = null,
+        ?string $startDate = null,
+        ?string $endDate = null
     )
     {
         if (is_null($accountId)) {

@@ -28,7 +28,7 @@ class InsufficientBalance extends IFRSException
         string $transactionType,
         float $amount,
         string $assignedType,
-        string $message = null,
+        ?string $message = null,
         int $code = 0
     )
     {

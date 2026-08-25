@@ -100,7 +100,7 @@ class Category extends Model implements Segregatable, Recyclable
      *
      * @return array
      */
-    public function getAccountBalances(Carbon $startDate = null, Carbon $endDate = null)
+    public function getAccountBalances(?Carbon $startDate = null, ?Carbon $endDate = null)
     {
         $balances = ["total" => 0, "accounts" => []];
 

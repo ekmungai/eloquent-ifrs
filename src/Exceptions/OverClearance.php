@@ -22,7 +22,7 @@ class OverClearance extends IFRSException
      * @param string $message
      * @param int $code
      */
-    public function __construct(string $assignedType, float $amount, string $message = null, int $code = null)
+    public function __construct(string $assignedType, float $amount, ?string $message = null, ?int $code = null)
     {
         $assignedType = Transaction::getType($assignedType);
 

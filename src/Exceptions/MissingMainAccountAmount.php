@@ -18,7 +18,7 @@ class MissingMainAccountAmount extends IFRSException
      * @param string $message
      * @param int $code
      */
-    public function __construct(string $message = null, int $code = null)
+    public function __construct(?string $message = null, ?int $code = null)
     {
         $error = "Compund Journal Entries must have a Main Account Amount ";
 

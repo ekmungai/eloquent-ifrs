@@ -214,7 +214,7 @@ class Entity extends Model implements Recyclable
      * @param string $locale
      * @return string
      */
-    public function localizeAmount(float $amount, string $currencyCode = null, $locale = null)
+    public function localizeAmount(float $amount, ?string $currencyCode = null, $locale = null)
     {
         if (is_null($locale)) {
             $locale = $this->locale;

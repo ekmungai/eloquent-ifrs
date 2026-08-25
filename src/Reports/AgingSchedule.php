@@ -59,7 +59,7 @@ class AgingSchedule
      * @param string $endDate
      * @param Entity $entity
      */
-    public function __construct(string $accountType = Account::RECEIVABLE, string $endDate = null, int $currencyId = null, Entity $entity = null)
+    public function __construct(string $accountType = Account::RECEIVABLE, ?string $endDate = null, ?int $currencyId = null, ?Entity $entity = null)
     {
         if (is_null($entity)) {
             $this->entity = Auth::user()->entity;
