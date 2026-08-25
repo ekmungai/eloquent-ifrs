@@ -90,6 +90,12 @@ class Ledger extends Model implements Segregatable
     {
         $rate = $transaction->exchangeRate->rate;
         foreach ($appliedVats as $appliedVat) {
+
+            // zero rated Vats are charged no amount and have no Vat account to post to
+            if (is_null($appliedVat->vat->account_id)) {
+                continue;
+            }
+
             list($post, $folio) = Ledger::getLedgers($transaction);
 
             // identical double entry data
