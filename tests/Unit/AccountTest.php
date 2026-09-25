@@ -1183,7 +1183,13 @@ class AccountTest extends TestCase
 
         $this->assertTrue($account1->isClosed());
 
-        $differentYear = factory(ReportingPeriod::class)->create()->calendar_year;
+        // a year other than the one just closed. Drawing it from the factory
+        // risks faker returning the current year, which is closed, because the
+        // period in TestCase is created with an explicit calendar_year and so
+        // is not in faker's unique() store
+        $differentYear = factory(ReportingPeriod::class)->create([
+            'calendar_year' => $this->period->calendar_year - 1,
+        ])->calendar_year;
 
         $this->assertFalse($account1->isClosed($differentYear));
     }
