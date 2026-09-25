@@ -10,19 +10,15 @@
 
 namespace IFRS\Transactions;
 
-
-use IFRS\Interfaces\Clearable;
 use IFRS\Interfaces\Sells;
 
 use IFRS\Traits\Selling;
-use IFRS\Traits\Clearing;
 
 use IFRS\Models\Transaction;
 
-class ClientInvoice extends Transaction implements Sells, Clearable
+class ClientInvoice extends Transaction implements Sells
 {
     use Selling;
-    use Clearing;
 
     /**
      * Transaction Number prefix

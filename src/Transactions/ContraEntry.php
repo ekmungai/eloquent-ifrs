@@ -19,8 +19,8 @@ use IFRS\Exceptions\LineItemAccount;
 use IFRS\Exceptions\MainAccount;
 use IFRS\Exceptions\VatCharge;
 
-class ContraEntry extends Transaction {
-    
+class ContraEntry extends Transaction
+{
     /**
      * Transaction Number prefix
      *

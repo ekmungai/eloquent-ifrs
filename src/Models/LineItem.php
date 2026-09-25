@@ -20,7 +20,6 @@ use IFRS\Traits\Recycling;
 use IFRS\Traits\Segregating;
 use IFRS\Traits\ModelTablePrefix;
 
-use IFRS\Models\AppliedVat;
 
 use IFRS\Exceptions\NegativeAmount;
 use IFRS\Exceptions\NegativeQuantity;
