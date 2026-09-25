@@ -16,7 +16,6 @@ use IFRS\Models\Vat;
 use IFRS\Transactions\JournalEntry;
 
 use IFRS\Exceptions\UnbalancedTransaction;
-use IFRS\Exceptions\InvalidVatRate;
 use IFRS\Exceptions\MissingMainAccountAmount;
 use IFRS\Exceptions\MultipleVatError;
 
@@ -295,11 +294,11 @@ class JournalEntryTest extends TestCase
     }
 
     /**
-     * Test Invalid Vat Rate Exception
+     * Test Multiple Vat Error Exception
      *
      * @return void
      */
-    public function testInvalidVatRateException()
+    public function testMultipleVatErrorException()
     {
         $journalEntry = new JournalEntry([
             "account_id" => factory(Account::class)->create([

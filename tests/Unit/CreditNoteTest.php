@@ -4,7 +4,6 @@ namespace Tests\Unit;
 
 use Carbon\Carbon;
 
-use Illuminate\Support\Facades\Auth;
 
 use IFRS\Tests\TestCase;
 

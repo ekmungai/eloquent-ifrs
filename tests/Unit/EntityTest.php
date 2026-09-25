@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 
 use IFRS\Tests\TestCase;
@@ -14,7 +15,6 @@ use IFRS\Models\RecycledObject;
 use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Account;
 
-use IFRS\Exceptions\UnauthorizedUser;
 use IFRS\Exceptions\UnconfiguredLocale;
 use IFRS\Exceptions\MissingReportingCurrency;
 
@@ -132,18 +132,31 @@ class EntityTest extends TestCase
     }
 
     /**
-     * Test Entity Authorized User
+     * Test Model creation without an authenticated User.
+     *
+     * Models inherit their Entity from the authenticated User. Creating one
+     * without a session is not rejected outright, but there is then no Entity
+     * to inherit and the record is rejected by the database.
      *
      * @return void
      */
-    public function estEntityAuthorizedUser()
+    public function testUnauthenticatedUserEntity()
     {
+        $currency = factory(Currency::class)->create();
+
         Auth::logout();
 
-        $this->expectException(UnauthorizedUser::class);
-        $this->expectExceptionMessage('You are not Authorized to perform that action');
+        $account = new Account([
+            'name' => $this->faker->name,
+            'currency_id' => $currency->id,
+            'account_type' => Account::BANK,
+            'category_id' => null,
+        ]);
 
-        factory(Account::class)->create();
+        $this->expectException(QueryException::class);
+        $this->expectExceptionMessage('entity_id');
+
+        $account->save();
     }
 
     /**

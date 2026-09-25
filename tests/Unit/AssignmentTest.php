@@ -17,7 +17,6 @@ use IFRS\Models\ExchangeRate;
 use IFRS\Models\LineItem;
 use IFRS\Models\ReportingPeriod;
 use IFRS\Models\Transaction;
-use IFRS\Models\Vat;
 
 use IFRS\Transactions\ClientInvoice;
 use IFRS\Transactions\ClientReceipt;

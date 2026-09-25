@@ -12,7 +12,6 @@ use IFRS\Models\Ledger;
 use IFRS\Models\LineItem;
 use IFRS\Models\Vat;
 
-use IFRS\Models\Currency;
 
 use IFRS\Transactions\DebitNote;
 
