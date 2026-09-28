@@ -19,7 +19,6 @@ use IFRS\Models\ClosingRate;
 use IFRS\Models\Currency;
 use IFRS\Models\ExchangeRate;
 use IFRS\Models\LineItem;
-use IFRS\Models\Vat;
 
 use IFRS\Transactions\ClientInvoice;
 use IFRS\Transactions\ClientReceipt;

@@ -11,17 +11,14 @@
 namespace IFRS\Transactions;
 
 use IFRS\Interfaces\Buys;
-use IFRS\Interfaces\Clearable;
 
 use IFRS\Traits\Buying;
-use IFRS\Traits\Clearing;
 
 use IFRS\Models\Transaction;
 
-class SupplierBill extends Transaction implements Buys, Clearable
+class SupplierBill extends Transaction implements Buys
 {
     use Buying;
-    use Clearing;
 
     /**
      * Transaction Number prefix

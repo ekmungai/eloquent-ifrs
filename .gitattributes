@@ -1,0 +1,5 @@
+# Normalise line endings so the repository is byte-identical regardless of the
+# platform a change was authored on. Git stores every text file with LF and
+# checks it out with LF, which keeps Windows editors, WSL and Linux tooling
+# working against the same checkout without producing whole-file diffs.
+* text=auto eol=lf

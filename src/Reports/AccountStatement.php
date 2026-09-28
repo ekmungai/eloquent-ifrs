@@ -12,7 +12,6 @@ namespace IFRS\Reports;
 
 use Carbon\Carbon;
 
-use Illuminate\Support\Facades\Auth;
 
 use IFRS\Models\Entity;
 use IFRS\Models\Ledger;

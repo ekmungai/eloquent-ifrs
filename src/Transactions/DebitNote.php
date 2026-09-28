@@ -10,18 +10,15 @@
 
 namespace IFRS\Transactions;
 
-use IFRS\Interfaces\Assignable;
 use IFRS\Interfaces\Buys;
 
-use IFRS\Traits\Assigning;
 use IFRS\Traits\Buying;
 
 use IFRS\Models\Transaction;
 
-class DebitNote extends Transaction implements Buys, Assignable
+class DebitNote extends Transaction implements Buys
 {
     use Buying;
-    use Assigning;
 
     /**
      * Transaction Number prefix

@@ -15,7 +15,6 @@ use IFRS\Models\ExchangeRate;
 use IFRS\Models\LineItem;
 use IFRS\Models\RecycledObject;
 use IFRS\Models\ReportingPeriod;
-use IFRS\Models\Vat;
 
 use IFRS\Transactions\ClientInvoice;
 

@@ -10,17 +10,10 @@
 
 namespace IFRS\Transactions;
 
-use IFRS\Interfaces\Assignable;
-use IFRS\Interfaces\Clearable;
-
 use IFRS\Models\LineItem;
-
-use IFRS\Traits\Assigning;
-use IFRS\Traits\Clearing;
 
 use IFRS\Models\Transaction;
 
-use IFRS\Exceptions\InvalidVatRate;
 use IFRS\Exceptions\MissingMainAccountAmount;
 use IFRS\Exceptions\MultipleVatError;
 
@@ -44,11 +37,8 @@ use IFRS\Exceptions\MultipleVatError;
  * @property Carbon $deleted_at
  */
 
-class JournalEntry extends Transaction implements Assignable, Clearable
+class JournalEntry extends Transaction
 {
-    use Assigning;
-    use Clearing;
-
     /**
      * Transaction Number prefix
      *

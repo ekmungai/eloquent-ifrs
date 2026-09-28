@@ -10,24 +10,16 @@
 
 namespace IFRS\Transactions;
 
-
 use IFRS\Exceptions\LineItemAccount;
 use IFRS\Exceptions\MainAccount;
 use IFRS\Exceptions\VatCharge;
-
-use IFRS\Interfaces\Assignable;
-
-
-use IFRS\Traits\Assigning;
 
 use IFRS\Models\Account;
 use IFRS\Models\LineItem;
 use IFRS\Models\Transaction;
 
-class ClientReceipt extends Transaction implements Assignable
+class ClientReceipt extends Transaction
 {
-    use Assigning;
-
     /**
      * Transaction Number prefix
      *
