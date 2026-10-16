@@ -147,7 +147,7 @@ class Assignment extends Model implements Segregatable
         $this->validate($transactionRate, $clearedRate, $transactionType, $clearedType);
 
         // Realize Forex differences
-        if (!bccomp($transactionRate, $clearedRate, config('ifrs.forex_scale')) == 0) {
+        if (!self::ratesMatch($transactionRate, $clearedRate)) {
             Ledger::postForex($this, $transactionRate, $clearedRate);
         }
         return parent::save();
@@ -163,6 +163,21 @@ class Assignment extends Model implements Segregatable
      * 
      * @return void
      */
+    /**
+     * Whether two rates are equal to forex_scale decimal places. The rates are formatted first because
+     * PHP writes a float below 0.0001 in scientific notation (6.0E-5), which bccomp rejects.
+     */
+    private static function ratesMatch(float $transactionRate, float $clearedRate): bool
+    {
+        $scale = (int) config('ifrs.forex_scale', 4);
+
+        return bccomp(
+            number_format($transactionRate, $scale, '.', ''),
+            number_format($clearedRate, $scale, '.', ''),
+            $scale
+        ) == 0;
+    }
+
     private function validate(float $transactionRate, float $clearedRate, string $transactionType, string $clearedType): void
     {
         if (!in_array($transactionType, Assignment::ASSIGNABLES)) {
@@ -198,7 +213,7 @@ class Assignment extends Model implements Segregatable
             throw new InvalidClearanceEntry();
         }
 
-        if (round($this->transaction->balance, config('ifrs.forex_scale')) < round($this->amount, config('ifrs.forex_scale'))) {
+        if (round($this->transaction->balance, 4) < round($this->amount, 4)) {
             throw new InsufficientBalance($transactionType, $this->amount, $clearedType);
         }
 
@@ -206,7 +221,7 @@ class Assignment extends Model implements Segregatable
             throw new OverClearance($clearedType, $this->amount);
         }
 
-        if (!bccomp($transactionRate, $clearedRate, config('ifrs.forex_scale')) == 0 && !isset($this->forex_account_id)) {
+        if (!self::ratesMatch($transactionRate, $clearedRate) && !isset($this->forex_account_id)) {
             throw new MissingForexAccount();
         }
 

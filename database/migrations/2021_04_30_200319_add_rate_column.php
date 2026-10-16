@@ -16,7 +16,7 @@ class AddRateColumn extends Migration
         Schema::table(
             config('ifrs.table_prefix') . 'ledgers',
             function (Blueprint $table) {
-                $table->decimal('rate', 13, 4)->default(1);
+                $table->decimal('rate', 9 + config('ifrs.forex_scale', 4), config('ifrs.forex_scale', 4))->default(1);
         });
     }
 

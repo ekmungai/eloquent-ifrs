@@ -35,7 +35,7 @@ class CreateIfrsExchangeRatesTable extends Migration
                 // attributes
                 $table->dateTime('valid_from', 0);
                 $table->dateTime('valid_to', 0)->nullable();
-                $table->decimal('rate', 13, 4)->default(1);
+                $table->decimal('rate', 9 + config('ifrs.forex_scale', 4), config('ifrs.forex_scale', 4))->default(1);
 
                 // *permanent* deletion
                 $table->dateTime('destroyed_at')->nullable();

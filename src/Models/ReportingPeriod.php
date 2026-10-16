@@ -265,7 +265,7 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
                         $localBalance = $balances[$reportingCurrency];
                         $foreignBalance = $balances[$currency->currency_id] * $rates[$currency->currency_id];
 
-                        if ($localBalance <> round($foreignBalance, config('ifrs.forex_scale'))) {
+                        if ($localBalance <> round($foreignBalance, 4)) {
                             $transactions[] = $this->balanceAccount(
                                 $forexAccountId,
                                 $account,

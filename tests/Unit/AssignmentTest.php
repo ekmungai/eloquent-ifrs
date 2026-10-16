@@ -465,6 +465,76 @@ class AssignmentTest extends TestCase
     }
 
     /**
+     * Test Realized Forex gain on rates below 0.0001, which PHP writes in scientific notation.
+     *
+     * @return void
+     */
+    public function testRealizedForexOnVerySmallRates()
+    {
+        config(['ifrs.forex_scale' => 10]);
+
+        $account = factory(Account::class)->create([
+            'account_type' => Account::RECEIVABLE,
+            'category_id' => null
+        ]);
+
+        $currency = factory(Currency::class)->create();
+        $transaction = new ClientReceipt([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
+                "rate" => 0.0000600
+            ])->id,
+            'currency_id' => $currency->id,
+        ]);
+        $transaction->addLineItem(new LineItem([
+            'account_id' => factory(Account::class)->create([
+                'account_type' => Account::BANK,
+                'category_id' => null,
+                'currency_id' => $currency->id,
+            ])->id,
+            'amount' => 10000000,
+        ]));
+        $transaction->post();
+
+        $cleared = new ClientInvoice([
+            "account_id" => $account->id,
+            "transaction_date" => Carbon::now(),
+            "narration" => $this->faker->word,
+            "exchange_rate_id" => factory(ExchangeRate::class)->create([
+                "rate" => 0.0000578
+            ])->id,
+            'currency_id' => $currency->id,
+        ]);
+        $cleared->addLineItem(new LineItem([
+            'account_id' => factory(Account::class)->create([
+                'account_type' => Account::OPERATING_REVENUE,
+                'category_id' => null
+            ])->id,
+            'amount' => 10000000,
+        ]));
+        $cleared->post();
+
+        $forex = factory(Account::class)->create([
+            'account_type' => Account::NON_OPERATING_REVENUE,
+            'category_id' => null
+        ]);
+
+        $assignment = new Assignment([
+            'assignment_date' => Carbon::now(),
+            'transaction_id' => $transaction->id,
+            'cleared_id' => $cleared->id,
+            'cleared_type' => $cleared->cleared_type,
+            'amount' => 10000000,
+            'forex_account_id' => $forex->id,
+        ]);
+        $assignment->save();
+
+        $this->assertEquals($forex->Closingbalance(), [$this->reportingCurrencyId => -22]);
+    }
+
+    /**
      * Test Realized Forex loss.
      *
      * @return void

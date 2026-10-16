@@ -60,8 +60,14 @@ return [
      | Forex scale
      |--------------------------------------------------------------------------
      |
-     | The number of decimal places to consider when calculating the difference between two 
-     | exchange rates
+     | The number of decimal places of an exchange rate: how many the rate columns of the
+     | exchange_rates and ledgers tables store, and how many count when two rates are compared
+     | and their difference is posted. Four is enough for currencies of similar value, but a
+     | rate between currencies of very different value loses most of its precision: HUF to USD
+     | (about 0.0028) is stored with an error of up to 2%, and IDR to EUR (about 0.0000578)
+     | becomes 0.0001. Raise it before running the migrations, for example to 10, if the entity
+     | deals in such pairs. The migrations read it, so changing it later needs a migration of
+     | the existing columns. Amounts keep four decimal places whatever this is set to.
      |
      */
     'forex_scale' => 4,
