@@ -174,7 +174,9 @@ class Entity extends Model implements Recyclable
      */
     public function getCurrentReportingPeriodAttribute(): ReportingPeriod
     {
-        $existing = $this->reportingPeriods->where('calendar_year', date("Y"))
+        $year = ReportingPeriod::year(null, $this);
+
+        $existing = $this->reportingPeriods->where('calendar_year', $year)
             ->where('entity_id', '=', $this->id)->first();
 
         if (!is_null($existing)) {
@@ -182,7 +184,7 @@ class Entity extends Model implements Recyclable
         }
 
         $new = new ReportingPeriod([
-            'calendar_year' => date('Y'),
+            'calendar_year' => $year,
             'period_count' => count(ReportingPeriod::where('entity_id', '=', $this->id)->withTrashed()->get()) + 1,
             'entity_id' => $this->id
         ]);
