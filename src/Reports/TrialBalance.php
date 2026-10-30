@@ -26,6 +26,13 @@ class TrialBalance extends FinancialStatement
     const TITLE = 'TRIAL_BALANCE';
 
     /**
+     * Trial Balance end date.
+     *
+     * @var Carbon
+     */
+    public $endDate;
+
+    /**
      * Construct Trial Balance
      *
      * @param string $year

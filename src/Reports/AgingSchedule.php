@@ -39,6 +39,12 @@ class AgingSchedule
      */
     public $brackets = [];
     /**
+     * Aging Schedule period.
+     *
+     * @var array
+     */
+    public $period = [];
+    /**
      * Aging Schedule Currency.
      *
      * @var Currency

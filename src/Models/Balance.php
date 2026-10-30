@@ -25,6 +25,7 @@ use IFRS\Traits\Recycling;
 use IFRS\Traits\Segregating;
 use IFRS\Traits\ModelTablePrefix;
 
+use IFRS\Exceptions\ClosedReportingPeriod;
 use IFRS\Exceptions\NegativeAmount;
 use IFRS\Exceptions\InvalidBalanceType;
 use IFRS\Exceptions\InvalidBalanceDate;
@@ -305,8 +306,16 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
             throw new InvalidCurrency("Balance", $this->account);
         }
 
-        if (ReportingPeriod::periodStart(null, $entity)->lt($this->transaction_date) && !$entity->mid_year_balances) {
+        $period = ReportingPeriod::find($this->reporting_period_id);
+
+        $dateChanged = !$this->exists || $this->isDirty(['transaction_date', 'reporting_period_id']);
+
+        if ($dateChanged && ReportingPeriod::yearStart($period->calendar_year, $entity)->lt($this->transaction_date) && !$entity->mid_year_balances) {
             throw new InvalidBalanceDate();
+        }
+
+        if ($period->status == ReportingPeriod::CLOSED && (!$this->exists || $this->isDirty(['balance', 'reporting_period_id']))) {
+            throw new ClosedReportingPeriod($period->calendar_year);
         }
 
         if (!isset($this->currency_id)) {

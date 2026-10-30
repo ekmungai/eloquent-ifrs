@@ -228,6 +228,11 @@ class Account extends Model implements Recyclable, Segregatable
                     $categoryId = $category->id;
                 }
 
+                // Different Categories can share a name, and must not be added together
+                if (isset($balances['sectionCategories'][$categoryName]) && $balances['sectionCategories'][$categoryName]['id'] != $categoryId) {
+                    $categoryName .= ' (' . $categoryId . ')';
+                }
+
                 if (array_key_exists($categoryName, $balances['sectionCategories'])) {
                     $balances['sectionCategories'][$categoryName]['accounts']->push((object)$account->attributes);
                     $balances['sectionCategories'][$categoryName]['total'] += $account->closingBalance;

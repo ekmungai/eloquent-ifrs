@@ -533,7 +533,7 @@ class AccountBalanceTest extends TestCase
         $entity->save();
 
         //no exception
-        $balance = factory(Balance::class)->create([
+        factory(Balance::class)->create([
             "transaction_date" => Carbon::now(),
             "entity_id" => $entity->id
         ]);
@@ -541,12 +541,13 @@ class AccountBalanceTest extends TestCase
         $entity->mid_year_balances = false;
         $entity->save();
 
-        $balance->load('entity');
-        
         $this->expectException(InvalidBalanceDate::class);
         $this->expectExceptionMessage('Transaction date must be earlier than the first day of the Balance\'s Reporting Period ');
 
-        $balance->save();
+        factory(Balance::class)->create([
+            "transaction_date" => Carbon::now(),
+            "entity_id" => $entity->id
+        ]);
     }
 
     /**
