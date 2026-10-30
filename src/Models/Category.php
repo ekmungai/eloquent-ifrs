@@ -110,6 +110,7 @@ class Category extends Model implements Segregatable, Recyclable
 
         $periodStart = ReportingPeriod::periodStart($endDate, $entity);
         $year = ReportingPeriod::year($endDate, $entity);
+        $startDate = $startDate ?? $periodStart;
 
         foreach ($this->accounts as $account) {
 

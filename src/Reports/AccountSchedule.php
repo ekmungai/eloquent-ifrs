@@ -123,8 +123,8 @@ class AccountSchedule extends AccountStatement
         $rate = is_null($this->currencyId) ? $transaction->exchangeRate->rate : 1;
 
         $transaction->originalAmount = $transaction->amount * $rate;
-        $transaction->amountCleared = $transaction->clearedAmount * $rate;
-        $unclearedAmount = $transaction->originalAmount - $transaction->clearedAmount * $rate;
+        $transaction->amountCleared = $transaction->clearedAmountAsAt($this->period['endDate']) * $rate;
+        $unclearedAmount = $transaction->originalAmount - $transaction->amountCleared;
 
         if ($unclearedAmount > 0) {
 
