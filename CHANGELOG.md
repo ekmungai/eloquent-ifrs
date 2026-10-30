@@ -3,6 +3,7 @@
 - Fix `Balance::save()` translating the amount again on every save, which compounded a foreign currency Balance by its exchange rate each time it was edited, restored or otherwise saved. Only an amount being entered is translated now
 - Fix `Assignment` allowing a transaction to be over cleared by less than 1. `bccomp()` was called without a scale, so it compared whole numbers only
 - Scope `ReportingPeriod::transactionCurrencies()` to its Entity and ignore deleted Transactions. A foreign currency Transaction of another Entity, or a deleted one, could make `prepareBalancesTranslation()` fail
+- Add the `ifrs:audit-balances` command, which lists without changing anything the foreign currency Balances that may have been compounded, and the Transactions and Balances cleared by more than their amount
 
 ## 7.1.0 - 2026-10-30
 

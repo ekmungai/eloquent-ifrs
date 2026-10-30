@@ -12,6 +12,7 @@ namespace IFRS;
 
 use Illuminate\Support\ServiceProvider;
 
+use IFRS\Console\AuditBalances;
 use IFRS\Console\RepairBalances;
 
 class IFRSServiceProvider extends ServiceProvider
@@ -47,7 +48,7 @@ class IFRSServiceProvider extends ServiceProvider
 		}				
 
 		if ($this->app->runningInConsole()) {
-			$this->commands([RepairBalances::class]);
+			$this->commands([AuditBalances::class, RepairBalances::class]);
 		}
     }
 }
