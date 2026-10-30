@@ -1,4 +1,4 @@
-## Unreleased
+## 7.2.0 - 2026-10-30
 
 - Fix `Balance::save()` translating the amount again on every save, which compounded a foreign currency Balance by its exchange rate each time it was edited, restored or otherwise saved. Only an amount being entered is translated now
 - Fix `Assignment` allowing a transaction to be over cleared by less than 1. `bccomp()` was called without a scale, so it compared whole numbers only
