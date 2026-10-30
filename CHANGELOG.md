@@ -1,3 +1,7 @@
+## Unreleased
+
+- Add the `ifrs:repair-balances` command, which lists Balances that a version before 7.0.0 attached to the Reporting Period of the next financial year, and moves them with `--apply`. Affects entities whose year does not start in January, for Balances saved without an explicit period before `year_start`. Run it without `--apply` first: a Balance given that period on purpose looks the same
+
 ## 7.0.0 - 2026-10-30
 
 - **BREAKING:** The `ifrs_create_or_update_users_table` migration no longer creates an application `users` table as a fallback. The table configured through `ifrs.user_model` must exist before the IFRS migrations run; the migration now fails with an explicit message instead of silently creating a competing table. Only the package's own prefixed table (`IFRS\User`) is still created for standalone use (#195)

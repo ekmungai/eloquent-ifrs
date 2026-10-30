@@ -12,6 +12,8 @@ namespace IFRS;
 
 use Illuminate\Support\ServiceProvider;
 
+use IFRS\Console\RepairBalances;
+
 class IFRSServiceProvider extends ServiceProvider
 {
     /**
@@ -43,5 +45,9 @@ class IFRSServiceProvider extends ServiceProvider
 		if ($this->app->runningInConsole() && config('ifrs.load_factories', true)) {
 			$this->loadFactoriesFrom(__DIR__ . '/../database/factories');
 		}				
+
+		if ($this->app->runningInConsole()) {
+			$this->commands([RepairBalances::class]);
+		}
     }
 }
