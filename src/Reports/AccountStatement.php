@@ -89,7 +89,7 @@ class AccountStatement
 
         $this->entity = $this->account->entity;
 
-        $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart(null, $this->entity) : Carbon::parse($startDate);
+        $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart(null, $this->entity) : Carbon::parse($startDate)->startOfDay();
         $this->period['endDate'] = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
         $this->currency = is_null($currencyId) ? $this->entity->currency : Currency::find($currencyId);
         $this->currencyId = $currencyId;
@@ -127,7 +127,7 @@ class AccountStatement
 
         // The statement opens with the year's opening balance plus whatever moved before its start date
         $this->balances['opening'] = $this->account->openingBalance(ReportingPeriod::year($startDate, $entity), $this->currencyId)[$this->currency->id]
-            + $this->account->currentBalance($periodStart, $startDate->copy()->subSecond(), $this->currencyId)[$this->currency->id];
+            + $this->account->currentBalance($periodStart, $startDate->copy()->subDay(), $this->currencyId)[$this->currency->id];
         $this->balances['closing'] += $this->balances['opening'];
 
         $balance = $this->balances['opening'];

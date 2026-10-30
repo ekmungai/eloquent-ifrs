@@ -18,6 +18,8 @@ use IFRS\Models\ReportingPeriod;
 
 use IFRS\Reports\AccountSchedule;
 use IFRS\Reports\AccountStatement;
+use IFRS\Reports\BalanceSheet;
+use IFRS\Reports\CashFlowStatement;
 use IFRS\Reports\TrialBalance;
 
 use IFRS\Transactions\ClientReceipt;
@@ -55,12 +57,14 @@ class FinancialYearTest extends TestCase
     /**
      * Create an Account.
      *
+     * @param string $type
+     *
      * @return Account
      */
-    private function account(): Account
+    private function account(string $type = Account::RECEIVABLE): Account
     {
         return factory(Account::class)->create([
-            'account_type' => Account::RECEIVABLE,
+            'account_type' => $type,
             'category_id' => null,
         ]);
     }
@@ -96,10 +100,11 @@ class FinancialYearTest extends TestCase
      * @param string $date
      * @param float $amount
      * @param bool $credited
+     * @param string $lineAccountType
      *
      * @return void
      */
-    private function postJournal(Account $account, string $date, float $amount, bool $credited): void
+    private function postJournal(Account $account, string $date, float $amount, bool $credited, string $lineAccountType = Account::CONTROL): void
     {
         $journalEntry = new JournalEntry([
             'account_id' => $account->id,
@@ -114,7 +119,7 @@ class FinancialYearTest extends TestCase
             'amount' => $amount,
             'quantity' => 1,
             'account_id' => factory(Account::class)->create([
-                'account_type' => Account::CONTROL,
+                'account_type' => $lineAccountType,
                 'category_id' => null,
                 'currency_id' => $account->currency_id,
             ])->id,
@@ -283,6 +288,175 @@ class FinancialYearTest extends TestCase
 
         $this->assertEquals($period->id, $trialBalance->reportingPeriod->id);
         $this->assertEquals('2025-06-30', $trialBalance->endDate->toDateString());
+    }
+
+    /**
+     * Test the section balances count a transaction dated exactly at the start
+     * date once, in the movement and not in the opening balance as well.
+     *
+     * @return void
+     */
+    public function testSectionBalancesStartDate()
+    {
+        $this->period(2024);
+        $account = $this->account();
+
+        $this->postJournal($account, '2024-10-01', 50, false);
+
+        $balances = Account::sectionBalances([Account::RECEIVABLE], '2024-10-01', '2024-12-31', true, Auth::user()->entity);
+
+        $this->assertEquals(0, $balances['sectionOpeningBalance']);
+        $this->assertEquals(50, $balances['sectionClosingBalance']);
+    }
+
+    /**
+     * Test the closing balance includes a transaction made during the end date.
+     *
+     * @return void
+     */
+    public function testClosingBalanceEndDate()
+    {
+        $this->period(2024);
+        $account = $this->account();
+
+        $this->postJournal($account, '2024-12-31 14:30:00', 50, false);
+
+        $reportingCurrencyId = $account->entity->currency_id;
+
+        $this->assertEquals(0, $account->closingBalance('2024-12-30')[$reportingCurrencyId]);
+        $this->assertEquals(50, $account->closingBalance('2024-12-31')[$reportingCurrencyId]);
+    }
+
+    /**
+     * Test the section balances include a transaction made during the end date.
+     *
+     * @return void
+     */
+    public function testSectionBalancesEndDate()
+    {
+        $this->period(2024);
+        $account = $this->account();
+
+        $this->postJournal($account, '2024-12-31 14:30:00', 50, false);
+
+        $balances = Account::sectionBalances([Account::RECEIVABLE], '2024-10-01', '2024-12-31', true, Auth::user()->entity);
+
+        $this->assertEquals(50, $balances['sectionClosingBalance']);
+    }
+
+    /**
+     * Test the Balance Sheet of a year that does not start in January, with
+     * activity on both sides of the turn of the calendar year.
+     *
+     * @return void
+     */
+    public function testBalanceSheet()
+    {
+        $this->startYearInJuly();
+
+        $this->period(2023);
+        $period = $this->period(2024);
+        $account = $this->account();
+
+        $this->openingBalance($account, $period, '2024-07-01', Balance::DEBIT, 2000);
+        $this->postJournal($account, '2024-10-05', 500, false);
+        $this->postJournal($account, '2025-02-05', 100, false);
+
+        $balanceSheet = new BalanceSheet('2025-03-31');
+        $balanceSheet->getSections();
+
+        $this->assertEquals($period->id, $balanceSheet->reportingPeriod->id);
+        $this->assertEquals('2024-07-01', $balanceSheet->period['startDate']->toDateString());
+        $this->assertEquals(2600, $balanceSheet->totals[BalanceSheet::ASSETS]);
+        $this->assertEquals(-600, $balanceSheet->totals[BalanceSheet::LIABILITIES]);
+    }
+
+    /**
+     * Post the cash flows shared by the Cash Flow Statement tests: 1000 of opening
+     * cash and two 300 sales, the second in the calendar year after the first.
+     *
+     * @param ReportingPeriod $period
+     * @param string $openingDate
+     * @param string $firstSale
+     * @param string $secondSale
+     *
+     * @return void
+     */
+    private function postCashFlows(ReportingPeriod $period, string $openingDate, string $firstSale, string $secondSale): void
+    {
+        $bank = $this->account(Account::BANK);
+
+        $this->openingBalance($bank, $period, $openingDate, Balance::DEBIT, 1000);
+        $this->postJournal($bank, $firstSale, 300, false, Account::OPERATING_REVENUE);
+        $this->postJournal($bank, $secondSale, 300, false, Account::OPERATING_REVENUE);
+    }
+
+    /**
+     * Assert the Cash Flow Statement of the cash flows above.
+     *
+     * @param CashFlowStatement $statement
+     *
+     * @return void
+     */
+    private function assertCashFlows(CashFlowStatement $statement): void
+    {
+        $sections = $statement->getSections();
+
+        $this->assertEquals(600, $sections['balances'][CashFlowStatement::PROFIT]);
+        $this->assertEquals(600, $sections['balances'][CashFlowStatement::NET_CASH_FLOW]);
+        $this->assertEquals(1000, $sections['balances'][CashFlowStatement::START_CASH_BALANCE]);
+        $this->assertEquals(1600, $sections['results'][CashFlowStatement::END_CASH_BALANCE]);
+        $this->assertEquals(1600, $sections['results'][CashFlowStatement::CASHBOOK_BALANCE]);
+    }
+
+    /**
+     * Test the Cash Flow Statement of a past year that starts in January.
+     *
+     * @return void
+     */
+    public function testCashFlowStatementPastYear()
+    {
+        $this->postCashFlows($this->period(2024), '2024-01-01', '2024-03-05', '2024-10-05');
+
+        $this->assertCashFlows(new CashFlowStatement('2024-01-01', '2024-12-31'));
+    }
+
+    /**
+     * Test the Cash Flow Statement of a past year that does not start in January.
+     *
+     * @return void
+     */
+    public function testCashFlowStatementFinancialYear()
+    {
+        $this->startYearInJuly();
+
+        $this->period(2023);
+        $this->postCashFlows($this->period(2024), '2024-07-01', '2024-10-05', '2025-02-05');
+
+        $this->assertCashFlows(new CashFlowStatement('2024-07-01', '2025-06-30'));
+    }
+
+    /**
+     * Test the Cash Flow Statement of part of a year starts from the cash held
+     * before it, reports only its own profit, and stops at its end date.
+     *
+     * @return void
+     */
+    public function testCashFlowStatementPartOfYear()
+    {
+        $this->postCashFlows($this->period(2024), '2024-01-01', '2024-03-05', '2024-10-01');
+
+        $sections = (new CashFlowStatement('2024-10-01', '2024-10-31'))->getSections();
+
+        $this->assertEquals(300, $sections['balances'][CashFlowStatement::PROFIT]);
+        $this->assertEquals(1300, $sections['balances'][CashFlowStatement::START_CASH_BALANCE]);
+        $this->assertEquals(1600, $sections['results'][CashFlowStatement::END_CASH_BALANCE]);
+        $this->assertEquals(1600, $sections['results'][CashFlowStatement::CASHBOOK_BALANCE]);
+
+        $sections = (new CashFlowStatement('2024-04-01', '2024-09-30'))->getSections();
+
+        $this->assertEquals(0, $sections['balances'][CashFlowStatement::PROFIT]);
+        $this->assertEquals(1300, $sections['results'][CashFlowStatement::END_CASH_BALANCE]);
     }
 
     /**

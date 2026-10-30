@@ -1,3 +1,10 @@
+## Unreleased
+
+- Fix `CashFlowStatement` ignoring its dates: sections and profit always covered the current year, so any other period reported nothing. Its profit is now that of the period rather than of the year to date, its starting cash is the cash held before the start date, and its end date is no longer pushed a day later
+- Include the whole of the end date in `Account::currentBalance()`, and through it `closingBalance()`, `sectionBalances()` and `Category::getAccountBalances()`. A transaction made during the end date was left out, including on the last day of the year by default
+- Stop `Account::sectionBalances()` counting a transaction on the start date in both the opening balance and the movement
+- `AccountStatement` and `Account::sectionBalances()` treat their start date as a whole day
+
 ## 7.0.0 - 2026-10-30
 
 - **BREAKING:** The `ifrs_create_or_update_users_table` migration no longer creates an application `users` table as a fallback. The table configured through `ifrs.user_model` must exist before the IFRS migrations run; the migration now fails with an explicit message instead of silently creating a competing table. Only the package's own prefixed table (`IFRS\User`) is still created for standalone use (#195)
