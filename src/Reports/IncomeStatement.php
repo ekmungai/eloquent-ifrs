@@ -62,7 +62,7 @@ class IncomeStatement extends FinancialStatement
      */
     public function __construct(?string $startDate = null, ?string $endDate = null, ?Entity $entity = null)
     {
-        $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart(null, $entity) : Carbon::parse($startDate);
+        $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart($endDate, $entity) : Carbon::parse($startDate);
         $this->period['endDate'] = is_null($endDate) ? ReportingPeriod::periodEnd(null, $entity) : Carbon::parse($endDate);
 
         $reportingPeriod = ReportingPeriod::getPeriod($endDate, $entity);
@@ -132,12 +132,12 @@ class IncomeStatement extends FinancialStatement
         $expenses = self::getBalance(config('ifrs')[self::NON_OPERATING_EXPENSES], $startDate, $endDate, $entity);
 
         return [
-            self::OPERATING_REVENUES => abs($revenues),
-            self::NON_OPERATING_REVENUES => abs($otherRevenues),
+            self::OPERATING_REVENUES => $revenues * -1,
+            self::NON_OPERATING_REVENUES => $otherRevenues * -1,
             self::OPERATING_EXPENSES => $cogs,
-            self::GROSS_PROFIT => abs($revenues + $otherRevenues + $cogs),
+            self::GROSS_PROFIT => ($revenues + $cogs) * -1,
             self::NON_OPERATING_EXPENSES => $expenses,
-            self::NET_PROFIT => abs($revenues + $otherRevenues + $cogs + $expenses),
+            self::NET_PROFIT => ($revenues + $otherRevenues + $cogs + $expenses) * -1,
         ];
     }
 

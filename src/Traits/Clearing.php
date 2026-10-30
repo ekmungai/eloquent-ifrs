@@ -10,6 +10,8 @@
 
 namespace IFRS\Traits;
 
+use Carbon\Carbon;
+
 use IFRS\Models\Assignment;
 
 /**
@@ -31,6 +33,22 @@ trait Clearing
         }
 
         return $cleared;
+    }
+
+    /**
+     * Cleared Transaction amount as at the end of the given date.
+     *
+     * @param Carbon $date
+     *
+     * @return float
+     */
+    public function clearedAmountAsAt(Carbon $date): float
+    {
+        $this->load('clearances');
+
+        return $this->clearances->filter(function ($clearance) use ($date) {
+            return Carbon::parse($clearance->assignment_date)->lte($date->copy()->endOfDay());
+        })->sum('amount');
     }
 
     /**
