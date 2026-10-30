@@ -1,4 +1,4 @@
-## Unreleased
+## 7.0.0 - 2026-10-30
 
 - **BREAKING:** The `ifrs_create_or_update_users_table` migration no longer creates an application `users` table as a fallback. The table configured through `ifrs.user_model` must exist before the IFRS migrations run; the migration now fails with an explicit message instead of silently creating a competing table. Only the package's own prefixed table (`IFRS\User`) is still created for standalone use (#195)
 - Make the users table extension additive and idempotent: only the columns the package is missing are added, and `down()` drops only those columns instead of the application's table (#195)
@@ -11,6 +11,13 @@
 - Stop `AccountTest::testAccountClosing` drawing its "different" year from the `ReportingPeriod` factory. Faker's `year()` spans 1970 to the current year and `unique()` only excludes values it returned itself, so roughly one run in 75 drew the current year, which is closed, and the assertion that it is not failed
 - Normalise line endings through a `.gitattributes` so the repository stores LF whatever platform a change is authored on. A repo wide CRLF conversion had previously turned routine edits into whole file diffs
 - **BREAKING:** Remove three exception classes that nothing throws any more: `InvalidVatRate`, orphaned when the compound Journal Entry Vat guard was replaced by `MultipleVatError`; `UnauthorizedUser`, orphaned when models stopped requiring an authenticated user; and `VatPeriodOverlap`, whose Vat validity period check was never reimplemented after the Vat account moved off the Line Item. Catch `IFRSException` instead
+- **BREAKING:** Fix balances for an Entity whose financial year does not start in January. A year was resolved from its 1 January, which belongs to the previous financial year, so `Account::openingBalance()` read the wrong Reporting Period, or threw `MissingReportingPeriod` when there was none. `closingBalance()`, `openingBalances()`, `sectionBalances()` and the reports built on them inherited the error. Reported figures change for these entities (#187)
+- Fix the same assumption in `TrialBalance`, `Entity::current_reporting_period`, `Account::isClosed()`, `Account::closingTransactions()`, `ReportingPeriod::transactionCurrencies()` and `ReportingPeriod::prepareBalancesTranslation()`, the last of which also passed a malformed date. A financial year is labelled by the calendar year it starts in
+- Add `ReportingPeriod::yearStart()`, the first day of the financial year that a calendar year labels
+- Include movements between the start of the year and the statement's start date in the `AccountStatement` opening balance (#187)
+- Stop the currency filter of `Account::openingBalance()` and `AccountSchedule` dropping the Reporting Period filter, which added together the balances of every year
+- Add `forex_scale` to the exchange rate columns: the rate columns now use the `forex_scale` setting for their decimal places, so rates such as IDR to EUR are stored without being rounded away. Set it before running the migrations; changing it later needs a migration of the existing columns. Rates below 0.0001 no longer crash the Assignment rate comparison (#201)
+- Update `league/commonmark` and `guzzlehttp` dependencies past published advisories, and set `prefer-stable` (#202)
 ## 6.0.0 - 2026-07-01
 
 - Add Laravel 13 Compatibility
