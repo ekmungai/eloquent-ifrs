@@ -192,7 +192,7 @@ class Account extends Model implements Recyclable, Segregatable
 
         $balances = ['sectionOpeningBalance' => 0, 'sectionClosingBalance' => 0, 'sectionMovement' => 0, 'sectionCategories' => []];
 
-        $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate, $entity) : Carbon::parse($startDate);
+        $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate, $entity) : Carbon::parse($startDate)->startOfDay();
         $endDate = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
         $periodStart = ReportingPeriod::periodStart($endDate, $entity);
 
@@ -202,7 +202,7 @@ class Account extends Model implements Recyclable, Segregatable
 
             $reportingCurrencyId = $account->entity->currency_id;
 
-            $account->openingBalance = $account->openingBalance($year)[$reportingCurrencyId] + $account->currentBalance($periodStart, $startDate)[$reportingCurrencyId];
+            $account->openingBalance = $account->openingBalance($year)[$reportingCurrencyId] + $account->currentBalance($periodStart, $startDate->copy()->subDay())[$reportingCurrencyId];
             $account->balanceMovement = $account->currentBalance($startDate, $endDate)[$reportingCurrencyId];
 
             $account->closingBalance = $fullBalance ? $account->openingBalance + $account->balanceMovement : $account->balanceMovement;
@@ -367,7 +367,7 @@ class Account extends Model implements Recyclable, Segregatable
     }
 
     /**
-     * Get Account's Current Balances for the Period given.
+     * Get Account's Current Balances for the Period given, both of its days included.
      *
      * @param Carbon $startDate
      * @param Carbon $endDate
@@ -381,7 +381,7 @@ class Account extends Model implements Recyclable, Segregatable
 
         $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate, $entity) : $startDate;
         $endDate = is_null($endDate) ? Carbon::now() : $endDate;
-        return Ledger::balance($this, $startDate, $endDate, $currencyId);
+        return Ledger::balance($this, $startDate, $endDate->copy()->endOfDay(), $currencyId);
     }
 
     /**

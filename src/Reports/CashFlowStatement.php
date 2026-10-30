@@ -80,9 +80,6 @@ class CashFlowStatement extends FinancialStatement
     {
         $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart(null, $entity) : Carbon::parse($startDate);
         $this->period['endDate'] = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
-        if ($this->period['endDate'] != ReportingPeriod::periodEnd($endDate)) {
-            $this->period['endDate']->addDay();
-        }
 
         $period = ReportingPeriod::getPeriod($endDate, $entity);
         parent::__construct($period, $entity);
@@ -127,8 +124,8 @@ class CashFlowStatement extends FinancialStatement
         foreach (array_keys($this->balances) as $section) {
             $this->balances[$section] = Account::sectionBalances(
                 config('ifrs')[$section],
-                null,
-                null,
+                $this->period['startDate'],
+                $this->period['endDate'],
                 true,
                 $this->entity
             )['sectionMovement'];
@@ -137,12 +134,12 @@ class CashFlowStatement extends FinancialStatement
         // Profit for the Period
         $this->balances[self::PROFIT] = Account::sectionBalances(
                 IncomeStatement::getAccountTypes(),
-                null,
-                null,
+                $this->period['startDate'],
+                $this->period['endDate'],
                 true,
                 $this->entity
 
-            )["sectionClosingBalance"] * -1;
+            )['sectionMovement'];
 
         // Operations Cash Flow
         $this->results[self::OPERATIONS_CASH_FLOW] = $this->balances[self::PROFIT] + array_sum(array_slice($this->balances, 0, 6));
@@ -157,14 +154,13 @@ class CashFlowStatement extends FinancialStatement
         $this->balances[self::NET_CASH_FLOW] = $this->results[self::OPERATIONS_CASH_FLOW] + $this->results[self::INVESTMENT_CASH_FLOW] + $this->results[self::FINANCING_CASH_FLOW];
 
         // Cash at start of the Period
-        $periodStart = ReportingPeriod::periodStart($this->period['endDate'], $this->entity);
         $this->balances[self::START_CASH_BALANCE] = Account::sectionBalances(
             [Account::BANK],
-            $periodStart,
             $this->period['startDate'],
+            $this->period['endDate'],
             true,
             $this->entity
-        )["sectionClosingBalance"];
+        )["sectionOpeningBalance"];
 
         // Cash at end of the Period
         $this->results[self::END_CASH_BALANCE] = $this->balances[self::START_CASH_BALANCE] + $this->balances[self::NET_CASH_FLOW];
