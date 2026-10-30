@@ -323,6 +323,8 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
         $startDate = ReportingPeriod::yearStart($this->calendar_year, $this->entity);
         $query = DB::table($transactionTable)
             ->leftJoin($currenciesTable, $currenciesTable . '.id', '=', $transactionTable . '.currency_id')
+            ->where($transactionTable . '.entity_id', $this->entity_id)
+            ->whereNull($transactionTable . '.deleted_at')
             ->where($transactionTable . '.transaction_date', '>=', $startDate)
             ->where($transactionTable . '.transaction_date', '<=', ReportingPeriod::periodEnd($startDate, $this->entity)->endOfDay())
             ->whereNotIn($currenciesTable . '.id', [$reportingCurrency])

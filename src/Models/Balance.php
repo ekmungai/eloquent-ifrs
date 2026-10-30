@@ -319,7 +319,11 @@ class Balance extends Model implements Recyclable, Clearable, Segregatable
             $this->transaction_no = $this->account_id . $currency . $year;
         }
 
-        $this->balance *= $this->exchangeRate->rate;
+        // Only an amount being entered is in the Balance's currency: a stored one is
+        // already translated, and any other save would otherwise translate it again
+        if (!$this->exists || $this->isDirty('balance')) {
+            $this->balance *= $this->exchangeRate->rate;
+        }
 
         return parent::save();
     }
