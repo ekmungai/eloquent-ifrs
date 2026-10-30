@@ -75,6 +75,9 @@ abstract class FinancialStatement
         }else{
             $this->entity = $entity;
         }
+
+        $this->entity->assertAccessible();
+
         $this->reportingPeriod = is_null($period) ? $this->entity->currentReportingPeriod : $period;
 
         $this->statement = "";
