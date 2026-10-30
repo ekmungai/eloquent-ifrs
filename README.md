@@ -118,7 +118,7 @@ php artisan vendor:publish
 Full documentation for this package can be found [here](https://ekmungai.github.io/ifrs-docs/).
 
 ### DB Collision
-Publish configuration file with `vendor:publish` if your `User` model is different from `App\User` and update the namespace of your `User` model.
+Publish configuration file with `vendor:publish` if your `User` model is different from `App\Models\User` and update the namespace of your `User` model.
 
 Open your `User` model and implement the below interfaces and also include the trait as well.
 
@@ -246,14 +246,14 @@ use IFRS\Transactions\CashSale;
 
 $cashSale = CashSale::create([
     'account_id' => $bankAccount->id,
-    'date' => Carbon::now(),
+    'transaction_date' => Carbon::now(),
     'narration' => "Example Cash Sale",
 ]); // Intermediate save does not record the transaction in the Ledger
 ```
 So far the Transaction has only one side of the double entry, so we create a Line Item for the other side:
 
 ```php
-use IFRS\models\LineItem;
+use IFRS\Models\LineItem;
 
 $cashSaleLineItem = LineItem::create([
     'account_id' => $revenueAccount->id,
@@ -274,7 +274,7 @@ use IFRS\Transactions\ClientInvoice;
 
 $clientInvoice = ClientInvoice::create([
     'account_id' => $clientAccount->id,
-    'date' => Carbon::now(),
+    'transaction_date' => Carbon::now(),
     'narration' => "Example Credit Sale",
 ]);
 
@@ -295,7 +295,7 @@ use IFRS\Transactions\CashPurchase;
 
 $cashPurchase = CashPurchase::create([
     'account_id' => $clientAccount->id,
-    'date' => Carbon::now(),
+    'transaction_date' => Carbon::now(),
     'narration' => "Example Cash Purchase",
 ]);
 
@@ -315,7 +315,7 @@ use IFRS\Transactions\SupplierBill;
 
 $supplierBill = SupplierBill::create([
     'account_id' => $supplierAccount->id,
-    'date' => Carbon::now(),
+    'transaction_date' => Carbon::now(),
     'narration' => "Example Credit Purchase",
 ]);
 
@@ -335,7 +335,7 @@ use IFRS\Transactions\ClientReceipt;
 
 $clientReceipt = ClientReceipt::create([
     'account_id' => $clientAccount->id,
-    'date' => Carbon::now(),
+    'transaction_date' => Carbon::now(),
     'narration' => "Example Client Payment",
 ]);
 

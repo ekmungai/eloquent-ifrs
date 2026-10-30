@@ -73,7 +73,7 @@ class AccountSchedule extends AccountStatement
         });
 
         if (!is_null($currencyId)) {
-            $balances = $this->account->balances->filter(function ($balance, $key) use ($currencyId) {
+            $balances = $balances->filter(function ($balance, $key) use ($currencyId) {
                 return $balance->currency_id == $currencyId;
             });
         }

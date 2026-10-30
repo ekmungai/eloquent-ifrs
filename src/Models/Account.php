@@ -336,7 +336,7 @@ class Account extends Model implements Recyclable, Segregatable
         $balances = [$entity->currency_id => 0];
 
         if (!is_null($year)) {
-            $period = ReportingPeriod::getPeriod($year . "-01-01", $entity);
+            $period = ReportingPeriod::getPeriod(ReportingPeriod::yearStart($year, $entity), $entity);
         } else {
             $period = $entity->current_reporting_period;
         }
@@ -346,7 +346,7 @@ class Account extends Model implements Recyclable, Segregatable
         });
 
         if (!is_null($currencyId)) {
-            $openingBalances = $this->balances->where('entity_id', '=', $entity->id)->filter(function ($balance, $key) use ($currencyId) {
+            $openingBalances = $openingBalances->filter(function ($balance, $key) use ($currencyId) {
                 return $balance->currency_id == $currencyId;
             });
             $balances[$currencyId] = 0;
@@ -409,11 +409,13 @@ class Account extends Model implements Recyclable, Segregatable
     {
         $transactionsTable = config('ifrs.table_prefix') . 'transactions';
         $closingTransactionsTable = config('ifrs.table_prefix') . 'closing_transactions';
+        $startDate = ReportingPeriod::yearStart($year, $this->entity);
 
         return DB::table($transactionsTable)
             ->join($closingTransactionsTable, $closingTransactionsTable . '.transaction_id', '=', $transactionsTable . '.id')
             ->where($transactionsTable . '.account_id', '=', $this->id)
-            ->whereYear($transactionsTable . '.transaction_date', '=', $year)
+            ->where($transactionsTable . '.transaction_date', '>=', $startDate)
+            ->where($transactionsTable . '.transaction_date', '<=', ReportingPeriod::periodEnd($startDate, $this->entity)->endOfDay())
             ->selectRaw('transaction_id AS id, account_id, ' . $transactionsTable . '.currency_id, reporting_period_id, credited, transaction_type, transaction_date, narration');
     }
 

@@ -132,6 +132,24 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
     }
 
     /**
+     * First day of the financial year that the calendar year labels. A financial
+     * year is labelled by the calendar year it starts in.
+     *
+     * @param int $year
+     * @param Entity $entity
+     *
+     * @return Carbon
+     */
+    public static function yearStart(int $year, ?Entity $entity = null)
+    {
+        if (is_null($entity)) {
+            $entity = Auth::user()->entity;
+        }
+
+        return Carbon::create($year, $entity->year_start, 1)->startOfDay();
+    }
+
+    /**
      * Instance Identifier.
      *
      * @return string
@@ -250,7 +268,7 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
         }
 
         $reportingCurrency = $this->entity->currency_id;
-        $periodEnd = ReportingPeriod::periodEnd($this->calendar_year . '01-01', $this->entity);
+        $periodEnd = ReportingPeriod::periodEnd(ReportingPeriod::yearStart($this->calendar_year, $this->entity), $this->entity);
 
         $accounts = Account::whereNotIn('currency_id', [$reportingCurrency]);
         if (!is_null($accountId)) {
@@ -294,9 +312,11 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
         $reportingCurrency = $this->entity->currency_id;
         $transactionTable = config('ifrs.table_prefix') . 'transactions';
         $currenciesTable = config('ifrs.table_prefix') . 'currencies';
+        $startDate = ReportingPeriod::yearStart($this->calendar_year, $this->entity);
         $query = DB::table($transactionTable)
             ->leftJoin($currenciesTable, $currenciesTable . '.id', '=', $transactionTable . '.currency_id')
-            ->whereYear($transactionTable . '.transaction_date', '=', $this->calendar_year)
+            ->where($transactionTable . '.transaction_date', '>=', $startDate)
+            ->where($transactionTable . '.transaction_date', '<=', ReportingPeriod::periodEnd($startDate, $this->entity)->endOfDay())
             ->whereNotIn($currenciesTable . '.id', [$reportingCurrency])
             ->select($transactionTable . '.currency_id', $currenciesTable . '.currency_code')
             ->distinct();
