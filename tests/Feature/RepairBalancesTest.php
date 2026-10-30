@@ -252,7 +252,7 @@ class RepairBalancesTest extends TestCase
             'entity_id' => $this->entity->id,
         ]);
 
-        $this->balanceWrittenAt($this->account(), $period, '2022-03-10 09:00:00');
+        $this->balanceWrittenAt($this->account(), $period, '2022-03-10 09:00:00', ['transaction_date' => '2022-07-01']);
 
         $findings = MisattachedBalances::find();
 

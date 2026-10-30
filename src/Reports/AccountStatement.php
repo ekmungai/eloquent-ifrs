@@ -65,6 +65,12 @@ class AccountStatement
      * @var Entity
      */
     protected $entity;
+    /**
+     * Id of the Currency the Account Statement is limited to, if any.
+     *
+     * @var int|null
+     */
+    public $currencyId;
 
     /**
      * Construct Account Statement for the account for the period.
@@ -89,7 +95,7 @@ class AccountStatement
 
         $this->entity = $this->account->entity;
 
-        $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart(null, $this->entity) : Carbon::parse($startDate)->startOfDay();
+        $this->period['startDate'] = is_null($startDate) ? ReportingPeriod::periodStart($endDate, $this->entity) : Carbon::parse($startDate)->startOfDay();
         $this->period['endDate'] = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
         $this->currency = is_null($currencyId) ? $this->entity->currency : Currency::find($currencyId);
         $this->currencyId = $currencyId;

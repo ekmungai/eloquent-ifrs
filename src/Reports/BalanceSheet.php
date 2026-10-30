@@ -139,7 +139,7 @@ class BalanceSheet extends FinancialStatement
         ];
 
         // Total Equity
-        $this->results[self::TOTAL_EQUITY] = abs($this->totals[self::EQUITY] + $netProfit);
+        $this->results[self::TOTAL_EQUITY] = ($this->totals[self::EQUITY] + $netProfit) * -1;
 
         return [
             "accounts" => $this->accounts,

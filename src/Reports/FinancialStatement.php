@@ -57,6 +57,36 @@ abstract class FinancialStatement
      */
     public $results = [];
     /**
+     * Financial Statement printout.
+     *
+     * @var string
+     */
+    public $statement;
+    /**
+     * Financial Statement printout indent.
+     *
+     * @var string
+     */
+    public $indent;
+    /**
+     * Financial Statement printout subtotal rule.
+     *
+     * @var string
+     */
+    public $separator;
+    /**
+     * Financial Statement printout total rule.
+     *
+     * @var string
+     */
+    public $grand_total;
+    /**
+     * Financial Statement printout result indent width.
+     *
+     * @var int
+     */
+    public $result_indents;
+    /**
      * Financial Statement Entity.
      *
      * @var Entity
@@ -75,6 +105,9 @@ abstract class FinancialStatement
         }else{
             $this->entity = $entity;
         }
+
+        $this->entity->assertAccessible();
+
         $this->reportingPeriod = is_null($period) ? $this->entity->currentReportingPeriod : $period;
 
         $this->statement = "";

@@ -113,6 +113,10 @@ class Assignment extends Model implements Segregatable
         $schedule->getTransactions();
 
         foreach ($schedule->transactions as $outstanding) {
+            if (round($balance, 4) <= 0) {
+                break;
+            }
+
             $assignment = new Assignment([
                 'assignment_date' => Carbon::now(),
                 'transaction_id' => $transaction->id,

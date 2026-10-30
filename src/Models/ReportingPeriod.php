@@ -96,6 +96,8 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
             $entity = Auth::user()->entity;
         }
 
+        $entity->assertAccessible();
+
         $year = ReportingPeriod::year($date, $entity);
 
         $period = ReportingPeriod::where("calendar_year", $year)

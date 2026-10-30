@@ -371,7 +371,7 @@ class IncomeStatementTest extends TestCase
 
         $this->assertEquals(
             $results[IncomeStatement::GROSS_PROFIT],
-            350
+            145
         );
 
         $this->assertEquals(
@@ -816,7 +816,7 @@ class IncomeStatementTest extends TestCase
 
         $this->assertEquals(
             $results[IncomeStatement::GROSS_PROFIT],
-            350
+            145
         );
 
         $this->assertEquals(

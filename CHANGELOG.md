@@ -1,8 +1,21 @@
-## Unreleased
+## 7.2.0 - 2026-10-30
 
 - Fix `Balance::save()` translating the amount again on every save, which compounded a foreign currency Balance by its exchange rate each time it was edited, restored or otherwise saved. Only an amount being entered is translated now
 - Fix `Assignment` allowing a transaction to be over cleared by less than 1. `bccomp()` was called without a scale, so it compared whole numbers only
 - Scope `ReportingPeriod::transactionCurrencies()` to its Entity and ignore deleted Transactions. A foreign currency Transaction of another Entity, or a deleted one, could make `prepareBalancesTranslation()` fail
+- Fix reports given an end date but no start date starting from the current year, so that any earlier end date came back empty. `AccountStatement`, `AccountSchedule` and `IncomeStatement` now start from the year of their end date, and `AgingSchedule` is no longer always empty for an earlier year
+- `AccountSchedule` and `AgingSchedule` count only what had been cleared by their end date, using the new `clearedAmountAsAt()`. A later clearance used to reduce the amount outstanding
+- Fix `IncomeStatement::getResults()` showing a loss as a profit. Its results now keep their sign, and its gross profit no longer includes non operating revenue, so they agree with `getSections()`
+- Fix `BalanceSheet` reporting negative equity as positive
+- Fix `Category::getAccountBalances()` leaving out opening balances when called without a start date
+- Throw `EntityMismatch` when a report or balance query is given an `$entity` other than that of the logged in User. The `EntityScope` limits every query to the User's Entity, so these came back empty with no error. Passing an Entity with nobody logged in, as on the console, still works
+- Fix `clearances` and `cleared_amount` being empty on Transaction subclasses such as `ClientInvoice`. They were looked up under the subclass name, and clearances are stored under `Transaction`
+- Declare the properties that the reports created dynamically, which raises a deprecation notice from PHP 8.2
+- Validate the date of a new or re-dated Balance against the start of its own Reporting Period rather than the current one, and refuse a new Balance, or a change to an amount or period, in a closed Reporting Period. Existing Balances can still be edited and restored otherwise
+- Stop `Assignment::bulkAssign()` saving a zero Assignment once the Transaction's balance has run out
+- Stop `Transaction::transactionNo()` counting the Transactions of later Reporting Periods
+- Stop `Account::sectionBalances()` adding together Categories that share a name. The second is keyed `Name (id)`
+- Add the `ifrs:audit-balances` command, which lists without changing anything the foreign currency Balances that may have been compounded, and the Transactions and Balances cleared by more than their amount
 
 ## 7.1.0 - 2026-10-30
 

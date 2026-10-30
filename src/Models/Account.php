@@ -150,6 +150,8 @@ class Account extends Model implements Recyclable, Segregatable
             $entity = Auth::user()->entity;
         }
 
+        $entity->assertAccessible();
+
         $accounts = collect([]);
         $balances = ['debit' => 0, 'credit' => 0];
 
@@ -191,6 +193,8 @@ class Account extends Model implements Recyclable, Segregatable
             $entity = Auth::user()->entity;
         }
 
+        $entity->assertAccessible();
+
         $balances = ['sectionOpeningBalance' => 0, 'sectionClosingBalance' => 0, 'sectionMovement' => 0, 'sectionCategories' => []];
 
         $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate, $entity) : Carbon::parse($startDate)->startOfDay();
@@ -222,6 +226,11 @@ class Account extends Model implements Recyclable, Segregatable
                     $category = $account->category;
                     $categoryName = $category->name;
                     $categoryId = $category->id;
+                }
+
+                // Different Categories can share a name, and must not be added together
+                if (isset($balances['sectionCategories'][$categoryName]) && $balances['sectionCategories'][$categoryName]['id'] != $categoryId) {
+                    $categoryName .= ' (' . $categoryId . ')';
                 }
 
                 if (array_key_exists($categoryName, $balances['sectionCategories'])) {
