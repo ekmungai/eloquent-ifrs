@@ -4,6 +4,10 @@
 - Include the whole of the end date in `Account::currentBalance()`, and through it `closingBalance()`, `sectionBalances()` and `Category::getAccountBalances()`. A transaction made during the end date was left out, including on the last day of the year by default
 - Stop `Account::sectionBalances()` counting a transaction on the start date in both the opening balance and the movement
 - `AccountStatement` and `Account::sectionBalances()` treat their start date as a whole day
+- Fix `Account::sectionBalances()` and so `CashFlowStatement` across two financial years, which took the opening balance of the later year and overstated cash. A section now opens with the balances of the year it starts in
+- Default the start of a `CashFlowStatement` to the start of the year of its end date
+- Identify closing Transactions by their Reporting Period and not their date, and ignore deleted ones. `Account::isClosed()` and `closingTransactions()` missed misdated closings, so preparing the translations again duplicated them, and an Account stayed closed after its closing Transaction was deleted
+- Stop `ReportingPeriod::getTranslations()` and `postTranslations()` failing on a deleted closing Transaction
 - Add the `ifrs:repair-balances` command, which lists Balances that a version before 7.0.0 attached to the Reporting Period of the next financial year, and moves them with `--apply`. Affects entities whose year does not start in January, for Balances saved without an explicit period before `year_start`. Run it without `--apply` first: a Balance given that period on purpose looks the same
 
 ## 7.0.0 - 2026-10-30
