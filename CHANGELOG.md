@@ -9,6 +9,12 @@
 - Fix `BalanceSheet` reporting negative equity as positive
 - Fix `Category::getAccountBalances()` leaving out opening balances when called without a start date
 - Throw `EntityMismatch` when a report or balance query is given an `$entity` other than that of the logged in User. The `EntityScope` limits every query to the User's Entity, so these came back empty with no error. Passing an Entity with nobody logged in, as on the console, still works
+- Fix `clearances` and `cleared_amount` being empty on Transaction subclasses such as `ClientInvoice`. They were looked up under the subclass name, and clearances are stored under `Transaction`
+- Declare the properties that the reports created dynamically, which raises a deprecation notice from PHP 8.2
+- Validate the date of a new or re-dated Balance against the start of its own Reporting Period rather than the current one, and refuse a new Balance, or a change to an amount or period, in a closed Reporting Period. Existing Balances can still be edited and restored otherwise
+- Stop `Assignment::bulkAssign()` saving a zero Assignment once the Transaction's balance has run out
+- Stop `Transaction::transactionNo()` counting the Transactions of later Reporting Periods
+- Stop `Account::sectionBalances()` adding together Categories that share a name. The second is keyed `Name (id)`
 - Add the `ifrs:audit-balances` command, which lists without changing anything the foreign currency Balances that may have been compounded, and the Transactions and Balances cleared by more than their amount
 
 ## 7.1.0 - 2026-10-30

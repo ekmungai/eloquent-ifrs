@@ -11,7 +11,7 @@ $factory->define(
     Category::class,
     function (Faker $faker) {
         return [
-            'name' => $faker->word,
+            'name' => $faker->words(3, true),
             'category_type' => $faker->randomElement(
                 array_keys(config('ifrs')['accounts'])
             ),

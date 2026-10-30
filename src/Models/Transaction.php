@@ -784,6 +784,7 @@ class Transaction extends Model implements Segregatable, Recyclable, Clearable, 
         $nextId = Transaction::withTrashed()
             ->where("transaction_type", $type)
             ->where("transaction_date", ">=", $periodStart)
+            ->where("transaction_date", "<=", ReportingPeriod::periodEnd($transaction_date, $entity)->endOfDay())
             ->where("entity_id", '=', $entity->id)
             ->count() + 1;
 

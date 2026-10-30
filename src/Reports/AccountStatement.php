@@ -65,6 +65,12 @@ class AccountStatement
      * @var Entity
      */
     protected $entity;
+    /**
+     * Id of the Currency the Account Statement is limited to, if any.
+     *
+     * @var int|null
+     */
+    public $currencyId;
 
     /**
      * Construct Account Statement for the account for the period.
