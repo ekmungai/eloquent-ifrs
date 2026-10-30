@@ -66,7 +66,9 @@ class AgingSchedule
         }else{
             $this->entity = $entity;
         }
-        
+
+        $this->entity->assertAccessible();
+
         $this->period['endDate'] = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
         $this->currency = is_null($currencyId) ? $this->entity->currency : Currency::find($currencyId);
 

@@ -150,6 +150,8 @@ class Account extends Model implements Recyclable, Segregatable
             $entity = Auth::user()->entity;
         }
 
+        $entity->assertAccessible();
+
         $accounts = collect([]);
         $balances = ['debit' => 0, 'credit' => 0];
 
@@ -190,6 +192,8 @@ class Account extends Model implements Recyclable, Segregatable
         if (is_null($entity)) {
             $entity = Auth::user()->entity;
         }
+
+        $entity->assertAccessible();
 
         $balances = ['sectionOpeningBalance' => 0, 'sectionClosingBalance' => 0, 'sectionMovement' => 0, 'sectionCategories' => []];
 

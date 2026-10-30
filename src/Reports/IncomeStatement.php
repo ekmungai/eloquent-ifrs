@@ -120,6 +120,8 @@ class IncomeStatement extends FinancialStatement
             $entity = Auth::user()->entity;
         }
 
+        $entity->assertAccessible();
+
         $startDate = Carbon::parse($year . '-' . $month . '-01')->startOfDay();
         $endDate = Carbon::parse($year . '-' . $month . '-01')->endOfMonth();
 

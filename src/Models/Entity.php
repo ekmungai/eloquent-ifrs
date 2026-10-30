@@ -14,7 +14,9 @@ use Carbon\Carbon;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
+use IFRS\Exceptions\EntityMismatch;
 use IFRS\Exceptions\MissingReportingCurrency;
 use IFRS\Exceptions\UnconfiguredLocale;
 
@@ -165,6 +167,20 @@ class Entity extends Model implements Recyclable
         $new->save();
 
         return $new;
+    }
+
+    /**
+     * Confirm the logged in User can work with the Entity. The EntityScope restricts
+     * every query to the User's Entity, so asking for another one would otherwise
+     * silently come back empty. Nobody being logged in, as on the console, is fine.
+     *
+     * @return void
+     */
+    public function assertAccessible(): void
+    {
+        if (Auth::check() && Auth::user()->entity_id != $this->id) {
+            throw new EntityMismatch($this->name);
+        }
     }
 
     /**

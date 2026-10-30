@@ -8,6 +8,7 @@
 - Fix `IncomeStatement::getResults()` showing a loss as a profit. Its results now keep their sign, and its gross profit no longer includes non operating revenue, so they agree with `getSections()`
 - Fix `BalanceSheet` reporting negative equity as positive
 - Fix `Category::getAccountBalances()` leaving out opening balances when called without a start date
+- Throw `EntityMismatch` when a report or balance query is given an `$entity` other than that of the logged in User. The `EntityScope` limits every query to the User's Entity, so these came back empty with no error. Passing an Entity with nobody logged in, as on the console, still works
 - Add the `ifrs:audit-balances` command, which lists without changing anything the foreign currency Balances that may have been compounded, and the Transactions and Balances cleared by more than their amount
 
 ## 7.1.0 - 2026-10-30
