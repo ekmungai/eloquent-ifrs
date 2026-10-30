@@ -99,9 +99,13 @@ abstract class FinancialStatement
     }
 
     /**
+     * Get Statement Sections.
+     *
+     * @param string | Carbon $startDate
+     * @param string | Carbon $endDate
      * @param bool $fullbalance
      *
-     * Get Statement Sections.
+     * @return array
      */
     public function getSections($startDate = null, $endDate = null, $fullbalance = true): array
     {

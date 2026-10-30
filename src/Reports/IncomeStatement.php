@@ -110,8 +110,8 @@ class IncomeStatement extends FinancialStatement
     /**
      * Get Income Statement Account Types.
      *
-     * @param int|string month
-     * @param int|string year
+     * @param int|string $month
+     * @param int|string $year
      * @return array
      */
     public static function getResults($month, $year, ?Entity $entity = null)
@@ -144,8 +144,8 @@ class IncomeStatement extends FinancialStatement
     /**
      * Get Income Statement Account Type balance total.
      *
-     * @param int month
-     * @param int year
+     * @param int $month
+     * @param int $year
      */
     private static function getBalance(array $accountTypes, Carbon $startDate, Carbon $endDate, ?Entity $entity = null): float
     {

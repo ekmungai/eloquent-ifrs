@@ -1,4 +1,4 @@
-## Unreleased
+## 7.1.0 - 2026-10-30
 
 - Fix `CashFlowStatement` ignoring its dates: sections and profit always covered the current year, so any other period reported nothing. Its profit is now that of the period rather than of the year to date, its starting cash is the cash held before the start date, and its end date is no longer pushed a day later
 - Include the whole of the end date in `Account::currentBalance()`, and through it `closingBalance()`, `sectionBalances()` and `Category::getAccountBalances()`. A transaction made during the end date was left out, including on the last day of the year by default

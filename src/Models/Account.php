@@ -170,9 +170,10 @@ class Account extends Model implements Recyclable, Segregatable
     /**
      * Chart of Account Section Balances for the Reporting Period.
      *
-     * @param string $accountType
+     * @param array $accountTypes
      * @param string | Carbon $startDate
      * @param string | Carbon $endDate
+     * @param bool $fullBalance
      * @param Entity|null $entity
      *
      * @return array
