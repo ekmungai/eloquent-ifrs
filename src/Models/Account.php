@@ -170,9 +170,10 @@ class Account extends Model implements Recyclable, Segregatable
     /**
      * Chart of Account Section Balances for the Reporting Period.
      *
-     * @param string $accountType
+     * @param array $accountTypes
      * @param string | Carbon $startDate
      * @param string | Carbon $endDate
+     * @param bool $fullBalance
      * @param Entity|null $entity
      *
      * @return array
@@ -194,15 +195,18 @@ class Account extends Model implements Recyclable, Segregatable
 
         $startDate = is_null($startDate) ? ReportingPeriod::periodStart($endDate, $entity) : Carbon::parse($startDate)->startOfDay();
         $endDate = is_null($endDate) ? Carbon::now() : Carbon::parse($endDate);
-        $periodStart = ReportingPeriod::periodStart($endDate, $entity);
+        $periodStart = ReportingPeriod::periodStart($startDate, $entity);
 
-        $year = ReportingPeriod::year($endDate, $entity);
+        // The opening balances are those of the year the section starts in, which a
+        // section reaching further back than the entity's records does not have
+        $year = ReportingPeriod::year($startDate, $entity);
+        $hasOpeningBalances = ReportingPeriod::where('calendar_year', $year)->where('entity_id', $entity->id)->exists();
 
         foreach (Account::whereIn('account_type', $accountTypes)->where('entity_id', '=', $entity->id)->get() as $account) {
 
             $reportingCurrencyId = $account->entity->currency_id;
 
-            $account->openingBalance = $account->openingBalance($year)[$reportingCurrencyId] + $account->currentBalance($periodStart, $startDate->copy()->subDay())[$reportingCurrencyId];
+            $account->openingBalance = ($hasOpeningBalances ? $account->openingBalance($year)[$reportingCurrencyId] : 0) + $account->currentBalance($periodStart, $startDate->copy()->subDay())[$reportingCurrencyId];
             $account->balanceMovement = $account->currentBalance($startDate, $endDate)[$reportingCurrencyId];
 
             $account->closingBalance = $fullBalance ? $account->openingBalance + $account->balanceMovement : $account->balanceMovement;
@@ -409,13 +413,15 @@ class Account extends Model implements Recyclable, Segregatable
     {
         $transactionsTable = config('ifrs.table_prefix') . 'transactions';
         $closingTransactionsTable = config('ifrs.table_prefix') . 'closing_transactions';
-        $startDate = ReportingPeriod::yearStart($year, $this->entity);
+        $periodsTable = config('ifrs.table_prefix') . 'reporting_periods';
 
         return DB::table($transactionsTable)
             ->join($closingTransactionsTable, $closingTransactionsTable . '.transaction_id', '=', $transactionsTable . '.id')
+            ->join($periodsTable, $periodsTable . '.id', '=', $closingTransactionsTable . '.reporting_period_id')
             ->where($transactionsTable . '.account_id', '=', $this->id)
-            ->where($transactionsTable . '.transaction_date', '>=', $startDate)
-            ->where($transactionsTable . '.transaction_date', '<=', ReportingPeriod::periodEnd($startDate, $this->entity)->endOfDay())
+            ->where($periodsTable . '.calendar_year', '=', $year)
+            ->whereNull($transactionsTable . '.deleted_at')
+            ->whereNull($closingTransactionsTable . '.deleted_at')
             ->selectRaw('transaction_id AS id, account_id, ' . $transactionsTable . '.currency_id, reporting_period_id, credited, transaction_type, transaction_date, narration');
     }
 

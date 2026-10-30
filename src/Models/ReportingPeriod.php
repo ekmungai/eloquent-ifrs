@@ -201,6 +201,11 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
 
         foreach ($this->closingTransactions as $translation) {
             $transaction = Transaction::find($translation->transaction_id);
+
+            if (is_null($transaction)) {
+                continue;
+            }
+
             $account = $transaction->account;
             $balances = $account->closingBalance($transaction->transaction_date, $translation->currency_id);
             $closingRate = ClosingRate::where('reporting_period_id', $this->id)
@@ -230,7 +235,10 @@ class ReportingPeriod extends Model implements Segregatable, Recyclable
     {
         foreach ($this->closingTransactions as $translation) {
             $transaction = Transaction::find($translation->transaction_id);
-            $transaction->post();
+
+            if (!is_null($transaction)) {
+                $transaction->post();
+            }
         }
     }
 

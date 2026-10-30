@@ -15,7 +15,6 @@ class NegativeQuantity extends IFRSException
     /**
      * Negative Quantity Exception
      *
-     * @param string $modelType
      * @param string $message
      * @param int    $code
      */

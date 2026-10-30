@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 use IFRS\Tests\TestCase;
 
@@ -379,15 +380,21 @@ class FinancialYearTest extends TestCase
      * @param string $openingDate
      * @param string $firstSale
      * @param string $secondSale
+     * @param ReportingPeriod|null $nextPeriod The period to carry the first sale's cash into
      *
      * @return void
      */
-    private function postCashFlows(ReportingPeriod $period, string $openingDate, string $firstSale, string $secondSale): void
+    private function postCashFlows(ReportingPeriod $period, string $openingDate, string $firstSale, string $secondSale, ?ReportingPeriod $nextPeriod = null): void
     {
         $bank = $this->account(Account::BANK);
 
         $this->openingBalance($bank, $period, $openingDate, Balance::DEBIT, 1000);
         $this->postJournal($bank, $firstSale, 300, false, Account::OPERATING_REVENUE);
+
+        if (!is_null($nextPeriod)) {
+            $this->openingBalance($bank, $nextPeriod, $nextPeriod->calendar_year . '-01-01', Balance::DEBIT, 1300);
+        }
+
         $this->postJournal($bank, $secondSale, 300, false, Account::OPERATING_REVENUE);
     }
 
@@ -457,6 +464,145 @@ class FinancialYearTest extends TestCase
 
         $this->assertEquals(0, $sections['balances'][CashFlowStatement::PROFIT]);
         $this->assertEquals(1300, $sections['results'][CashFlowStatement::END_CASH_BALANCE]);
+    }
+
+    /**
+     * Test a Cash Flow Statement across two financial years starts from the cash
+     * held at its start date, and not from the opening balance of the later year.
+     *
+     * @return void
+     */
+    public function testCashFlowStatementAcrossYears()
+    {
+        $this->postCashFlows($this->period(2023), '2023-01-01', '2023-11-05', '2024-02-05', $this->period(2024));
+
+        $this->assertCashFlows(new CashFlowStatement('2023-10-01', '2024-03-31'));
+    }
+
+    /**
+     * Test a Cash Flow Statement given only an end date covers the year of that date.
+     *
+     * @return void
+     */
+    public function testCashFlowStatementDefaultStartDate()
+    {
+        $this->postCashFlows($this->period(2024), '2024-01-01', '2024-03-05', '2024-10-05');
+
+        $this->assertCashFlows(new CashFlowStatement(null, '2024-12-31'));
+    }
+
+    /**
+     * Test section balances reaching back before the entity's first Reporting Period
+     * start from nothing rather than failing.
+     *
+     * @return void
+     */
+    public function testSectionBalancesBeforeFirstPeriod()
+    {
+        $period = $this->period(2024);
+        $account = $this->account();
+
+        $this->openingBalance($account, $period, '2024-01-01', Balance::DEBIT, 2000);
+        $this->postJournal($account, '2024-03-05', 50, false);
+
+        $balances = Account::sectionBalances([Account::RECEIVABLE], '2000-01-01', '2024-12-31', true, Auth::user()->entity);
+
+        $this->assertEquals(0, $balances['sectionOpeningBalance']);
+        $this->assertEquals(50, $balances['sectionMovement'] * -1);
+    }
+
+    /**
+     * Translate a foreign currency Account's balance for the 2024 period.
+     *
+     * @return array
+     */
+    private function translateBalance(): array
+    {
+        $period = $this->period(2024);
+        $currency = factory(Currency::class)->create();
+
+        ClosingRate::create([
+            'exchange_rate_id' => factory(ExchangeRate::class)->create([
+                'currency_id' => $currency->id,
+            ])->id,
+            'reporting_period_id' => $period->id,
+        ]);
+
+        $account = factory(Account::class)->create([
+            'account_type' => Account::RECEIVABLE,
+            'category_id' => null,
+            'currency_id' => $currency->id,
+        ]);
+
+        $transaction = new ClientReceipt([
+            'account_id' => $account->id,
+            'transaction_date' => '2024-03-15',
+            'narration' => $this->faker->word,
+            'exchange_rate_id' => factory(ExchangeRate::class)->create([
+                'rate' => 110,
+                'currency_id' => $currency->id,
+            ])->id,
+            'currency_id' => $currency->id,
+        ]);
+        $transaction->addLineItem(new LineItem([
+            'account_id' => factory(Account::class)->create([
+                'account_type' => Account::BANK,
+                'category_id' => null,
+                'currency_id' => $currency->id,
+            ])->id,
+            'amount' => 100,
+        ]));
+        $transaction->post();
+
+        $forex = factory(Account::class)->create([
+            'account_type' => Account::EQUITY,
+            'category_id' => null,
+        ]);
+
+        $period->status = ReportingPeriod::ADJUSTING;
+
+        return [$account, $period, $forex, $period->prepareBalancesTranslation($forex->id)];
+    }
+
+    /**
+     * Test deleting a closing Transaction reopens the Account, and leaves the
+     * Reporting Period's translations usable.
+     *
+     * @return void
+     */
+    public function testDeletedClosingTransaction()
+    {
+        [$account, $period, , $translations] = $this->translateBalance();
+
+        $this->assertTrue($account->isClosed(2024));
+
+        $translations[0]->delete();
+
+        $this->assertFalse($account->isClosed(2024));
+        $this->assertEquals([], $account->closingTransactions(2024)['transactions']);
+
+        $this->assertEquals([], $period->fresh()->getTranslations());
+        $period->fresh()->postTranslations();
+    }
+
+    /**
+     * Test a closing Transaction dated outside its Reporting Period, as versions
+     * before 7.0.0 could leave them, still closes the Account for that period, so
+     * that preparing the translations again does not duplicate it.
+     *
+     * @return void
+     */
+    public function testMisdatedClosingTransaction()
+    {
+        [$account, $period, $forex, $translations] = $this->translateBalance();
+
+        DB::table($translations[0]->getTable())->where('id', $translations[0]->id)->update([
+            'transaction_date' => '2026-10-30 10:00:00',
+        ]);
+
+        $this->assertTrue($account->isClosed(2024));
+        $this->assertFalse($account->isClosed(2026));
+        $this->assertEquals([], $period->prepareBalancesTranslation($forex->id));
     }
 
     /**
